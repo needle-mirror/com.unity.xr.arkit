@@ -36,12 +36,51 @@ namespace UnityEditor.XR.ARKit
             const string arkitFramework = "ARKit.framework";
             proj.AddFrameworkToProject(targetGuid, arkitFramework, isFrameworkOptional);
 
+            HandleARKitRequiredFlag(pathToBuiltProject);
+
             // Finally, write out the modified project with the framework added.
             File.WriteAllText(projPath, proj.WriteToString());
         }
 
+        static void HandleARKitRequiredFlag(string pathToBuiltProject)
+        {
+            var arkitSettings = ARKitSettings.GetOrCreateSettings();
+            string plistPath = Path.Combine(pathToBuiltProject, "Info.plist");
+            PlistDocument plist = new PlistDocument();
+            plist.ReadFromString(File.ReadAllText(plistPath));
+            PlistElementDict rootDict = plist.root;
+
+            // Get or create array to manage device capabilities
+            const string capsKey = "UIRequiredDeviceCapabilities";
+            PlistElementArray capsArray;
+            PlistElement pel;
+            if (rootDict.values.TryGetValue(capsKey, out pel))
+            {
+                capsArray = pel.AsArray();
+            }
+            else
+            {
+                capsArray = rootDict.CreateArray(capsKey);
+            }
+            // Remove any existing "arkit" plist entries
+            const string arkitStr = "arkit";
+            capsArray.values.RemoveAll(x => arkitStr.Equals(x.AsString()));
+            if (arkitSettings.ARKitRequirement == ARKitSettings.Requirement.Required)
+            {
+                // Add "arkit" plist entry
+                capsArray.AddString(arkitStr);
+            }
+
+            File.WriteAllText(plistPath, plist.WriteToString());
+        }
+
         internal class ARKitPreprocessBuild : IPreprocessBuildWithReport
         {
+            // Magic value according to
+            // https://docs.unity3d.com/ScriptReference/PlayerSettings.GetArchitecture.html
+            // "0 - None, 1 - ARM64, 2 - Universal."
+            const int k_TargetArchitectureArm64 = 1;
+
             public void OnPreprocessBuild(BuildReport report)
             {
                 if (report.summary.platform != BuildTarget.iOS)
@@ -51,14 +90,23 @@ namespace UnityEditor.XR.ARKit
                     throw new BuildFailedException("ARKit requires a Camera Usage Description (Player Settings > iOS > Other Settings > Camera Usage Description)");
 
                 EnsureOnlyMetalIsUsed();
-
-#if !UNITY_2018_3_OR_NEWER
-                if ((report.summary.options & BuildOptions.SymlinkLibraries) != BuildOptions.None)
-                    throw new BuildFailedException("The \"ARKit XR Plugin\" package cannot be symlinked. Go to File > Build Settings... and uncheck \"Symlink Unity libraries\".");
-#endif
+                EnsureTargetArchitecturesAreSupported(report.summary.platformGroup);
 
                 if (LinkerUtility.AssemblyStrippingEnabled(report.summary.platformGroup))
+                {
                     LinkerUtility.EnsureLinkXmlExistsFor("ARKit");
+                    var arkitSettings = ARKitSettings.GetOrCreateSettings();
+                    if (arkitSettings.ARKitFaceTrackingEnabled)
+                    {
+                        LinkerUtility.EnsureLinkXmlExistsFor("ARKit.FaceTracking");
+                    }
+                }
+            }
+
+            void EnsureTargetArchitecturesAreSupported(BuildTargetGroup buildTargetGroup)
+            {
+                if (PlayerSettings.GetArchitecture(buildTargetGroup) != k_TargetArchitectureArm64)
+                    throw new BuildFailedException("ARKit XR Plugin only supports the ARM64 architecture. See Player Settings > Other Settings > Architecture.");
             }
 
             void EnsureOnlyMetalIsUsed()
@@ -74,7 +122,6 @@ namespace UnityEditor.XR.ARKit
 
             public int callbackOrder { get { return 0; } }
         }
-
     }
 }
 #endif

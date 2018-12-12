@@ -4,6 +4,21 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-preview.20] - 2018-12-13
+
+- Fix package dependency.
+
+## [1.0.0-preview.19] - 2018-12-13
+- Add C header file necessary to interpret native pointers. See `Includes~/UnityXRNativePtrs.h`
+- Add support for setting the camera focus mode.
+- Add a build check to ensure only ARM64 is selected as the only target architecture.
+- Implement `CameraConfiguration` support, allowing you to enumerate and set the resolution used by the hardware camera.
+
+## [1.0.0-preview.18] - 2018-11-21
+### New
+- Added ARKit Face Tracking support via `com.unity.xr.facesubsystem`.
+- Plane detection modes: Add ability to selectively enable detection for horizontal, vertical, or both types of planes.
+
 ## [1.0.0-preview.17] - 2018-10-06
 ### Fixes
 - Fixed an issue where toggling plane detection or light estimation would momentarily pause the ARSession, causing tracking to become temporarily unstable.
