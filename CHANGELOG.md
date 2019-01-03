@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-preview.23] - 2019-01-04
+### Fixes
+- Refactor the way ARKit face tracking is in the build. Face tracking has been moved to a separate static lib so that it can be removed from the build when face tracking is not enabled. This was preventing apps from passing App Store validation, as face tracking types may not appear in the binary unless you include a privacy policy describing to users how you intend to use face tracking and face data.
+
+### New
+- Support the `CameraIntrinsics` API in ARExtensions.
+
+### Fixes
+- Fixed linker errors when linking `UnityARKit.a` with Xcode 9.x
+
 ## [1.0.0-preview.20] - 2018-12-13
 
 - Fix package dependency.

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEditor.Compilation;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEditor.XR.ARExtensions;
@@ -23,23 +25,7 @@ namespace UnityEditor.XR.ARKit
             if (target != BuildTarget.iOS)
                 return;
 
-            string unityTargetName = PBXProject.GetUnityTargetName();
-            string projPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
-
-            // Create a PBXProject object and populate it with the trampoline project
-            var proj = new PBXProject();
-            proj.ReadFromString(File.ReadAllText(projPath));
-
-            // Add the ARKit framework to the Xcode project
-            string targetGuid = proj.TargetGuidByName(unityTargetName);
-            const bool isFrameworkOptional = false;
-            const string arkitFramework = "ARKit.framework";
-            proj.AddFrameworkToProject(targetGuid, arkitFramework, isFrameworkOptional);
-
             HandleARKitRequiredFlag(pathToBuiltProject);
-
-            // Finally, write out the modified project with the framework added.
-            File.WriteAllText(projPath, proj.WriteToString());
         }
 
         static void HandleARKitRequiredFlag(string pathToBuiltProject)
@@ -76,6 +62,19 @@ namespace UnityEditor.XR.ARKit
 
         internal class ARKitPreprocessBuild : IPreprocessBuildWithReport
         {
+#pragma warning disable 649
+            // type used to load the .asmdef as json
+            struct AssemblyDefinitionType
+            {
+                public string name;
+                public List<string> references;
+                public List<string> includePlatforms;
+                public List<string> excludePlatforms;
+                public bool allowUnsafeCode;
+                public bool autoReferenced;
+            }
+#pragma warning restore 649
+
             // Magic value according to
             // https://docs.unity3d.com/ScriptReference/PlayerSettings.GetArchitecture.html
             // "0 - None, 1 - ARM64, 2 - Universal."
@@ -92,13 +91,52 @@ namespace UnityEditor.XR.ARKit
                 EnsureOnlyMetalIsUsed();
                 EnsureTargetArchitecturesAreSupported(report.summary.platformGroup);
 
+                var arkitSettings = ARKitSettings.GetOrCreateSettings();
+
                 if (LinkerUtility.AssemblyStrippingEnabled(report.summary.platformGroup))
                 {
                     LinkerUtility.EnsureLinkXmlExistsFor("ARKit");
-                    var arkitSettings = ARKitSettings.GetOrCreateSettings();
                     if (arkitSettings.ARKitFaceTrackingEnabled)
-                    {
                         LinkerUtility.EnsureLinkXmlExistsFor("ARKit.FaceTracking");
+                }
+
+                if (!arkitSettings.ARKitFaceTrackingEnabled)
+                    EnsureLinkXmlDoesNotContainFaceTracking();
+
+                var pluginImporter = AssetImporter.GetAtPath("Packages/com.unity.xr.arkit/Runtime/iOS/libUnityARKitFaceTracking.a") as PluginImporter;
+                if (pluginImporter)
+                    pluginImporter.SetCompatibleWithPlatform(BuildTarget.iOS, arkitSettings.ARKitFaceTrackingEnabled);
+            }
+
+            void EnsureLinkXmlDoesNotContainFaceTracking()
+            {
+                var path = Path.Combine("Assets", "link.xml");
+                if (!File.Exists(path))
+                    return;
+
+                var document = new XmlDocument();
+                document.Load(path);
+                var nav = document.CreateNavigator();
+
+                var assemblyName = "Unity.XR.ARKit.FaceTracking";
+                var iter = nav.SelectSingleNode(string.Format("/linker/assembly[@fullname='{0}']", assemblyName));
+                if (iter != null)
+                {
+                    // Entry exists. Need to remove it.
+                    var fixLinkXml = EditorUtility.DisplayDialog(
+                        string.Format("{0} is included in your build.", assemblyName),
+                        "Face tracking is not enabled, but your link.xml includes the Unity.XR.ARKit.FaceTracking assembly. You will not be able to build until this is resolved. Would you like to remove this entry from your link.xml now?",
+                        "Yes, fix and build",
+                        "No, cancel build");
+
+                    if (fixLinkXml)
+                    {
+                        iter.DeleteSelf();
+                        document.Save(path);
+                    }
+                    else
+                    {
+                        throw new BuildFailedException("Build canceled by request. Either enable face tracking in your ARKit Settings (Edit > Project Settings > ARKit XR Plugin) or remove the Unity.XR.ARKit.FaceTracking entry from your link.xml.");
                     }
                 }
             }
