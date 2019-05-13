@@ -1,57 +1,79 @@
 #if UNITY_IOS
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
+using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
+using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEditor.XR.ARKit
 {
     internal class ARKitBuildProcessor
     {
-        [PostProcessBuild(1)]
-        public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
+        public static IEnumerable<T> AssetsOfType<T>() where T : UnityEngine.Object
         {
-            if (target != BuildTarget.iOS)
-                return;
-
-            HandleARKitRequiredFlag(pathToBuiltProject);
+            foreach(var guid in AssetDatabase.FindAssets("t:" + typeof(T).Name))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                yield return AssetDatabase.LoadAssetAtPath<T>(path);
+            }
         }
 
-        static void HandleARKitRequiredFlag(string pathToBuiltProject)
+        class PostProcessor : IPostprocessBuildWithReport
         {
-            var arkitSettings = ARKitSettings.GetOrCreateSettings();
-            string plistPath = Path.Combine(pathToBuiltProject, "Info.plist");
-            PlistDocument plist = new PlistDocument();
-            plist.ReadFromString(File.ReadAllText(plistPath));
-            PlistElementDict rootDict = plist.root;
+            public int callbackOrder { get { return 0; } }
 
-            // Get or create array to manage device capabilities
-            const string capsKey = "UIRequiredDeviceCapabilities";
-            PlistElementArray capsArray;
-            PlistElement pel;
-            if (rootDict.values.TryGetValue(capsKey, out pel))
+            public void OnPostprocessBuild(BuildReport report)
             {
-                capsArray = pel.AsArray();
-            }
-            else
-            {
-                capsArray = rootDict.CreateArray(capsKey);
-            }
-            // Remove any existing "arkit" plist entries
-            const string arkitStr = "arkit";
-            capsArray.values.RemoveAll(x => arkitStr.Equals(x.AsString()));
-            if (arkitSettings.requirement == ARKitSettings.Requirement.Required)
-            {
-                // Add "arkit" plist entry
-                capsArray.AddString(arkitStr);
+                if (report.summary.platform != BuildTarget.iOS)
+                    return;
+
+                HandleARKitRequiredFlag(report.summary.outputPath);
             }
 
-            File.WriteAllText(plistPath, plist.WriteToString());
+            static void HandleARKitRequiredFlag(string pathToBuiltProject)
+            {
+                var arkitSettings = ARKitSettings.GetOrCreateSettings();
+                string plistPath = Path.Combine(pathToBuiltProject, "Info.plist");
+                PlistDocument plist = new PlistDocument();
+                plist.ReadFromString(File.ReadAllText(plistPath));
+                PlistElementDict rootDict = plist.root;
+
+                // Get or create array to manage device capabilities
+                const string capsKey = "UIRequiredDeviceCapabilities";
+                PlistElementArray capsArray;
+                PlistElement pel;
+                if (rootDict.values.TryGetValue(capsKey, out pel))
+                {
+                    capsArray = pel.AsArray();
+                }
+                else
+                {
+                    capsArray = rootDict.CreateArray(capsKey);
+                }
+                // Remove any existing "arkit" plist entries
+                const string arkitStr = "arkit";
+                capsArray.values.RemoveAll(x => arkitStr.Equals(x.AsString()));
+                if (arkitSettings.requirement == ARKitSettings.Requirement.Required)
+                {
+                    // Add "arkit" plist entry
+                    capsArray.AddString(arkitStr);
+                }
+
+                File.WriteAllText(plistPath, plist.WriteToString());
+            }
         }
 
-        internal class ARKitPreprocessBuild : IPreprocessBuildWithReport
+        class Preprocessor : IPreprocessBuildWithReport
         {
             // Magic value according to
             // https://docs.unity3d.com/ScriptReference/PlayerSettings.GetArchitecture.html

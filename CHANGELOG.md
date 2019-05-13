@@ -4,12 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.0.1] - 2019-03-20
-- Specify package is only compatible with 2019.2.0a8+
-
-## [2.0.0] - 2019-03-15
-### Changes
-- Verified for 2019.2
+## [2.1.0-preview.3] - 2019-05-14
+### New
+- Add [image tracking](https://developer.apple.com/documentation/arkit/recognizing_images_in_an_ar_experience) support.
+- Add [environment probe](https://developer.apple.com/documentation/arkit/adding_realistic_reflections_to_an_ar_experience) support.
+- Add [face tracking](https://developer.apple.com/documentation/arkit/creating_face-based_ar_experiences) support.
+- Add [object tracking](https://developer.apple.com/documentation/arkit/scanning_and_detecting_3d_objects) support.
 
 ## [1.0.0-preview.23] - 2019-01-04
 ### Fixes
