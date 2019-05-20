@@ -1,6 +1,6 @@
 # Image Tracking
 
-To use image tracking on ARKit, you will first need to create a Reference Image Library. See the [AR Subsystems documentation on image tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/image-tracking.md) for instructions.
+To use image tracking on ARKit, you will first need to create a Reference Image Library. See the [AR Subsystems documentation on image tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/image-tracking.html) for instructions.
 
 During an iOS player build, each reference image library is used to generate a corresponding AR Resource Group in the generated Xcode project:
 

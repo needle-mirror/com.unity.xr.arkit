@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.0-preview.5] - 2019-05-21
+### Fixes
+- Fix documentation links
+- Fix iOS version number parsing. This caused
+  - Editor Play Mode exceptions (trying to parse a desktop OS string)
+  - Incorrect handling of iOS point releases (e.g., 12.1.3)
+
 ## [2.1.0-preview.3] - 2019-05-14
 ### New
 - Add [image tracking](https://developer.apple.com/documentation/arkit/recognizing_images_in_an_ar_experience) support.

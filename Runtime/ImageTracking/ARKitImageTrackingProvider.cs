@@ -121,18 +121,18 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void RegisterDescriptor()
         {
-            float iOSversion = float.Parse(Device.systemVersion, CultureInfo.InvariantCulture.NumberFormat);
+#if UNITY_IOS && !UNITY_EDITOR
+            var iOSversion = OSVersion.Parse(Device.systemVersion);
 
             // No support before iOS 11.3
-            if (iOSversion < 11.3)
+            if (iOSversion < new OSVersion(11, 3))
                 return;
 
-#if UNITY_IOS && !UNITY_EDITOR
             XRImageTrackingSubsystemDescriptor.Create(new XRImageTrackingSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-ImageTracking",
                 subsystemImplementationType = typeof(ARKitImageTrackingSubsystem),
-                supportsMovingImages = iOSversion >= 12f
+                supportsMovingImages = (iOSversion >= new OSVersion(12))
             });
 #endif
         }

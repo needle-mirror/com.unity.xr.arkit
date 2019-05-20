@@ -114,13 +114,13 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void RegisterDescriptor()
         {
-            float iOSversion = float.Parse(Device.systemVersion, CultureInfo.InvariantCulture.NumberFormat);
+#if UNITY_IOS && !UNITY_EDITOR
+            var iOSversion = OSVersion.Parse(Device.systemVersion);
 
             // No support before iOS 12.0
-            if (iOSversion < 12f)
+            if (iOSversion < new OSVersion(12))
                 return;
 
-#if UNITY_IOS && !UNITY_EDITOR
             var capabilities = new XRObjectTrackingSubsystemDescriptor.Capabilities
             {
             };

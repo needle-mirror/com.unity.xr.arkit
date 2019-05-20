@@ -3,16 +3,16 @@
 
 Use the *ARKit XR Plugin* package enable ARKit support via Unity's multi-platform XR API. This package implements the following XR Subsystems:
 
-* [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/session-subsystem.md)
-* [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/camera-subsystem.md)
-* [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/depth-subsystem.md)
+* [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/session-subsystem.html)
+* [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/camera-subsystem.html)
+* [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/depth-subsystem.html)
 * [Input](https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.XR.XRInputSubsystem.html)
-* [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/plane-subsystem.md)
-* [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/raycast-subsystem.md)
-* [ReferencePoints](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/reference-point-subsystem.md)
-* [Image Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/image-tracking.md)
-* [Object Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/object-tracking.md)
-* [Environment Probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/environment-probe-subsystem.md)
+* [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/plane-subsystem.html)
+* [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/raycast-subsystem.html)
+* [ReferencePoints](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/reference-point-subsystem.html)
+* [Image Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/image-tracking.html)
+* [Object Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/object-tracking.html)
+* [Environment Probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/environment-probe-subsystem.html)
 
 This version of *ARKit XR Plugin* supports the following features:
 
@@ -29,7 +29,7 @@ This version of *ARKit XR Plugin* supports the following features:
 * Object Tracking
 * Environment Probes
 
-[Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/face-tracking.md) support is available in the separate "ARKit Face Tracking" package. Apple's App Store will reject an app that contains certain face tracking-related symbols in its binary if the app developer does not intend to use face tracking, so we've broken out face tracking support into a separate package to avoid any ambiguity.
+[Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/face-tracking.html) support is available in the separate "ARKit Face Tracking" package. Apple's App Store will reject an app that contains certain face tracking-related symbols in its binary if the app developer does not intend to use face tracking, so we've broken out face tracking support into a separate package to avoid any ambiguity.
 
 # Installing ARKit XR Plugin
 
@@ -57,11 +57,11 @@ ARKit can be either "required" or "optional". By default it is "required", which
 
 ## Session
 
-See the [ARSubsystems Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/session-subsystem.md) documentation for more details. ARKit's implementation of `XRSessionSubsystem.GetAvailabilityAsync` is trivial, as the device simply needs to check that it is at least on running iOS 11.0.
+See the [ARSubsystems Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/session-subsystem.html) documentation for more details. ARKit's implementation of `XRSessionSubsystem.GetAvailabilityAsync` is trivial, as the device simply needs to check that it is at least on running iOS 11.0.
 
 ## Depth Subsystem
 
-See the [ARSubsystems Depth Subsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/depth-subsystem.md) documentation for more details. Raycasts always return a `Pose` for the item the raycast hit. When raycasting against feature points, the pose always has an identity rotation.
+See the [ARSubsystems Depth Subsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/depth-subsystem.html) documentation for more details. Raycasts always return a `Pose` for the item the raycast hit. When raycasting against feature points, the pose always has an identity rotation.
 
 The depth subsystem does not require additional resources, so enabling it does not incur any performance impact.
 
@@ -69,7 +69,7 @@ ARCore's depth subsystem will only ever produce a single [`XRPointCloud`](https:
 
 ## Plane Tracking
 
-See the [ARSubsystems Plane Subsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/plane-subsystem.md) documentation for more details. ARKit does not support plane subsumption; there is no merge event. If two planes are determined to be separate parts of the same surface, one plane may be removed while the other expands to the explored surface.
+See the [ARSubsystems Plane Subsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/plane-subsystem.html) documentation for more details. ARKit does not support plane subsumption; there is no merge event. If two planes are determined to be separate parts of the same surface, one plane may be removed while the other expands to the explored surface.
 
 ARKit provides boundary points for all its planes on iOS 11.3 and later. Boundary points are not available in iOS 11.0.
 

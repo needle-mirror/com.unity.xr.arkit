@@ -1,6 +1,6 @@
 # Object Tracking
 
-To use object tracking on ARKit, you will first need to create a Reference Object Library. See the [AR Subsystems documentation on object tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/object-tracking.md) for instructions.
+To use object tracking on ARKit, you will first need to create a Reference Object Library. See the [AR Subsystems documentation on object tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/object-tracking.html) for instructions.
 
 Next, you will need to create an ARKit-specific version of the reference object. See [Scanning and Detecting 3D Objects](https://developer.apple.com/documentation/arkit/scanning_and_detecting_3d_objects) for an app that you can run on an iOS device that will produce such a scan.
 
