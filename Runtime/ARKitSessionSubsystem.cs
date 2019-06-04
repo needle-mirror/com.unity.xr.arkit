@@ -1,6 +1,8 @@
 using AOT;
 using System;
 using System.Runtime.InteropServices;
+using Unity.Collections;
+using UnityEngine.iOS;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -104,6 +106,100 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
+        /// Get or set whether collaboration is enabled. When collaboration is enabled, collaboration
+        /// data is accumulated by the subsystem until you read it out with <see cref="DequeueCollaborationData"/>.
+        /// </summary>
+        /// <remarks>
+        /// Note: If you change this value, the new value may not be reflected until the next frame.
+        /// </remarks>
+        /// <seealso cref="ARCollaborationData"/>
+        /// <seealso cref="DequeueCollaborationData"/>
+        /// <seealso cref="collaborationDataCount"/>
+        public bool collaborationEnabled
+        {
+            get
+            {
+                return NativeApi.UnityARKit_session_getCollaborationEnabled();
+            }
+
+            set
+            {
+                if (supportsCollaboration)
+                {
+                    NativeApi.UnityARKit_session_setCollaborationRequested(value);
+                }
+                else if (value)
+                {
+                    throw new NotSupportedException("ARCollaborationData is not supported by this version of iOS.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// True if collaboration is supported. Collaboration is only supported on iOS versions 13.0 and later.
+        /// </summary>
+        /// <seealso cref="ARCollaborationData"/>
+        public static bool supportsCollaboration
+        {
+            get
+            {
+#if UNITY_IOS && !UNITY_EDITOR
+                var iOSversion = OSVersion.Parse(Device.systemVersion);
+                return iOSversion >= new OSVersion(13);
+#else
+                return false;
+#endif
+            }
+        }
+
+        /// <summary>
+        /// The number of <see cref="ARCollaborationData"/>s in the queue. Obtain <see cref="ARCollaborationData"/>
+        /// with <see cref="DequeueCollaborationData"/>.
+        /// </summary>
+        /// <seealso cref="ARCollaborationData"/>
+        /// <seealso cref="DequeueCollaborationData"/>
+        public int collaborationDataCount
+        {
+            get
+            {
+                return NativeApi.UnityARKit_session_getCollaborationDataQueueSize();
+            }
+        }
+
+        /// <summary>
+        /// Get the most recent collaboration data. After calling this method, <see cref="hasUpdatedCollaborationData"/>
+        /// will be false until there is more collaboration data.
+        /// </summary>
+        /// <exception cref="System.NotSupportedException"/>Thrown if <see cref="supportsCollaboration"/> is false.</exception>
+        /// <exception cref="System.InvalidOperationException"/>Thrown if <see cref="hasUpdatedCollaborationData"/> is false.</exception>
+        /// <seealso cref="ARCollaborationData"/>
+        public ARCollaborationData DequeueCollaborationData()
+        {
+            if (!supportsCollaboration)
+                throw new NotSupportedException("ARCollaborationData is not supported by this version of iOS.");
+
+            if (collaborationDataCount == 0)
+                throw new InvalidOperationException("There is no collaboration data to dequeue.");
+
+            return new ARCollaborationData(NativeApi.UnityARKit_session_dequeueCollaborationData());
+        }
+
+        /// <summary>
+        /// Applies <see cref="ARCollaborationData"/> to the session.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="collaborationData"/> is not valid.</exception>
+        public void UpdateWithCollaborationData(ARCollaborationData collaborationData)
+        {
+            if (!supportsCollaboration)
+                throw new NotSupportedException("ARCollaborationData is not supported by this version of iOS.");
+
+            if (!collaborationData.valid)
+                throw new InvalidOperationException("Invalid collaboration data.");
+
+            NativeApi.UnityARKit_session_updateWithCollaborationData(collaborationData.m_Data);
+        }
+
+        /// <summary>
         /// Creates the provider interface.
         /// </summary>
         /// <returns>The provider interface for ARKit</returns>
@@ -203,17 +299,24 @@ namespace UnityEngine.XR.ARKit
             {
                 get { return NativeApi.UnityARKit_session_getTrackingState(); }
             }
+
+            public override Guid sessionId
+            {
+                get { return NativeApi.UnityARKit_session_getSessionId(); }
+            }
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void RegisterDescriptor()
         {
+#if UNITY_IOS && !UNITY_EDITOR
             XRSessionSubsystemDescriptor.RegisterDescriptor(new XRSessionSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Session",
                 subsystemImplementationType = typeof(ARKitSessionSubsystem),
                 supportsInstall = false
             });
+#endif
         }
 
         static class NativeApi
@@ -230,7 +333,6 @@ namespace UnityEngine.XR.ARKit
                 int worldMapId,
                 IntPtr context);
 
-#if UNITY_IOS && !UNITY_EDITOR
             [DllImport("__Internal")]
             public static extern int UnityARKit_createWorldMapRequest();
 
@@ -274,65 +376,24 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern TrackingState UnityARKit_session_getTrackingState();
-#else
-            public static int UnityARKit_createWorldMapRequest()
-            {
-                return default(int);
-            }
 
-            public static void UnityARKit_createWorldMapRequestWithCallback(
-                OnAsyncConversionCompleteDelegate callback,
-                IntPtr context)
-            {
-                callback(ARWorldMapRequestStatus.ErrorNotSupported, ARWorldMap.k_InvalidHandle, context);
-            }
+            [DllImport("__Internal")]
+            public static extern IntPtr UnityARKit_session_dequeueCollaborationData();
 
-            public static bool UnityARKit_worldMapSupported()
-            {
-                return false;
-            }
+            [DllImport("__Internal")]
+            public static extern int UnityARKit_session_getCollaborationDataQueueSize();
 
-            public static ARWorldMappingStatus UnityARKit_session_getWorldMappingStatus()
-            {
-                return ARWorldMappingStatus.NotAvailable;
-            }
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_session_updateWithCollaborationData(IntPtr data);
 
-            public static void UnityARKit_applyWorldMap(int worldMapId)
-            { }
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_session_getCollaborationEnabled();
 
-            public static IntPtr UnityARKit_session_getNativePtr()
-            {
-                return IntPtr.Zero;
-            }
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_session_setCollaborationRequested(bool requested);
 
-            public static Availability UnityARKit_session_getAvailability()
-            {
-                return Availability.None;
-            }
-
-            public static void UnityARKit_session_update()
-            { }
-
-            public static void UnityARKit_session_construct()
-            { }
-
-            public static void UnityARKit_session_destroy()
-            { }
-
-            public static void UnityARKit_session_resume()
-            { }
-
-            public static void UnityARKit_session_pause()
-            { }
-
-            public static void UnityARKit_session_reset()
-            { }
-
-            public static TrackingState UnityARKit_session_getTrackingState()
-            {
-                return TrackingState.None;
-            }
-#endif
+            [DllImport("__Internal")]
+            public static extern Guid UnityARKit_session_getSessionId();
         }
     }
 }

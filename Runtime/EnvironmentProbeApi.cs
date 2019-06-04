@@ -23,6 +23,9 @@ namespace UnityEngine.XR.ARKit
         internal static extern void UnityARKit_EnvironmentProbeProvider_SetAutomaticPlacementEnabled(bool enabled);
 
         [DllImport("__Internal")]
+        internal static extern bool UnityARKit_EnvironmentProbeProvider_TrySetEnvironmentTextureHDREnabled(bool enabled);
+
+        [DllImport("__Internal")]
         internal static extern bool UnityARKit_EnvironmentProbeProvider_TryAddEnvironmentProbe(Pose pose,
                                                                                                Vector3 scale,
                                                                                                Vector3 size,
@@ -52,6 +55,8 @@ namespace UnityEngine.XR.ARKit
         internal static void UnityARKit_EnvironmentProbeProvider_Stop() {}
 
         internal static void UnityARKit_EnvironmentProbeProvider_SetAutomaticPlacementEnabled(bool enabled) {}
+
+        internal static bool UnityARKit_EnvironmentProbeProvider_TrySetEnvironmentTextureHDREnabled(bool enabled) { return false; }
 
         internal static bool UnityARKit_EnvironmentProbeProvider_TryAddEnvironmentProbe(Pose pose,
                                                                                         Vector3 scale,

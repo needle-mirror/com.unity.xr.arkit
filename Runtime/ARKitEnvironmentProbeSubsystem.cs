@@ -2,6 +2,7 @@ using AOT;
 using System;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.iOS;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -14,32 +15,31 @@ namespace UnityEngine.XR.ARKit
     internal static class ARKitEnvironmentProbeRegistration
     {
         /// <summary>
-        /// The identifying name for the environment probe providing implementation.
-        /// </summary>
-        static readonly string k_SubsystemId = "ARKit-EnvironmentProbe";
-
-        /// <summary>
         /// Create and register the environment probe subsystem descriptor to advertise a providing implementation for
         /// environment probe functionality.
         /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Register()
         {
+#if UNITY_IOS && !UNITY_EDITOR
+            const string subsystemId = "ARKit-EnvironmentProbe";
             XREnvironmentProbeSubsystemCinfo environmentProbeSubsystemInfo = new XREnvironmentProbeSubsystemCinfo()
             {
-                id = k_SubsystemId,
+                id = subsystemId,
                 implementationType = typeof(ARKitEnvironmentProbeSubsystem),
                 supportsManualPlacement = true,
                 supportsRemovalOfManual = true,
                 supportsAutomaticPlacement = true,
                 supportsRemovalOfAutomatic = true,
                 supportsEnvironmentTexture = true,
+                supportsEnvironmentTextureHDR = OSVersion.Parse(Device.systemVersion) >= new OSVersion(13),
             };
 
             if (!XREnvironmentProbeSubsystem.Register(environmentProbeSubsystemInfo))
             {
-                Debug.LogErrorFormat("Cannot register the {0} subsystem", k_SubsystemId);
+                Debug.LogErrorFormat("Cannot register the {0} subsystem", subsystemId);
             }
+#endif
         }
     }
 
@@ -93,6 +93,19 @@ namespace UnityEngine.XR.ARKit
             public override void SetAutomaticPlacement(bool value)
             {
                 EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_SetAutomaticPlacementEnabled(value);
+            }
+
+            /// <summary>
+            /// Set the state of HDR environment texture generation.
+            /// </summary>
+            /// <param name="value">Whether HDR environment texture generation is enabled (<c>true</c>) or disabled
+            /// (<c>false</c>).</param>
+            /// <returns>
+            /// Whether the HDR environment texture generation state was set.
+            /// </returns>
+            public override bool TrySetEnvironmentTextureHDREnabled(bool value)
+            {
+                return EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_TrySetEnvironmentTextureHDREnabled(value);
             }
 
             public override bool TryAddEnvironmentProbe(Pose pose, Vector3 scale, Vector3 size, out XREnvironmentProbe environmentProbe)
