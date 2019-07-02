@@ -1,7 +1,5 @@
 ﻿using System;
-#if UNITY_IOS && !UNITY_EDITOR
 using System.Runtime.InteropServices;
-#endif
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
@@ -18,7 +16,6 @@ namespace UnityEngine.XR.ARKit
     {
         class Provider : IDepthApi
         {
-#if UNITY_IOS && !UNITY_EDITOR
             [DllImport("__Internal")]
             static extern void UnityARKit_depth_destroy();
 
@@ -47,44 +44,6 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             static extern unsafe void UnityARKit_depth_releasePointCloud(
                 void* pointCloud);
-#else
-            static void UnityARKit_depth_destroy()
-            { }
-
-            static void UnityARKit_depth_start()
-            { }
-
-            static void UnityARKit_depth_stop()
-            { }
-
-            static unsafe void* UnityARKit_depth_acquireChanges(
-                out void* addedPtr, out int addedLength,
-                out void* updatedPtr, out int updatedLength,
-                out void* removedPtr, out int removedLength,
-                out int elementSize)
-            {
-                addedPtr = updatedPtr = removedPtr = null;
-                addedLength = updatedLength = removedLength = elementSize = 0;
-                return null;
-            }
-
-            static unsafe void UnityARKit_depth_releaseChanges(
-                void* changes)
-            { }
-
-            static unsafe void* UnityARKit_depth_acquirePointCloud(
-                TrackableId trackableId,
-                out void* positionsPtr, out void* identifiersPtr, out int numPoints)
-            {
-                positionsPtr = identifiersPtr = null;
-                numPoints = 0;
-                return null;
-            }
-
-            static unsafe void UnityARKit_depth_releasePointCloud(
-                void* pointCloud)
-            { }
-#endif
 
             public override unsafe TrackableChanges<XRPointCloud> GetChanges(
                 XRPointCloud defaultPointCloud,
@@ -191,6 +150,7 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void RegisterDescriptor()
         {
+#if UNITY_IOS && !UNITY_EDITOR
             var descriptorParams = new XRDepthSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Depth",
@@ -201,6 +161,7 @@ namespace UnityEngine.XR.ARKit
             };
 
             XRDepthSubsystemDescriptor.RegisterDescriptor(descriptorParams);
+#endif
         }
     }
 }

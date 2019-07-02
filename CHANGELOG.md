@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2019-07-03
+- 2019.3 verified release
+### New
+- Add support for NotTrackingReason
+
+## [2.1.0-preview.6] - 2019-06-14
+### Improvements
+- Add support for matching the ARCore framerate with the Unity one. See `XRSessionSubsystem.matchFrameRate`.
+- Use relative paths for Xcode asset catalogs. This allows the generated Xcode project to be moved to a different directory, or even a different machine. Previously, we used full paths, which prevented this.
+- Conditionally compile subsystem registrations. This means the subsystems wont't register themselves in the Editor (and won't generate warnings if there are other subsystems for other platforms).
+
 ## [2.1.0-preview.5] - 2019-05-21
 ### Fixes
 - Fix documentation links

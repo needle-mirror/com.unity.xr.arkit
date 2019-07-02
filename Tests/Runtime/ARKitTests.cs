@@ -18,36 +18,49 @@ namespace UnityEngine.XR.ARKit.Tests
         [Test]
         public void DepthSubsystemRegistered()
         {
+#if !UNITY_EDITOR
             Assert.That(SubsystemDescriptorRegistered<XRDepthSubsystemDescriptor>("ARKit-Depth"));
+#endif
         }
 
         [Test]
         public void SessionSubsystemRegistered()
         {
+#if !UNITY_EDITOR
             Assert.That(SubsystemDescriptorRegistered<XRSessionSubsystemDescriptor>("ARKit-Session"));
+#endif
         }
 
         [Test]
         public void PlaneSubsystemRegistered()
         {
+#if !UNITY_EDITOR
             Assert.That(SubsystemDescriptorRegistered<XRPlaneSubsystemDescriptor>("ARKit-Plane"));
+#endif
         }
 
         [Test]
         public void RaycastSubsystemRegistered()
         {
+#if !UNITY_EDITOR
             Assert.That(SubsystemDescriptorRegistered<XRRaycastSubsystemDescriptor>("ARKit-Raycast"));
+#endif
         }
+
         [Test]
         public void ReferencePointSubsystemRegistered()
         {
+#if !UNITY_EDITOR
             Assert.That(SubsystemDescriptorRegistered<XRReferencePointSubsystemDescriptor>("ARKit-ReferencePoint"));
+#endif
         }
 
         [Test]
         public void CameraSubsystemRegistered()
         {
+#if !UNITY_EDITOR
             Assert.That(SubsystemDescriptorRegistered<XRCameraSubsystemDescriptor>("ARKit-Camera"));
+#endif
         }
         bool SubsystemDescriptorRegistered<T>(string id) where T : SubsystemDescriptor
         {

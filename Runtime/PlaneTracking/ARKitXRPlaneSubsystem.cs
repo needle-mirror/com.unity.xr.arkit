@@ -1,6 +1,4 @@
-#if UNITY_IOS && !UNITY_EDITOR
 using System.Runtime.InteropServices;
-#endif
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
@@ -146,7 +144,6 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-#if UNITY_IOS && !UNITY_EDITOR
             [DllImport("__Internal")]
             static extern void UnityARKit_planes_shutdown();
 
@@ -178,52 +175,12 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             static extern unsafe void UnityARKit_planes_releaseBoundary(
                 void* boundary);
-#else
-            static void UnityARKit_planes_shutdown()
-            { }
-
-            static void UnityARKit_planes_start()
-            { }
-
-            static void UnityARKit_planes_stop()
-            { }
-
-            static unsafe void* UnityARKit_planes_acquireChanges(
-                out void* addedPtr, out int addedLength,
-                out void* updatedPtr, out int updatedLength,
-                out void* removedPtr, out int removedLength,
-                out int elementSize)
-            {
-                addedPtr = updatedPtr = removedPtr = null;
-                addedLength = updatedLength = removedLength = elementSize = 0;
-                return null;
-            }
-
-            static unsafe void UnityARKit_planes_releaseChanges(void* changes)
-            { }
-
-            static void UnityARKit_planes_setPlaneDetectionMode(PlaneDetectionMode mode)
-            { }
-
-            static unsafe void* UnityARKit_planes_acquireBoundary(
-                TrackableId trackableId,
-                out void* verticesPtr,
-                out int numPoints)
-            {
-                verticesPtr = null;
-                numPoints = 0;
-                return null;
-            }
-
-            static unsafe void UnityARKit_planes_releaseBoundary(
-                void* boundary)
-            { }
-#endif
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void RegisterDescriptor()
         {
+#if UNITY_IOS && !UNITY_EDITOR
             var cinfo = new XRPlaneSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Plane",
@@ -235,6 +192,7 @@ namespace UnityEngine.XR.ARKit
             };
 
             XRPlaneSubsystemDescriptor.Create(cinfo);
+#endif
         }
     }
 }

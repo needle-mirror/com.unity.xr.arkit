@@ -1,6 +1,4 @@
-#if UNITY_IOS && !UNITY_EDITOR
 using System.Runtime.InteropServices;
-#endif
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine.Scripting;
@@ -49,6 +47,7 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void RegisterDescriptor()
         {
+#if UNITY_IOS && !UNITY_EDITOR
             XRRaycastSubsystemDescriptor.RegisterDescriptor(new XRRaycastSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Raycast",
@@ -59,11 +58,11 @@ namespace UnityEngine.XR.ARKit
                     TrackableType.Planes |
                     TrackableType.FeaturePoint
             });
+#endif
         }
 
         static class NativeApi
         {
-#if UNITY_IOS && !UNITY_EDITOR
             [DllImport("__Internal")]
             public static unsafe extern void UnityARKit_raycast_acquireHitResults(
                 Vector2 screenPoint,
@@ -77,24 +76,6 @@ namespace UnityEngine.XR.ARKit
                 int stride,
                 void* hitResults,
                 void* dstBuffer);
-#else
-            public static unsafe void UnityARKit_raycast_acquireHitResults(
-                Vector2 screenPoint,
-                TrackableType filter,
-                out void* hitResults,
-                out int hitCount)
-            {
-                hitResults = null;
-                hitCount = 0;
-            }
-
-            public static unsafe void UnityARKit_raycast_copyAndReleaseHitResults(
-                void* defaultHit,
-                int stride,
-                void* hitResults,
-                void* dstBuffer)
-            { }
-#endif
         }
     }
 }

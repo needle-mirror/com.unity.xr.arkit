@@ -44,41 +44,5 @@ namespace UnityEditor.XR.ARKit
             public string filename;
             public string idiom;
         }
-
-        [Serializable]
-        public struct ObjectProperties
-        {
-            /// <summary>
-            /// Preview filename, e.g., 'preview.jpg'
-            /// </summary>
-            public string preview;
-
-            /// <summary>
-            /// An array of 4 floats representing the quaternion (x, y, z, w)
-            /// </summary>
-            public float[] rotation;
-
-            /// <summary>
-            /// cv3dmap filename, e.g., "trackingData.cv3dmap"
-            /// </summary>
-            public string content;
-
-            /// <summary>
-            /// An array of 3 floats representing the translation (x, y, z)
-            /// </summary>
-            public float[] translation;
-
-            /// <summary>
-            /// The version of the properties, e.g., 1
-            /// </summary>
-            public int version;
-        }
-
-        [Serializable]
-        public struct ReferenceObject
-        {
-            public AuthorInfo info;
-            public ObjectProperties properties;
-        }
     }
 }

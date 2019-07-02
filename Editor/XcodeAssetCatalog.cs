@@ -33,15 +33,15 @@ namespace UnityEditor.XR.ARKit
         {
             var unityTargetName = "Unity-iPhone";
             var relativePathToAssetCatalog = Path.Combine(unityTargetName, name + ".xcassets");
-            var fullPathToAssetCatalogPath = Path.Combine(pathToBuiltProject, relativePathToAssetCatalog);
+            var fullPathToAssetCatalog = Path.Combine(pathToBuiltProject, relativePathToAssetCatalog);
 
             // Create the asset catalog, destroying an existing one.
-            if (Directory.Exists(fullPathToAssetCatalogPath))
-                Directory.Delete(fullPathToAssetCatalogPath, true);
-            Directory.CreateDirectory(fullPathToAssetCatalogPath);
+            if (Directory.Exists(fullPathToAssetCatalog))
+                Directory.Delete(fullPathToAssetCatalog, true);
+            Directory.CreateDirectory(fullPathToAssetCatalog);
 
             // Add it to Xcode's build
-            var folderGuid = project.AddFile(fullPathToAssetCatalogPath, relativePathToAssetCatalog);
+            var folderGuid = project.AddFile(relativePathToAssetCatalog, relativePathToAssetCatalog);
 #if UNITY_2019_3_OR_NEWER
             var targetGuid = project.GetUnityMainTargetGuid();
 #else
@@ -51,7 +51,7 @@ namespace UnityEditor.XR.ARKit
 
             foreach (var resourceGroup in m_ResourceGroups)
             {
-                resourceGroup.Write(fullPathToAssetCatalogPath);
+                resourceGroup.Write(fullPathToAssetCatalog);
             }
         }
 

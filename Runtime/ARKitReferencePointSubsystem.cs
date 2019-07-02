@@ -1,6 +1,4 @@
-#if UNITY_IOS && !UNITY_EDITOR
 using System.Runtime.InteropServices;
-#endif
 using Unity.Collections;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
@@ -81,7 +79,6 @@ namespace UnityEngine.XR.ARKit
                 return UnityARKit_refPoints_tryRemove(referencePointId);
             }
 
-#if UNITY_IOS && !UNITY_EDITOR
             [DllImport("__Internal")]
             static extern void UnityARKit_refPoints_onStart();
 
@@ -114,60 +111,12 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             static extern bool UnityARKit_refPoints_tryRemove(TrackableId referencePointId);
-#else
-            static void UnityARKit_refPoints_onStart()
-            { }
-
-            static void UnityARKit_refPoints_onStop()
-            { }
-
-            static unsafe void UnityARKit_refPoints_onDestroy()
-            { }
-
-            static unsafe void* UnityARKit_refPoints_acquireChanges(
-                out void* addedPtr, out int addedCount,
-                out void* updatedPtr, out int updatedCount,
-                out void* removedPtr, out int removedCount,
-                out int elementSize)
-            {
-                addedPtr = null;
-                updatedPtr = null;
-                removedPtr = null;
-                addedCount = 0;
-                updatedCount = 0;
-                removedCount = 0;
-                elementSize = 0;
-                return null;
-            }
-
-            static unsafe void UnityARKit_refPoints_releaseChanges(void* changes)
-            { }
-
-            static bool UnityARKit_refPoints_tryAdd(Pose pose, out XRReferencePoint referencePoint)
-            {
-                referencePoint = default(XRReferencePoint);
-                return false;
-            }
-
-            static bool UnityARKit_refPoints_tryAttach(
-                TrackableId trackableToAffix,
-                Pose pose,
-                out XRReferencePoint referencePoint)
-            {
-                referencePoint = default(XRReferencePoint);
-                return false;
-            }
-
-            static bool UnityARKit_refPoints_tryRemove(TrackableId referencePointId)
-            {
-                return false;
-            }
-#endif
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void RegisterDescriptor()
         {
+#if UNITY_IOS && !UNITY_EDITOR
             var cinfo = new XRReferencePointSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-ReferencePoint",
@@ -176,6 +125,7 @@ namespace UnityEngine.XR.ARKit
             };
 
             XRReferencePointSubsystemDescriptor.Create(cinfo);
+#endif
         }
     }
 }

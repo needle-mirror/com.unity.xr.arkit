@@ -203,17 +203,39 @@ namespace UnityEngine.XR.ARKit
             {
                 get { return NativeApi.UnityARKit_session_getTrackingState(); }
             }
+			
+            public override NotTrackingReason notTrackingReason
+            {
+                get { return NativeApi.UnityARKit_session_getNotTrackingReason(); }
+            }
+			
+            public override bool matchFrameRate
+            {
+                get { return NativeApi.UnityARKit_session_getMatchFrameRateEnabled(); }
+                set { NativeApi.UnityARKit_session_setMatchFrameRateEnabled(value); }
+            }
+
+            public override int frameRate
+            {
+                get
+                {
+                    return 60;
+                }
+            }
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void RegisterDescriptor()
         {
+#if UNITY_IOS && !UNITY_EDITOR
             XRSessionSubsystemDescriptor.RegisterDescriptor(new XRSessionSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Session",
                 subsystemImplementationType = typeof(ARKitSessionSubsystem),
-                supportsInstall = false
+                supportsInstall = false,
+                supportsMatchFrameRate = true
             });
+#endif
         }
 
         static class NativeApi
@@ -230,7 +252,6 @@ namespace UnityEngine.XR.ARKit
                 int worldMapId,
                 IntPtr context);
 
-#if UNITY_IOS && !UNITY_EDITOR
             [DllImport("__Internal")]
             public static extern int UnityARKit_createWorldMapRequest();
 
@@ -274,65 +295,14 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern TrackingState UnityARKit_session_getTrackingState();
-#else
-            public static int UnityARKit_createWorldMapRequest()
-            {
-                return default(int);
-            }
+            [DllImport("__Internal")]
+            public static extern NotTrackingReason UnityARKit_session_getNotTrackingReason();
 
-            public static void UnityARKit_createWorldMapRequestWithCallback(
-                OnAsyncConversionCompleteDelegate callback,
-                IntPtr context)
-            {
-                callback(ARWorldMapRequestStatus.ErrorNotSupported, ARWorldMap.k_InvalidHandle, context);
-            }
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_session_getMatchFrameRateEnabled();
 
-            public static bool UnityARKit_worldMapSupported()
-            {
-                return false;
-            }
-
-            public static ARWorldMappingStatus UnityARKit_session_getWorldMappingStatus()
-            {
-                return ARWorldMappingStatus.NotAvailable;
-            }
-
-            public static void UnityARKit_applyWorldMap(int worldMapId)
-            { }
-
-            public static IntPtr UnityARKit_session_getNativePtr()
-            {
-                return IntPtr.Zero;
-            }
-
-            public static Availability UnityARKit_session_getAvailability()
-            {
-                return Availability.None;
-            }
-
-            public static void UnityARKit_session_update()
-            { }
-
-            public static void UnityARKit_session_construct()
-            { }
-
-            public static void UnityARKit_session_destroy()
-            { }
-
-            public static void UnityARKit_session_resume()
-            { }
-
-            public static void UnityARKit_session_pause()
-            { }
-
-            public static void UnityARKit_session_reset()
-            { }
-
-            public static TrackingState UnityARKit_session_getTrackingState()
-            {
-                return TrackingState.None;
-            }
-#endif
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_session_setMatchFrameRateEnabled(bool enabled);
         }
     }
 }

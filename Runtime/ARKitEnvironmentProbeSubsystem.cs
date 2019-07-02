@@ -14,20 +14,17 @@ namespace UnityEngine.XR.ARKit
     internal static class ARKitEnvironmentProbeRegistration
     {
         /// <summary>
-        /// The identifying name for the environment probe providing implementation.
-        /// </summary>
-        static readonly string k_SubsystemId = "ARKit-EnvironmentProbe";
-
-        /// <summary>
         /// Create and register the environment probe subsystem descriptor to advertise a providing implementation for
         /// environment probe functionality.
         /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Register()
         {
+#if UNITY_IOS && !UNITY_EDITOR
+            const string subsystemId = "ARKit-EnvironmentProbe";
             XREnvironmentProbeSubsystemCinfo environmentProbeSubsystemInfo = new XREnvironmentProbeSubsystemCinfo()
             {
-                id = k_SubsystemId,
+                id = subsystemId,
                 implementationType = typeof(ARKitEnvironmentProbeSubsystem),
                 supportsManualPlacement = true,
                 supportsRemovalOfManual = true,
@@ -38,8 +35,9 @@ namespace UnityEngine.XR.ARKit
 
             if (!XREnvironmentProbeSubsystem.Register(environmentProbeSubsystemInfo))
             {
-                Debug.LogErrorFormat("Cannot register the {0} subsystem", k_SubsystemId);
+                Debug.LogErrorFormat("Cannot register the {0} subsystem", subsystemId);
             }
+#endif
         }
     }
 
