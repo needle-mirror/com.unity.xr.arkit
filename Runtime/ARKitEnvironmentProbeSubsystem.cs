@@ -18,7 +18,11 @@ namespace UnityEngine.XR.ARKit
         /// Create and register the environment probe subsystem descriptor to advertise a providing implementation for
         /// environment probe functionality.
         /// </summary>
+#if UNITY_2019_2_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+#endif
         static void Register()
         {
 #if UNITY_IOS && !UNITY_EDITOR

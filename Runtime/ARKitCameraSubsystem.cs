@@ -51,7 +51,11 @@ namespace UnityEngine.XR.ARKit
         /// Create and register the camera subsystem descriptor to advertise a providing implementation for camera
         /// functionality.
         /// </summary>
+#if UNITY_2019_2_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+#endif
         static void Register()
         {
 #if UNITY_IOS && !UNITY_EDITOR
@@ -59,7 +63,7 @@ namespace UnityEngine.XR.ARKit
             {
                 id = k_SubsystemId,
                 implementationType = typeof(ARKitCameraSubsystem),
-                supportsAverageBrightness = true,
+                supportsAverageBrightness = false,
                 supportsAverageColorTemperature = true,
                 supportsColorCorrection = false,
                 supportsDisplayMatrix = true,
@@ -67,6 +71,7 @@ namespace UnityEngine.XR.ARKit
                 supportsTimestamp = true,
                 supportsCameraConfigurations = true,
                 supportsCameraImage = true,
+                supportsAverageIntensityInLumens = true
             };
 
             if (!XRCameraSubsystem.Register(cameraSubsystemCinfo))

@@ -139,18 +139,7 @@ namespace UnityEngine.XR.ARKit
         /// True if collaboration is supported. Collaboration is only supported on iOS versions 13.0 and later.
         /// </summary>
         /// <seealso cref="ARCollaborationData"/>
-        public static bool supportsCollaboration
-        {
-            get
-            {
-#if UNITY_IOS && !UNITY_EDITOR
-                var iOSversion = OSVersion.Parse(Device.systemVersion);
-                return iOSversion >= new OSVersion(13);
-#else
-                return false;
-#endif
-            }
-        }
+        public static bool supportsCollaboration => s_SupportsCollaboration;
 
         /// <summary>
         /// The number of <see cref="ARCollaborationData"/>s in the queue. Obtain <see cref="ARCollaborationData"/>
@@ -167,11 +156,11 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Get the most recent collaboration data. After calling this method, <see cref="hasUpdatedCollaborationData"/>
-        /// will be false until there is more collaboration data.
+        /// Dequeues the oldest collaboration data in the queue. After calling this method, <see cref="collaborationDataCount"/>
+        /// will be decremented by one.
         /// </summary>
         /// <exception cref="System.NotSupportedException"/>Thrown if <see cref="supportsCollaboration"/> is false.</exception>
-        /// <exception cref="System.InvalidOperationException"/>Thrown if <see cref="hasUpdatedCollaborationData"/> is false.</exception>
+        /// <exception cref="System.InvalidOperationException"/>Thrown if <see cref="collaborationDataCount"/> is zero.</exception>
         /// <seealso cref="ARCollaborationData"/>
         public ARCollaborationData DequeueCollaborationData()
         {
@@ -187,6 +176,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Applies <see cref="ARCollaborationData"/> to the session.
         /// </summary>
+        /// <exception cref="System.NotSupportedException"/>Thrown if <see cref="supportsCollaboration"/> is false.</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="collaborationData"/> is not valid.</exception>
         public void UpdateWithCollaborationData(ARCollaborationData collaborationData)
         {
@@ -196,7 +186,7 @@ namespace UnityEngine.XR.ARKit
             if (!collaborationData.valid)
                 throw new InvalidOperationException("Invalid collaboration data.");
 
-            NativeApi.UnityARKit_session_updateWithCollaborationData(collaborationData.m_Data);
+            NativeApi.UnityARKit_session_updateWithCollaborationData(collaborationData.m_NativePtr);
         }
 
         /// <summary>
@@ -211,9 +201,16 @@ namespace UnityEngine.XR.ARKit
         static ARKitSessionSubsystem()
         {
             s_OnAsyncWorldMapCompleted = OnAsyncConversionComplete;
+#if UNITY_IOS && !UNITY_EDITOR
+            s_SupportsCollaboration = NativeApi.UnityARKit_session_getCollaborationSupported();
+#else
+            s_SupportsCollaboration = false;
+#endif
         }
 
         static NativeApi.OnAsyncConversionCompleteDelegate s_OnAsyncWorldMapCompleted;
+
+        static bool s_SupportsCollaboration;
 
         [MonoPInvokeCallback(typeof(NativeApi.OnAsyncConversionCompleteDelegate))]
         static unsafe void OnAsyncConversionComplete(ARWorldMapRequestStatus status, int worldMapId, IntPtr context)
@@ -299,14 +296,36 @@ namespace UnityEngine.XR.ARKit
             {
                 get { return NativeApi.UnityARKit_session_getTrackingState(); }
             }
+            public override NotTrackingReason notTrackingReason
+            {
+                get { return NativeApi.UnityARKit_session_getNotTrackingReason(); }
+            }
 
             public override Guid sessionId
             {
                 get { return NativeApi.UnityARKit_session_getSessionId(); }
             }
+
+            public override bool matchFrameRate
+            {
+                get { return NativeApi.UnityARKit_session_getMatchFrameRateEnabled(); }
+                set { NativeApi.UnityARKit_session_setMatchFrameRateEnabled(value); }
+            }
+
+            public override int frameRate
+            {
+                get
+                {
+                    return 60;
+                }
+            }
         }
 
+#if UNITY_2019_2_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+#endif
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR
@@ -314,7 +333,8 @@ namespace UnityEngine.XR.ARKit
             {
                 id = "ARKit-Session",
                 subsystemImplementationType = typeof(ARKitSessionSubsystem),
-                supportsInstall = false
+                supportsInstall = false,
+                supportsMatchFrameRate = true
             });
 #endif
         }
@@ -378,6 +398,12 @@ namespace UnityEngine.XR.ARKit
             public static extern TrackingState UnityARKit_session_getTrackingState();
 
             [DllImport("__Internal")]
+            public static extern NotTrackingReason UnityARKit_session_getNotTrackingReason();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_session_getCollaborationSupported();
+
+            [DllImport("__Internal")]
             public static extern IntPtr UnityARKit_session_dequeueCollaborationData();
 
             [DllImport("__Internal")]
@@ -394,6 +420,12 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern Guid UnityARKit_session_getSessionId();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_session_getMatchFrameRateEnabled();
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_session_setMatchFrameRateEnabled(bool enabled);
         }
     }
 }

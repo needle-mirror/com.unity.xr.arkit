@@ -17,24 +17,24 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Register the ARKit human body subsystem if iOS and not the editor.
         /// </summary>
+#if UNITY_2019_2_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+#endif
         static void Register()
         {
 #if UNITY_IOS && !UNITY_EDITOR
             const string k_SubsystemId = "ARKit-HumanBody";
 
-            bool supportsBodyPoseEstimation = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPoseEstimation();
-            bool supportsBodySegmentationStencil = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationStencil();
-            bool supportsBodySegmentationDepth = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationDepth();
-
             XRHumanBodySubsystemCinfo humanBodySubsystemCinfo = new XRHumanBodySubsystemCinfo()
             {
                 id = k_SubsystemId,
                 implementationType = typeof(ARKitHumanBodySubsystem),
-                supportsHumanBody2D = supportsBodyPoseEstimation,
-                supportsHumanBody3D = supportsBodyPoseEstimation,
-                supportsHumanStencilImage = supportsBodySegmentationStencil,
-                supportsHumanDepthImage = supportsBodySegmentationDepth,
+                supportsHumanBody2D = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose2DEstimation(),
+                supportsHumanBody3D = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation(),
+                supportsHumanStencilImage = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationStencil(),
+                supportsHumanDepthImage = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationDepth(),
             };
 
             if (!XRHumanBodySubsystem.Register(humanBodySubsystemCinfo))
@@ -50,7 +50,10 @@ namespace UnityEngine.XR.ARKit
         static class NativeApi
         {
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPoseEstimation();
+            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose2DEstimation();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation();
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationStencil();
@@ -117,16 +120,37 @@ namespace UnityEngine.XR.ARKit
             }
 
             /// <summary>
-            /// Sets whether human body pose estimation is enabled.
+            /// Sets whether human body pose 2D estimation is enabled.
             /// </summary>
-            /// <param name="humanBodyPoseEstimationEnabled">Whether the human body pose estimation should be enabled.
+            /// <param name="enabled">Whether the human body pose 2D estimation should be enabled.
             /// </param>
             /// <returns>
-            /// <c>true</c> if the human body pose estimation is set to the given value. Otherwise, <c>false</c>.
+            /// <c>true</c> if the human body pose 2D estimation is set to the given value. Otherwise, <c>false</c>.
             /// </returns>
-            public override bool TrySetHumanBodyPoseEstimationEnabled(bool humanBodyPoseEstimationEnabled)
+            /// <remarks>
+            /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images
+            /// to be enabled. At this time, these features are mutually exclusive.
+            /// </remarks>
+            public override bool TrySetHumanBodyPose2DEstimationEnabled(bool enabled)
             {
-                return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPoseEstimationEnabled(humanBodyPoseEstimationEnabled);
+                return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose2DEstimationEnabled(enabled);
+            }
+
+            /// <summary>
+            /// Sets whether human body pose 3D estimation is enabled.
+            /// </summary>
+            /// <param name="enabled">Whether the human body pose 3D estimation should be enabled.
+            /// </param>
+            /// <returns>
+            /// <c>true</c> if the human body pose 3D estimation is set to the given value. Otherwise, <c>false</c>.
+            /// </returns>
+            /// <remarks>
+            /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images
+            /// to be enabled. At this time, these features are mutually exclusive.
+            /// </remarks>
+            public override bool TrySetHumanBodyPose3DEstimationEnabled(bool enabled)
+            {
+                return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DEstimationEnabled(enabled);
             }
 
             /// <summary>
@@ -137,6 +161,10 @@ namespace UnityEngine.XR.ARKit
             /// <c>true</c> if the method successfully set the human segmentation stencil mode. Otherwise,
             /// <c>false</c>.
             /// </returns>
+            /// <remarks>
+            /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images
+            /// to be enabled. At this time, these features are mutually exclusive.
+            /// </remarks>
             public override bool TrySetHumanSegmentationStencilMode(HumanSegmentationMode humanSegmentationStencilMode)
             {
                 return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanSegmentationStencilMode(humanSegmentationStencilMode);
@@ -150,6 +178,10 @@ namespace UnityEngine.XR.ARKit
             /// <c>true</c> if the method successfully set the human segmentation depth mode. Otherwise,
             /// <c>false</c>.
             /// </returns>
+            /// <remarks>
+            /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images
+            /// to be enabled. At this time, these features are mutually exclusive.
+            /// </remarks>
             public override bool TrySetHumanSegmentationDepthMode(HumanSegmentationMode humanSegmentationDepthMode)
             {
                 return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanSegmentationDepthMode(humanSegmentationDepthMode);
@@ -319,7 +351,10 @@ namespace UnityEngine.XR.ARKit
             public static extern void UnityARKit_HumanBodyProvider_Destruct();
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanBodyPoseEstimationEnabled(bool humanBodyPoseEstimationEnabled);
+            public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanBodyPose2DEstimationEnabled(bool enabled);
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DEstimationEnabled(bool enabled);
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanSegmentationStencilMode(HumanSegmentationMode humanSegmentationStencilMode);

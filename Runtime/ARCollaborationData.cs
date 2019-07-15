@@ -23,45 +23,85 @@ namespace UnityEngine.XR.ARKit
     public struct ARCollaborationData : IDisposable, IEquatable<ARCollaborationData>
     {
         /// <summary>
-        /// Constructs an ARCollaborationData from a byte array. You can obtain
-        /// a serialized version of ARCollaborationData with the <see cref="bytes"/> property.
+        /// Constructs an ARCollaborationData from a byte array.
         /// Check <see cref="valid"/> after construction to ensure <paramref name="bytes"/> was successfully deserialized.
         /// </summary>
+        /// <param name="bytes">An array of <c>byte</c>s to convert to <see cref="ARCollaborationData"/>.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="bytes"/> is null.</exception>
+        /// <seealso cref="ToSerialized"/>
         public unsafe ARCollaborationData(byte[] bytes)
         {
             if (bytes == null)
-                throw new ArgumentNullException("bytes");
+                throw new ArgumentNullException(nameof(bytes));
 
-            fixed(byte* ptr = bytes)
-            {
-                m_Data = UnityARKit_session_convertBytesToCollaborationData(ptr, bytes.Length);
-            }
+            m_NativePtr = ConstructUnchecked(bytes, 0, bytes.Length);
         }
 
         /// <summary>
-        /// Constructs an ARCollaborationData from a byte <c>NativeArray</c>. You can obtain
-        /// a serialized version of ARCollaborationData with the <see cref="bytes"/> property.
+        /// Constructs an ARCollaborationData from a byte array.
         /// Check <see cref="valid"/> after construction to ensure <paramref name="bytes"/> was successfully deserialized.
         /// </summary>
-        /// <exception cref="System.ArgumentException">Thrown if <paramref name="bytes"/><c>.IsCreated</c> is false.</exception>
-        public unsafe ARCollaborationData(NativeArray<byte> bytes)
+        /// <param name="bytes">An array of <c>byte</c>s to convert to <see cref="ARCollaborationData"/>.</param>
+        /// <param name="offset">The offset into the <paramref name="bytes"/> array from which to start constructing <see cref="ARCollaborationData"/>.</param>
+        /// <param name="length">The number of bytes in <paramref name="bytes"/> to convert to <see cref="ARCollaborationData"/>.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="bytes"/> is null.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> is outside the range [0..bytes.Length).</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="length"/> is outside the range [0..(bytes.Length - offset)].</exception>
+        /// <seealso cref="ToSerialized"/>
+        public unsafe ARCollaborationData(byte[] bytes, int offset, int length)
         {
-            if (!bytes.IsCreated)
-                throw new ArgumentException("Invalid byte array.", "bytes");
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
 
-            m_Data = UnityARKit_session_convertBytesToCollaborationData(bytes.GetUnsafePtr(), bytes.Length);
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException(nameof(offset), offset, $"'{nameof(offset)}' must be greater than or equal to zero.");
+
+            if (offset >= bytes.Length)
+                throw new ArgumentOutOfRangeException(nameof(offset), offset, $"'{nameof(offset)}' must be less than the length of the byte array ({bytes.Length}).");
+
+            if (length <= 0)
+                throw new ArgumentOutOfRangeException(nameof(length), length, $"'{nameof(length)}' must be greater than zero.");
+
+            if (length > (bytes.Length - offset))
+                throw new ArgumentOutOfRangeException(nameof(length), length, $"'{nameof(length)}' is greater than the number of available bytes in the buffer ({bytes.Length - offset})");
+
+            m_NativePtr = ConstructUnchecked(bytes, offset, length);
+        }
+
+        /// <summary>
+        /// Constructs an ARCollaborationData from a <c>NativeSlice</c> of <c>byte</c>s.
+        /// Check <see cref="valid"/> after construction to ensure <paramref name="bytes"/> was successfully deserialized.
+        /// </summary>
+        /// <param name="bytes">An array of <c>byte</c>s to convert to <see cref="ARCollaborationData"/>.</param>
+        /// <exception cref="System.ArgumentException">Thrown if <paramref name="bytes"/> does not refer to valid data.</exception>
+        /// <seealso cref="ToSerialized"/>
+        public unsafe ARCollaborationData(NativeSlice<byte> bytes)
+        {
+            void* ptr = bytes.GetUnsafePtr();
+            if ((ptr == null) || (bytes.Length == 0))
+                throw new ArgumentException("Invalid NativeSlice", nameof(bytes));
+
+            m_NativePtr = ConstructUnchecked(ptr, bytes.Length);
         }
 
         /// <summary>
         /// True if the data is valid. The data may be invalid if this object was constructed
         /// with an invalid byte array, or if it has been disposed.
         /// </summary>
-        public bool valid
+        public bool valid => m_NativePtr != IntPtr.Zero;
+
+        /// <summary>
+        /// Gets the priority of the collaboration data. Use this to determine how
+        /// you should send the information to peers in a collaborative session,
+        /// e.g., reliably vs unreliably.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">Thrown if <see cref="valid"/> is false.</exception>
+        public ARCollaborationDataPriority priority
         {
             get
             {
-                return (m_Data != IntPtr.Zero);
+                ValidateAndThrow();
+                return UnityARKit_session_getCollaborationDataPriority(m_NativePtr);
             }
         }
 
@@ -71,65 +111,65 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         public void Dispose()
         {
-            UnityARKit_CFRelease(m_Data);
-            m_Data = IntPtr.Zero;
+            UnityARKit_CFRelease(m_NativePtr);
+            m_NativePtr = IntPtr.Zero;
         }
 
         /// <summary>
-        /// Get a NativeArray of bytes representing the serialized ARCollaborationData. This can
-        /// be used at a later time to construct a new ARCollaborationData. A common use case
-        /// would be to send these bytes to another device over a network.
+        /// Copies the bytes representing the serialized <see cref="ARCollaborationData"/> to a
+        /// <see cref="SerializedARCollaborationData"/>.
+        /// A common use case would be to send these bytes to another device over a network.
         /// </summary>
+        /// <returns>A container representing the serialized bytes of this <see cref="ARCollaborationData"/>.</returns>
         /// <exception cref="System.InvalidOperationException">Thrown if <see cref="valid"/> is false.</exception>
-        public unsafe NativeArray<byte> bytes
+        public unsafe SerializedARCollaborationData ToSerialized()
         {
-            get
-            {
-                ValidateAndThrow();
+            ValidateAndThrow();
 
-                IntPtr bytes;
-                int length;
-                UnityARKit_session_getCollaborationDataBytes(m_Data, out bytes, out length);
-                return NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<byte>(
-                    (void*)bytes, length, Allocator.None);
-            }
+            var nsData = new NSData(UnityARKit_session_serializeCollaborationDataToNSData(m_NativePtr));
+            return new SerializedARCollaborationData(nsData);
         }
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return m_Data.GetHashCode();
-            }
-        }
+        /// <summary>
+        /// Generates a hash code suitable for use in <c>HashSet</c> and <c>Dictionary</c>.
+        /// </summary>
+        /// <returns>A hash of the <see cref="ARCollaborationData"/>.</returns>
+        public override int GetHashCode() => m_NativePtr.GetHashCode();
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ARCollaborationData))
-                return false;
+        /// <summary>
+        /// Compares for equality.
+        /// </summary>
+        /// <param name="obj">An <c>object</c> to compare against.</param>
+        /// <returns><c>true</c> if <paramref name="obj"/> is an <see cref="ARCollaborationData"/> and
+        /// <see cref="Equals(ARCollaborationData)"/> is also <c>true</c>. Otherwise, <c>false</c>.</returns>
+        public override bool Equals(object obj) => (obj is ARCollaborationData) && Equals((ARCollaborationData)obj);
 
-            return Equals((ARCollaborationData)obj);
-        }
+        /// <summary>
+        /// Compares for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="ARCollaborationData"/> to compare against.</param>
+        /// <returns><c>true</c> if the <see cref="ARCollaborationData"/> represents the same object.</returns>
+        public bool Equals(ARCollaborationData other) => m_NativePtr == other.m_NativePtr;
 
-        public bool Equals(ARCollaborationData other)
-        {
-            return (m_Data == other.m_Data);
-        }
+        /// <summary>
+        /// Compares <paramref name="lhs"/> and <paramref name="rhs"/> for equality using <see cref="Equals(ARCollaborationData)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand-side <see cref="ARCollaborationData"/> of the comparison.</param>
+        /// <param name="rhs">The right-hand-side <see cref="ARCollaborationData"/> of the comparison.</param>
+        /// <returns><c>true</c> if <paramref name="lhs"/> compares equal to <paramref name="rhs"/>, <c>false</c> otherwise.</returns>
+        public static bool operator ==(ARCollaborationData lhs, ARCollaborationData rhs) => lhs.Equals(rhs);
 
-        public static bool operator ==(ARCollaborationData lhs, ARCollaborationData rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Compares <paramref name="lhs"/> and <paramref name="rhs"/> for inequality using <see cref="Equals(ARCollaborationData)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand-side <see cref="ARCollaborationData"/> of the comparison.</param>
+        /// <param name="rhs">The right-hand-side <see cref="ARCollaborationData"/> of the comparison.</param>
+        /// <returns><c>false</c> if <paramref name="lhs"/> compares equal to <paramref name="rhs"/>, <c>true</c> otherwise.</returns>
+        public static bool operator !=(ARCollaborationData lhs, ARCollaborationData rhs) => !lhs.Equals(rhs);
 
-        public static bool operator !=(ARCollaborationData lhs, ARCollaborationData rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        internal ARCollaborationData(IntPtr data) => m_NativePtr = data;
 
-        internal ARCollaborationData(IntPtr data)
-        {
-            m_Data = data;
-        }
+        internal ARCollaborationData(NSData data) => m_NativePtr = UnityARKit_session_deserializeCollaborationDataFromNSData(data);
 
         void ValidateAndThrow()
         {
@@ -137,15 +177,34 @@ namespace UnityEngine.XR.ARKit
                 throw new InvalidOperationException("ARCollaborationData has already been disposed.");
         }
 
-        [DllImport("__Internal")]
-        static extern void UnityARKit_session_getCollaborationDataBytes(IntPtr data, out IntPtr buffer, out int length);
+        unsafe static IntPtr ConstructUnchecked(void* bytes, int length)
+        {
+            using (var nsData = NSData.CreateWithBytesNoCopy(bytes, length))
+            {
+                return UnityARKit_session_deserializeCollaborationDataFromNSData(nsData);
+            }
+        }
+
+        unsafe static IntPtr ConstructUnchecked(byte[] bytes, int offset, int length)
+        {
+            fixed(void* ptr = &bytes[offset])
+            {
+                return ConstructUnchecked(ptr, length);
+            }
+        }
 
         [DllImport("__Internal")]
         static extern void UnityARKit_CFRelease(IntPtr ptr);
 
         [DllImport("__Internal")]
-        static extern unsafe IntPtr UnityARKit_session_convertBytesToCollaborationData(void* bytes, int length);
+        static extern IntPtr UnityARKit_session_deserializeCollaborationDataFromNSData(IntPtr nsData);
 
-        internal IntPtr m_Data;
+        [DllImport("__Internal")]
+        static extern IntPtr UnityARKit_session_serializeCollaborationDataToNSData(IntPtr collaborationData);
+
+        [DllImport("__Internal")]
+        static extern ARCollaborationDataPriority UnityARKit_session_getCollaborationDataPriority(IntPtr collaborationData);
+
+        internal IntPtr m_NativePtr;
     }
 }

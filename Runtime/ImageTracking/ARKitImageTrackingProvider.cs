@@ -118,7 +118,11 @@ namespace UnityEngine.XR.ARKit
         [DllImport("__Internal")]
         static extern unsafe void UnityARKit_imageTracking_releaseChanges(void* changes);
 
+#if UNITY_2019_2_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+#endif
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR

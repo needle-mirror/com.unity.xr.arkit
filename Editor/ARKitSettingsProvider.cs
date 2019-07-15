@@ -11,14 +11,14 @@ namespace UnityEditor.XR.ARKit
         static SettingsProvider CreateSettingsProvider()
         {
             GUIContent s_WarningToCreateSettings = EditorGUIUtility.TrTextContent(
-                "You must create a serialized instance of the settings data in order to modify the settings in this UI. Until then only default settings set by the provider will be available.");
+                "This controls the Build Settings for ARKit.\n\nYou must create a serialized instance of the settings data in order to modify the settings in this UI. Until then only default settings set by the provider will be available.");
 
             // First parameter is the path in the Settings window.
             // Second parameter is the scope of this setting: it only appears in the Project Settings window.
             var provider = new SettingsProvider("Project/XR/ARKit", SettingsScope.Project)
             {
                 // By default the last token of the path is used as display name if no label is provided.
-                label = "ARKit",
+                label = "ARKit Build Settings",
 
                 // Create the SettingsProvider and initialize its drawing (IMGUI) function in place:
                 guiHandler = (searchContext) =>
