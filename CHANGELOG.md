@@ -4,6 +4,20 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0-preview.1] - 2019-08-27
+### New
+- Add support for [XR Management](https://docs.unity3d.com/Packages/com.unity.xr.management@3.0/manual/index.html).
+- Add support for the [XRParticipantSubsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/participant-subsystem.html), which can track other users in a multi-user collaborative session.
+- Add support for [exposureDuration](https://developer.apple.com/documentation/arkit/arcamera/3182986-exposureduration?language=objc)
+- Add support for [exposureOffset](https://developer.apple.com/documentation/arkit/arcamera/3194569-exposureoffset?language=objc)
+- Add support for Lightweight Render Pipeline and Universal Render Pipeline.
+- Add support for height scale estimatation for the 3D human body subsystem.
+- This package now supports bulding with Xcode 9, 10, and 11 beta 7.
+
+### Fixes
+- Enforce minimum target iOS version of 11.0 whenever ARKit is required.
+- Setting the `ARHumanBodyManager.humanSegmentationDepthMode` value to either `HalfScreenResolution` or `FullScreenResolution` resulted in an invalid human segmentation depth image. This has been fixed.
+
 ## [2.2.0-preview.4] - 2019-07-29
 ### Fixes
 - Update ARKit 3 compatibility for Xcode 11 beta 5.

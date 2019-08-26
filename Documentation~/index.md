@@ -3,16 +3,17 @@
 
 Use the *ARKit XR Plugin* package enable ARKit support via Unity's multi-platform XR API. This package implements the following XR Subsystems:
 
-* [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/session-subsystem.html)
-* [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/camera-subsystem.html)
-* [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/depth-subsystem.html)
+* [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/session-subsystem.html)
+* [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/camera-subsystem.html)
+* [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/depth-subsystem.html)
 * [Input](https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.XR.XRInputSubsystem.html)
-* [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/plane-subsystem.html)
-* [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/raycast-subsystem.html)
-* [ReferencePoints](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/reference-point-subsystem.html)
-* [Image Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/image-tracking.html)
-* [Object Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/object-tracking.html)
-* [Environment Probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/environment-probe-subsystem.html)
+* [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/plane-subsystem.html)
+* [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/raycast-subsystem.html)
+* [ReferencePoints](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/reference-point-subsystem.html)
+* [Image Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/image-tracking.html)
+* [Object Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/object-tracking.html)
+* [Environment Probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/environment-probe-subsystem.html)
+* [Participants](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/participant-subsystem.html)
 
 This version of *ARKit XR Plugin* supports the following features:
 
@@ -28,6 +29,7 @@ This version of *ARKit XR Plugin* supports the following features:
 * Image Tracking
 * Object Tracking
 * Environment Probes
+* Participants
 
 [Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/face-tracking.html) support is available in the separate "ARKit Face Tracking" package. Apple's App Store will reject an app that contains certain face tracking-related symbols in its binary if the app developer does not intend to use face tracking, so we've broken out face tracking support into a separate package to avoid any ambiguity.
 
@@ -84,6 +86,10 @@ See [Image Tracking](arkit-image-tracking.md).
 ## Object Tracking
 
 See [Object Tracking](arkit-object-tracking.md).
+
+## Participant Tracking
+
+A "participant" represents another device in a multi-user collaborative session. Although you can start and stop the participant subsystem at any time, the session must be fed `ARCollaborationData` from other peers in the multi-user session in order for participants to be detected. See the [ARCollaborationData sample](https://github.com/Unity-Technologies/arfoundation-samples/tree/master/Assets/Scenes/ARCollaborationData).
 
 # Technical details
 ## Requirements

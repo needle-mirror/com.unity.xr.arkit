@@ -18,7 +18,7 @@ namespace UnityEngine.XR.ARKit
         /// No copies are made; the <c>NativeSlice</c> is a "view" into the raw data.
         /// The <c>NativeSlice</c> is valid until this object is <see cref="Dispose"/>d.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException"/>Thrown if <see cref="created"/> is <c>false</c>.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if <see cref="created"/> is <c>false</c>.</exception>
         public unsafe NativeSlice<byte> bytes
         {
             get

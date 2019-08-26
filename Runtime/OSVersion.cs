@@ -49,12 +49,16 @@ namespace UnityEngine.XR.ARKit
         /// Parses a string which contains a version number of the form X.Y.Z somewhere in the string.
         /// If multiple such substrings exists, the first is used. The parser stops when either
         /// 3 components have been identified, or when less than 3 components have been identified
-        /// and the next character is not a period (".") or a digit (0-9).
+        /// and the next character is not a period (".") or a digit (0-9). If <paramref name="version"/>
+        /// is <c>null</c> or the empty string, this method returns the version 0.0.0
         /// </summary>
         /// <param name="version">The string to parse.</param>
         /// <returns>A new <c>OSVersion</c> representing <paramref name="version"/>.</returns>
         public static OSVersion Parse(string version)
         {
+            if (string.IsNullOrEmpty(version))
+                return new OSVersion(0);
+
             int index = IndexOfFirstDigit(version);
             return new OSVersion
             {
@@ -126,7 +130,7 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// IComparable<T> interface. This is useful for sorting routines.
+        /// IComparable interface. This is useful for sorting routines.
         /// </summary>
         /// <param name="version">The other version to compare to.</param>
         /// <returns>-1 if this OSVersion is less than <paramref name="version"/>, 0 if they are equal, or 1 if this is greater.</returns>

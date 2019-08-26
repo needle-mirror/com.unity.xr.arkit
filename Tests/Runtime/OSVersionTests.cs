@@ -141,5 +141,17 @@ namespace UnityEngine.XR.ARKit.Tests
         {
             Assert.That(OSVersion.Parse("12.2 .4") == new OSVersion(12, 2));
         }
+
+        [Test]
+        public void HandlesNull()
+        {
+            Assert.That(OSVersion.Parse(null) == new OSVersion(0));
+        }
+
+        [Test]
+        public void HandlesEmptyString()
+        {
+            Assert.That(OSVersion.Parse("") == new OSVersion(0));
+        }
     }
 }

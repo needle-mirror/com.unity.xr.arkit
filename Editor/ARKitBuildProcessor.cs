@@ -11,9 +11,13 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
+using UnityEditor.XR.ARSubsystems;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.XR.ARKit;
+
+using OSVersion = UnityEngine.XR.ARKit.OSVersion;
 
 namespace UnityEditor.XR.ARKit
 {
@@ -35,8 +39,11 @@ namespace UnityEditor.XR.ARKit
             public void OnPostprocessBuild(BuildReport report)
             {
                 if (report.summary.platform != BuildTarget.iOS)
+                {
                     return;
+                }
 
+                BuildHelper.RemoveShaderFromProject(ARKitCameraSubsystem.backgroundShaderName);
                 HandleARKitRequiredFlag(report.summary.outputPath);
             }
 
@@ -80,6 +87,14 @@ namespace UnityEditor.XR.ARKit
             // "0 - None, 1 - ARM64, 2 - Universal."
             const int k_TargetArchitectureArm64 = 1;
 
+            void SelectStaticLib()
+            {
+                const string pluginPath = "Packages/com.unity.xr.arkit/Runtime/iOS";
+                LibUtil.SelectPlugin(
+                    PluginImporter.GetAtPath($"{pluginPath}/Xcode1000/UnityARKit.a") as PluginImporter,
+                    PluginImporter.GetAtPath($"{pluginPath}/Xcode1100/UnityARKit.a") as PluginImporter);
+            }
+
             public void OnPreprocessBuild(BuildReport report)
             {
                 if (report.summary.platform != BuildTarget.iOS)
@@ -88,8 +103,22 @@ namespace UnityEditor.XR.ARKit
                 if (string.IsNullOrEmpty(PlayerSettings.iOS.cameraUsageDescription))
                     throw new BuildFailedException("ARKit requires a Camera Usage Description (Player Settings > iOS > Other Settings > Camera Usage Description)");
 
+                SelectStaticLib();
+                EnsureMinimumBuildTarget();
                 EnsureOnlyMetalIsUsed();
                 EnsureTargetArchitecturesAreSupported(report.summary.platformGroup);
+
+                BuildHelper.AddBackgroundShaderToProject(ARKitCameraSubsystem.backgroundShaderName);
+            }
+
+            void EnsureMinimumBuildTarget()
+            {
+                var userSetTargetVersion = OSVersion.Parse(PlayerSettings.iOS.targetOSVersionString);
+                if (userSetTargetVersion < new OSVersion(11))
+                {
+                    throw new BuildFailedException("You have selected a minimum target iOS version of " + userSetTargetVersion + " and have the ARKit package installed.  "
+                        + "ARKit requires at least iOS version 11.0 (See Player Settings > Other Settings > Target minimum iOS Version).");
+                }
             }
 
             void EnsureTargetArchitecturesAreSupported(BuildTargetGroup buildTargetGroup)

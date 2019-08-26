@@ -2,6 +2,12 @@ using System;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.Rendering;
+#if MODULE_URP_ENABLED
+using UnityEngine.Rendering.Universal;
+#elif MODULE_LWRP_ENABLED
+using UnityEngine.Rendering.LWRP;
+#endif
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -20,6 +26,33 @@ namespace UnityEngine.XR.ARKit
         /// The identifying name for the camera-providing implementation.
         /// </value>
         const string k_SubsystemId = "ARKit-Camera";
+
+        /// <summary>
+        /// The name for the shader for rendering the camera texture in the legacy render pipeline.
+        /// </summary>
+        /// <value>
+        /// The name for the shader for rendering the camera texture in the legacy render pipeline.
+        /// </value>
+        const string k_BackgroundLegacyRPShaderName = "Unlit/ARKitBackground";
+
+#if MODULE_URP_ENABLED
+        /// <summary>
+        /// The name for the shader for rendering the camera texture in the universal render pipeline.
+        /// </summary>
+        /// <value>
+        /// The name for the shader for rendering the camera texture in the universal render pipeline.
+        /// </value>
+        const string k_BackgroundUniversalRPShaderName = "Unlit/ARKitURPBackground";
+
+#elif MODULE_LWRP_ENABLED
+        /// <summary>
+        /// The name for the shader for rendering the camera texture in the lightweight render pipeline.
+        /// </summary>
+        /// <value>
+        /// The name for the shader for rendering the camera texture in the lightweight render pipeline.
+        /// </value>
+        const string k_BackgroundLightweightRPShaderName = "Unlit/ARKitLWRPBackground";
+#endif
 
         /// <summary>
         /// Resulting values from setting the camera configuration.
@@ -45,6 +78,43 @@ namespace UnityEngine.XR.ARKit
             /// The provider session was invalid.
             /// </summary>
             InvalidSession = 3,
+        }
+
+        /// <summary>
+        /// The name for the background shader based on the current render pipeline.
+        /// </summary>
+        /// <value>
+        /// The name for the background shader based on the current render pipeline. Or, <c>null</c> if the current
+        /// render pipeline is incompatible with the set of shaders.
+        /// </value>
+        /// <remarks>
+        /// The value for the <c>GraphicsSettings.renderPipelineAsset</c> is not expected to change within the lifetime
+        /// of the application.
+        /// </remarks>
+        public static string backgroundShaderName
+        {
+            get
+            {
+                if (GraphicsSettings.renderPipelineAsset == null)
+                {
+                    return k_BackgroundLegacyRPShaderName;
+                }
+#if MODULE_URP_ENABLED
+                else if (GraphicsSettings.renderPipelineAsset is UniversalRenderPipelineAsset)
+                {
+                    return k_BackgroundUniversalRPShaderName;
+                }
+#elif MODULE_LWRP_ENABLED
+                else if (GraphicsSettings.renderPipelineAsset is LightweightRenderPipelineAsset)
+                {
+                    return k_BackgroundLightweightRPShaderName;
+                }
+#endif
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         /// <summary>
@@ -130,15 +200,13 @@ namespace UnityEngine.XR.ARKit
             static readonly int k_TextureCbCrPropertyNameId = Shader.PropertyToID(k_TextureCbCrPropertyName);
 
             /// <summary>
-            /// Get the shader name used by <c>XRCameraSubsystem</c> to render texture.
+            /// Get the material used by <c>XRCameraSubsystem</c> to render the camera texture.
             /// </summary>
-            /// <value>
-            /// Get the shader name used by <c>XRCameraSubsystem</c> to render texture.
-            /// </value>
-            public override string shaderName
-            {
-                get { return "Unlit/ARKit"; }
-            }
+            /// <returns>
+            /// The material to render the camera texture.
+            /// </returns>
+            public override Material cameraMaterial { get => m_CameraMaterial; }
+            Material m_CameraMaterial;
 
             /// <summary>
             /// Whether camera permission has been granted.
@@ -158,6 +226,16 @@ namespace UnityEngine.XR.ARKit
             {
                 NativeApi.UnityARKit_Camera_Construct(k_TextureYPropertyNameId,
                                                       k_TextureCbCrPropertyNameId);
+
+                string shaderName = ARKitCameraSubsystem.backgroundShaderName;
+                if (shaderName == null)
+                {
+                    Debug.LogError("Cannot create camera background material compatible with the render pipeline");
+                }
+                else
+                {
+                    m_CameraMaterial = CreateCameraMaterial(shaderName);
+                }
             }
 
             /// <summary>
@@ -513,6 +591,7 @@ namespace UnityEngine.XR.ARKit
                 NativeApi.UnityARKit_Camera_CreateAsyncConversionRequestWithCallback(
                     nativeHandle, conversionParams, callback, context);
             }
+
         }
 
         /// <summary>

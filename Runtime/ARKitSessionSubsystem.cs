@@ -159,8 +159,8 @@ namespace UnityEngine.XR.ARKit
         /// Dequeues the oldest collaboration data in the queue. After calling this method, <see cref="collaborationDataCount"/>
         /// will be decremented by one.
         /// </summary>
-        /// <exception cref="System.NotSupportedException"/>Thrown if <see cref="supportsCollaboration"/> is false.</exception>
-        /// <exception cref="System.InvalidOperationException"/>Thrown if <see cref="collaborationDataCount"/> is zero.</exception>
+        /// <exception cref="System.NotSupportedException">Thrown if <see cref="supportsCollaboration"/> is false.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if <see cref="collaborationDataCount"/> is zero.</exception>
         /// <seealso cref="ARCollaborationData"/>
         public ARCollaborationData DequeueCollaborationData()
         {
@@ -176,7 +176,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Applies <see cref="ARCollaborationData"/> to the session.
         /// </summary>
-        /// <exception cref="System.NotSupportedException"/>Thrown if <see cref="supportsCollaboration"/> is false.</exception>
+        /// <exception cref="System.NotSupportedException">Thrown if <see cref="supportsCollaboration"/> is false.</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="collaborationData"/> is not valid.</exception>
         public void UpdateWithCollaborationData(ARCollaborationData collaborationData)
         {

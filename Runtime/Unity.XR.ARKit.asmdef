@@ -1,7 +1,10 @@
 {
     "name": "Unity.XR.ARKit",
     "references": [
-        "Unity.XR.ARSubsystems"
+        "Unity.RenderPipelines.Lightweight.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.XR.ARSubsystems",
+        "Unity.XR.Management"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [
@@ -14,5 +17,16 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": []
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.lightweight",
+            "expression": "[5.7.2,7.0.0)",
+            "define": "MODULE_LWRP_ENABLED"
+        },
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "7.0.0",
+            "define": "MODULE_URP_ENABLED"
+        }
+    ]
 }

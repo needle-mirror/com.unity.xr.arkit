@@ -1,9 +1,9 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "ARKit XR Plugin",
-  "version": "2.2.0-preview.4",
-  "unity": "2018.3",
-  "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\n=Supported Features=\n-Efficient Background Rendering\n-Plane Detection\n-Feature Points\n-Reference Points\n-Raycasting\n-Environment Probes\n-Object Tracking\n-Image Tracking\n-Human Body Tracking\n-Collaborative Sessions",
+  "version": "3.0.0-preview.1",
+  "unity": "2019.2",
+  "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\n=Supported Features=\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Reference Points\n-Hit Testing\n-Face Tracking\n-Environment Probes",
   "keywords": [
     "arkit",
     "ar",
@@ -12,11 +12,12 @@
     "reality"
   ],
   "dependencies": {
-    "com.unity.xr.arsubsystems": "2.2.0-preview.3"
+    "com.unity.xr.arsubsystems": "3.0.0-preview.1",
+    "com.unity.xr.management": "3.0.2-preview.2"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:Unity-Technologies/upm-xr-arkit.git",
-    "revision": "670ac673d64779a384ce13fc8db916409def170c"
+    "revision": "86cb38336fb3c085d871603ba6c7c918cf313f61"
   }
 }
