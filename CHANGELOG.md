@@ -4,7 +4,15 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.1.1] - 2019-07-03
+## [2.1.2] - 2019-08-31
+### Fixes
+- Enforce minimum target iOS version of 11.0 whenever ARKit is required.
+
+## [2.1.1] - 2019-08-05
+### Updated
+- Update depedency on AR Subsystems package to version 2.1.1. This should not impact existing functionality, but helps with future compatibility.
+
+## [2.1.0] - 2019-06-25
 - 2019.3 verified release
 ### New
 - Add support for NotTrackingReason
