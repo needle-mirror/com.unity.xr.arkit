@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0-preview.2] - 2019-09-05
+### New
+- Added support for [ARCoachingOverlayView](https://developer.apple.com/documentation/arkit/arcoachingoverlayview)
+
+### Fixes
+- 3.0.0-preview.1 was not compatible with some older versions of Xcode. This has been fixed.
+
+### Breaking changes
+- `ARKitSessionSubsystem.worldMapSupported` was previously an instance method; now it is a `static` method as it does not require an instance to perform this check.
+
 ## [3.0.0-preview.1] - 2019-08-27
 ### New
 - Add support for [XR Management](https://docs.unity3d.com/Packages/com.unity.xr.management@3.0/manual/index.html).
