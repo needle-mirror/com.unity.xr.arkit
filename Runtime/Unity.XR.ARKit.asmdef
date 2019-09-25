@@ -4,9 +4,9 @@
         "Unity.RenderPipelines.Lightweight.Runtime",
         "Unity.RenderPipelines.Universal.Runtime",
         "Unity.XR.ARSubsystems",
-        "Unity.XR.Management"
+        "Unity.XR.Management",
+        "Unity.InputSystem"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor",
         "iOS"
@@ -27,6 +27,12 @@
             "name": "com.unity.render-pipelines.universal",
             "expression": "7.0.0",
             "define": "MODULE_URP_ENABLED"
+        },
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "",
+            "define": "UNITY_INPUT_SYSTEM"
         }
-    ]
+    ],
+    "noEngineReferences": false
 }

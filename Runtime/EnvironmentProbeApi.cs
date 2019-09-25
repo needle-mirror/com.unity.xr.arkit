@@ -63,7 +63,7 @@ namespace UnityEngine.XR.ARKit
                                                                                         Vector3 size,
                                                                                         out XREnvironmentProbe environmentProbe)
         {
-            environmentProbe = XREnvironmentProbe.GetDefault();
+            environmentProbe = XREnvironmentProbe.defaultValue;
             return false;
         }
 

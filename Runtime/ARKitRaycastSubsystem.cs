@@ -12,12 +12,9 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitRaycastSubsystem : XRRaycastSubsystem
     {
-        protected override IProvider CreateProvider()
-        {
-            return new Provider();
-        }
+        protected override Provider CreateProvider() => new ARKitProvider();
 
-        class Provider : IProvider
+        class ARKitProvider : XRRaycastSubsystem.Provider
         {
             public override unsafe NativeArray<XRRaycastHit> Raycast(
                 XRRaycastHit defaultRaycastHit,
@@ -44,11 +41,7 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR

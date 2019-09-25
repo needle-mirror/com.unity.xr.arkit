@@ -1,16 +1,8 @@
-using AOT;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
 using System.Runtime.InteropServices;
 using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
-using UnityEngine.iOS;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
-using Unity.Jobs;
 
 namespace UnityEngine.XR.ARKit
 {
@@ -22,7 +14,7 @@ namespace UnityEngine.XR.ARKit
     /// </summary>
     public sealed class ARKitImageTrackingSubsystem : XRImageTrackingSubsystem
     {
-        class Provider : IProvider
+        class ARKitProvider : Provider
         {
             public unsafe override RuntimeReferenceImageLibrary CreateRuntimeLibrary(
                 XRReferenceImageLibrary serializedLibrary)
@@ -77,17 +69,11 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            public override void Destroy()
-            {
-                UnityARKit_imageTracking_destroy();
-            }
+            public override void Destroy() => UnityARKit_imageTracking_destroy();
 
             public override int maxNumberOfMovingImages
             {
-                set
-                {
-                    UnityARKit_imageTracking_setMaximumNumberOfTrackedImages(value);
-                }
+                set => UnityARKit_imageTracking_setMaximumNumberOfTrackedImages(value);
             }
         }
 
@@ -114,15 +100,11 @@ namespace UnityEngine.XR.ARKit
         [DllImport("__Internal")]
         static extern unsafe void UnityARKit_imageTracking_releaseChanges(void* changes);
 
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR
-            var iOSversion = OSVersion.Parse(Device.systemVersion);
+            var iOSversion = OSVersion.Parse(UnityEngine.iOS.Device.systemVersion);
 
             // No support before iOS 11.3
             if (iOSversion < new OSVersion(11, 3))
@@ -139,9 +121,9 @@ namespace UnityEngine.XR.ARKit
 #endif
         }
 
-        protected override IProvider CreateProvider()
+        protected override Provider CreateProvider()
         {
-            return new Provider();
+            return new ARKitProvider();
         }
     }
 }

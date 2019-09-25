@@ -66,7 +66,14 @@ Shader "Unlit/ARKitBackground"
                         float4(0.0, +0.0000, +0.0000, +1.0000)
                     );
 
-                return mul(ycbcrToRGBTransform, ycbcr);
+                float4 result = mul(ycbcrToRGBTransform, ycbcr);
+
+#if !UNITY_COLORSPACE_GAMMA
+                // Incoming video texture is in sRGB color space. If we are rendering in linear color space, we need to convert.
+                result = float4(GammaToLinearSpace(result.xyz), result.w);
+#endif // !UNITY_COLORSPACE_GAMMA
+
+                return result;
             }
             ENDCG
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
@@ -14,16 +13,10 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitXRDepthSubsystem : XRDepthSubsystem
     {
-        class Provider : IDepthApi
+        class ARKitProvider : Provider
         {
             [DllImport("__Internal")]
             static extern void UnityARKit_depth_destroy();
-
-            [DllImport("__Internal")]
-            static extern void UnityARKit_depth_start();
-
-            [DllImport("__Internal")]
-            static extern void UnityARKit_depth_stop();
 
             [DllImport("__Internal")]
             static extern unsafe void* UnityARKit_depth_acquireChanges(
@@ -73,20 +66,7 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            public override void Destroy()
-            {
-                UnityARKit_depth_destroy();
-            }
-
-            public override void Start()
-            {
-                UnityARKit_depth_start();
-            }
-
-            public override void Stop()
-            {
-                UnityARKit_depth_stop();
-            }
+            public override void Destroy() => UnityARKit_depth_destroy();
 
             public override unsafe XRPointCloudData GetPointCloudData(
                 TrackableId trackableId,
@@ -141,17 +121,10 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-        protected override IDepthApi GetInterface()
-        {
-            return new Provider();
-        }
+        protected override Provider CreateProvider() => new ARKitProvider();
 
         //this method is run on startup of the app to register this provider with XR Subsystem Manager
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR

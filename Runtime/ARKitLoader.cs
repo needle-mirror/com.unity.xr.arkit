@@ -1,11 +1,6 @@
-#if UNITY_2019_2_OR_NEWER
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.Management;
-using UnityEngine.XR;
-using UnityEngine;
 
 namespace UnityEngine.XR.ARKit
 {
@@ -224,4 +219,3 @@ namespace UnityEngine.XR.ARKit
         }
     }
 }
-#endif

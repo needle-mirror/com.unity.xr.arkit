@@ -4,9 +4,21 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0-preview.3] - 2019-09-26
+### New
+- Build compiled binaries with Xcode 10.3 (10G8) and Xcode 11 (11A420a)
+- Added support for both linear and gamma color spaces.
+- Register AR tracking inputs with the new [Input System](https://github.com/Unity-Technologies/InputSystem)
+
+### Fixes
+- Exclude tvOS as a supported platform.
+- The ["match frame rate"](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.0/api/UnityEngine.XR.ARFoundation.ARSession.html#UnityEngine_XR_ARFoundation_ARSession_matchFrameRate) option could incorrectly cause execution to be blocked while waiting for a new frame, leading to long frame times. This has been fixed.
+- The ["match frame rate"](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.0/api/UnityEngine.XR.ARFoundation.ARSession.html#UnityEngine_XR_ARFoundation_ARSession_matchFrameRate) option did not account for thermal throttling, which can put ARKit into a 30 frames per second update mode while Unity would keep trying to update at 60 frames per second. This could lead to visual artifacts like judder. The calculated frame rate now takes the thermal state into account and will do a better job matching ARKit's update rate.
+
 ## [3.0.0-preview.2] - 2019-09-05
 ### New
 - Added support for [ARCoachingOverlayView](https://developer.apple.com/documentation/arkit/arcoachingoverlayview)
+- Added tracking input support for the [Input System](https://github.com/Unity-Technologies/InputSystem)
 
 ### Fixes
 - 3.0.0-preview.1 was not compatible with some older versions of Xcode. This has been fixed.
@@ -22,7 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add support for [exposureOffset](https://developer.apple.com/documentation/arkit/arcamera/3194569-exposureoffset?language=objc)
 - Add support for Lightweight Render Pipeline and Universal Render Pipeline.
 - Add support for height scale estimatation for the 3D human body subsystem.
-- This package now supports bulding with Xcode 9, 10, and 11 beta 7.
+- This package now supports bulding with Xcode ~~9,~~ 10 and 11 beta 7.
 
 ### Fixes
 - Enforce minimum target iOS version of 11.0 whenever ARKit is required.

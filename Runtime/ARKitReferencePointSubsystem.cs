@@ -12,27 +12,15 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitReferencePointSubsystem : XRReferencePointSubsystem
     {
-        protected override IProvider CreateProvider()
+        protected override Provider CreateProvider() => new ARKitProvider();
+
+        class ARKitProvider : Provider
         {
-            return new Provider();
-        }
+            public override void Start() => UnityARKit_refPoints_onStart();
 
-        class Provider : IProvider
-        {
-            public override void Start()
-            {
-                UnityARKit_refPoints_onStart();
-            }
+            public override void Stop() => UnityARKit_refPoints_onStop();
 
-            public override void Stop()
-            {
-                UnityARKit_refPoints_onStop();
-            }
-
-            public override void Destroy()
-            {
-                UnityARKit_refPoints_onDestroy();
-            }
+            public override void Destroy() => UnityARKit_refPoints_onDestroy();
 
             public override unsafe TrackableChanges<XRReferencePoint> GetChanges(
                 XRReferencePoint defaultReferencePoint,
@@ -113,11 +101,7 @@ namespace UnityEngine.XR.ARKit
             static extern bool UnityARKit_refPoints_tryRemove(TrackableId referencePointId);
         }
 
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR

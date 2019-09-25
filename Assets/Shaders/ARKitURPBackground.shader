@@ -6,49 +6,49 @@ Shader "Unlit/ARKitURPBackground"
         _textureCbCr ("TextureCbCr", 2D) = "black" {}
     }
 
-     SubShader
+    SubShader
     {
         Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline"}
         LOD 100
 
-         Pass
+        Pass
         {
             Name "Default"
-            Tags { "LightMode" = "LightweightForward"}
+            Tags { "LightMode" = "UniversalForward"}
 
-             ZTest Always
-             ZWrite Off
+            ZTest Always
+            ZWrite Off
 
-             HLSLPROGRAM
+            HLSLPROGRAM
             // Required to compile gles 2.0 with standard srp library
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
             #pragma vertex Vertex
             #pragma fragment Fragment
 
-             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
-             float4x4 _UnityDisplayTransform;
+            float4x4 _UnityDisplayTransform;
 
-             struct VertexInput
+            struct VertexInput
             {
                 float4 vertex   : POSITION;
                 float2 uv       : TEXCOORD0;
             };
 
-             struct VertexOutput
+            struct VertexOutput
             {
                 half4 pos       : SV_POSITION;
                 half2 uv        : TEXCOORD0;
             };
-
 
             TEXTURE2D(_textureY);
             SAMPLER(sampler_textureY);
             TEXTURE2D(_textureCbCr);
             SAMPLER(sampler_textureCbCr);
 
-             VertexOutput Vertex(VertexInput i)
+            VertexOutput Vertex(VertexInput i)
             {
                 VertexOutput o;
                 o.pos = TransformObjectToHClip(i.vertex.xyz);
@@ -57,22 +57,28 @@ Shader "Unlit/ARKitURPBackground"
                 return o;
             }
 
-             half4 Fragment(VertexOutput i) : SV_Target
+            half4 Fragment(VertexOutput i) : SV_Target
             {
                 half y = SAMPLE_TEXTURE2D(_textureY, sampler_textureY, i.uv).r;
                 half4 ycbcr = half4(y, SAMPLE_TEXTURE2D(_textureCbCr, sampler_textureCbCr, i.uv).rg, 1.0);
 
-                 const half4x4 ycbcrToRGBTransform = half4x4(
-                     half4(1.0, +0.0000, +1.4020, -0.7010),
-                     half4(1.0, -0.3441, -0.7141, +0.5291),
-                     half4(1.0, +1.7720, +0.0000, -0.8860),
+                const half4x4 ycbcrToRGBTransform = half4x4(
+                    half4(1.0, +0.0000, +1.4020, -0.7010),
+                    half4(1.0, -0.3441, -0.7141, +0.5291),
+                    half4(1.0, +1.7720, +0.0000, -0.8860),
                     half4(0.0, +0.0000, +0.0000, +1.0000)
-                 );
+                );
 
-                 return mul(ycbcrToRGBTransform, ycbcr);
-             }
+                half4 result = mul(ycbcrToRGBTransform, ycbcr);
+
+#if !UNITY_COLORSPACE_GAMMA
+                // Incoming video texture is in sRGB color space. If we are rendering in linear color space, we need to convert.
+                result = FastSRGBToLinear(result);
+#endif // !UNITY_COLORSPACE_GAMMA
+
+                return result;
+            }
             ENDHLSL
         }
     }
-
 }

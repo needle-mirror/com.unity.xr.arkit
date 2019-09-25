@@ -1,6 +1,3 @@
-#if UNITY_2019_2_OR_NEWER
-using System;
-
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
@@ -14,4 +11,3 @@ namespace UnityEngine.XR.ARKit
         public const string k_SettingsKey = "com.unity.xr.management.arkit_loader";
     }
 }
-#endif

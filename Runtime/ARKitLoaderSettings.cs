@@ -1,5 +1,3 @@
-#if UNITY_2019_2_OR_NEWER
-using UnityEngine;
 using UnityEngine.XR.Management;
 
 namespace UnityEngine.XR.ARKit
@@ -35,4 +33,3 @@ namespace UnityEngine.XR.ARKit
         }
     }
 }
-#endif

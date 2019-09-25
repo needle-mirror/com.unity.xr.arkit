@@ -1,13 +1,8 @@
-#if UNITY_2019_2_OR_NEWER
-using System;
-using System.IO;
 using System.Linq;
 
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-
-using UnityEngine;
 
 namespace UnityEngine.XR.ARKit
 {
@@ -87,4 +82,3 @@ namespace UnityEngine.XR.ARKit
         }
     }
 }
-#endif

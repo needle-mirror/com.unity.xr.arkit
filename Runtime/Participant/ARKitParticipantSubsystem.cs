@@ -5,10 +5,6 @@ using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
-
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
@@ -19,21 +15,15 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitParticipantSubsystem : XRParticipantSubsystem
     {
-        protected override IProvider CreateProvider()
-        {
-            return new Provider();
-        }
+        protected override Provider CreateProvider() => new ARKitProvider();
 
-        class Provider : IProvider
+        class ARKitProvider : Provider
         {
             IntPtr m_Ptr;
 
             bool created => m_Ptr != IntPtr.Zero;
 
-            public Provider()
-            {
-                m_Ptr = UnityARKit_Participant_init();
-            }
+            public ARKitProvider() => m_Ptr = UnityARKit_Participant_init();
 
             public override void Start()
             {
@@ -83,14 +73,13 @@ namespace UnityEngine.XR.ARKit
             static extern IntPtr UnityARKit_Participant_init();
         }
 
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR
+            if (OSVersion.Parse(UnityEngine.iOS.Device.systemVersion) < new OSVersion(13))
+                return;
+
             XRParticipantSubsystemDescriptor.Register<ARKitParticipantSubsystem>(
                 "ARKit-Participant",
                 XRParticipantSubsystemDescriptor.Capabilities.None);

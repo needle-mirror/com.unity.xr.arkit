@@ -13,27 +13,15 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitXRPlaneSubsystem : XRPlaneSubsystem
     {
-        protected override IProvider CreateProvider()
+        protected override Provider CreateProvider() => new ARKitProvider();
+
+        class ARKitProvider : Provider
         {
-            return new Provider();
-        }
+            public override void Destroy() => UnityARKit_planes_shutdown();
 
-        class Provider : IProvider
-        {
-            public override void Destroy()
-            {
-                UnityARKit_planes_shutdown();
-            }
+            public override void Start() =>  UnityARKit_planes_start();
 
-            public override void Start()
-            {
-                UnityARKit_planes_start();
-            }
-
-            public override void Stop()
-            {
-                UnityARKit_planes_stop();
-            }
+            public override void Stop() => UnityARKit_planes_stop();
 
             public override unsafe void GetBoundary(
                 TrackableId trackableId,
@@ -138,10 +126,7 @@ namespace UnityEngine.XR.ARKit
 
             public override PlaneDetectionMode planeDetectionMode
             {
-                set
-                {
-                    UnityARKit_planes_setPlaneDetectionMode(value);
-                }
+                set => UnityARKit_planes_setPlaneDetectionMode(value);
             }
 
             [DllImport("__Internal")]
@@ -177,11 +162,7 @@ namespace UnityEngine.XR.ARKit
                 void* boundary);
         }
 
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR

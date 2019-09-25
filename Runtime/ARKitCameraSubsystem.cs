@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine.Rendering;
 #if MODULE_URP_ENABLED
 using UnityEngine.Rendering.Universal;
@@ -121,11 +120,7 @@ namespace UnityEngine.XR.ARKit
         /// Create and register the camera subsystem descriptor to advertise a providing implementation for camera
         /// functionality.
         /// </summary>
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         static void Register()
         {
 #if UNITY_IOS && !UNITY_EDITOR
@@ -157,15 +152,12 @@ namespace UnityEngine.XR.ARKit
         /// <returns>
         /// The ARKit camera functionality provider for the camera subsystem.
         /// </returns>
-        protected override IProvider CreateProvider()
-        {
-            return new Provider();
-        }
+        protected override Provider CreateProvider() => new ARKitProvider();
 
         /// <summary>
         /// Provides the camera functionality for the ARKit implementation.
         /// </summary>
-        class Provider : IProvider
+        class ARKitProvider : Provider
         {
             /// <summary>
             /// The shader property name for the luminance component of the camera video frame.
@@ -205,7 +197,7 @@ namespace UnityEngine.XR.ARKit
             /// <returns>
             /// The material to render the camera texture.
             /// </returns>
-            public override Material cameraMaterial { get => m_CameraMaterial; }
+            public override Material cameraMaterial => m_CameraMaterial;
             Material m_CameraMaterial;
 
             /// <summary>
@@ -214,15 +206,12 @@ namespace UnityEngine.XR.ARKit
             /// <value>
             /// <c>true</c> if camera permission has been granted for this app. Otherwise, <c>false</c>.
             /// </value>
-            public override bool permissionGranted
-            {
-                get { return NativeApi.UnityARKit_Camera_IsCameraPermissionGranted(); }
-            }
+            public override bool permissionGranted => NativeApi.UnityARKit_Camera_IsCameraPermissionGranted();
 
             /// <summary>
             /// Constructs the ARKit camera functionality provider.
             /// </summary>
-            public Provider()
+            public ARKitProvider()
             {
                 NativeApi.UnityARKit_Camera_Construct(k_TextureYPropertyNameId,
                                                       k_TextureCbCrPropertyNameId);
@@ -241,26 +230,17 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// Start the camera functionality.
             /// </summary>
-            public override void Start()
-            {
-                NativeApi.UnityARKit_Camera_Start();
-            }
+            public override void Start() => NativeApi.UnityARKit_Camera_Start();
 
             /// <summary>
             /// Stop the camera functionality.
             /// </summary>
-            public override void Stop()
-            {
-                NativeApi.UnityARKit_Camera_Stop();
-            }
+            public override void Stop() => NativeApi.UnityARKit_Camera_Stop();
 
             /// <summary>
             /// Destroy any resources required for the camera functionality.
             /// </summary>
-            public override void Destroy()
-            {
-                NativeApi.UnityARKit_Camera_Destruct();
-            }
+            public override void Destroy() => NativeApi.UnityARKit_Camera_Destruct();
 
             /// <summary>
             /// Get the current camera frame for the subsystem.
@@ -451,20 +431,14 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             /// <param name="nativeHandle">A unique identifier for this camera image.</param>
             /// <seealso cref="TryAcquireLatestImage"/>
-            public override void DisposeImage(int nativeHandle)
-            {
-                NativeApi.UnityARKit_Camera_DisposeImage(nativeHandle);
-            }
+            public override void DisposeImage(int nativeHandle) => NativeApi.UnityARKit_Camera_DisposeImage(nativeHandle);
 
             /// <summary>
             /// Dispose an existing async conversion request.
             /// </summary>
             /// <param name="requestId">A unique identifier for the request.</param>
             /// <seealso cref="ConvertAsync(int, XRCameraImageConversionParams)"/>
-            public override void DisposeAsyncRequest(int requestId)
-            {
-                NativeApi.UnityARKit_Camera_DisposeAsyncRequest(requestId);
-            }
+            public override void DisposeAsyncRequest(int requestId) => NativeApi.UnityARKit_Camera_DisposeAsyncRequest(requestId);
 
             /// <summary>
             /// Get information about an image plane from a native image handle by index.
@@ -494,11 +468,7 @@ namespace UnityEngine.XR.ARKit
             /// <param name="nativeHandle">A unique identifier for the camera image in question.</param>
             /// <returns><c>true</c>, if it is a valid handle. Otherwise, <c>false</c>.</returns>
             /// <seealso cref="DisposeImage"/>
-            public override bool NativeHandleValid(
-                int nativeHandle)
-            {
-                return NativeApi.UnityARKit_Camera_HandleValid(nativeHandle);
-            }
+            public override bool NativeHandleValid(int nativeHandle) => NativeApi.UnityARKit_Camera_HandleValid(nativeHandle);
 
             /// <summary>
             /// Get the number of bytes required to store an image with the iven dimensions and <c>TextureFormat</c>.

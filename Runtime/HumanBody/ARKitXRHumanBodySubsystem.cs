@@ -1,7 +1,4 @@
-using AOT;
-using System;
 using System.Runtime.InteropServices;
-using System.Text;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine.Scripting;
@@ -17,11 +14,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Register the ARKit human body subsystem if iOS and not the editor.
         /// </summary>
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         static void Register()
         {
 #if UNITY_IOS && !UNITY_EDITOR
@@ -79,49 +72,36 @@ namespace UnityEngine.XR.ARKit
         /// <returns>
         /// The implementation provider.
         /// </returns>
-        protected override IProvider CreateProvider()
+        protected override Provider CreateProvider()
         {
-            return new Provider();
+            return new ARKitProvider();
         }
 
         /// <summary>
         /// The implementation provider class.
         /// </summary>
-        class Provider : IProvider
+        class ARKitProvider : XRHumanBodySubsystem.Provider
         {
             /// <summary>
             /// Construct the implementation provider.
             /// </summary>
-            public Provider()
-            {
-                // Construct the Objective-C body provider.
-                NativeApi.UnityARKit_HumanBodyProvider_Construct();
-            }
+            public ARKitProvider() => NativeApi.UnityARKit_HumanBodyProvider_Construct();
 
             /// <summary>
             /// Start the provider.
             /// </summary>
-            public override void Start()
-            {
-                NativeApi.UnityARKit_HumanBodyProvider_Start();
-            }
+            public override void Start() => NativeApi.UnityARKit_HumanBodyProvider_Start();
 
             /// <summary>
             /// Stop the provider.
             /// </summary>
-            public override void Stop()
-            {
-                NativeApi.UnityARKit_HumanBodyProvider_Stop();
-            }
+            public override void Stop() => NativeApi.UnityARKit_HumanBodyProvider_Stop();
 
             /// <summary>
             /// Destroy the human body subsystem by first ensuring that the subsystem has been stopped and then
             /// destroying the provider.
             /// </summary>
-            public override void Destroy()
-            {
-                NativeApi.UnityARKit_HumanBodyProvider_Destruct();
-            }
+            public override void Destroy() => NativeApi.UnityARKit_HumanBodyProvider_Destruct();
 
             /// <summary>
             /// Sets whether human body pose 2D estimation is enabled.

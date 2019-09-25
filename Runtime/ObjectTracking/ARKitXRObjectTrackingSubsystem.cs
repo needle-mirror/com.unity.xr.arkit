@@ -1,8 +1,6 @@
 using System;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using Unity.Collections;
-using UnityEngine.iOS;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -14,12 +12,9 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitXRObjectTrackingSubsystem : XRObjectTrackingSubsystem
     {
-        protected override IProvider CreateProvider()
-        {
-            return new Provider();
-        }
+        protected override Provider CreateProvider() => new ARKitProvider();
 
-        class Provider : IProvider
+        class ARKitProvider : Provider
         {
             [DllImport("__Internal")]
             static extern void UnityARKit_ObjectTracking_Initialize();
@@ -99,27 +94,17 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            public override void Destroy()
-            {
-                UnityARKit_ObjectTracking_Shutdown();
-            }
+            public override void Destroy() => UnityARKit_ObjectTracking_Shutdown();
 
-            public Provider()
-            {
-                UnityARKit_ObjectTracking_Initialize();
-            }
+            public ARKitProvider() => UnityARKit_ObjectTracking_Initialize();
         }
 
         //this method is run on startup of the app to register this provider with XR Subsystem Manager
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         public static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR
-            var iOSversion = OSVersion.Parse(Device.systemVersion);
+            var iOSversion = OSVersion.Parse(UnityEngine.iOS.Device.systemVersion);
 
             // No support before iOS 12.0
             if (iOSversion < new OSVersion(12))

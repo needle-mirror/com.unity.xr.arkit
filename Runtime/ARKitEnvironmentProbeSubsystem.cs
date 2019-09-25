@@ -1,8 +1,5 @@
-using AOT;
 using System;
 using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
-using UnityEngine.iOS;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -18,14 +15,14 @@ namespace UnityEngine.XR.ARKit
         /// Create and register the environment probe subsystem descriptor to advertise a providing implementation for
         /// environment probe functionality.
         /// </summary>
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         static void Register()
         {
 #if UNITY_IOS && !UNITY_EDITOR
+            var iOSVersion = OSVersion.Parse(UnityEngine.iOS.Device.systemVersion);
+            if (iOSVersion < new OSVersion(12))
+                return;
+
             const string subsystemId = "ARKit-EnvironmentProbe";
             XREnvironmentProbeSubsystemCinfo environmentProbeSubsystemInfo = new XREnvironmentProbeSubsystemCinfo()
             {
@@ -36,7 +33,7 @@ namespace UnityEngine.XR.ARKit
                 supportsAutomaticPlacement = true,
                 supportsRemovalOfAutomatic = true,
                 supportsEnvironmentTexture = true,
-                supportsEnvironmentTextureHDR = OSVersion.Parse(Device.systemVersion) >= new OSVersion(13),
+                supportsEnvironmentTextureHDR = iOSVersion >= new OSVersion(13),
             };
 
             if (!XREnvironmentProbeSubsystem.Register(environmentProbeSubsystemInfo))
@@ -53,41 +50,24 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     class ARKitEnvironmentProbeSubsystem : XREnvironmentProbeSubsystem
     {
-        protected override IProvider CreateProvider()
-        {
-            return new Provider();
-        }
+        protected override Provider CreateProvider() => new ARKitProvider();
 
-        class Provider : IProvider
+        class ARKitProvider : Provider
         {
-            public Provider()
-            {
-                // Construct the Objective-C environment probe provider.
-                EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_Construct();
-            }
+            public ARKitProvider() => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_Construct();
 
-            public override void Start()
-            {
-                EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_Start();
-            }
+            public override void Start() => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_Start();
 
             /// <summary>
             /// Stops the environment probe subsystem by disabling the environment probe state.
             /// </summary>
-            public override void Stop()
-            {
-                // Disable the environment probe state.
-                EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_Stop();
-            }
+            public override void Stop() => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_Stop();
 
             /// <summary>
             /// Destroy the environment probe subsystem by first ensuring that the subsystem has been stopped and then
             /// destroying the provider.
             /// </summary>
-            public override void Destroy()
-            {
-                EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_Destruct();
-            }
+            public override void Destroy() => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_Destruct();
 
             /// <summary>
             /// Enable or disable automatic placement of environment probes by the provider.
@@ -167,11 +147,6 @@ namespace UnityEngine.XR.ARKit
                 {
                     EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_ReleaseChanges(context);
                 }
-            }
-
-            public override bool supported
-            {
-                get { return EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_IsSupported(); }
             }
         }
     }

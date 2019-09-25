@@ -1,8 +1,6 @@
 using AOT;
 using System;
 using System.Runtime.InteropServices;
-using Unity.Collections;
-using UnityEngine.iOS;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -133,13 +131,7 @@ namespace UnityEngine.XR.ARKit
         /// creating an <see cref="ARWorldMap"/>.
         /// </summary>
         /// <returns>The <see cref="ARWorldMappingStatus"/> of the session.</returns>
-        public ARWorldMappingStatus worldMappingStatus
-        {
-            get
-            {
-                return NativeApi.UnityARKit_session_getWorldMappingStatus();
-            }
-        }
+        public ARWorldMappingStatus worldMappingStatus => NativeApi.UnityARKit_session_getWorldMappingStatus();
 
         /// <summary>
         /// Apply an existing <see cref="ARWorldMap"/> to the session. This will attempt
@@ -150,8 +142,7 @@ namespace UnityEngine.XR.ARKit
         /// property on the session's <a href="https://developer.apple.com/documentation/arkit/arworldtrackingconfiguration">ARWorldTrackingConfiguration</a>.
         /// </summary>
         /// <param name="worldMap">An <see cref="ARWorldMap"/> with which to relocalize the session.</param>
-        public void ApplyWorldMap(
-            ARWorldMap worldMap)
+        public void ApplyWorldMap(ARWorldMap worldMap)
         {
             if (worldMap.nativeHandle == ARWorldMap.k_InvalidHandle)
                 throw new InvalidOperationException("ARWorldMap has been disposed.");
@@ -171,11 +162,7 @@ namespace UnityEngine.XR.ARKit
         /// <seealso cref="collaborationDataCount"/>
         public bool collaborationEnabled
         {
-            get
-            {
-                return NativeApi.UnityARKit_session_getCollaborationEnabled();
-            }
-
+            get => NativeApi.UnityARKit_session_getCollaborationEnabled();
             set
             {
                 if (supportsCollaboration)
@@ -201,13 +188,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <seealso cref="ARCollaborationData"/>
         /// <seealso cref="DequeueCollaborationData"/>
-        public int collaborationDataCount
-        {
-            get
-            {
-                return NativeApi.UnityARKit_session_getCollaborationDataQueueSize();
-            }
-        }
+        public int collaborationDataCount => NativeApi.UnityARKit_session_getCollaborationDataQueueSize();
 
         /// <summary>
         /// Dequeues the oldest collaboration data in the queue. After calling this method, <see cref="collaborationDataCount"/>
@@ -247,10 +228,7 @@ namespace UnityEngine.XR.ARKit
         /// Creates the provider interface.
         /// </summary>
         /// <returns>The provider interface for ARKit</returns>
-        protected override IProvider CreateProvider()
-        {
-            return new Provider();
-        }
+        protected override Provider CreateProvider() => new ARKitProvider();
 
         static ARKitSessionSubsystem()
         {
@@ -285,43 +263,19 @@ namespace UnityEngine.XR.ARKit
             handle.Free();
         }
 
-        class Provider : IProvider
+        class ARKitProvider : Provider
         {
-            public Provider()
-            {
-                NativeApi.UnityARKit_session_construct();
-            }
+            public ARKitProvider() => NativeApi.UnityARKit_session_construct();
 
-            public override void Resume()
-            {
-                NativeApi.UnityARKit_session_resume();
-            }
+            public override void Resume() => NativeApi.UnityARKit_session_resume();
 
-            public override void Pause()
-            {
-                NativeApi.UnityARKit_session_pause();
-            }
+            public override void Pause() => NativeApi.UnityARKit_session_pause();
 
-            public override void Update(XRSessionUpdateParams updateParams)
-            {
-                NativeApi.UnityARKit_session_update();
-            }
+            public override void Update(XRSessionUpdateParams updateParams) => NativeApi.UnityARKit_session_update();
 
-            public override void Destroy()
-            {
-                NativeApi.UnityARKit_session_destroy();
-            }
+            public override void Destroy() => NativeApi.UnityARKit_session_destroy();
 
-            public override void Reset()
-            {
-                NativeApi.UnityARKit_session_reset();
-            }
-
-            public override void OnApplicationPause()
-            { }
-
-            public override void OnApplicationResume()
-            { }
+            public override void Reset() => NativeApi.UnityARKit_session_reset();
 
             public override Promise<SessionAvailability> GetAvailabilityAsync()
             {
@@ -333,53 +287,27 @@ namespace UnityEngine.XR.ARKit
                 return Promise<SessionAvailability>.CreateResolvedPromise(retVal);
             }
 
-            public override Promise<SessionInstallationStatus> InstallAsync()
-            {
+            public override Promise<SessionInstallationStatus> InstallAsync() =>
                 throw new NotSupportedException("ARKit cannot be installed.");
-            }
 
-            public override IntPtr nativePtr
-            {
-                get
-                {
-                    return NativeApi.UnityARKit_session_getNativePtr();
-                }
-            }
+            public override IntPtr nativePtr => NativeApi.UnityARKit_session_getNativePtr();
 
-            public override TrackingState trackingState
-            {
-                get { return NativeApi.UnityARKit_session_getTrackingState(); }
-            }
-            public override NotTrackingReason notTrackingReason
-            {
-                get { return NativeApi.UnityARKit_session_getNotTrackingReason(); }
-            }
+            public override TrackingState trackingState => NativeApi.UnityARKit_session_getTrackingState();
 
-            public override Guid sessionId
-            {
-                get { return NativeApi.UnityARKit_session_getSessionId(); }
-            }
+            public override NotTrackingReason notTrackingReason => NativeApi.UnityARKit_session_getNotTrackingReason();
+
+            public override Guid sessionId => NativeApi.UnityARKit_session_getSessionId();
 
             public override bool matchFrameRate
             {
-                get { return NativeApi.UnityARKit_session_getMatchFrameRateEnabled(); }
-                set { NativeApi.UnityARKit_session_setMatchFrameRateEnabled(value); }
+                get => NativeApi.UnityARKit_session_getMatchFrameRateEnabled();
+                set => NativeApi.UnityARKit_session_setMatchFrameRateEnabled(value);
             }
 
-            public override int frameRate
-            {
-                get
-                {
-                    return 60;
-                }
-            }
+            public override int frameRate => NativeApi.UnityARKit_Session_GetFrameRate();
         }
 
-#if UNITY_2019_2_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#else
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#endif
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR
@@ -481,6 +409,9 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_session_setMatchFrameRateEnabled(bool enabled);
+
+            [DllImport("__Internal")]
+            public static extern int UnityARKit_Session_GetFrameRate();
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_coachingOverlay_getActivatesAutomatically();
