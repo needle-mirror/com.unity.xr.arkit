@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0-preview.4] - 2019-10-22
+### New
+- Add getter for the camera focus mode.
+- Add support for plane classification for devices running iOS 12 with A12 CPU or later.
+- Static libraries were built with Xcode 11.1 (11A1027) and Xcode 10.3 (10G8)
+
+### Fixes
+- Allow building on non-macOS platforms. When building for iOS, this package determines which version of Xcode is selected in the Build Settings and enables the appropriate native library. This requires that Xcode be installed, which is not possible on non-macOS platforms. In this case, the library built with Xcode 11 is used.
+- Fixed reporting of tracking state for ARHumanBodies. Previously, the tracking state was always `TrackingState.Tracking`. Now, the tracking state will change to `TrackingState.None` when the person is no longer being tracked.
+
 ## [3.0.0-preview.3] - 2019-09-26
 ### New
 - Build compiled binaries with Xcode 10.3 (10G8) and Xcode 11 (11A420a)

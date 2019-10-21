@@ -14,9 +14,10 @@ namespace UnityEditor.XR.ARKit
             PluginImporter libXcode11)
         {
             const BuildTarget platform = BuildTarget.iOS;
+#if UNITY_EDITOR_OSX
             var version = GetXcodeVersion();
             if (version == new OSVersion(0))
-                throw new BuildFailedException($"Could not determine which version of Xcode was selected in the Build Settings. Xcode app was computed as {GetXcodeApplicationName()}.");
+                throw new BuildFailedException($"Could not determine which version of Xcode was selected in the Build Settings. Xcode app was computed as \"{GetXcodeApplicationName()}\".");
 
             if (version >= new OSVersion(11))
             {
@@ -28,6 +29,10 @@ namespace UnityEditor.XR.ARKit
                 libXcode10?.SetCompatibleWithPlatform(platform, true);
                 libXcode11?.SetCompatibleWithPlatform(platform, false);
             }
+#else
+            libXcode10?.SetCompatibleWithPlatform(platform, false);
+            libXcode11?.SetCompatibleWithPlatform(platform, true);
+#endif
         }
 
         static OSVersion GetXcodeVersion()

@@ -17,11 +17,11 @@ namespace UnityEngine.XR.ARKit
 
         class ARKitProvider : Provider
         {
-            public override void Destroy() => UnityARKit_planes_shutdown();
+            public override void Destroy() => NativeApi.UnityARKit_planes_shutdown();
 
-            public override void Start() =>  UnityARKit_planes_start();
+            public override void Start() =>  NativeApi.UnityARKit_planes_start();
 
-            public override void Stop() => UnityARKit_planes_stop();
+            public override void Stop() => NativeApi.UnityARKit_planes_stop();
 
             public override unsafe void GetBoundary(
                 TrackableId trackableId,
@@ -30,7 +30,7 @@ namespace UnityEngine.XR.ARKit
             {
                 int numPoints;
                 void* verticesPtr;
-                void* plane = UnityARKit_planes_acquireBoundary(
+                void* plane = NativeApi.UnityARKit_planes_acquireBoundary(
                     trackableId,
                     out verticesPtr,
                     out numPoints);
@@ -51,7 +51,7 @@ namespace UnityEngine.XR.ARKit
                 }
                 finally
                 {
-                    UnityARKit_planes_releaseBoundary(plane);
+                    NativeApi.UnityARKit_planes_releaseBoundary(plane);
                 }
             }
 
@@ -103,7 +103,7 @@ namespace UnityEngine.XR.ARKit
             {
                 int addedLength, updatedLength, removedLength, elementSize;
                 void* addedArrayPtr, updatedArrayPtr, removedArrayPtr;
-                var context = UnityARKit_planes_acquireChanges(
+                var context = NativeApi.UnityARKit_planes_acquireChanges(
                     out addedArrayPtr, out addedLength,
                     out updatedArrayPtr, out updatedLength,
                     out removedArrayPtr, out removedLength,
@@ -120,45 +120,54 @@ namespace UnityEngine.XR.ARKit
                 }
                 finally
                 {
-                    UnityARKit_planes_releaseChanges(context);
+                    NativeApi.UnityARKit_planes_releaseChanges(context);
                 }
             }
 
             public override PlaneDetectionMode planeDetectionMode
             {
-                set => UnityARKit_planes_setPlaneDetectionMode(value);
+                set => NativeApi.UnityARKit_planes_setPlaneDetectionMode(value);
             }
+        }
+
+        /// <summary>
+        /// Container to wrap the native ARKit APIs needed at registration.
+        /// </summary>
+        static class NativeApi
+        {
+            [DllImport("__Internal")]
+            static internal extern unsafe bool UnityARKit_planes_SupportsClassification();
 
             [DllImport("__Internal")]
-            static extern void UnityARKit_planes_shutdown();
+            static internal extern void UnityARKit_planes_shutdown();
 
             [DllImport("__Internal")]
-            static extern void UnityARKit_planes_start();
+            static internal extern void UnityARKit_planes_start();
 
             [DllImport("__Internal")]
-            static extern void UnityARKit_planes_stop();
+            static internal extern void UnityARKit_planes_stop();
 
             [DllImport("__Internal")]
-            static extern unsafe void* UnityARKit_planes_acquireChanges(
+            static internal extern unsafe void* UnityARKit_planes_acquireChanges(
                 out void* addedPtr, out int addedLength,
                 out void* updatedPtr, out int updatedLength,
                 out void* removedPtr, out int removedLength,
                 out int elementSize);
 
             [DllImport("__Internal")]
-            static extern unsafe void UnityARKit_planes_releaseChanges(void* changes);
+            static internal extern unsafe void UnityARKit_planes_releaseChanges(void* changes);
 
             [DllImport("__Internal")]
-            static extern void UnityARKit_planes_setPlaneDetectionMode(PlaneDetectionMode mode);
+            static internal extern void UnityARKit_planes_setPlaneDetectionMode(PlaneDetectionMode mode);
 
             [DllImport("__Internal")]
-            static extern unsafe void* UnityARKit_planes_acquireBoundary(
+            static internal extern unsafe void* UnityARKit_planes_acquireBoundary(
                 TrackableId trackableId,
                 out void* verticiesPtr,
                 out int numPoints);
 
             [DllImport("__Internal")]
-            static extern unsafe void UnityARKit_planes_releaseBoundary(
+            static internal extern unsafe void UnityARKit_planes_releaseBoundary(
                 void* boundary);
         }
 
@@ -173,7 +182,8 @@ namespace UnityEngine.XR.ARKit
                 supportsHorizontalPlaneDetection = true,
                 supportsVerticalPlaneDetection = true,
                 supportsArbitraryPlaneDetection = false,
-                supportsBoundaryVertices = true
+                supportsBoundaryVertices = true,
+                supportsClassification = NativeApi.UnityARKit_planes_SupportsClassification(),
             };
 
             XRPlaneSubsystemDescriptor.Create(cinfo);

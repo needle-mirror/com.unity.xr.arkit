@@ -13,8 +13,7 @@ namespace UnityEngine.XR.ARKit
     public struct ARWorldMap : IDisposable, IEquatable<ARWorldMap>
     {
         /// <summary>
-        /// Dispose of the world map. This will invalidate any <c>NativeArray</c>s
-        /// previously returned by <see cref="GetRawData"/>.
+        /// Disposes of the world map. This releases the native [ARWorldMap](https://developer.apple.com/documentation/arkit/arworldmap) resource.
         /// </summary>
         public void Dispose()
         {

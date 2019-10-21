@@ -136,7 +136,8 @@ namespace UnityEngine.XR.ARKit
                 supportsTimestamp = true,
                 supportsCameraConfigurations = true,
                 supportsCameraImage = true,
-                supportsAverageIntensityInLumens = true
+                supportsAverageIntensityInLumens = true,
+                supportsFocusModes = true,
             };
 
             if (!XRCameraSubsystem.Register(cameraSubsystemCinfo))
@@ -262,9 +263,10 @@ namespace UnityEngine.XR.ARKit
             /// <returns>
             /// <c>true</c> if the method successfully set the focus mode for the camera. Otherwise, <c>false</c>.
             /// </returns>
-            public override bool TrySetFocusMode(CameraFocusMode cameraFocusMode)
+            public override CameraFocusMode cameraFocusMode
             {
-                return NativeApi.UnityARKit_Camera_TrySetFocusMode(cameraFocusMode);
+                get => NativeApi.UnityARKit_Camera_GetFocusMode();
+                set => NativeApi.UnityARKit_Camera_SetFocusMode(value);
             }
 
             /// <summary>
@@ -587,7 +589,10 @@ namespace UnityEngine.XR.ARKit
                                                                     out XRCameraFrame cameraFrame);
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_Camera_TrySetFocusMode(CameraFocusMode cameraFocusMode);
+            public static extern void UnityARKit_Camera_SetFocusMode(CameraFocusMode cameraFocusMode);
+
+            [DllImport("__Internal")]
+            public static extern CameraFocusMode UnityARKit_Camera_GetFocusMode();
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_Camera_TrySetLightEstimationMode(LightEstimationMode lightEstimationMode);
