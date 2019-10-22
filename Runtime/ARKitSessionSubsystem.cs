@@ -15,6 +15,56 @@ namespace UnityEngine.XR.ARKit
     public sealed class ARKitSessionSubsystem : XRSessionSubsystem
     {
         /// <summary>
+        /// <c>true</c> if [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview) is supported, otherwise <c>false</c>.
+        /// </summary>
+        public static bool coachingOverlaySupported
+        {
+            get
+            {
+#if UNITY_IOS && !UNITY_EDITOR
+                return NativeApi.UnityARKit_coachingOverlay_isSupported();
+#else
+                return false;
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Whether the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview)
+        /// activates automatically or not. By default, it does not.
+        /// </summary>
+        public bool coachingActivatesAutomatically
+        {
+            get => NativeApi.UnityARKit_coachingOverlay_getActivatesAutomatically();
+            set => NativeApi.UnityARKit_coachingOverlay_setActivatesAutomatically(value);
+        }
+
+        /// <summary>
+        /// Defines the [Coaching Goal](https://developer.apple.com/documentation/arkit/arcoachingoverlayview/3192180-goal).
+        /// This should be based on your app's tracking requirements and affects the UI that the coaching overlay presents.
+        /// </summary>
+        public ARCoachingGoal coachingGoal
+        {
+            get => NativeApi.UnityARKit_coachingOverlay_getGoal();
+            set => NativeApi.UnityARKit_coachingOverlay_setGoal(value);
+        }
+
+        /// <summary>
+        /// <c>true</c> if the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview) is active.
+        /// </summary>
+        public bool coachingActive => NativeApi.UnityARKit_coachingOverlay_isActive();
+
+        /// <summary>
+        /// Activates or deactivates the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview)
+        /// </summary>
+        /// <param name="active">Whether the coaching overlay should be active or not.</param>
+        /// <param name="animate">The type of transition to use when showing or hiding the coaching overlay.</param>
+        public void SetCoachingActive(bool active, ARCoachingOverlayTransition transition)
+        {
+            NativeApi.UnityARKit_coachingOverlay_setActive(active, transition == ARCoachingOverlayTransition.Animated);
+        }
+
+        /// <summary>
         /// <para>Asynchronously create an <see cref="ARWorldMap"/>. An <c>ARWorldMap</c>
         /// represents the state of the session and can be serialized to a byte
         /// array to persist the session data, or send it to another device for
@@ -66,11 +116,15 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <returns><c>true</c> if <c>ARWorldMap</c>s are supported, otherwise <c>false</c>.</returns>
         /// <seealso cref="GetARWorldMapAsync()"/>
-        public bool worldMapSupported
+        public static bool worldMapSupported
         {
             get
             {
+#if UNITY_IOS && !UNITY_EDITOR
                 return NativeApi.UnityARKit_worldMapSupported();
+#else
+                return false;
+#endif
             }
         }
 
@@ -159,8 +213,8 @@ namespace UnityEngine.XR.ARKit
         /// Dequeues the oldest collaboration data in the queue. After calling this method, <see cref="collaborationDataCount"/>
         /// will be decremented by one.
         /// </summary>
-        /// <exception cref="System.NotSupportedException"/>Thrown if <see cref="supportsCollaboration"/> is false.</exception>
-        /// <exception cref="System.InvalidOperationException"/>Thrown if <see cref="collaborationDataCount"/> is zero.</exception>
+        /// <exception cref="System.NotSupportedException">Thrown if <see cref="supportsCollaboration"/> is false.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if <see cref="collaborationDataCount"/> is zero.</exception>
         /// <seealso cref="ARCollaborationData"/>
         public ARCollaborationData DequeueCollaborationData()
         {
@@ -176,7 +230,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Applies <see cref="ARCollaborationData"/> to the session.
         /// </summary>
-        /// <exception cref="System.NotSupportedException"/>Thrown if <see cref="supportsCollaboration"/> is false.</exception>
+        /// <exception cref="System.NotSupportedException">Thrown if <see cref="supportsCollaboration"/> is false.</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="collaborationData"/> is not valid.</exception>
         public void UpdateWithCollaborationData(ARCollaborationData collaborationData)
         {
@@ -329,6 +383,7 @@ namespace UnityEngine.XR.ARKit
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR
+            NativeApi.UnityARKit_ensureRootViewIsSetup();
             XRSessionSubsystemDescriptor.RegisterDescriptor(new XRSessionSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Session",
@@ -426,6 +481,30 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_session_setMatchFrameRateEnabled(bool enabled);
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_coachingOverlay_getActivatesAutomatically();
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_coachingOverlay_setActivatesAutomatically(bool activatesAutomatically);
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_coachingOverlay_isActive();
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_coachingOverlay_setGoal(ARCoachingGoal goal);
+
+            [DllImport("__Internal")]
+            public static extern ARCoachingGoal UnityARKit_coachingOverlay_getGoal();
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_coachingOverlay_setActive(bool active, bool animated);
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_ensureRootViewIsSetup();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_coachingOverlay_isSupported();
         }
     }
 }

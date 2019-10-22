@@ -1,3 +1,4 @@
+#if UNITY_IOS
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -38,7 +39,7 @@ namespace UnityEditor.XR.ARKit
                 throw new MissingTrackingDataException();
             }
 
-            name = referenceObject.name + "_" + referenceObject.guid.ToString("N");
+            name = referenceObject.name + "_" + referenceObject.guid.ToUUIDString();
         }
 
         public override string extension
@@ -101,3 +102,4 @@ namespace UnityEditor.XR.ARKit
         string m_Path;
     }
 }
+#endif

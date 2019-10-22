@@ -22,7 +22,7 @@ namespace UnityEditor.XR.ARKit
             // Create a resource group for each reference image library
             foreach (var library in ARKitBuildProcessor.AssetsOfType<XRReferenceImageLibrary>())
             {
-                var resourceGroup = new ARResourceGroup(library.name + "_" + library.guid.ToString().ToUpper());
+                var resourceGroup = new ARResourceGroup(library.name + "_" + library.guid.ToUUIDString());
 
                 // Create a resource group for each library
                 foreach (var referenceImage in library)

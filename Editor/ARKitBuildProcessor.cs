@@ -14,6 +14,7 @@ using UnityEditor.iOS.Xcode;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.XR.ARSubsystems;
+using OSVersion = UnityEngine.XR.ARKit.OSVersion;
 
 namespace UnityEditor.XR.ARKit
 {
@@ -88,8 +89,19 @@ namespace UnityEditor.XR.ARKit
                 if (string.IsNullOrEmpty(PlayerSettings.iOS.cameraUsageDescription))
                     throw new BuildFailedException("ARKit requires a Camera Usage Description (Player Settings > iOS > Other Settings > Camera Usage Description)");
 
+                EnsureMinimumBuildTarget();
                 EnsureOnlyMetalIsUsed();
                 EnsureTargetArchitecturesAreSupported(report.summary.platformGroup);
+            }
+
+            void EnsureMinimumBuildTarget()
+            {
+                var userSetTargetVersion = OSVersion.Parse(PlayerSettings.iOS.targetOSVersionString);
+                if (userSetTargetVersion < new OSVersion(11))
+                {
+                    throw new BuildFailedException("You have selected a minimum target iOS version of " + userSetTargetVersion + " and have the ARKit package installed.  " 
+                        + "ARKit requires at least iOS version 11.0 (See Player Settings > Other Settings > Target minimum iOS Version).");
+                }
             }
 
             void EnsureTargetArchitecturesAreSupported(BuildTargetGroup buildTargetGroup)

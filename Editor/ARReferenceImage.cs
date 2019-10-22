@@ -125,7 +125,7 @@ namespace UnityEditor.XR.ARKit
             }
 
             m_Width = referenceImage.width;
-            name = referenceImage.name + "_" + referenceImage.guid.ToString("N");
+            name = referenceImage.name + "_" + referenceImage.guid.ToUUIDString();
         }
 
         byte[] m_ImageBytes;

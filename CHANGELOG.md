@@ -4,9 +4,21 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.2.0-preview.5] - 2019-08-29
+## [2.2.0-preview.6] - 2019-10-23
+### New
+- Added support for both linear and gamma color spaces.
+- Add support for height scale estimatation for the 3D human body subsystem.
+- Add support for the [XRParticipantSubsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/participant-subsystem.html), which can track other users in a multi-user collaborative session.
+- Add support for [exposureDuration](https://developer.apple.com/documentation/arkit/arcamera/3182986-exposureduration?language=objc)
+- Add support for [exposureOffset](https://developer.apple.com/documentation/arkit/arcamera/3194569-exposureoffset?language=objc)
+- Added support for [ARCoachingOverlayView](https://developer.apple.com/documentation/arkit/arcoachingoverlayview)
+- Added support for runtime-generated tracked image libraries.
+
 ### Fixes
-- Update ARKit 3 compatibility for Xcode 11 beta 7.
+- Update ARKit 3 compatibility for Xcode 11.0 (11A420a).
+- Enforce minimum target iOS version of 11.0 whenever ARKit is required.
+- Setting the `ARHumanBodyManager.humanSegmentationDepthMode` value to either `HalfScreenResolution` or `FullScreenResolution` resulted in an invalid human segmentation depth image. This has been fixed.
+- Exclude tvOS as a supported platform.
 
 ## [2.2.0-preview.4] - 2019-07-29
 ### Fixes

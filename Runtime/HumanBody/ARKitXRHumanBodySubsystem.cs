@@ -33,6 +33,7 @@ namespace UnityEngine.XR.ARKit
                 implementationType = typeof(ARKitHumanBodySubsystem),
                 supportsHumanBody2D = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose2DEstimation(),
                 supportsHumanBody3D = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation(),
+                supportsHumanBody3DScaleEstimation = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation(),
                 supportsHumanStencilImage = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationStencil(),
                 supportsHumanDepthImage = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationDepth(),
             };
@@ -54,6 +55,9 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation();
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationStencil();
@@ -151,6 +155,19 @@ namespace UnityEngine.XR.ARKit
             public override bool TrySetHumanBodyPose3DEstimationEnabled(bool enabled)
             {
                 return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DEstimationEnabled(enabled);
+            }
+
+            /// <summary>
+            /// Sets whether 3D human body scale estimation is enabled.
+            /// </summary>
+            /// <param name="enabled">Whether the 3D human body scale estimation should be enabled.
+            /// </param>
+            /// <returns>
+            /// <c>true</c> if the 3D human body scale estimation is set to the given value. Otherwise, <c>false</c>.
+            /// </returns>
+            public override bool TrySetHumanBodyPose3DScaleEstimationEnabled(bool enabled)
+            {
+                return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DScaleEstimationEnabled(enabled);
             }
 
             /// <summary>
@@ -355,6 +372,9 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DEstimationEnabled(bool enabled);
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DScaleEstimationEnabled(bool enabled);
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanSegmentationStencilMode(HumanSegmentationMode humanSegmentationStencilMode);

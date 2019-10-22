@@ -32,7 +32,7 @@ namespace UnityEditor.XR.ARKit
             foreach (var library in ARKitBuildProcessor.AssetsOfType<XRReferenceObjectLibrary>())
             {
                 // Create a resource group for each reference object library
-                var resourceGroup = new ARResourceGroup(library.name + "_" + library.guid.ToString().ToUpper());
+                var resourceGroup = new ARResourceGroup(library.name + "_" + library.guid.ToUUIDString());
                 int resourceCount = 0;
 
                 foreach (var referenceObject in library)
