@@ -9,7 +9,7 @@ Use the *ARKit XR Plugin* package enable ARKit support via Unity's multi-platfor
 * [Input](https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.XR.XRInputSubsystem.html)
 * [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/plane-subsystem.html)
 * [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/raycast-subsystem.html)
-* [ReferencePoints](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/reference-point-subsystem.html)
+* [Anchors](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/anchor-subsystem.html)
 * [Image Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/image-tracking.html)
 * [Object Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/object-tracking.html)
 * [Environment Probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/environment-probe-subsystem.html)
@@ -23,7 +23,7 @@ This version of *ARKit XR Plugin* supports the following features:
 * Point Clouds
 * Pass-through Camera View
 * Light Estimation
-* Reference Points
+* Anchors
 * Hit Testing
 * Session Management
 * Image Tracking

@@ -4,76 +4,136 @@ Shader "Unlit/ARKitBackground"
     {
         _textureY ("TextureY", 2D) = "white" {}
         _textureCbCr ("TextureCbCr", 2D) = "black" {}
+        _HumanStencil ("HumanStencil", 2D) = "black" {}
+        _HumanDepth ("HumanDepth", 2D) = "black" {}
     }
     SubShader
     {
-        Cull Off
-        Tags { "RenderType"="Opaque" }
-        LOD 100
+        Tags
+        {
+            "Queue" = "Background"
+            "RenderType" = "Background"
+            "ForceNoShadowCasting" = "True"
+        }
 
         Pass
         {
-            ZWrite Off
+            Cull Off
+            ZTest Always
+            ZWrite On
+            Lighting Off
+            LOD 100
+            Tags
+            {
+                "LightMode" = "Always"
+            }
+
+
             CGPROGRAM
+
             #pragma vertex vert
             #pragma fragment frag
 
+            #pragma multi_compile_local __ ARKIT_HUMAN_SEGMENTATION_ENABLED
+
             #include "UnityCG.cginc"
 
-            float4x4 _UnityDisplayTransform;
 
-            struct Vertex
+            struct appdata
             {
-                float4 position : POSITION;
+                float3 position : POSITION;
                 float2 texcoord : TEXCOORD0;
             };
 
-            struct TexCoordInOut
+            struct v2f
             {
                 float4 position : SV_POSITION;
                 float2 texcoord : TEXCOORD0;
             };
 
-            TexCoordInOut vert (Vertex vertex)
+            struct fragment_output
             {
-                TexCoordInOut o;
-                o.position = UnityObjectToClipPos(vertex.position);
+                half4 color : SV_Target;
+                float depth : SV_Depth;
+            };
 
-                float texX = vertex.texcoord.x;
-                float texY = vertex.texcoord.y;
 
-                o.texcoord.x = (_UnityDisplayTransform[0].x * texX + _UnityDisplayTransform[1].x * (texY) + _UnityDisplayTransform[2].x);
-                o.texcoord.y = (_UnityDisplayTransform[0].y * texX + _UnityDisplayTransform[1].y * (texY) + (_UnityDisplayTransform[2].y));
+            CBUFFER_START(UnityPerFrame)
+            // Device display transform is provided by the AR Foundation camera background renderer.
+            float4x4 _UnityDisplayTransform;
+            CBUFFER_END
 
+            v2f vert (appdata v)
+            {
+                // Transform the position from object space to clip space.
+                float4 position = UnityObjectToClipPos(v.position);
+
+                // Remap the texture coordinates based on the device rotation.
+                float2 texcoord = mul(float3(v.texcoord, 1.0f), _UnityDisplayTransform).xy;
+
+                v2f o;
+                o.position = position;
+                o.texcoord = texcoord;
                 return o;
             }
 
-            // samplers
-            sampler2D _textureY;
-            sampler2D _textureCbCr;
 
-            fixed4 frag (TexCoordInOut i) : SV_Target
+            CBUFFER_START(ARKitColorTransformations)
+            static const half4x4 s_YCbCrToSRGB = half4x4(
+                half4(1.0h,  0.0000h,  1.4020h, -0.7010h),
+                half4(1.0h, -0.3441h, -0.7141h,  0.5291h),
+                half4(1.0h,  1.7720h,  0.0000h, -0.8860h),
+                half4(0.0h,  0.0000h,  0.0000h,  1.0000h)
+            );
+            CBUFFER_END
+
+            inline float ConvertDistanceToDepth(float d)
             {
-                // sample the texture
-                float2 texcoord = i.texcoord;
-                float y = tex2D(_textureY, texcoord).r;
-                float4 ycbcr = float4(y, tex2D(_textureCbCr, texcoord).rg, 1.0);
+                // Clip any distances smaller than the near clip plane, and compute the depth value from the distance.
+                return (d < _ProjectionParams.y) ? 0.0f : ((0.5f / _ZBufferParams.z) * ((1.0f / d) - _ZBufferParams.w));
+            }
 
-                const float4x4 ycbcrToRGBTransform = float4x4(
-                        float4(1.0, +0.0000, +1.4020, -0.7010),
-                        float4(1.0, -0.3441, -0.7141, +0.5291),
-                        float4(1.0, +1.7720, +0.0000, -0.8860),
-                        float4(0.0, +0.0000, +0.0000, +1.0000)
-                    );
+            UNITY_DECLARE_TEX2D_HALF(_textureY);
+            UNITY_DECLARE_TEX2D_HALF(_textureCbCr);
+#if ARKIT_HUMAN_SEGMENTATION_ENABLED
+            UNITY_DECLARE_TEX2D_HALF(_HumanStencil);
+            UNITY_DECLARE_TEX2D_FLOAT(_HumanDepth);
+#endif // ARKIT_HUMAN_SEGMENTATION_ENABLED
 
-                float4 result = mul(ycbcrToRGBTransform, ycbcr);
+            fragment_output frag (v2f i)
+            {
+                // Sample the video textures (in YCbCr).
+                half4 ycbcr = half4(UNITY_SAMPLE_TEX2D(_textureY, i.texcoord).r,
+                                    UNITY_SAMPLE_TEX2D(_textureCbCr, i.texcoord).rg,
+                                    1.0h);
+
+                // Convert from YCbCr to sRGB.
+                half4 videoColor = mul(s_YCbCrToSRGB, ycbcr);
 
 #if !UNITY_COLORSPACE_GAMMA
-                // Incoming video texture is in sRGB color space. If we are rendering in linear color space, we need to convert.
-                result = float4(GammaToLinearSpace(result.xyz), result.w);
+                // If rendering in linear color space, convert from sRGB to RGB.
+                videoColor.xyz = GammaToLinearSpace(videoColor.xyz);
 #endif // !UNITY_COLORSPACE_GAMMA
 
-                return result;
+                // Assume the background depth is the back of the depth clipping volume.
+                float depthValue = 0.0f;
+
+#if ARKIT_HUMAN_SEGMENTATION_ENABLED
+                // Check the human stencil, and skip non-human pixels.
+                if (UNITY_SAMPLE_TEX2D(_HumanStencil, i.texcoord).r > 0.5h)
+                {
+                    // Sample the human depth (in meters).
+                    float humanDistance = UNITY_SAMPLE_TEX2D(_HumanDepth, i.texcoord).r;
+
+                    // Convert the distance to depth.
+                    depthValue = ConvertDistanceToDepth(humanDistance);
+                }
+#endif // ARKIT_HUMAN_SEGMENTATION_ENABLED
+
+                fragment_output o;
+                o.color = videoColor;
+                o.depth = depthValue;
+                return o;
             }
             ENDCG
         }

@@ -214,8 +214,7 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             public ARKitProvider()
             {
-                NativeApi.UnityARKit_Camera_Construct(k_TextureYPropertyNameId,
-                                                      k_TextureCbCrPropertyNameId);
+                NativeApi.UnityARKit_Camera_Construct(k_TextureYPropertyNameId, k_TextureCbCrPropertyNameId);
 
                 string shaderName = ARKitCameraSubsystem.backgroundShaderName;
                 if (shaderName == null)
@@ -379,8 +378,7 @@ namespace UnityEngine.XR.ARKit
             }
 
             /// <summary>
-            /// Gets the texture descriptors associated with th current camera
-            /// frame.
+            /// Gets the texture descriptors associated with the current camera frame.
             /// </summary>
             /// <param name="defaultDescriptor">Default descriptor.</param>
             /// <param name="allocator">Allocator.</param>

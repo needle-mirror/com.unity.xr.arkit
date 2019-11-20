@@ -5,7 +5,7 @@ using Unity.Collections.LowLevel.Unsafe;
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
-    /// The space-mapping state and set of planes and reference points from
+    /// The space-mapping state and set of planes and anchors from
     /// an AR session. This is a wrapper for
     /// <a href="https://developer.apple.com/documentation/arkit/arworldmap">ARKit's ARWorldMap</a>
     /// Note: The <c>ARWorldMap</c> must be explicitly disposed to avoid leaking native resources.

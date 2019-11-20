@@ -4,79 +4,142 @@ Shader "Unlit/ARKitURPBackground"
     {
         _textureY ("TextureY", 2D) = "white" {}
         _textureCbCr ("TextureCbCr", 2D) = "black" {}
+        _HumanStencil ("HumanStencil", 2D) = "black" {}
+        _HumanDepth ("HumanDepth", 2D) = "black" {}
     }
-
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline"}
-        LOD 100
+        Tags
+        {
+            "Queue" = "Background"
+            "RenderType" = "Background"
+            "ForceNoShadowCasting" = "True"
+            "RenderPipeline" = "UniversalPipeline"
+        }
 
         Pass
         {
-            Name "Default"
-            Tags { "LightMode" = "UniversalForward"}
-
+            Cull Off
             ZTest Always
-            ZWrite Off
+            ZWrite On
+            Lighting Off
+            LOD 100
+            Tags
+            {
+                "LightMode" = "Always"
+            }
+
 
             HLSLPROGRAM
-            // Required to compile gles 2.0 with standard srp library
-            #pragma prefer_hlslcc gles
-            #pragma exclude_renderers d3d11_9x
-            #pragma vertex Vertex
-            #pragma fragment Fragment
+
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #pragma multi_compile_local __ ARKIT_HUMAN_SEGMENTATION_ENABLED
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
+
+            struct appdata
+            {
+                float3 position : POSITION;
+                float2 texcoord : TEXCOORD0;
+            };
+
+            struct v2f
+            {
+                float4 position : SV_POSITION;
+                float2 texcoord : TEXCOORD0;
+            };
+
+            struct fragment_output
+            {
+                real4 color : SV_Target;
+                float depth : SV_Depth;
+            };
+
+
+            CBUFFER_START(UnityPerFrame)
+            // Device display transform is provided by the AR Foundation camera background renderer.
             float4x4 _UnityDisplayTransform;
+            CBUFFER_END
 
-            struct VertexInput
+            v2f vert (appdata v)
             {
-                float4 vertex   : POSITION;
-                float2 uv       : TEXCOORD0;
-            };
+                // Transform the position from object space to clip space.
+                float4 position = TransformObjectToHClip(v.position);
 
-            struct VertexOutput
+                // Remap the texture coordinates based on the device rotation.
+                float2 texcoord = mul(float3(v.texcoord, 1.0f), _UnityDisplayTransform).xy;
+
+                v2f o;
+                o.position = position;
+                o.texcoord = texcoord;
+                return o;
+            }
+
+
+            CBUFFER_START(ARKitColorTransformations)
+            static const real4x4 s_YCbCrToSRGB = real4x4(
+                real4(1.0h,  0.0000h,  1.4020h, -0.7010h),
+                real4(1.0h, -0.3441h, -0.7141h,  0.5291h),
+                real4(1.0h,  1.7720h,  0.0000h, -0.8860h),
+                real4(0.0h,  0.0000h,  0.0000h,  1.0000h)
+            );
+            CBUFFER_END
+
+            inline float ConvertDistanceToDepth(float d)
             {
-                half4 pos       : SV_POSITION;
-                half2 uv        : TEXCOORD0;
-            };
+                // Clip any distances smaller than the near clip plane, and compute the depth value from the distance.
+                return (d < _ProjectionParams.y) ? 0.0f : ((0.5f / _ZBufferParams.z) * ((1.0f / d) - _ZBufferParams.w));
+            }
 
             TEXTURE2D(_textureY);
             SAMPLER(sampler_textureY);
             TEXTURE2D(_textureCbCr);
             SAMPLER(sampler_textureCbCr);
+#if ARKIT_HUMAN_SEGMENTATION_ENABLED
+            TEXTURE2D(_HumanStencil);
+            SAMPLER(sampler_HumanStencil);
+            TEXTURE2D_FLOAT(_HumanDepth);
+            SAMPLER(sampler_HumanDepth);
+#endif // ARKIT_HUMAN_SEGMENTATION_ENABLED
 
-            VertexOutput Vertex(VertexInput i)
+            fragment_output frag (v2f i)
             {
-                VertexOutput o;
-                o.pos = TransformObjectToHClip(i.vertex.xyz);
-                o.uv.x = (_UnityDisplayTransform[0].x * i.uv.x + _UnityDisplayTransform[1].x * (i.uv.y) + _UnityDisplayTransform[2].x);
-                o.uv.y = (_UnityDisplayTransform[0].y * i.uv.x + _UnityDisplayTransform[1].y * (i.uv.y) + _UnityDisplayTransform[2].y);
-                return o;
-            }
+                // Sample the video textures (in YCbCr).
+                real4 ycbcr = real4(SAMPLE_TEXTURE2D(_textureY, sampler_textureY, i.texcoord).r,
+                                    SAMPLE_TEXTURE2D(_textureCbCr, sampler_textureCbCr, i.texcoord).rg,
+                                    1.0h);
 
-            half4 Fragment(VertexOutput i) : SV_Target
-            {
-                half y = SAMPLE_TEXTURE2D(_textureY, sampler_textureY, i.uv).r;
-                half4 ycbcr = half4(y, SAMPLE_TEXTURE2D(_textureCbCr, sampler_textureCbCr, i.uv).rg, 1.0);
-
-                const half4x4 ycbcrToRGBTransform = half4x4(
-                    half4(1.0, +0.0000, +1.4020, -0.7010),
-                    half4(1.0, -0.3441, -0.7141, +0.5291),
-                    half4(1.0, +1.7720, +0.0000, -0.8860),
-                    half4(0.0, +0.0000, +0.0000, +1.0000)
-                );
-
-                half4 result = mul(ycbcrToRGBTransform, ycbcr);
+                // Convert from YCbCr to sRGB.
+                real4 videoColor = mul(s_YCbCrToSRGB, ycbcr);
 
 #if !UNITY_COLORSPACE_GAMMA
-                // Incoming video texture is in sRGB color space. If we are rendering in linear color space, we need to convert.
-                result = FastSRGBToLinear(result);
+                // If rendering in linear color space, convert from sRGB to RGB.
+                videoColor.xyz = FastSRGBToLinear(videoColor.xyz);
 #endif // !UNITY_COLORSPACE_GAMMA
 
-                return result;
+                // Assume the background depth is the back of the depth clipping volume.
+                float depthValue = 0.0f;
+
+#if ARKIT_HUMAN_SEGMENTATION_ENABLED
+                // Check the human stencil, and skip non-human pixels.
+                if (SAMPLE_TEXTURE2D(_HumanStencil, sampler_HumanStencil, i.texcoord).r > 0.5h)
+                {
+                    // Sample the human depth (in meters).
+                    float humanDistance = SAMPLE_TEXTURE2D(_HumanDepth, sampler_HumanDepth, i.texcoord).r;
+
+                    // Convert the distance to depth.
+                    depthValue = ConvertDistanceToDepth(humanDistance);
+                }
+#endif // ARKIT_HUMAN_SEGMENTATION_ENABLED
+
+                fragment_output o;
+                o.color = videoColor;
+                o.depth = depthValue;
+                return o;
             }
             ENDHLSL
         }

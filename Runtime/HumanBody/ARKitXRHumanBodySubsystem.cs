@@ -27,8 +27,6 @@ namespace UnityEngine.XR.ARKit
                 supportsHumanBody2D = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose2DEstimation(),
                 supportsHumanBody3D = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation(),
                 supportsHumanBody3DScaleEstimation = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation(),
-                supportsHumanStencilImage = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationStencil(),
-                supportsHumanDepthImage = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationDepth(),
             };
 
             if (!XRHumanBodySubsystem.Register(humanBodySubsystemCinfo))
@@ -51,13 +49,7 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation();
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationStencil();
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodySegmentationDepth();
-        }
+       }
     }
 
     /// <summary>
@@ -72,10 +64,7 @@ namespace UnityEngine.XR.ARKit
         /// <returns>
         /// The implementation provider.
         /// </returns>
-        protected override Provider CreateProvider()
-        {
-            return new ARKitProvider();
-        }
+        protected override Provider CreateProvider() => new ARKitProvider();
 
         /// <summary>
         /// The implementation provider class.
@@ -116,9 +105,7 @@ namespace UnityEngine.XR.ARKit
             /// to be enabled. At this time, these features are mutually exclusive.
             /// </remarks>
             public override bool TrySetHumanBodyPose2DEstimationEnabled(bool enabled)
-            {
-                return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose2DEstimationEnabled(enabled);
-            }
+                => NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose2DEstimationEnabled(enabled);
 
             /// <summary>
             /// Sets whether human body pose 3D estimation is enabled.
@@ -133,9 +120,7 @@ namespace UnityEngine.XR.ARKit
             /// to be enabled. At this time, these features are mutually exclusive.
             /// </remarks>
             public override bool TrySetHumanBodyPose3DEstimationEnabled(bool enabled)
-            {
-                return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DEstimationEnabled(enabled);
-            }
+                => NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DEstimationEnabled(enabled);
 
             /// <summary>
             /// Sets whether 3D human body scale estimation is enabled.
@@ -146,43 +131,7 @@ namespace UnityEngine.XR.ARKit
             /// <c>true</c> if the 3D human body scale estimation is set to the given value. Otherwise, <c>false</c>.
             /// </returns>
             public override bool TrySetHumanBodyPose3DScaleEstimationEnabled(bool enabled)
-            {
-                return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DScaleEstimationEnabled(enabled);
-            }
-
-            /// <summary>
-            /// Set the human segmentation stencil mode.
-            /// </summary>
-            /// <param name="humanSegmentationStencilMode">The mode for the human segmentation stencil.</param>
-            /// <returns>
-            /// <c>true</c> if the method successfully set the human segmentation stencil mode. Otherwise,
-            /// <c>false</c>.
-            /// </returns>
-            /// <remarks>
-            /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images
-            /// to be enabled. At this time, these features are mutually exclusive.
-            /// </remarks>
-            public override bool TrySetHumanSegmentationStencilMode(HumanSegmentationMode humanSegmentationStencilMode)
-            {
-                return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanSegmentationStencilMode(humanSegmentationStencilMode);
-            }
-
-            /// <summary>
-            /// Set the human segmentation depth mode.
-            /// </summary>
-            /// <param name="humanSegmentationDepthMode">The mode for the human segmentation depth.</param>
-            /// <returns>
-            /// <c>true</c> if the method successfully set the human segmentation depth mode. Otherwise,
-            /// <c>false</c>.
-            /// </returns>
-            /// <remarks>
-            /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images
-            /// to be enabled. At this time, these features are mutually exclusive.
-            /// </remarks>
-            public override bool TrySetHumanSegmentationDepthMode(HumanSegmentationMode humanSegmentationDepthMode)
-            {
-                return NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanSegmentationDepthMode(humanSegmentationDepthMode);
-            }
+                => NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DScaleEstimationEnabled(enabled);
 
             /// <summary>
             /// Queries for the set of human body changes.
@@ -300,34 +249,6 @@ namespace UnityEngine.XR.ARKit
                     NativeApi.UnityARKit_HumanBodyProvider_ReleaseHumanBodyPose2DJoints(joints);
                 }
             }
-
-            /// <summary>
-            /// Gets the human stencil texture descriptor.
-            /// </summary>
-            /// <param name="humanStencilDescriptor">The human stencil texture descriptor to be populated, if
-            /// available.</param>
-            /// <returns>
-            /// <c>true</c> if the human stencil texture descriptor is available and is returned. Otherwise,
-            /// <c>false</c>.
-            /// </returns>
-            public override bool TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor)
-            {
-                return NativeApi.UnityARKit_HumanBodyProvider_TryGetHumanStencil(out humanStencilDescriptor);
-            }
-
-            /// <summary>
-            /// Get the human depth texture descriptor.
-            /// </summary>
-            /// <param name="humanDepthDescriptor">The human depth texture descriptor to be populated, if available
-            /// </param>
-            /// <returns>
-            /// <c>true</c> if the human depth texture descriptor is available and is returned. Otherwise,
-            /// <c>false</c>.
-            /// </returns>
-            public override bool TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor)
-            {
-                return NativeApi.UnityARKit_HumanBodyProvider_TryGetHumanDepth(out humanDepthDescriptor);
-            }
         }
 
         /// <summary>
@@ -357,16 +278,10 @@ namespace UnityEngine.XR.ARKit
             public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DScaleEstimationEnabled(bool enabled);
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanSegmentationStencilMode(HumanSegmentationMode humanSegmentationStencilMode);
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanSegmentationDepthMode(HumanSegmentationMode humanSegmentationDepthMode);
-
-            [DllImport("__Internal")]
             public static extern unsafe void* UnityARKit_HumanBodyProvider_AcquireChanges(out int numAddedHumanBodies, out void* addedBodys,
-                                                                                     out int numUpdatedHumanBodies, out void* updatedBodys,
-                                                                                     out int numRemovedHumanBodyIds, out void* removedBodyIds,
-                                                                                     out int stride);
+                                                                                          out int numUpdatedHumanBodies, out void* updatedBodys,
+                                                                                          out int numRemovedHumanBodyIds, out void* removedBodyIds,
+                                                                                          out int stride);
 
             [DllImport("__Internal")]
             public static extern unsafe void UnityARKit_HumanBodyProvider_ReleaseChanges(void* context);
@@ -384,12 +299,6 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static unsafe extern void UnityARKit_HumanBodyProvider_ReleaseHumanBodyPose2DJoints(void* joints);
-
-            [DllImport("__Internal")]
-            public static unsafe extern bool UnityARKit_HumanBodyProvider_TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor);
-
-            [DllImport("__Internal")]
-            public static unsafe extern bool UnityARKit_HumanBodyProvider_TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor);
         }
     }
 }
