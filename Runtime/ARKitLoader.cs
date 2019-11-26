@@ -10,13 +10,11 @@ namespace UnityEngine.XR.ARKit
         private static List<XRCameraSubsystemDescriptor> s_CameraSubsystemDescriptors = new List<XRCameraSubsystemDescriptor>();
         private static List<XRDepthSubsystemDescriptor> s_DepthSubsystemDescriptors = new List<XRDepthSubsystemDescriptor>();
         private static List<XRPlaneSubsystemDescriptor> s_PlaneSubsystemDescriptors = new List<XRPlaneSubsystemDescriptor>();
-        private static List<XRReferencePointSubsystemDescriptor> s_ReferencePointSubsystemDescriptors = new List<XRReferencePointSubsystemDescriptor>();
+        private static List<XRAnchorSubsystemDescriptor> s_AnchorSubsystemDescriptors = new List<XRAnchorSubsystemDescriptor>();
         private static List<XRRaycastSubsystemDescriptor> s_RaycastSubsystemDescriptors = new List<XRRaycastSubsystemDescriptor>();
-        private static List<XRHumanBodySubsystemDescriptor> s_HumanBodySubsystemDescriptors = new List<XRHumanBodySubsystemDescriptor>();
         private static List<XREnvironmentProbeSubsystemDescriptor> s_EnvironmentProbeSubsystemDescriptors = new List<XREnvironmentProbeSubsystemDescriptor>();
         private static List<XRInputSubsystemDescriptor> s_InputSubsystemDescriptors = new List<XRInputSubsystemDescriptor>();
         private static List<XRImageTrackingSubsystemDescriptor> s_ImageTrackingSubsystemDescriptors = new List<XRImageTrackingSubsystemDescriptor>();
-        private static List<XRObjectTrackingSubsystemDescriptor> s_ObjectTrackingSubsystemDescriptors = new List<XRObjectTrackingSubsystemDescriptor>();
         private static List<XRFaceSubsystemDescriptor> s_FaceSubsystemDescriptors = new List<XRFaceSubsystemDescriptor>();
 
         public XRSessionSubsystem sessionSubsystem
@@ -51,11 +49,11 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-        public XRReferencePointSubsystem referencePointSubsystem
+        public XRAnchorSubsystem anchorSubsystem
         {
             get
             {
-                return GetLoadedSubsystem<XRReferencePointSubsystem>();
+                return GetLoadedSubsystem<XRAnchorSubsystem>();
             }
         }
 
@@ -64,14 +62,6 @@ namespace UnityEngine.XR.ARKit
             get
             {
                 return GetLoadedSubsystem<XRRaycastSubsystem>();
-            }
-        }
-
-        public XRHumanBodySubsystem humanBodySubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRHumanBodySubsystem>();
             }
         }
 
@@ -99,14 +89,6 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-        public XRObjectTrackingSubsystem objectTrackingSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRObjectTrackingSubsystem>();
-            }
-        }
-
         public XRFaceSubsystem faceSubsystem
         {
             get
@@ -122,15 +104,13 @@ namespace UnityEngine.XR.ARKit
             CreateSubsystem<XRCameraSubsystemDescriptor, XRCameraSubsystem>(s_CameraSubsystemDescriptors, "ARKit-Camera");
             CreateSubsystem<XRDepthSubsystemDescriptor, XRDepthSubsystem>(s_DepthSubsystemDescriptors, "ARKit-Depth");
             CreateSubsystem<XRPlaneSubsystemDescriptor, XRPlaneSubsystem>(s_PlaneSubsystemDescriptors, "ARKit-Plane");
-            CreateSubsystem<XRReferencePointSubsystemDescriptor, XRReferencePointSubsystem>(s_ReferencePointSubsystemDescriptors, "ARKit-ReferencePoint");
+            CreateSubsystem<XRAnchorSubsystemDescriptor, XRAnchorSubsystem>(s_AnchorSubsystemDescriptors, "ARKit-Anchor");
             CreateSubsystem<XRRaycastSubsystemDescriptor, XRRaycastSubsystem>(s_RaycastSubsystemDescriptors, "ARKit-Raycast");
-            CreateSubsystem<XRHumanBodySubsystemDescriptor, XRHumanBodySubsystem>(s_HumanBodySubsystemDescriptors, "ARKit-HumanBody");
             CreateSubsystem<XREnvironmentProbeSubsystemDescriptor, XREnvironmentProbeSubsystem>(s_EnvironmentProbeSubsystemDescriptors, "ARKit-EnvironmentProbe");
             CreateSubsystem<XRInputSubsystemDescriptor, XRInputSubsystem>(s_InputSubsystemDescriptors, "ARKit-Input");
 
             // Optional subsystems that might not have been registered, based on the iOS version.
             CreateSubsystem<XRImageTrackingSubsystemDescriptor, XRImageTrackingSubsystem>(s_ImageTrackingSubsystemDescriptors, "ARKit-ImageTracking");
-            CreateSubsystem<XRObjectTrackingSubsystemDescriptor, XRObjectTrackingSubsystem>(s_ObjectTrackingSubsystemDescriptors, "ARKit-ObjectTracking");
             CreateSubsystem<XRFaceSubsystemDescriptor, XRFaceSubsystem>(s_FaceSubsystemDescriptors, "ARKit-Face");
 
             if (sessionSubsystem == null)
@@ -153,13 +133,11 @@ namespace UnityEngine.XR.ARKit
                 StartSubsystem<XRCameraSubsystem>();
                 StartSubsystem<XRDepthSubsystem>();
                 StartSubsystem<XRPlaneSubsystem>();
-                StartSubsystem<XRReferencePointSubsystem>();
+                StartSubsystem<XRAnchorSubsystem>();
                 StartSubsystem<XRRaycastSubsystem>();
-                StartSubsystem<XRHumanBodySubsystem>();
                 StartSubsystem<XREnvironmentProbeSubsystem>();
                 StartSubsystem<XRInputSubsystem>();
                 StartSubsystem<XRImageTrackingSubsystem>();
-                StartSubsystem<XRObjectTrackingSubsystem>();
                 StartSubsystem<XRFaceSubsystem>();
             }
             return true;
@@ -174,13 +152,11 @@ namespace UnityEngine.XR.ARKit
                 StopSubsystem<XRCameraSubsystem>();
                 StopSubsystem<XRDepthSubsystem>();
                 StopSubsystem<XRPlaneSubsystem>();
-                StopSubsystem<XRReferencePointSubsystem>();
+                StopSubsystem<XRAnchorSubsystem>();
                 StopSubsystem<XRRaycastSubsystem>();
-                StopSubsystem<XRHumanBodySubsystem>();
                 StopSubsystem<XREnvironmentProbeSubsystem>();
                 StopSubsystem<XRInputSubsystem>();
                 StopSubsystem<XRImageTrackingSubsystem>();
-                StopSubsystem<XRObjectTrackingSubsystem>();
                 StopSubsystem<XRFaceSubsystem>();
             }
             return true;
@@ -193,13 +169,11 @@ namespace UnityEngine.XR.ARKit
             DestroySubsystem<XRCameraSubsystem>();
             DestroySubsystem<XRDepthSubsystem>();
             DestroySubsystem<XRPlaneSubsystem>();
-            DestroySubsystem<XRReferencePointSubsystem>();
+            DestroySubsystem<XRAnchorSubsystem>();
             DestroySubsystem<XRRaycastSubsystem>();
-            DestroySubsystem<XRHumanBodySubsystem>();
             DestroySubsystem<XREnvironmentProbeSubsystem>();
             DestroySubsystem<XRInputSubsystem>();
             DestroySubsystem<XRImageTrackingSubsystem>();
-            DestroySubsystem<XRObjectTrackingSubsystem>();
             DestroySubsystem<XRFaceSubsystem>();
 #endif
             return true;

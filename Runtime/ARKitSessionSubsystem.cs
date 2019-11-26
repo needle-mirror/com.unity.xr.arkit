@@ -136,7 +136,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Apply an existing <see cref="ARWorldMap"/> to the session. This will attempt
         /// to relocalize the current session to the given <paramref name="worldMap"/>.
-        /// If relocalization is successful, the stored planes & reference points from
+        /// If relocalization is successful, the stored planes and anchors from
         /// the <paramref name="worldMap"/> will be added to the current session.
         /// This is equivalent to setting the <a href="https://developer.apple.com/documentation/arkit/arworldtrackingconfiguration/2968180-initialworldmap">initialWorldMap</a>
         /// property on the session's <a href="https://developer.apple.com/documentation/arkit/arworldtrackingconfiguration">ARWorldTrackingConfiguration</a>.

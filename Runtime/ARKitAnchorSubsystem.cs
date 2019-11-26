@@ -6,11 +6,11 @@ using UnityEngine.XR.ARSubsystems;
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
-    /// The ARKit implementation of the <c>XRReferencePointSubsystem</c>. Do not create this directly.
+    /// The ARKit implementation of the <c>XRAnchorSubsystem</c>. Do not create this directly.
     /// Use the <c>SubsystemManager</c> instead.
     /// </summary>
     [Preserve]
-    public sealed class ARKitReferencePointSubsystem : XRReferencePointSubsystem
+    public sealed class ARKitAnchorSubsystem : XRAnchorSubsystem
     {
         protected override Provider CreateProvider() => new ARKitProvider();
 
@@ -22,8 +22,8 @@ namespace UnityEngine.XR.ARKit
 
             public override void Destroy() => UnityARKit_refPoints_onDestroy();
 
-            public override unsafe TrackableChanges<XRReferencePoint> GetChanges(
-                XRReferencePoint defaultReferencePoint,
+            public override unsafe TrackableChanges<XRAnchor> GetChanges(
+                XRAnchor defaultAnchor,
                 Allocator allocator)
             {
                 void* addedPtr, updatedPtr, removedPtr;
@@ -36,11 +36,11 @@ namespace UnityEngine.XR.ARKit
 
                 try
                 {
-                    return new TrackableChanges<XRReferencePoint>(
+                    return new TrackableChanges<XRAnchor>(
                         addedPtr, addedCount,
                         updatedPtr, updatedCount,
                         removedPtr, removedCount,
-                        defaultReferencePoint, elementSize,
+                        defaultAnchor, elementSize,
                         allocator);
                 }
                 finally
@@ -49,22 +49,22 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            public override bool TryAddReferencePoint(Pose pose, out XRReferencePoint referencePoint)
+            public override bool TryAddAnchor(Pose pose, out XRAnchor anchor)
             {
-                return UnityARKit_refPoints_tryAdd(pose, out referencePoint);
+                return UnityARKit_refPoints_tryAdd(pose, out anchor);
             }
 
-            public override bool TryAttachReferencePoint(
+            public override bool TryAttachAnchor(
                 TrackableId trackableToAffix,
                 Pose pose,
-                out XRReferencePoint referencePoint)
+                out XRAnchor anchor)
             {
-                return UnityARKit_refPoints_tryAttach(trackableToAffix, pose, out referencePoint);
+                return UnityARKit_refPoints_tryAttach(trackableToAffix, pose, out anchor);
             }
 
-            public override bool TryRemoveReferencePoint(TrackableId referencePointId)
+            public override bool TryRemoveAnchor(TrackableId anchorId)
             {
-                return UnityARKit_refPoints_tryRemove(referencePointId);
+                return UnityARKit_refPoints_tryRemove(anchorId);
             }
 
             [DllImport("__Internal")]
@@ -89,30 +89,30 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             static extern bool UnityARKit_refPoints_tryAdd(
                 Pose pose,
-                out XRReferencePoint referencePoint);
+                out XRAnchor anchor);
 
             [DllImport("__Internal")]
             static extern bool UnityARKit_refPoints_tryAttach(
                 TrackableId trackableToAffix,
                 Pose pose,
-                out XRReferencePoint referencePoint);
+                out XRAnchor anchor);
 
             [DllImport("__Internal")]
-            static extern bool UnityARKit_refPoints_tryRemove(TrackableId referencePointId);
+            static extern bool UnityARKit_refPoints_tryRemove(TrackableId anchorId);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR
-            var cinfo = new XRReferencePointSubsystemDescriptor.Cinfo
+            var cinfo = new XRAnchorSubsystemDescriptor.Cinfo
             {
-                id = "ARKit-ReferencePoint",
-                subsystemImplementationType = typeof(ARKitReferencePointSubsystem),
+                id = "ARKit-Anchor",
+                subsystemImplementationType = typeof(ARKitAnchorSubsystem),
                 supportsTrackableAttachments = true
             };
 
-            XRReferencePointSubsystemDescriptor.Create(cinfo);
+            XRAnchorSubsystemDescriptor.Create(cinfo);
 #endif
         }
     }
