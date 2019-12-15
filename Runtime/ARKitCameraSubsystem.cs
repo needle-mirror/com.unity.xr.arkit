@@ -138,6 +138,10 @@ namespace UnityEngine.XR.ARKit
                 supportsCameraImage = true,
                 supportsAverageIntensityInLumens = true,
                 supportsFocusModes = true,
+                supportsFaceTrackingAmbientIntensityLightEstimation = true,
+                supportsFaceTrackingHDRLightEstimation = true,
+                supportsWorldTrackingAmbientIntensityLightEstimation = true,
+                supportsWorldTrackingHDRLightEstimation = false,
             };
 
             if (!XRCameraSubsystem.Register(cameraSubsystemCinfo))
