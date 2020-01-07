@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0-preview.4] - 2020-01-08
+### Fixes
+- Fixes an issue with the 2D joint positions from human body tracking.
+
 ## [3.1.0-preview.2] - 2019-12-16
 ### New
 - Added support for HDR Light Estimation.  HDR Light Estimation only functions during Face-Tracking on ARKit.

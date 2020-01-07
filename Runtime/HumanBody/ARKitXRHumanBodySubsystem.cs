@@ -216,25 +216,31 @@ namespace UnityEngine.XR.ARKit
             }
 
             /// <summary>
-            /// Get the human body pose 2D joints for the current frame.
+            /// Gets the human body pose 2D joints for the current frame.
             /// </summary>
-            /// <param name="defaultBody2DJoint">The default value for the human body pose 2D joint.</param>
+            /// <param name="defaultHumanBodyPose2DJoint">The default value for the body pose 2D joint.</param>
+            /// <param name="screenWidth">The width of the screen, in pixels.</param>
+            /// <param name="screenHeight">The height of the screen, in pixels.</param>
             /// <param name="screenOrientation">The orientation of the device so that the joint positions may be
             /// adjusted as required.</param>
             /// <param name="allocator">The allocator to use for the returned array memory.</param>
             /// <returns>
-            /// The array of human body pose 2D joints.
+            /// The array of body pose 2D joints.
             /// </returns>
             /// <remarks>
-            /// The returned array may be empty if the system is not enabled or if the system does not detect a human
-            /// body.
+            /// The returned array may be empty if the system does not detect a human in the camera image.
             /// </remarks>
             public override unsafe NativeArray<XRHumanBodyPose2DJoint> GetHumanBodyPose2DJoints(XRHumanBodyPose2DJoint defaultHumanBodyPose2DJoint,
+                                                                                                int screenWidth,
+                                                                                                int screenHeight,
                                                                                                 ScreenOrientation screenOrientation,
                                                                                                 Allocator allocator)
             {
-                int length, elementSize;
-                var joints = NativeApi.UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(screenOrientation, out length, out elementSize);
+                var joints = NativeApi.UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(screenWidth,
+                                                                                                 screenHeight,
+                                                                                                 screenOrientation,
+                                                                                                 out int length,
+                                                                                                 out int elementSize);
 
                 try
                 {
@@ -293,7 +299,9 @@ namespace UnityEngine.XR.ARKit
             public static extern unsafe void UnityARKit_HumanBodyProvider_ReleaseJoints(void* joints);
 
             [DllImport("__Internal")]
-            public static unsafe extern void* UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(ScreenOrientation screenOrientation,
+            public static unsafe extern void* UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(int screenWidth,
+                                                                                                        int screenHeight,
+                                                                                                        ScreenOrientation screenOrientation,
                                                                                                         out int length,
                                                                                                         out int elementSize);
 
