@@ -44,7 +44,7 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR

@@ -203,12 +203,12 @@ namespace UnityEngine.XR.ARKit
             {
                 get { return NativeApi.UnityARKit_session_getTrackingState(); }
             }
-			
+
             public override NotTrackingReason notTrackingReason
             {
                 get { return NativeApi.UnityARKit_session_getNotTrackingReason(); }
             }
-			
+
             public override bool matchFrameRate
             {
                 get { return NativeApi.UnityARKit_session_getMatchFrameRateEnabled(); }
@@ -224,7 +224,7 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR

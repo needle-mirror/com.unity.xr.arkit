@@ -113,7 +113,7 @@ namespace UnityEngine.XR.ARKit
             static extern bool UnityARKit_refPoints_tryRemove(TrackableId referencePointId);
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR

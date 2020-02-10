@@ -177,7 +177,7 @@ namespace UnityEngine.XR.ARKit
                 void* boundary);
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR
