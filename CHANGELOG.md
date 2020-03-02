@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0-preview.7] - 2020-03-03
+### Fixes
+- When auto focus was set to "Fixed" when starting an AR session, the iOS device would still perform auto focus. This has been fixed.
+- The estimated main light direction was Y flipped, e.g., it pointed up when it should be pointing down. This has been fixed.
+- Patched a memory leak by removing the coaching overly view from the superview.
+
 ## [3.1.0-preview.6] - 2020-02-18
 
 ## [3.1.0-preview.4] - 2020-01-08
