@@ -101,7 +101,7 @@ namespace UnityEngine.XR.ARKit
             get
             {
                 ValidateAndThrow();
-                return UnityARKit_session_getCollaborationDataPriority(m_NativePtr);
+                return UnityARKit_CollaborationData_GetPriority(m_NativePtr);
             }
         }
 
@@ -126,7 +126,7 @@ namespace UnityEngine.XR.ARKit
         {
             ValidateAndThrow();
 
-            var nsData = new NSData(UnityARKit_session_serializeCollaborationDataToNSData(m_NativePtr));
+            var nsData = new NSData(UnityARKit_CollaborationData_SerializeToNSData(m_NativePtr));
             return new SerializedARCollaborationData(nsData);
         }
 
@@ -169,7 +169,7 @@ namespace UnityEngine.XR.ARKit
 
         internal ARCollaborationData(IntPtr data) => m_NativePtr = data;
 
-        internal ARCollaborationData(NSData data) => m_NativePtr = UnityARKit_session_deserializeCollaborationDataFromNSData(data);
+        internal ARCollaborationData(NSData data) => m_NativePtr = UnityARKit_CollaborationData_DeserializeFromNSData(data);
 
         void ValidateAndThrow()
         {
@@ -181,7 +181,7 @@ namespace UnityEngine.XR.ARKit
         {
             using (var nsData = NSData.CreateWithBytesNoCopy(bytes, length))
             {
-                return UnityARKit_session_deserializeCollaborationDataFromNSData(nsData);
+                return UnityARKit_CollaborationData_DeserializeFromNSData(nsData);
             }
         }
 
@@ -197,13 +197,13 @@ namespace UnityEngine.XR.ARKit
         static extern void UnityARKit_CFRelease(IntPtr ptr);
 
         [DllImport("__Internal")]
-        static extern IntPtr UnityARKit_session_deserializeCollaborationDataFromNSData(IntPtr nsData);
+        static extern IntPtr UnityARKit_CollaborationData_DeserializeFromNSData(IntPtr nsData);
 
         [DllImport("__Internal")]
-        static extern IntPtr UnityARKit_session_serializeCollaborationDataToNSData(IntPtr collaborationData);
+        static extern IntPtr UnityARKit_CollaborationData_SerializeToNSData(IntPtr collaborationData);
 
         [DllImport("__Internal")]
-        static extern ARCollaborationDataPriority UnityARKit_session_getCollaborationDataPriority(IntPtr collaborationData);
+        static extern ARCollaborationDataPriority UnityARKit_CollaborationData_GetPriority(IntPtr collaborationData);
 
         internal IntPtr m_NativePtr;
     }

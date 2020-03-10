@@ -1,6 +1,9 @@
 using AOT;
 using System;
 using System.Runtime.InteropServices;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.Assertions;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -12,20 +15,14 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitSessionSubsystem : XRSessionSubsystem
     {
+        ARKitProvider m_Provider;
+
+        IntPtr self => m_Provider.self;
+
         /// <summary>
         /// <c>true</c> if [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview) is supported, otherwise <c>false</c>.
         /// </summary>
-        public static bool coachingOverlaySupported
-        {
-            get
-            {
-#if UNITY_IOS && !UNITY_EDITOR
-                return NativeApi.UnityARKit_coachingOverlay_isSupported();
-#else
-                return false;
-#endif
-            }
-        }
+        public static bool coachingOverlaySupported => Api.AtLeast13_0();
 
         /// <summary>
         /// Whether the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview)
@@ -33,24 +30,43 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         public bool coachingActivatesAutomatically
         {
-            get => NativeApi.UnityARKit_coachingOverlay_getActivatesAutomatically();
-            set => NativeApi.UnityARKit_coachingOverlay_setActivatesAutomatically(value);
+            get => NativeApi.UnityARKit_Session_GetCoachingOverlayActivatesAutomatically(self);
+            set => NativeApi.UnityARKit_Session_SetCoachingOverlayActivatesAutomatically(self, value);
         }
 
         /// <summary>
         /// Defines the [Coaching Goal](https://developer.apple.com/documentation/arkit/arcoachingoverlayview/3192180-goal).
-        /// This should be based on your app's tracking requirements and affects the UI that the coaching overlay presents.
+        /// This property is obsolete. Use <see cref="requestedCoachingGoal"/> or <see cref="currentCoachingGoal"/> instead.
         /// </summary>
+        [Obsolete("Use requestedCoachingGoal or currentCoachingGoal instead. (2020-01-17)")]
         public ARCoachingGoal coachingGoal
         {
-            get => NativeApi.UnityARKit_coachingOverlay_getGoal();
-            set => NativeApi.UnityARKit_coachingOverlay_setGoal(value);
+            get => currentCoachingGoal;
+            set => requestedCoachingGoal = value;
         }
+
+        /// <summary>
+        /// Requestes the [Coaching Goal](https://developer.apple.com/documentation/arkit/arcoachingoverlayview/3192180-goal).
+        /// This should be based on your app's tracking requirements and affects the UI that the coaching overlay presents.
+        /// </summary>
+        /// <value>The type of goal the coaching overlay should guide the user through.</value>
+        public ARCoachingGoal requestedCoachingGoal
+        {
+            get => NativeApi.UnityARKit_Session_GetRequestedCoachingGoal(self);
+            set => NativeApi.UnityARKit_Session_SetRequestedCoachingGoal(self, value);
+        }
+
+        /// <summary>
+        /// The current [Coaching Goal](https://developer.apple.com/documentation/arkit/arcoachingoverlayview/3192180-goal).
+        /// This may be different than the <see cref="requestedCoachingGoal"/>.
+        /// </summary>
+        /// <returns>The type of goal the coaching overlay will guide the user through.</returns>
+        public ARCoachingGoal currentCoachingGoal => NativeApi.UnityARKit_Session_GetCurrentCoachingGoal(self);
 
         /// <summary>
         /// <c>true</c> if the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview) is active.
         /// </summary>
-        public bool coachingActive => NativeApi.UnityARKit_coachingOverlay_isActive();
+        public bool coachingActive => NativeApi.UnityARKit_Session_IsCoachingOverlayActive(self);
 
         /// <summary>
         /// Activates or deactivates the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview)
@@ -59,7 +75,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="animate">The type of transition to use when showing or hiding the coaching overlay.</param>
         public void SetCoachingActive(bool active, ARCoachingOverlayTransition transition)
         {
-            NativeApi.UnityARKit_coachingOverlay_setActive(active, transition == ARCoachingOverlayTransition.Animated);
+            NativeApi.UnityARKit_Session_SetCoachingOverlayActive(self, active, transition == ARCoachingOverlayTransition.Animated);
         }
 
         /// <summary>
@@ -114,24 +130,14 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <returns><c>true</c> if <c>ARWorldMap</c>s are supported, otherwise <c>false</c>.</returns>
         /// <seealso cref="GetARWorldMapAsync()"/>
-        public static bool worldMapSupported
-        {
-            get
-            {
-#if UNITY_IOS && !UNITY_EDITOR
-                return NativeApi.UnityARKit_worldMapSupported();
-#else
-                return false;
-#endif
-            }
-        }
+        public static bool worldMapSupported => Api.AtLeast12_0();
 
         /// <summary>
         /// Get the world mapping status. Used to determine the suitability of the current session for
         /// creating an <see cref="ARWorldMap"/>.
         /// </summary>
         /// <returns>The <see cref="ARWorldMappingStatus"/> of the session.</returns>
-        public ARWorldMappingStatus worldMappingStatus => NativeApi.UnityARKit_session_getWorldMappingStatus();
+        public ARWorldMappingStatus worldMappingStatus => NativeApi.UnityARKit_Session_GetWorldMappingStatus(self);
 
         /// <summary>
         /// Apply an existing <see cref="ARWorldMap"/> to the session. This will attempt
@@ -151,8 +157,11 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Get or set whether collaboration is enabled. When collaboration is enabled, collaboration
-        /// data is accumulated by the subsystem until you read it out with <see cref="DequeueCollaborationData"/>.
+        /// Get whether
+        /// [collaboration is enabled](https://developer.apple.com/documentation/arkit/arworldtrackingconfiguration/3152987-collaborationenabled).
+        /// When collaboration is enabled,
+        /// [collaboration data](https://developer.apple.com/documentation/arkit/arcollaborationdata)
+        /// is accumulated by the subsystem until you read it out with <see cref="DequeueCollaborationData"/>.
         /// </summary>
         /// <remarks>
         /// Note: If you change this value, the new value may not be reflected until the next frame.
@@ -160,27 +169,22 @@ namespace UnityEngine.XR.ARKit
         /// <seealso cref="ARCollaborationData"/>
         /// <seealso cref="DequeueCollaborationData"/>
         /// <seealso cref="collaborationDataCount"/>
-        public bool collaborationEnabled
+        public bool collaborationRequested
         {
-            get => NativeApi.UnityARKit_session_getCollaborationEnabled();
-            set
-            {
-                if (supportsCollaboration)
-                {
-                    NativeApi.UnityARKit_session_setCollaborationRequested(value);
-                }
-                else if (value)
-                {
-                    throw new NotSupportedException("ARCollaborationData is not supported by this version of iOS.");
-                }
-            }
+            get => Api.GetRequestedFeatures().All(Feature.Collaboration);
+            set => Api.SetFeatureRequested(Feature.Collaboration, value);
         }
+
+        /// <summary>
+        /// Queries whether collaboration is currently enabled.
+        /// </summary>
+        public bool collaborationEnabled => NativeApi.UnityARKit_Session_GetCollaborationEnabled(self);
 
         /// <summary>
         /// True if collaboration is supported. Collaboration is only supported on iOS versions 13.0 and later.
         /// </summary>
         /// <seealso cref="ARCollaborationData"/>
-        public static bool supportsCollaboration => s_SupportsCollaboration;
+        public static bool supportsCollaboration => Api.AtLeast13_0();
 
         /// <summary>
         /// The number of <see cref="ARCollaborationData"/>s in the queue. Obtain <see cref="ARCollaborationData"/>
@@ -188,7 +192,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <seealso cref="ARCollaborationData"/>
         /// <seealso cref="DequeueCollaborationData"/>
-        public int collaborationDataCount => NativeApi.UnityARKit_session_getCollaborationDataQueueSize();
+        public int collaborationDataCount => NativeApi.UnityARKit_Session_GetCollaborationDataQueueSize(self);
 
         /// <summary>
         /// Dequeues the oldest collaboration data in the queue. After calling this method, <see cref="collaborationDataCount"/>
@@ -205,7 +209,7 @@ namespace UnityEngine.XR.ARKit
             if (collaborationDataCount == 0)
                 throw new InvalidOperationException("There is no collaboration data to dequeue.");
 
-            return new ARCollaborationData(NativeApi.UnityARKit_session_dequeueCollaborationData());
+            return new ARCollaborationData(NativeApi.UnityARKit_Session_DequeueCollaborationData(self));
         }
 
         /// <summary>
@@ -221,28 +225,25 @@ namespace UnityEngine.XR.ARKit
             if (!collaborationData.valid)
                 throw new InvalidOperationException("Invalid collaboration data.");
 
-            NativeApi.UnityARKit_session_updateWithCollaborationData(collaborationData.m_NativePtr);
+            NativeApi.UnityARKit_Session_UpdateWithCollaborationData(self, collaborationData.m_NativePtr);
         }
 
         /// <summary>
         /// Creates the provider interface.
         /// </summary>
         /// <returns>The provider interface for ARKit</returns>
-        protected override Provider CreateProvider() => new ARKitProvider();
+        protected override Provider CreateProvider()
+        {
+            m_Provider = new ARKitProvider();
+            return m_Provider;
+        }
 
         static ARKitSessionSubsystem()
         {
             s_OnAsyncWorldMapCompleted = OnAsyncConversionComplete;
-#if UNITY_IOS && !UNITY_EDITOR
-            s_SupportsCollaboration = NativeApi.UnityARKit_session_getCollaborationSupported();
-#else
-            s_SupportsCollaboration = false;
-#endif
         }
 
         static NativeApi.OnAsyncConversionCompleteDelegate s_OnAsyncWorldMapCompleted;
-
-        static bool s_SupportsCollaboration;
 
         [MonoPInvokeCallback(typeof(NativeApi.OnAsyncConversionCompleteDelegate))]
         static unsafe void OnAsyncConversionComplete(ARWorldMapRequestStatus status, int worldMapId, IntPtr context)
@@ -263,68 +264,108 @@ namespace UnityEngine.XR.ARKit
             handle.Free();
         }
 
+        ARKitProvider m_ARKitProvider;
+
         class ARKitProvider : Provider
         {
-            public ARKitProvider() => NativeApi.UnityARKit_session_construct();
+            IntPtr m_Self;
+            public IntPtr self => m_Self;
 
-            public override void Resume() => NativeApi.UnityARKit_session_resume();
+            public ARKitProvider() => m_Self = NativeApi.UnityARKit_Session_Construct();
 
-            public override void Pause() => NativeApi.UnityARKit_session_pause();
+            public override void Resume() => NativeApi.UnityARKit_Session_Resume(m_Self);
 
-            public override void Update(XRSessionUpdateParams updateParams) => NativeApi.UnityARKit_session_update();
+            public override void Pause() => NativeApi.UnityARKit_Session_Pause(m_Self);
 
-            public override void Destroy() => NativeApi.UnityARKit_session_destroy();
+            public override void Update(XRSessionUpdateParams updateParams)
+                => throw new NotSupportedException("Update requires a configuration.");
 
-            public override void Reset() => NativeApi.UnityARKit_session_reset();
+            public override void Update(XRSessionUpdateParams updateParams, Configuration configuration)
+                => NativeApi.UnityARKit_Session_Update(m_Self, configuration.descriptor.identifier, configuration.features);
 
-            public override Promise<SessionAvailability> GetAvailabilityAsync()
+            public unsafe override NativeArray<ConfigurationDescriptor> GetConfigurationDescriptors(Allocator allocator)
             {
-                var result = NativeApi.UnityARKit_session_getAvailability();
-                var retVal = SessionAvailability.None;
-                if (result == NativeApi.Availability.Supported)
-                    retVal = SessionAvailability.Installed | SessionAvailability.Supported;
+                int count = NativeApi.UnityARKit_Session_GetConfigurationDescriptors(m_Self, IntPtr.Zero, 0, 0);
+                Assert.IsTrue(count > 0, "There are no configuration descriptors.");
 
-                return Promise<SessionAvailability>.CreateResolvedPromise(retVal);
+                var descriptors = new NativeArray<ConfigurationDescriptor>(count, allocator);
+                NativeApi.UnityARKit_Session_GetConfigurationDescriptors(
+                    m_Self, new IntPtr(descriptors.GetUnsafePtr()),
+                    descriptors.Length, sizeof(ConfigurationDescriptor));
+
+                return descriptors;
             }
+
+            public override void Destroy()
+            {
+                Assert.AreNotEqual(IntPtr.Zero, m_Self, $"Tried to destroy an already destroyed {nameof(ARKitSessionSubsystem)}.");
+                Api.CFRelease(ref m_Self);
+            }
+
+            public override void Reset() => NativeApi.UnityARKit_Session_Reset(m_Self);
+
+            public override Promise<SessionAvailability> GetAvailabilityAsync() => Promise<SessionAvailability>.CreateResolvedPromise(
+                NativeApi.UnityARKit_Session_IsSupported() ? SessionAvailability.Installed | SessionAvailability.Supported : SessionAvailability.None);
 
             public override Promise<SessionInstallationStatus> InstallAsync() =>
                 throw new NotSupportedException("ARKit cannot be installed.");
 
-            public override IntPtr nativePtr => NativeApi.UnityARKit_session_getNativePtr();
+            public override IntPtr nativePtr => NativeApi.UnityARKit_Session_GetNativePtr(m_Self);
 
-            public override TrackingState trackingState => NativeApi.UnityARKit_session_getTrackingState();
+            public override TrackingState trackingState => NativeApi.UnityARKit_Session_GetTrackingState(m_Self);
 
-            public override NotTrackingReason notTrackingReason => NativeApi.UnityARKit_session_getNotTrackingReason();
+            public override NotTrackingReason notTrackingReason => NativeApi.UnityARKit_Session_GetNotTrackingReason(m_Self);
 
-            public override Guid sessionId => NativeApi.UnityARKit_session_getSessionId();
+            public override Feature requestedFeatures => Api.GetRequestedFeatures();
 
-            public override bool matchFrameRate
+            public override Feature requestedTrackingMode
             {
-                get => NativeApi.UnityARKit_session_getMatchFrameRateEnabled();
-                set => NativeApi.UnityARKit_session_setMatchFrameRateEnabled(value);
+                get => Api.GetRequestedFeatures();
+                set
+                {
+                    Api.SetFeatureRequested(Feature.AnyTracking, false);
+                    Api.SetFeatureRequested(value, true);
+                }
             }
 
-            public override int frameRate => NativeApi.UnityARKit_Session_GetFrameRate();
+            public override Feature currentTrackingMode => NativeApi.UnityARKit_Session_GetCurrentTrackingMode(m_Self);
+
+            public override Guid sessionId => NativeApi.UnityARKit_Session_GetSessionIdentifier(m_Self);
+
+            /// <summary>
+            /// Enabled is the same as requested because this is a property of Unity's implementation, not a setting within ARKit.
+            /// </summary>
+            public override bool matchFrameRateEnabled => matchFrameRateRequested;
+
+            public override bool matchFrameRateRequested
+            {
+                get => NativeApi.UnityARKit_Session_GetMatchFrameRateEnabled(m_Self);
+                set => NativeApi.UnityARKit_Session_SetMatchFrameRateEnabled(m_Self, value);
+            }
+
+            public override int frameRate => NativeApi.UnityARKit_Session_GetFrameRate(m_Self);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
-#if UNITY_IOS && !UNITY_EDITOR
-            NativeApi.UnityARKit_ensureRootViewIsSetup();
+            if (!Api.AtLeast11_0())
+                return;
+
+            Api.EnsureRootViewIsSetup();
+
             XRSessionSubsystemDescriptor.RegisterDescriptor(new XRSessionSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Session",
                 subsystemImplementationType = typeof(ARKitSessionSubsystem),
                 supportsInstall = false,
-                supportsMatchFrameRate = true
+                supportsMatchFrameRate = true,
             });
-#endif
         }
 
         static class NativeApi
         {
-            // Should match ARKitAvailability in ARKitXRSessionProvider.mm
+            // Should match ARKitAvailability in SessionProvider.h
             public enum Availability
             {
                 None,
@@ -345,97 +386,101 @@ namespace UnityEngine.XR.ARKit
                 IntPtr context);
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_worldMapSupported();
-
-            [DllImport("__Internal")]
-            public static extern ARWorldMappingStatus UnityARKit_session_getWorldMappingStatus();
+            public static extern ARWorldMappingStatus UnityARKit_getWorldMapRequestStatus();
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_applyWorldMap(int worldMapId);
 
             [DllImport("__Internal")]
-            public static extern IntPtr UnityARKit_session_getNativePtr();
+            public static extern IntPtr UnityARKit_Session_GetNativePtr(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern Availability UnityARKit_session_getAvailability();
+            public static extern bool UnityARKit_Session_IsSupported();
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_session_update();
+            public static extern void UnityARKit_Session_Update(IntPtr self, IntPtr desiredConfigurationClass, Feature features);
+
+            /// <summary>
+            /// If <paramref name="buffer"/> is not null, populates <paramref name="buffer"/> with up to <paramref name="capacity"/> configuration descriptors.
+            /// Otherwise, all other parameters are ignored. Call this method once with a null buffer to get the number of descriptors, then again
+            /// with a buffer to populate.
+            /// </summary>
+            /// <param name="self"></param>
+            /// <param name="buffer"></param>
+            /// <param name="capacity"></param>
+            /// <param name="stride"></param>
+            /// <returns></returns>
+            [DllImport("__Internal")]
+            public static extern int UnityARKit_Session_GetConfigurationDescriptors(IntPtr self, IntPtr buffer, int capacity, int stride);
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_session_construct();
+            public static extern IntPtr UnityARKit_Session_Construct();
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_session_destroy();
+            public static extern void UnityARKit_Session_Resume(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_session_resume();
+            public static extern void UnityARKit_Session_Pause(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_session_pause();
+            public static extern void UnityARKit_Session_Reset(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_session_reset();
+            public static extern TrackingState UnityARKit_Session_GetTrackingState(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern TrackingState UnityARKit_session_getTrackingState();
+            public static extern NotTrackingReason UnityARKit_Session_GetNotTrackingReason(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern NotTrackingReason UnityARKit_session_getNotTrackingReason();
+            public static extern IntPtr UnityARKit_Session_DequeueCollaborationData(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_session_getCollaborationSupported();
+            public static extern int UnityARKit_Session_GetCollaborationDataQueueSize(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern IntPtr UnityARKit_session_dequeueCollaborationData();
+            public static extern void UnityARKit_Session_UpdateWithCollaborationData(IntPtr self, IntPtr data);
 
             [DllImport("__Internal")]
-            public static extern int UnityARKit_session_getCollaborationDataQueueSize();
+            public static extern bool UnityARKit_Session_GetCollaborationEnabled(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_session_updateWithCollaborationData(IntPtr data);
+            public static extern Guid UnityARKit_Session_GetSessionIdentifier(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_session_getCollaborationEnabled();
+            public static extern bool UnityARKit_Session_GetMatchFrameRateEnabled(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_session_setCollaborationRequested(bool requested);
+            public static extern void UnityARKit_Session_SetMatchFrameRateEnabled(IntPtr self, bool enabled);
 
             [DllImport("__Internal")]
-            public static extern Guid UnityARKit_session_getSessionId();
+            public static extern int UnityARKit_Session_GetFrameRate(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_session_getMatchFrameRateEnabled();
+            public static extern bool UnityARKit_Session_GetCoachingOverlayActivatesAutomatically(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_session_setMatchFrameRateEnabled(bool enabled);
+            public static extern void UnityARKit_Session_SetCoachingOverlayActivatesAutomatically(IntPtr self, bool activatesAutomatically);
 
             [DllImport("__Internal")]
-            public static extern int UnityARKit_Session_GetFrameRate();
+            public static extern bool UnityARKit_Session_IsCoachingOverlayActive(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_coachingOverlay_getActivatesAutomatically();
+            public static extern ARCoachingGoal UnityARKit_Session_GetRequestedCoachingGoal(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_coachingOverlay_setActivatesAutomatically(bool activatesAutomatically);
+            public static extern void UnityARKit_Session_SetRequestedCoachingGoal(IntPtr self, ARCoachingGoal value);
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_coachingOverlay_isActive();
+            public static extern ARCoachingGoal UnityARKit_Session_GetCurrentCoachingGoal(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_coachingOverlay_setGoal(ARCoachingGoal goal);
+            public static extern void UnityARKit_Session_SetCoachingOverlayActive(IntPtr self, bool active, bool animated);
 
             [DllImport("__Internal")]
-            public static extern ARCoachingGoal UnityARKit_coachingOverlay_getGoal();
+            public static extern ARWorldMappingStatus UnityARKit_Session_GetWorldMappingStatus(IntPtr self);
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_coachingOverlay_setActive(bool active, bool animated);
-
-            [DllImport("__Internal")]
-            public static extern void UnityARKit_ensureRootViewIsSetup();
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_coachingOverlay_isSupported();
+            public static extern Feature UnityARKit_Session_GetCurrentTrackingMode(IntPtr self);
         }
     }
 }

@@ -103,11 +103,8 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void RegisterDescriptor()
         {
-#if UNITY_IOS && !UNITY_EDITOR
-            var iOSversion = OSVersion.Parse(UnityEngine.iOS.Device.systemVersion);
-
             // No support before iOS 12.0
-            if (iOSversion < new OSVersion(12))
+            if (!Api.AtLeast12_0())
                 return;
 
             var capabilities = new XRObjectTrackingSubsystemDescriptor.Capabilities
@@ -115,7 +112,6 @@ namespace UnityEngine.XR.ARKit
             };
 
             Register<ARKitXRObjectTrackingSubsystem>("ARKit-ObjectTracking", capabilities);
-#endif
         }
     }
 }

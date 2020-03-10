@@ -18,9 +18,7 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Register()
         {
-#if UNITY_IOS && !UNITY_EDITOR
-            var iOSVersion = OSVersion.Parse(UnityEngine.iOS.Device.systemVersion);
-            if (iOSVersion < new OSVersion(12))
+            if (!Api.AtLeast12_0())
                 return;
 
             const string subsystemId = "ARKit-EnvironmentProbe";
@@ -33,14 +31,13 @@ namespace UnityEngine.XR.ARKit
                 supportsAutomaticPlacement = true,
                 supportsRemovalOfAutomatic = true,
                 supportsEnvironmentTexture = true,
-                supportsEnvironmentTextureHDR = iOSVersion >= new OSVersion(13),
+                supportsEnvironmentTextureHDR = Api.AtLeast13_0(),
             };
 
             if (!XREnvironmentProbeSubsystem.Register(environmentProbeSubsystemInfo))
             {
                 Debug.LogErrorFormat("Cannot register the {0} subsystem", subsystemId);
             }
-#endif
         }
     }
 
@@ -74,23 +71,33 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             /// <param name='value'><c>true</c> if the provider should automatically place environment probes in the scene.
             /// Otherwise, <c>false</c></param>.
-            public override void SetAutomaticPlacement(bool value)
+            public override bool automaticPlacementRequested
             {
-                EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_SetAutomaticPlacementEnabled(value);
+                get => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_GetAutomaticPlacementRequested();
+                set => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_SetAutomaticPlacementRequested(value);
             }
 
             /// <summary>
-            /// Set the state of HDR environment texture generation.
+            /// Queries whether automatic placement is currently enabled.
             /// </summary>
-            /// <param name="value">Whether HDR environment texture generation is enabled (<c>true</c>) or disabled
-            /// (<c>false</c>).</param>
+            public override bool automaticPlacementEnabled => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_GetAutomaticPlacementEnabled();
+
+            /// <summary>
+            /// Get or set the requested state of HDR environment texture generation.
+            /// </summary>
             /// <returns>
-            /// Whether the HDR environment texture generation state was set.
+            /// Whether the HDR environment texture generation is requested.
             /// </returns>
-            public override bool TrySetEnvironmentTextureHDREnabled(bool value)
+            public override bool environmentTextureHDRRequested
             {
-                return EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_TrySetEnvironmentTextureHDREnabled(value);
+                get => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_GetEnvironmentTextureHDRRequested();
+                set => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_SetEnvironmentTextureHDRRequested(value);
             }
+
+            /// <summary>
+            /// Query whether HDR texture generation is enabled.
+            /// </summary>
+            public override bool environmentTextureHDREnabled => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_GetEnvironmentTextureHDREnabled();
 
             public override bool TryAddEnvironmentProbe(Pose pose, Vector3 scale, Vector3 size, out XREnvironmentProbe environmentProbe)
             {

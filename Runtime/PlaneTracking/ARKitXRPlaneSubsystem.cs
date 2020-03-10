@@ -17,11 +17,11 @@ namespace UnityEngine.XR.ARKit
 
         class ARKitProvider : Provider
         {
-            public override void Destroy() => NativeApi.UnityARKit_planes_shutdown();
+            public override void Destroy() => NativeApi.UnityARKit_Planes_Shutdown();
 
-            public override void Start() =>  NativeApi.UnityARKit_planes_start();
+            public override void Start() =>  NativeApi.UnityARKit_Planes_Start();
 
-            public override void Stop() => NativeApi.UnityARKit_planes_stop();
+            public override void Stop() => NativeApi.UnityARKit_Planes_Stop();
 
             public override unsafe void GetBoundary(
                 TrackableId trackableId,
@@ -30,7 +30,7 @@ namespace UnityEngine.XR.ARKit
             {
                 int numPoints;
                 void* verticesPtr;
-                void* plane = NativeApi.UnityARKit_planes_acquireBoundary(
+                void* plane = NativeApi.UnityARKit_Planes_AcquireBoundary(
                     trackableId,
                     out verticesPtr,
                     out numPoints);
@@ -51,7 +51,7 @@ namespace UnityEngine.XR.ARKit
                 }
                 finally
                 {
-                    NativeApi.UnityARKit_planes_releaseBoundary(plane);
+                    NativeApi.UnityARKit_Planes_ReleaseBoundary(plane);
                 }
             }
 
@@ -103,7 +103,7 @@ namespace UnityEngine.XR.ARKit
             {
                 int addedLength, updatedLength, removedLength, elementSize;
                 void* addedArrayPtr, updatedArrayPtr, removedArrayPtr;
-                var context = NativeApi.UnityARKit_planes_acquireChanges(
+                var context = NativeApi.UnityARKit_Planes_AcquireChanges(
                     out addedArrayPtr, out addedLength,
                     out updatedArrayPtr, out updatedLength,
                     out removedArrayPtr, out removedLength,
@@ -120,13 +120,14 @@ namespace UnityEngine.XR.ARKit
                 }
                 finally
                 {
-                    NativeApi.UnityARKit_planes_releaseChanges(context);
+                    NativeApi.UnityARKit_Planes_ReleaseChanges(context);
                 }
             }
 
-            public override PlaneDetectionMode planeDetectionMode
+            public override PlaneDetectionMode requestedPlaneDetectionMode
             {
-                set => NativeApi.UnityARKit_planes_setPlaneDetectionMode(value);
+                get => NativeApi.UnityARKit_Planes_GetRequestedPlaneDetectionMode();
+                set => NativeApi.UnityARKit_Planes_SetRequestedPlaneDetectionMode(value);
             }
         }
 
@@ -136,58 +137,65 @@ namespace UnityEngine.XR.ARKit
         static class NativeApi
         {
             [DllImport("__Internal")]
-            static internal extern unsafe bool UnityARKit_planes_SupportsClassification();
+            static internal extern unsafe bool UnityARKit_Planes_SupportsClassification();
 
             [DllImport("__Internal")]
-            static internal extern void UnityARKit_planes_shutdown();
+            static internal extern void UnityARKit_Planes_Shutdown();
 
             [DllImport("__Internal")]
-            static internal extern void UnityARKit_planes_start();
+            static internal extern void UnityARKit_Planes_Start();
 
             [DllImport("__Internal")]
-            static internal extern void UnityARKit_planes_stop();
+            static internal extern void UnityARKit_Planes_Stop();
 
             [DllImport("__Internal")]
-            static internal extern unsafe void* UnityARKit_planes_acquireChanges(
+            static internal extern unsafe void* UnityARKit_Planes_AcquireChanges(
                 out void* addedPtr, out int addedLength,
                 out void* updatedPtr, out int updatedLength,
                 out void* removedPtr, out int removedLength,
                 out int elementSize);
 
             [DllImport("__Internal")]
-            static internal extern unsafe void UnityARKit_planes_releaseChanges(void* changes);
+            static internal extern unsafe void UnityARKit_Planes_ReleaseChanges(void* changes);
 
             [DllImport("__Internal")]
-            static internal extern void UnityARKit_planes_setPlaneDetectionMode(PlaneDetectionMode mode);
+            static internal extern PlaneDetectionMode UnityARKit_Planes_GetRequestedPlaneDetectionMode();
 
             [DllImport("__Internal")]
-            static internal extern unsafe void* UnityARKit_planes_acquireBoundary(
+            static internal extern void UnityARKit_Planes_SetRequestedPlaneDetectionMode(PlaneDetectionMode mode);
+
+            [DllImport("__Internal")]
+            static internal extern PlaneDetectionMode UnityARKit_Planes_GetCurrentPlaneDetectionMode();
+
+            [DllImport("__Internal")]
+            static internal extern unsafe void* UnityARKit_Planes_AcquireBoundary(
                 TrackableId trackableId,
                 out void* verticiesPtr,
                 out int numPoints);
 
             [DllImport("__Internal")]
-            static internal extern unsafe void UnityARKit_planes_releaseBoundary(
+            static internal extern unsafe void UnityARKit_Planes_ReleaseBoundary(
                 void* boundary);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
-#if UNITY_IOS && !UNITY_EDITOR
+            if (!Api.AtLeast11_0())
+                return;
+
             var cinfo = new XRPlaneSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Plane",
                 subsystemImplementationType = typeof(ARKitXRPlaneSubsystem),
                 supportsHorizontalPlaneDetection = true,
-                supportsVerticalPlaneDetection = true,
+                supportsVerticalPlaneDetection = Api.AtLeast11_3(),
                 supportsArbitraryPlaneDetection = false,
                 supportsBoundaryVertices = true,
-                supportsClassification = NativeApi.UnityARKit_planes_SupportsClassification(),
+                supportsClassification = NativeApi.UnityARKit_Planes_SupportsClassification(),
             };
 
             XRPlaneSubsystemDescriptor.Create(cinfo);
-#endif
         }
     }
 }

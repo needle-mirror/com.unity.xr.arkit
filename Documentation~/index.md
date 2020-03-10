@@ -1,125 +1,136 @@
 # About ARKit XR Plugin
 
 
-Use the *ARKit XR Plugin* package enable ARKit support via Unity's multi-platform XR API. This package implements the following XR Subsystems:
+Use the ARKit XR Plugin package to enable ARKit support via Unity's multi-platform XR API. This package implements the following XR Subsystems:
 
-* [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/session-subsystem.html)
-* [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/camera-subsystem.html)
-* [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/depth-subsystem.html)
+* [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/session-subsystem.html)
+* [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/camera-subsystem.html)
+* [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/depth-subsystem.html)
 * [Input](https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.XR.XRInputSubsystem.html)
-* [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/plane-subsystem.html)
-* [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/raycast-subsystem.html)
-* [Anchors](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/anchor-subsystem.html)
-* [Image Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/image-tracking.html)
-* [Object Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/object-tracking.html)
-* [Environment Probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/environment-probe-subsystem.html)
-* [Participants](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/participant-subsystem.html)
+* [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/plane-subsystem.html)
+* [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/raycast-subsystem.html)
+* [Anchors](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/anchor-subsystem.html)
+* [Image tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/image-tracking.html)
+* [Object tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/object-tracking.html)
+* [Environment probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/environment-probe-subsystem.html)
+* [Participant](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/participant-subsystem.html)
 
-This version of *ARKit XR Plugin* supports the following features:
+This version of ARKit XR Plugin supports the following features:
 
-* Device Localization
-* Horizontal Plane Detection
-* Vertical Plane Detection
-* Point Clouds
-* Pass-through Camera View
-* Light Estimation
+* Device localization
+* Horizontal plane detection
+* Vertical plane detection
+* Point clouds
+* Pass-through camera view
+* Light estimation
 * Anchors
-* Hit Testing
-* Session Management
-* Image Tracking
-* Object Tracking
-* Environment Probes
-* Participants
+* Hit testing
+* Session management
+* Image tracking
+* Object tracking
+* Environment probes
+* Participant tracking
 
-[Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/face-tracking.html) support is available in the separate "ARKit Face Tracking" package. Apple's App Store will reject an app that contains certain face tracking-related symbols in its binary if the app developer does not intend to use face tracking, so we've broken out face tracking support into a separate package to avoid any ambiguity.
+Apple's App Store will reject any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, face tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/face-tracking.html) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.0).
 
 # Installing ARKit XR Plugin
 
 To install this package, follow the instructions in the [Package Manager documentation](https://docs.unity3d.com/Packages/com.unity.package-manager-ui@latest/index.html).
 
-In addition, you will likely want to also install the *ARFoundation* package which makes use of *ARKit XR Plugin* package and provides many useful scripts and prefabs.
+In addition, install the AR Foundation package, which uses ARKit XR Plugin and provides many useful scripts and prefabs. For more information about this package, see the [AR Foundation documentation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@latest).
 
 # Using ARKit XR Plugin
 
-The *ARKit XR Plugin* implements the native iOS endpoints required for building Handheld AR apps using Unity's multi-platform XR API. However, this package does not expose any public scripting interface of its own and most developers should use the scripts, prefabs, and assets provided by *ARFoundation* as the basis for their Handheld AR apps.
+The ARKit XR Plugin implements the native iOS endpoints required for building Handheld AR apps using Unity's multi-platform XR API. However, this package doesn't expose any public scripting interface of its own. In most cases, you should use the scripts, prefabs, and assets provided by AR Foundation as the basis for your Handheld AR apps.
 
-Inclusion of the *ARKit XR Plugin* will result in the inclusion of source files, static libraries, shader files, and plugin metadata to be included in the XCode project generated as part of the Unity's standard iOS build process.
+Including the ARKit XR Plugin also includes source files, static libraries, shader files, and plug-in metadata.
 
 ARKit requires iOS 11.0. Some specific features require later versions (see below).
 
-## Build Settings
+## Build settings
 
-From the menu, choose _Edit > Project Settings_ then navigate to _XR > ARKit_:
+To access ARKit build settings, from Unity's main menu, go to **Edit &gt; Project Settings**, then select **XR &gt; ARKit**:
 
-![alt text](images/arkitsettings-dialog.png "ARKitSettings dialog")
+![ARKit Settings window](images/arkitsettings-dialog.png "ARKit Settings window")
 
-### AR Requirement
+### Requiring AR
 
-ARKit can be either "required" or "optional". By default it is "required", which means the app will only be installable on AR-supported devices and operating systems (ARKit requires iOS 11.0). You can specify that AR is "optional", in which case your app will be installable on all iOS devices.
+You can flag ARKit as either required or optional. By default, ARKit is required, which means your app can ony be installed on AR-supported devices and operating systems (iOS 11.0 and above). If you specify that AR is optional, your app can be installed on all iOS devices.
+
+#### Targeting 32-bit Devices
+
+To target 32-bit devices _OpenGLES2_ must be included in the list of Graphics APIs. From the menu, choose _Edit > Project Settings_ then navigate to _Player > Other Settings > Graphics APIs_:
+
+![alt text](images/build-to-32bit-reference.png "ARKitSettings dialog")
 
 ## Session
 
-See the [ARSubsystems Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/session-subsystem.html) documentation for more details. ARKit's implementation of `XRSessionSubsystem.GetAvailabilityAsync` is trivial, as the device simply needs to check that it is at least on running iOS 11.0.
+ARKit implements `XRSessionSubsystem.GetAvailabilityAsync`, which consists of the device checking that it's running on iOS 11.0 or above. For more information, see the [ARSubsystems session documentation](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/session-subsystem.html).
 
-## Depth Subsystem
+## Depth subsystem
 
-See the [ARSubsystems Depth Subsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/depth-subsystem.html) documentation for more details. Raycasts always return a `Pose` for the item the raycast hit. When raycasting against feature points, the pose always has an identity rotation.
+Raycasts always return a `Pose` for the item the raycast hit. When raycasting against feature points, the pose is oriented to provide an estimate for the surface the feature point might represent.
 
-The depth subsystem does not require additional resources, so enabling it does not incur any performance impact.
+The depth subsystem doesn't require additional resources, so enabling it doesn't affect performance
 
-ARCore's depth subsystem will only ever produce a single [`XRPointCloud`](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/api/UnityEngine.XR.ARSubsystems.XRPointCloud.html).
+ARKit's depth subsystem will only ever produce a single [`XRPointCloud`](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.XRPointCloud.html).
 
-## Plane Tracking
+For more information, see the [ARSubsystems depth subsystem documentation](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/depth-subsystem.html).
 
-See the [ARSubsystems Plane Subsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.1/manual/plane-subsystem.html) documentation for more details. ARKit does not support plane subsumption; there is no merge event. If two planes are determined to be separate parts of the same surface, one plane may be removed while the other expands to the explored surface.
+## Plane tracking
 
-ARKit provides boundary points for all its planes on iOS 11.3 and later. Boundary points are not available in iOS 11.0.
+ARKit doesn't support plane subsumption (that is, one plane can't be included in another plane); there is no merge event. If two planes are determined to be separate parts of the same surface, one plane might be removed while the other expands to the explored surface.
 
-The ARKit plane subsystem requires additional CPU resources and can be energy intensive. Enabling both horizontal and vertical plane detection (available in iOS 11.3+) requires additional resources. Consider disabling plane detection when not needed to save energy.
+ARKit provides boundary points for all its planes on iOS 11.3 and later.
+
+The ARKit plane subsystem requires additional CPU resources and can be energy-intensive. Enabling both horizontal and vertical plane detection (available in iOS 11.3+) requires additional resources. Consider disabling plane detection when your app doesn't need it to save energy.
 
 Setting the plane detection mode to `PlaneDetectionMode.None` is equivalent to `Stop`ping subsystem.
 
-## Image Tracking
+For more information, see the [ARSubsystems plane subsystem documentation](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/plane-subsystem.html).
 
-See [Image Tracking](arkit-image-tracking.md).
+## Image tracking
 
-## Object Tracking
+See [Image tracking](arkit-image-tracking.md).
 
-See [Object Tracking](arkit-object-tracking.md).
+## Object tracking
 
-## Participant Tracking
+See [Object tracking](arkit-object-tracking.md).
 
-A "participant" represents another device in a multi-user collaborative session. Although you can start and stop the participant subsystem at any time, the session must be fed `ARCollaborationData` from other peers in the multi-user session in order for participants to be detected. See the [ARCollaborationData sample](https://github.com/Unity-Technologies/arfoundation-samples/tree/master/Assets/Scenes/ARCollaborationData).
+## Participant tracking
 
-## Light Estimation
+A participant represents another device in a multi-user collaborative session. Although you can start and stop the participant subsystem at any time, the session must receive `ARCollaborationData` from other peers in the multi-user session in order for participants to be detected. For an example implementation, see the [ARCollaborationData sample on GitHub](https://github.com/Unity-Technologies/arfoundation-samples/tree/master/Assets/Scenes/ARCollaborationData).
 
-ARKit Light Estimation can only be `enabled` or `disabled` selection between `Disabled`, `Ambient Intensity`, or `Environemental HDR`.  Instead, the current tracking configuration governs what information is surfaced when Light Estimation is enabled.  See the following table for more details.
+## Light estimation
 
-| Tracking Configuration | Ambient Intensity (Lumens) | Color Temperature | Main Light Direction | Main Light Intensity (Lumens) | Ambient Spherical Harmonics |
+ARKit light estimation can only be `enabled` or `disabled`. The availability of either  `Ambient Intensity` or `Environmental HDR` data is governed by the active tracking mode. See the following table for more details.
+
+| Tracking configuration | Ambient intensity (lumens) | Color temperature | Main light direction | Main light intensity (lumens) | Ambient spherical harmonics |
 |------------------------|----------------------------|-------------------|----------------------|-------------------------------|-----------------------------|
 | World Tracking         | Yes                        | Yes               | No                   | No                            | No                          |
 | Face Tracking          | Yes                        | Yes               | Yes                  | Yes                           | Yes                         |
 
-## Camera Configuration
+## Camera configuration
 
-[XRCameraConfiguration](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/api/UnityEngine.XR.ARSubsystems.XRCameraConfiguration.html) contains an `IntPtr` field `nativeConfigurationHandle` which is a platform-specific handle.  For ARKit, this handle is a pointer to the native [ARVideoFormat](https://developer.apple.com/documentation/arkit/arvideoformat?language=objc) Objective-C object.
+[XRCameraConfiguration](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.XRCameraConfiguration.html) contains an `IntPtr` field `nativeConfigurationHandle` which is a platform-specific handle. For ARKit, this handle is a pointer to the native [ARVideoFormat](https://developer.apple.com/documentation/arkit/arvideoformat?language=objc) Objective-C object.
 
 # Technical details
 ## Requirements
 
-This version of *ARKit XR Plugin* is compatible with the following versions of the Unity Editor:
+This version of ARKit XR Plugin is compatible with the following versions of the Unity Editor:
 
-* 2018.3 and later (recommended)
+* 2019.3 and later (recommended)
 
 ## Known limitations
 
-* Color Correction is not available as an RGB Value (only as color temperature).
-* Only 64-bit devices are supported by this package. In the iOS player settings, you need to select ARM64 as the target architecture (the default is Universal).
-![alt text](images/target-architecture.png "Target Architecture")
+* Color correction is not available as an RGB Value (only as color temperature).
+* This package only supports 64-bit devices. In the Player Settings window for iOS (menu: **Edit &gt; Project Settings &gt; Player Settings**, then select iOS), you need to select ARM64 as the target Architecture (the default is Universal).
+
+![Target Architecture setting in the iOS Player Settings window](images/target-architecture.png "Target Architecture setting in the iOS Player Settings window")
 
 ## Package contents
 
-This version of *ARKit XR Plugin* includes:
+This version of ARKit XR Plugin includes:
 
 * A static library which provides implementation of the XR Subsystems listed above
 * An Objective-C source file
@@ -127,10 +138,13 @@ This version of *ARKit XR Plugin* includes:
 * A plugin metadata file
 
 ## Document revision history
+
 |Date|Reason|
 |---|---|
+|January 20, 2020|Tech writer review.|
 |April 22, 2019|Update documentation to include new subsystems and the migration of face tracking to a separate package.|
 |April 19, 2018|Documentation update. Added support for vertical planes and boundary points for all planes.|
 |December 18, 2018|Add environment probe support. Updated the requirements to be Unity 2018.3.|
 |November 14, 2018|Add Face Tracking support.|
 |October 9, 2018|Remove lack of ARWorldMap support as a known limitation; it is now supported.|
+

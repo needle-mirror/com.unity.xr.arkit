@@ -21,6 +21,27 @@ namespace UnityEngine.XR.ARKit
             void* added, void* updated, void* removed);
 
 #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast11_0")]
+        public static extern bool AtLeast11_0();
+
+        [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast11_3")]
+        public static extern bool AtLeast11_3();
+
+        [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast12_0")]
+        public static extern bool AtLeast12_0();
+
+        [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast13_0")]
+        public static extern bool AtLeast13_0();
+
+        [DllImport("__Internal", EntryPoint="UnityARKit_EnsureRootViewIsSetup")]
+        public static extern void EnsureRootViewIsSetup();
+
+        [DllImport("__Internal", EntryPoint="UnityARKit_Session_SetFeatureRequested")]
+        public static extern void SetFeatureRequested(Feature feature, bool enabled);
+
+        [DllImport("__Internal", EntryPoint="UnityARKit_Session_GetRequestedFeatures")]
+        public static extern Feature GetRequestedFeatures();
+
         [DllImport("__Internal")]
         internal static extern ARWorldMapRequestStatus UnityARKit_getWorldMapRequestStatus(int worldMapId);
 
@@ -56,8 +77,26 @@ namespace UnityEngine.XR.ARKit
 
         [DllImport("__Internal")]
         static extern void UnityARKit_CFRelease(IntPtr ptr);
+
+        public static void CFRetain(IntPtr ptr)
+        {
+            if (ptr == IntPtr.Zero)
+                throw new NullReferenceException("Cannot retain a null pointer.");
+            UnityARKit_CFRetain(ptr);
+        }
+
+        [DllImport("__Internal")]
+        public static extern void UnityARKit_CFRetain(IntPtr ptr);
 #else
+        public static void SetFeatureRequested(Feature feature, bool enabled) {}
+
+        public static Feature GetRequestedFeatures() => Feature.None;
+
+        public static void EnsureRootViewIsSetup() {}
+
         public static void CFRelease(ref IntPtr ptr) => ptr = IntPtr.Zero;
+
+        public static void UnityARKit_CFRetain(IntPtr ptr) {}
 
         internal static ARWorldMapRequestStatus UnityARKit_getWorldMapRequestStatus(int worldMapId)
         {
@@ -98,6 +137,11 @@ namespace UnityEngine.XR.ARKit
         {
             return 0;
         }
+
+        public static bool AtLeast11_0() => false;
+        public static bool AtLeast11_3() => false;
+        public static bool AtLeast12_0() => false;
+        public static bool AtLeast13_0() => false;
 #endif
     }
 }

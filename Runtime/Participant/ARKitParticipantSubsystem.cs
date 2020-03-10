@@ -76,14 +76,12 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
-#if UNITY_IOS && !UNITY_EDITOR
-            if (OSVersion.Parse(UnityEngine.iOS.Device.systemVersion) < new OSVersion(13))
+            if (!Api.AtLeast13_0())
                 return;
 
             XRParticipantSubsystemDescriptor.Register<ARKitParticipantSubsystem>(
                 "ARKit-Participant",
                 XRParticipantSubsystemDescriptor.Capabilities.None);
-#endif
         }
     }
 }

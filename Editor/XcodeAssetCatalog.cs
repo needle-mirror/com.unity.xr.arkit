@@ -42,11 +42,7 @@ namespace UnityEditor.XR.ARKit
 
             // Add it to Xcode's build
             var folderGuid = project.AddFile(relativePathToAssetCatalog, relativePathToAssetCatalog);
-#if UNITY_2019_3_OR_NEWER
             var targetGuid = project.GetUnityMainTargetGuid();
-#else
-            var targetGuid = project.TargetGuidByName(unityTargetName);
-#endif
             project.AddFileToBuild(targetGuid, folderGuid);
 
             foreach (var resourceGroup in m_ResourceGroups)

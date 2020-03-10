@@ -28,11 +28,11 @@ namespace UnityEngine.XR.ARKit
                 {
                     if (value == null)
                     {
-                        UnityARKit_imageTracking_stop();
+                        UnityARKit_ImageTracking_Stop();
                     }
                     else if (value is ARKitImageDatabase database)
                     {
-                        UnityARKit_imageTracking_setDatabase(database.nativePtr);
+                        UnityARKit_ImageTracking_SetDatabase(database.nativePtr);
                     }
                     else
                     {
@@ -48,7 +48,7 @@ namespace UnityEngine.XR.ARKit
                 void* addedPtr, updatedPtr, removedPtr;
                 int addedLength, updatedLength, removedLength, stride;
 
-                var context = UnityARKit_imageTracking_acquireChanges(
+                var context = UnityARKit_ImageTracking_AcquireChanges(
                     out addedPtr, out addedLength,
                     out updatedPtr, out updatedLength,
                     out removedPtr, out removedLength,
@@ -65,60 +65,64 @@ namespace UnityEngine.XR.ARKit
                 }
                 finally
                 {
-                    UnityARKit_imageTracking_releaseChanges(context);
+                    UnityARKit_ImageTracking_ReleaseChanges(context);
                 }
             }
 
-            public override void Destroy() => UnityARKit_imageTracking_destroy();
+            public override void Destroy() => UnityARKit_ImageTracking_Destroy();
 
-            public override int maxNumberOfMovingImages
+            public override int requestedMaxNumberOfMovingImages
             {
-                set => UnityARKit_imageTracking_setMaximumNumberOfTrackedImages(value);
+                get => UnityARKit_ImageTracking_GetRequestedMaximumNumberOfTrackedImages();
+                set => UnityARKit_ImageTracking_SetRequestedMaximumNumberOfTrackedImages(value);
             }
+
+            public override int currentMaxNumberOfMovingImages => UnityARKit_ImageTracking_GetCurrentMaximumNumberOfTrackedImages();
         }
 
         [DllImport("__Internal")]
-        static extern void UnityARKit_imageTracking_setMaximumNumberOfTrackedImages(
-            int maxNumTrackedImages);
+        static extern int UnityARKit_ImageTracking_GetRequestedMaximumNumberOfTrackedImages();
 
         [DllImport("__Internal")]
-        static extern void UnityARKit_imageTracking_setDatabase(IntPtr database);
+        static extern void UnityARKit_ImageTracking_SetRequestedMaximumNumberOfTrackedImages(int maxNumTrackedImages);
 
         [DllImport("__Internal")]
-        static extern void UnityARKit_imageTracking_stop();
+        static extern int UnityARKit_ImageTracking_GetCurrentMaximumNumberOfTrackedImages();
 
         [DllImport("__Internal")]
-        static extern void UnityARKit_imageTracking_destroy();
+        static extern void UnityARKit_ImageTracking_SetDatabase(IntPtr database);
 
         [DllImport("__Internal")]
-        static extern unsafe void* UnityARKit_imageTracking_acquireChanges(
+        static extern void UnityARKit_ImageTracking_Stop();
+
+        [DllImport("__Internal")]
+        static extern void UnityARKit_ImageTracking_Destroy();
+
+        [DllImport("__Internal")]
+        static extern unsafe void* UnityARKit_ImageTracking_AcquireChanges(
             out void* addedPtr, out int addedLength,
             out void* updatedPtr, out int updatedLength,
             out void* removedPtr, out int removedLength,
             out int stride);
 
         [DllImport("__Internal")]
-        static extern unsafe void UnityARKit_imageTracking_releaseChanges(void* changes);
+        static extern unsafe void UnityARKit_ImageTracking_ReleaseChanges(void* changes);
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
-#if UNITY_IOS && !UNITY_EDITOR
-            var iOSversion = OSVersion.Parse(UnityEngine.iOS.Device.systemVersion);
-
             // No support before iOS 11.3
-            if (iOSversion < new OSVersion(11, 3))
+            if (!Api.AtLeast11_3())
                 return;
 
             XRImageTrackingSubsystemDescriptor.Create(new XRImageTrackingSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-ImageTracking",
                 subsystemImplementationType = typeof(ARKitImageTrackingSubsystem),
-                supportsMovingImages = (iOSversion >= new OSVersion(12)),
+                supportsMovingImages = Api.AtLeast12_0(),
                 supportsMutableLibrary = true,
                 requiresPhysicalImageDimensions = true
             });
-#endif
         }
 
         protected override Provider CreateProvider()

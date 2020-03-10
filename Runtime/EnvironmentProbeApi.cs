@@ -20,10 +20,22 @@ namespace UnityEngine.XR.ARKit
         internal static extern void UnityARKit_EnvironmentProbeProvider_Stop();
 
         [DllImport("__Internal")]
-        internal static extern void UnityARKit_EnvironmentProbeProvider_SetAutomaticPlacementEnabled(bool enabled);
+        internal static extern bool UnityARKit_EnvironmentProbeProvider_GetAutomaticPlacementRequested();
 
         [DllImport("__Internal")]
-        internal static extern bool UnityARKit_EnvironmentProbeProvider_TrySetEnvironmentTextureHDREnabled(bool enabled);
+        internal static extern void UnityARKit_EnvironmentProbeProvider_SetAutomaticPlacementRequested(bool enabled);
+
+        [DllImport("__Internal")]
+        internal static extern bool UnityARKit_EnvironmentProbeProvider_GetAutomaticPlacementEnabled();
+
+        [DllImport("__Internal")]
+        internal static extern bool UnityARKit_EnvironmentProbeProvider_GetEnvironmentTextureHDRRequested();
+
+        [DllImport("__Internal")]
+        internal static extern void UnityARKit_EnvironmentProbeProvider_SetEnvironmentTextureHDRRequested(bool enabled);
+
+        [DllImport("__Internal")]
+        internal static extern bool UnityARKit_EnvironmentProbeProvider_GetEnvironmentTextureHDREnabled();
 
         [DllImport("__Internal")]
         internal static extern bool UnityARKit_EnvironmentProbeProvider_TryAddEnvironmentProbe(Pose pose,
@@ -42,9 +54,6 @@ namespace UnityEngine.XR.ARKit
 
         [DllImport("__Internal")]
         internal static extern void UnityARKit_EnvironmentProbeProvider_ReleaseChanges(IntPtr context);
-
-        [DllImport("__Internal")]
-        internal static extern bool UnityARKit_EnvironmentProbeProvider_IsSupported();
 #else
         internal static void UnityARKit_EnvironmentProbeProvider_Construct() {}
 
@@ -54,9 +63,13 @@ namespace UnityEngine.XR.ARKit
 
         internal static void UnityARKit_EnvironmentProbeProvider_Stop() {}
 
-        internal static void UnityARKit_EnvironmentProbeProvider_SetAutomaticPlacementEnabled(bool enabled) {}
+        internal static bool UnityARKit_EnvironmentProbeProvider_GetAutomaticPlacementRequested() => false;
+        internal static void UnityARKit_EnvironmentProbeProvider_SetAutomaticPlacementRequested(bool enabled) {}
+        internal static bool UnityARKit_EnvironmentProbeProvider_GetAutomaticPlacementEnabled() => false;
 
-        internal static bool UnityARKit_EnvironmentProbeProvider_TrySetEnvironmentTextureHDREnabled(bool enabled) { return false; }
+        internal static bool UnityARKit_EnvironmentProbeProvider_GetEnvironmentTextureHDRRequested() => false;
+        internal static void UnityARKit_EnvironmentProbeProvider_SetEnvironmentTextureHDRRequested(bool enabled) {}
+        internal static bool UnityARKit_EnvironmentProbeProvider_GetEnvironmentTextureHDREnabled() => false;
 
         internal static bool UnityARKit_EnvironmentProbeProvider_TryAddEnvironmentProbe(Pose pose,
                                                                                         Vector3 scale,
@@ -88,8 +101,6 @@ namespace UnityEngine.XR.ARKit
         }
 
         internal static void UnityARKit_EnvironmentProbeProvider_ReleaseChanges(IntPtr context) {}
-
-        internal static bool UnityARKit_EnvironmentProbeProvider_IsSupported() { return false; }
 #endif
     }
 }

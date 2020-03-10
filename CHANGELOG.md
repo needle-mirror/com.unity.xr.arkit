@@ -4,9 +4,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.1.0-preview.8] - 2020-03-12
+## [4.0.0-preview.1] - 2020-03-11
+### Changes
+- The ARSubsystem implementions have been updated to reflect changes in the ARSubsystems API.
+- See the [ARFoundation Migration Guide](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/manual/migration-guide-3.html) for more details.
+
+### Breaking Changes
+- `ARKitSessionSubsystem.collaborationEnabled` was both gettable and settable; now it is only gettable. To toggle the collaboration feature, set `ARKitSessionSubsystem.collaborationRequested` instead.
+- The static library `UnityARKit.a` has been prefixed with `lib` to follow library naming conventions. Existing projects will need to either rebuild (Build and Run > Replace) the Unity generated Xcode project or manully remove `UnityARKit.a` from the `UnityFramework` "Frameworks and Libraries" section in Xcode.
+
 ### Fixes
-- Fixed a crash that could occur when multithreaded rendering was enabled and [Stop](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/api/UnityEngine.XR.ARSubsystems.XRSubsystem-1.html#UnityEngine_XR_ARSubsystems_XRSubsystem_1_Stop) was called on the `XRCameraSubsystem`. In ARFoundation, this happens when the [`ARCameraManager`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.1/api/UnityEngine.XR.ARFoundation.ARCameraManager.html) is disabled. This happened because the textures owned by the subsystem are later manipulated on the render thread, and stopping the subsystem could invalidate the textures.
+- Fixed a crash that could occur when multithreaded rendering was enabled and [Stop](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.XRSubsystem-1.html#UnityEngine_XR_ARSubsystems_XRSubsystem_1_Stop) was called on the `XRCameraSubsystem`. In ARFoundation, this happens when the [`ARCameraManager`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/api/UnityEngine.XR.ARFoundation.ARCameraManager.html) is disabled. This happened because the textures owned by the subsystem are later manipulated on the render thread, and stopping the subsystem could invalidate the textures.
 
 ## [3.1.0-preview.7] - 2020-03-03
 ### Fixes

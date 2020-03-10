@@ -123,7 +123,9 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Register()
         {
-#if UNITY_IOS && !UNITY_EDITOR
+            if (!Api.AtLeast11_0())
+                return;
+
             XRCameraSubsystemCinfo cameraSubsystemCinfo = new XRCameraSubsystemCinfo
             {
                 id = k_SubsystemId,
@@ -148,7 +150,6 @@ namespace UnityEngine.XR.ARKit
             {
                 Debug.LogErrorFormat("Cannot register the {0} subsystem", k_SubsystemId);
             }
-#endif // UNITY_IOS && !UNITY_EDITOR
         }
 
         /// <summary>
@@ -231,6 +232,21 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
+            public override Feature currentCamera => NativeApi.UnityARKit_Camera_GetCurrentCamera();
+
+            /// <summary>
+            /// Get the currently active camera or set the requested camera
+            /// </summary>
+            public override Feature requestedCamera
+            {
+                get => Api.GetRequestedFeatures();
+                set
+                {
+                    Api.SetFeatureRequested(Feature.AnyCamera, false);
+                    Api.SetFeatureRequested(value, true);
+                }
+            }
+
             /// <summary>
             /// Start the camera functionality.
             /// </summary>
@@ -259,29 +275,34 @@ namespace UnityEngine.XR.ARKit
                 return NativeApi.UnityARKit_Camera_TryGetFrame(cameraParams, out cameraFrame);
             }
 
+            public override bool autoFocusEnabled => NativeApi.UnityARKit_Camera_GetAutoFocusEnabled();
+
             /// <summary>
-            /// Set the focus mode for the camera.
+            /// Get or set the requested focus mode for the camera.
             /// </summary>
-            /// <param name="cameraFocusMode">The focus mode to set for the camera.</param>
-            /// <returns>
-            /// <c>true</c> if the method successfully set the focus mode for the camera. Otherwise, <c>false</c>.
-            /// </returns>
-            public override CameraFocusMode cameraFocusMode
+            public override bool autoFocusRequested
             {
-                get => NativeApi.UnityARKit_Camera_GetFocusMode();
-                set => NativeApi.UnityARKit_Camera_SetFocusMode(value);
+                get => Api.GetRequestedFeatures().All(Feature.AutoFocus);
+                set => Api.SetFeatureRequested(Feature.AutoFocus, value);
             }
 
             /// <summary>
-            /// Set the light estimation mode.
+            /// Gets the current light estimation mode as reported by the
+            /// [ARSession's configuration](https://developer.apple.com/documentation/arkit/arconfiguration/2923546-lightestimationenabled).
             /// </summary>
-            /// <param name="lightEstimationMode">The light estimation mode to set.</param>
-            /// <returns>
-            /// <c>true</c> if the method successfully set the light estimation mode. Otherwise, <c>false</c>.
-            /// </returns>
-            public override bool TrySetLightEstimationMode(LightEstimationMode lightEstimationMode)
+            public override Feature currentLightEstimation => NativeApi.GetCurrentLightEstimation();
+
+            /// <summary>
+            /// Get or set the requested light estimation mode.
+            /// </summary>
+            public override Feature requestedLightEstimation
             {
-                return NativeApi.UnityARKit_Camera_TrySetLightEstimationMode(lightEstimationMode);
+                get => Api.GetRequestedFeatures();
+                set
+                {
+                    Api.SetFeatureRequested(Feature.AnyLightEstimation, false);
+                    Api.SetFeatureRequested(value.Intersection(Feature.AnyLightEstimation), true);
+                }
             }
 
             /// <summary>
@@ -573,6 +594,9 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         static class NativeApi
         {
+            [DllImport("__Internal", EntryPoint="UnityARKit_Camera_GetCurrentLightEstimation")]
+            public static extern Feature GetCurrentLightEstimation();
+
             [DllImport("__Internal")]
             public static extern void UnityARKit_Camera_Construct(int textureYPropertyNameId,
                                                                   int textureCbCrPropertyNameId);
@@ -589,15 +613,6 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             public static extern bool UnityARKit_Camera_TryGetFrame(XRCameraParams cameraParams,
                                                                     out XRCameraFrame cameraFrame);
-
-            [DllImport("__Internal")]
-            public static extern void UnityARKit_Camera_SetFocusMode(CameraFocusMode cameraFocusMode);
-
-            [DllImport("__Internal")]
-            public static extern CameraFocusMode UnityARKit_Camera_GetFocusMode();
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_Camera_TrySetLightEstimationMode(LightEstimationMode lightEstimationMode);
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_Camera_TryGetIntrinsics(out XRCameraIntrinsics cameraIntrinsics);
@@ -670,6 +685,12 @@ namespace UnityEngine.XR.ARKit
             public static extern void UnityARKit_Camera_CreateAsyncConversionRequestWithCallback(
                 int nativeHandle, XRCameraImageConversionParams conversionParams,
                 XRCameraSubsystem.OnImageRequestCompleteDelegate callback, IntPtr context);
+
+            [DllImport("__Internal")]
+            public static extern Feature UnityARKit_Camera_GetCurrentCamera();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_Camera_GetAutoFocusEnabled();
         }
     }
 }

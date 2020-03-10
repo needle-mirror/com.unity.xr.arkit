@@ -17,7 +17,9 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Register()
         {
-#if UNITY_IOS && !UNITY_EDITOR
+            if (!Api.AtLeast13_0())
+                return;
+
             const string k_SubsystemId = "ARKit-HumanBody";
 
             XRHumanBodySubsystemCinfo humanBodySubsystemCinfo = new XRHumanBodySubsystemCinfo()
@@ -33,7 +35,6 @@ namespace UnityEngine.XR.ARKit
             {
                 Debug.LogErrorFormat("Cannot register the {0} subsystem", k_SubsystemId);
             }
-#endif
         }
 
         /// <summary>
@@ -104,8 +105,16 @@ namespace UnityEngine.XR.ARKit
             /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images
             /// to be enabled. At this time, these features are mutually exclusive.
             /// </remarks>
-            public override bool TrySetHumanBodyPose2DEstimationEnabled(bool enabled)
-                => NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose2DEstimationEnabled(enabled);
+            public override bool pose2DRequested
+            {
+                get => Api.GetRequestedFeatures().All(Feature.Body2D);
+                set => Api.SetFeatureRequested(Feature.Body2D, value);
+            }
+
+            /// <summary>
+            /// Tests whether 2D body tracking is enabled.
+            /// </summary>
+            public override bool pose2DEnabled => NativeApi.UnityARKit_HumanBodyProvider_GetHumanBodyPose2DEstimationEnabled();
 
             /// <summary>
             /// Sets whether human body pose 3D estimation is enabled.
@@ -119,19 +128,24 @@ namespace UnityEngine.XR.ARKit
             /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images
             /// to be enabled. At this time, these features are mutually exclusive.
             /// </remarks>
-            public override bool TrySetHumanBodyPose3DEstimationEnabled(bool enabled)
-                => NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DEstimationEnabled(enabled);
+            public override bool pose3DRequested
+            {
+                get => Api.GetRequestedFeatures().All(Feature.Body3D);
+                set => Api.SetFeatureRequested(Feature.Body3D, value);
+            }
 
             /// <summary>
-            /// Sets whether 3D human body scale estimation is enabled.
+            /// Tests whether 3D body tracking is enabled.
             /// </summary>
-            /// <param name="enabled">Whether the 3D human body scale estimation should be enabled.
-            /// </param>
-            /// <returns>
-            /// <c>true</c> if the 3D human body scale estimation is set to the given value. Otherwise, <c>false</c>.
-            /// </returns>
-            public override bool TrySetHumanBodyPose3DScaleEstimationEnabled(bool enabled)
-                => NativeApi.UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DScaleEstimationEnabled(enabled);
+            public override bool pose3DEnabled => NativeApi.UnityARKit_HumanBodyProvider_GetHumanBodyPose3DEstimationEnabled();
+
+            public override bool pose3DScaleEstimationRequested
+            {
+                get => Api.GetRequestedFeatures().All(Feature.Body3DScaleEstimation);
+                set => Api.SetFeatureRequested(Feature.Body3DScaleEstimation, value);
+            }
+
+            public override bool pose3DScaleEstimationEnabled => NativeApi.UnityARKit_HumanBodyProvider_GetHumanBodyPose3DScaleEstimationEnabled();
 
             /// <summary>
             /// Queries for the set of human body changes.
@@ -275,15 +289,6 @@ namespace UnityEngine.XR.ARKit
             public static extern void UnityARKit_HumanBodyProvider_Destruct();
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanBodyPose2DEstimationEnabled(bool enabled);
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DEstimationEnabled(bool enabled);
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_TrySetHumanBodyPose3DScaleEstimationEnabled(bool enabled);
-
-            [DllImport("__Internal")]
             public static extern unsafe void* UnityARKit_HumanBodyProvider_AcquireChanges(out int numAddedHumanBodies, out void* addedBodys,
                                                                                           out int numUpdatedHumanBodies, out void* updatedBodys,
                                                                                           out int numRemovedHumanBodyIds, out void* removedBodyIds,
@@ -307,6 +312,15 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static unsafe extern void UnityARKit_HumanBodyProvider_ReleaseHumanBodyPose2DJoints(void* joints);
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_HumanBodyProvider_GetHumanBodyPose2DEstimationEnabled();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_HumanBodyProvider_GetHumanBodyPose3DEstimationEnabled();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_HumanBodyProvider_GetHumanBodyPose3DScaleEstimationEnabled();
         }
     }
 }

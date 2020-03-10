@@ -17,7 +17,9 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Register()
         {
-#if UNITY_IOS && !UNITY_EDITOR
+            if (!Api.AtLeast13_0())
+                return;
+
             const string k_SubsystemId = "ARKit-Occlusion";
 
             bool supportsHumanSegmentationStencilImage = NativeApi.UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil();
@@ -38,7 +40,6 @@ namespace UnityEngine.XR.ARKit
                     Debug.Log($"Cannot register the {k_SubsystemId} subsystem");
                 }
             }
-#endif
         }
 
         /// <summary>
@@ -150,11 +151,18 @@ namespace UnityEngine.XR.ARKit
             /// </value>
             /// <exception cref="System.NotSupportedException">Thrown when setting the human segmentation stencil mode
             /// to enabled if the implementation does not support human segmentation.</exception>
-            public override SegmentationStencilMode humanSegmentationStencilMode
+            public override HumanSegmentationStencilMode requestedHumanStencilMode
             {
-                get => NativeApi.UnityARKit_OcclusionProvider_GetHumanSegmentationStencilMode();
-                set => NativeApi.UnityARKit_OcclusionProvider_SetHumanSegmentationStencilMode(value);
+                get => NativeApi.UnityARKit_OcclusionProvider_GetRequestedSegmentationStencilMode();
+                set
+                {
+                    NativeApi.UnityARKit_OcclusionProvider_SetRequestedSegmentationStencilMode(value);
+                    Api.SetFeatureRequested(Feature.PeopleOcclusionStencil, value.Enabled());
+                }
             }
+
+            public override HumanSegmentationStencilMode currentHumanStencilMode
+                => NativeApi.UnityARKit_OcclusionProvider_GetCurrentSegmentationStencilMode();
 
             /// <summary>
             /// Property to be implemented by the provider to get/set the human segmentation depth mode.
@@ -164,11 +172,18 @@ namespace UnityEngine.XR.ARKit
             /// </value>
             /// <exception cref="System.NotSupportedException">Thrown when setting the human segmentation depth mode
             /// to enabled if the implementation does not support human segmentation.</exception>
-            public override SegmentationDepthMode humanSegmentationDepthMode
+            public override HumanSegmentationDepthMode requestedHumanDepthMode
             {
-                get => NativeApi.UnityARKit_OcclusionProvider_GetHumanSegmentationDepthMode();
-                set => NativeApi.UnityARKit_OcclusionProvider_SetHumanSegmentationDepthMode(value);
+                get => NativeApi.UnityARKit_OcclusionProvider_GetRequestedSegmentationDepthMode();
+                set
+                {
+                    NativeApi.UnityARKit_OcclusionProvider_SetRequestedSegmentationDepthMode(value);
+                    Api.SetFeatureRequested(Feature.PeopleOcclusionDepth, value.Enabled());
+                }
             }
+
+            public override HumanSegmentationDepthMode currentHumanDepthMode
+                => NativeApi.UnityARKit_OcclusionProvider_GetCurrentSegmentationDepthMode();
 
             /// <summary>
             /// Gets the human stencil texture descriptor.
@@ -256,16 +271,22 @@ namespace UnityEngine.XR.ARKit
             public static extern void UnityARKit_OcclusionProvider_Destruct();
 
             [DllImport("__Internal")]
-            public static extern SegmentationStencilMode UnityARKit_OcclusionProvider_GetHumanSegmentationStencilMode();
+            public static extern HumanSegmentationStencilMode UnityARKit_OcclusionProvider_GetRequestedSegmentationStencilMode();
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_OcclusionProvider_SetHumanSegmentationStencilMode(SegmentationStencilMode humanSegmentationStencilMode);
+            public static extern void UnityARKit_OcclusionProvider_SetRequestedSegmentationStencilMode(HumanSegmentationStencilMode humanSegmentationStencilMode);
 
             [DllImport("__Internal")]
-            public static extern SegmentationDepthMode UnityARKit_OcclusionProvider_GetHumanSegmentationDepthMode();
+            public static extern HumanSegmentationStencilMode UnityARKit_OcclusionProvider_GetCurrentSegmentationStencilMode();
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_OcclusionProvider_SetHumanSegmentationDepthMode(SegmentationDepthMode humanSegmentationDepthMode);
+            public static extern HumanSegmentationDepthMode UnityARKit_OcclusionProvider_GetRequestedSegmentationDepthMode();
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_OcclusionProvider_SetRequestedSegmentationDepthMode(HumanSegmentationDepthMode humanSegmentationDepthMode);
+
+            [DllImport("__Internal")]
+            public static extern HumanSegmentationDepthMode UnityARKit_OcclusionProvider_GetCurrentSegmentationDepthMode();
 
             [DllImport("__Internal")]
             public static unsafe extern bool UnityARKit_OcclusionProvider_TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor);
