@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0-preview.8] - 2020-03-12
+### Fixes
+- Fixed a crash that could occur when multithreaded rendering was enabled and [Stop](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/api/UnityEngine.XR.ARSubsystems.XRSubsystem-1.html#UnityEngine_XR_ARSubsystems_XRSubsystem_1_Stop) was called on the `XRCameraSubsystem`. In ARFoundation, this happens when the [`ARCameraManager`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.1/api/UnityEngine.XR.ARFoundation.ARCameraManager.html) is disabled. This happened because the textures owned by the subsystem are later manipulated on the render thread, and stopping the subsystem could invalidate the textures.
+
 ## [3.1.0-preview.7] - 2020-03-03
 ### Fixes
 - When auto focus was set to "Fixed" when starting an AR session, the iOS device would still perform auto focus. This has been fixed.
