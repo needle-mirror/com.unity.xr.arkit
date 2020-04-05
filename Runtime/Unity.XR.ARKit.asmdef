@@ -30,7 +30,7 @@
         },
         {
             "name": "com.unity.inputsystem",
-            "expression": "",
+            "expression": "0.9.6-preview",
             "define": "UNITY_INPUT_SYSTEM"
         }
     ],

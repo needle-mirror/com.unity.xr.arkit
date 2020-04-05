@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.3] - 2020-04-06
+### Fixes
+- Adding a minimum version restriction to the com.unity.inputsystem package for the conditional code that depends on that package.
+- When auto focus was set to "Fixed" when starting an AR session, the iOS device would still perform auto focus. This has been fixed.
+- Patched a memory leak by removing the coaching overly view from the superview.
+- Fixed a crash that could occur when multithreaded rendering was enabled and [Stop](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/api/UnityEngine.XR.ARSubsystems.XRSubsystem-1.html#UnityEngine_XR_ARSubsystems_XRSubsystem_1_Stop) was called on the `XRCameraSubsystem`. In ARFoundation, this happens when the [`ARCameraManager`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.0/api/UnityEngine.XR.ARFoundation.ARCameraManager.html) is disabled. This happened because the textures owned by the subsystem are later manipulated on the render thread, and stopping the subsystem could invalidate the textures.
+- Static libraries were built with Xcode 11.3.1 (11C505) and Xcode 10.3 (10G8)
+
+### Changes
+- Default ARKit loader for XR Management will now only start and stop the implementations of XRInputSubsystem, XRCameraSubsystem, and XRSessionSubsystem when the _Initialize on Startup_ option in XR Management is enabled. 
+
 ## [3.0.1] - 2019-11-27
 - 2020.1 verified release
 

@@ -126,39 +126,19 @@ namespace UnityEngine.XR.ARKit
 
         public override bool Start()
         {
-            var settings = GetSettings();
-            if (settings != null && settings.startAndStopSubsystems)
-            {
-                StartSubsystem<XRSessionSubsystem>();
-                StartSubsystem<XRCameraSubsystem>();
-                StartSubsystem<XRDepthSubsystem>();
-                StartSubsystem<XRPlaneSubsystem>();
-                StartSubsystem<XRAnchorSubsystem>();
-                StartSubsystem<XRRaycastSubsystem>();
-                StartSubsystem<XREnvironmentProbeSubsystem>();
-                StartSubsystem<XRInputSubsystem>();
-                StartSubsystem<XRImageTrackingSubsystem>();
-                StartSubsystem<XRFaceSubsystem>();
-            }
+            StartSubsystem<XRSessionSubsystem>();
+            StartSubsystem<XRCameraSubsystem>();
+            StartSubsystem<XRInputSubsystem>();
+
             return true;
         }
 
         public override bool Stop()
         {
-            var settings = GetSettings();
-            if (settings != null && settings.startAndStopSubsystems)
-            {
-                StopSubsystem<XRSessionSubsystem>();
-                StopSubsystem<XRCameraSubsystem>();
-                StopSubsystem<XRDepthSubsystem>();
-                StopSubsystem<XRPlaneSubsystem>();
-                StopSubsystem<XRAnchorSubsystem>();
-                StopSubsystem<XRRaycastSubsystem>();
-                StopSubsystem<XREnvironmentProbeSubsystem>();
-                StopSubsystem<XRInputSubsystem>();
-                StopSubsystem<XRImageTrackingSubsystem>();
-                StopSubsystem<XRFaceSubsystem>();
-            }
+            StopSubsystem<XRSessionSubsystem>();
+            StopSubsystem<XRCameraSubsystem>();
+            StopSubsystem<XRInputSubsystem>();
+
             return true;
         }
 
@@ -177,19 +157,6 @@ namespace UnityEngine.XR.ARKit
             DestroySubsystem<XRFaceSubsystem>();
 #endif
             return true;
-        }
-
-        ARKitLoaderSettings GetSettings()
-        {
-            ARKitLoaderSettings settings = null;
-            // When running in the Unity Editor, we have to load user's customization of configuration data directly from
-            // EditorBuildSettings. At runtime, we need to grab it from the static instance field instead.
-            #if UNITY_EDITOR
-            UnityEditor.EditorBuildSettings.TryGetConfigObject(ARKitLoaderConstants.k_SettingsKey, out settings);
-            #else
-            settings = ARKitLoaderSettings.s_RuntimeInstance;
-            #endif
-            return settings;
         }
     }
 }

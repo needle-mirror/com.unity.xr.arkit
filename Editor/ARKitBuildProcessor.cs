@@ -86,6 +86,7 @@ namespace UnityEditor.XR.ARKit
             // https://docs.unity3d.com/ScriptReference/PlayerSettings.GetArchitecture.html
             // "0 - None, 1 - ARM64, 2 - Universal."
             const int k_TargetArchitectureArm64 = 1;
+            const int k_TargetArchitectureUniversal = 2;
 
             void SelectStaticLib()
             {
@@ -104,11 +105,18 @@ namespace UnityEditor.XR.ARKit
                     throw new BuildFailedException("ARKit requires a Camera Usage Description (Player Settings > iOS > Other Settings > Camera Usage Description)");
 
                 SelectStaticLib();
-                EnsureMinimumBuildTarget();
-                EnsureOnlyMetalIsUsed();
-                EnsureTargetArchitecturesAreSupported(report.summary.platformGroup);
+                EnsureMetalIsFirstApi();
 
-                BuildHelper.AddBackgroundShaderToProject(ARKitCameraSubsystem.backgroundShaderName);
+                if(ARKitSettings.GetOrCreateSettings().requirement == ARKitSettings.Requirement.Required)
+                {
+                    EnsureMinimumBuildTarget();
+                    EnsureTargetArchitecturesAreSupported(report.summary.platformGroup);
+                }
+                else if (PlayerSettings.GetArchitecture(report.summary.platformGroup) == k_TargetArchitectureUniversal)
+                {
+                    EnsureOpenGLIsUsed();
+                } 
+                BuildHelper.AddBackgroundShaderToProject(ARKitCameraSubsystem.backgroundShaderName);               
             }
 
             void EnsureMinimumBuildTarget()
@@ -119,23 +127,38 @@ namespace UnityEditor.XR.ARKit
                     throw new BuildFailedException("You have selected a minimum target iOS version of " + userSetTargetVersion + " and have the ARKit package installed.  "
                         + "ARKit requires at least iOS version 11.0 (See Player Settings > Other Settings > Target minimum iOS Version).");
                 }
+                
             }
 
             void EnsureTargetArchitecturesAreSupported(BuildTargetGroup buildTargetGroup)
             {
+                
                 if (PlayerSettings.GetArchitecture(buildTargetGroup) != k_TargetArchitectureArm64)
                     throw new BuildFailedException("ARKit XR Plugin only supports the ARM64 architecture. See Player Settings > Other Settings > Architecture.");
+                
             }
 
-            void EnsureOnlyMetalIsUsed()
+            void EnsureMetalIsFirstApi()
             {
                 var graphicsApis = PlayerSettings.GetGraphicsAPIs(BuildTarget.iOS);
                 if (graphicsApis.Length > 0)
                 {
                     var graphicsApi = graphicsApis[0];
                     if (graphicsApi != GraphicsDeviceType.Metal)
-                        throw new BuildFailedException("You have selected the graphics API " + graphicsApi + ". Only the Metal graphics API is supported by the ARKit XR Plugin. (See Player Settings > Other Settings > Graphics APIs)");
+                        throw new BuildFailedException($"You currently have {graphicsApi} at the top of the list of Graphics APis. However, Metal needs to be first in the list. (See Player Settings > Other Settings > Graphics APIs)");
                 }
+                
+            }
+
+            void EnsureOpenGLIsUsed()
+            {
+                var graphicsApis = PlayerSettings.GetGraphicsAPIs(BuildTarget.iOS);
+                if (graphicsApis.Length > 0)
+                {
+                    if(!graphicsApis.Contains(GraphicsDeviceType.OpenGLES2))
+                        throw new BuildFailedException("To build for 'Universal' architecture, OpenGLES2 is needed. (See Player Settings > Other Settings > Graphics APIs)");
+                }
+                
             }
 
             public int callbackOrder { get { return 0; } }
