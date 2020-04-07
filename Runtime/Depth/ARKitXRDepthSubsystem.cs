@@ -147,7 +147,7 @@ namespace UnityEngine.XR.ARKit
         }
 
         //this method is run on startup of the app to register this provider with XR Subsystem Manager
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
 #if UNITY_IOS && !UNITY_EDITOR

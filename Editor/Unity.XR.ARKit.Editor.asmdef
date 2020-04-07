@@ -3,10 +3,19 @@
     "references": [
         "Unity.XR.ARKit",
         "Unity.XR.ARSubsystems",
-        "Unity.XR.ARSubsystems.Editor"
+        "Unity.XR.ARSubsystems.Editor",
+        "Unity.XR.Management.Editor"
     ],
     "includePlatforms": [
         "Editor"
     ],
-    "excludePlatforms": []
+    "excludePlatforms": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.xr.management",
+            "expression": "3.2.0",
+            "define": "USE_XR_MANAGEMENT"
+        }
+    ]
+
 }

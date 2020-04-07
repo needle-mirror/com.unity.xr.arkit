@@ -4,6 +4,22 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.9] - 2020-04-08
+### New
+- Added XR Management loader for ARKit
+
+### Fixes
+- Previously, when starting an AR session with focus mode set to "Fixed", the iOS device behaved as though auto focus was enabled. Now, the device correctly respects the focus mode.
+- Apps that optionally use ARKit on 32-bit iOS devices now run as expected without AR functionality.
+- Fixed a crash that could occur when multithreaded rendering was enabled and [Stop](https://docs.unity3d.com/ScriptReference/Subsystem.Stop.html) was called on the `XRCameraSubsystem`. In ARFoundation, this happens when the [`ARCameraManager`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@2.1/api/UnityEngine.XR.ARFoundation.ARCameraManager.html) is disabled. This happened because the textures owned by the subsystem are later manipulated on the render thread, and stopping the subsystem could invalidate the textures.
+
+### Breaking Changes
+If you receive this error:
+
+> We were unable to create an instance of the requested type UnityEngine.XR.ARKit.ARKitLoader. Please make sure that all packages are updated to support this version of XR Plug-In Management. See the Unity documentation for XR Plug-In Management for information on resolving this issue.
+
+It means you need to update to at least version 2.1.8 of the ARKit XR Plugin package.
+
 ## [2.1.2] - 2019-08-31
 ### Fixes
 - Enforce minimum target iOS version of 11.0 whenever ARKit is required.
