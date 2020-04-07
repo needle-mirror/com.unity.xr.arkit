@@ -4,7 +4,7 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.0.3] - 2020-04-06
+## [3.0.4] - 2020-04-08
 ### Fixes
 - Adding a minimum version restriction to the com.unity.inputsystem package for the conditional code that depends on that package.
 - When auto focus was set to "Fixed" when starting an AR session, the iOS device would still perform auto focus. This has been fixed.

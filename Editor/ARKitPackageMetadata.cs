@@ -1,3 +1,4 @@
+#if USE_XR_PACKAGE_METADATA
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,3 +58,4 @@ namespace UnityEditor.XR.ARKit
         }
     }
 }
+#endif
