@@ -4,42 +4,20 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.1.0-preview.8] - 2020-03-12
+## [3.1.3] - 2020-04-13
 ### Fixes
-- Fixed a crash that could occur when multithreaded rendering was enabled and [Stop](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/api/UnityEngine.XR.ARSubsystems.XRSubsystem-1.html#UnityEngine_XR_ARSubsystems_XRSubsystem_1_Stop) was called on the `XRCameraSubsystem`. In ARFoundation, this happens when the [`ARCameraManager`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.1/api/UnityEngine.XR.ARFoundation.ARCameraManager.html) is disabled. This happened because the textures owned by the subsystem are later manipulated on the render thread, and stopping the subsystem could invalidate the textures.
+- Combines the three background shaders for different rendering pipelines into one shader file with variations. This eliminates compiler errors that started with Unity 2020.1.
 
-## [3.1.0-preview.7] - 2020-03-03
-### Fixes
-- When auto focus was set to "Fixed" when starting an AR session, the iOS device would still perform auto focus. This has been fixed.
-- The estimated main light direction was Y flipped, e.g., it pointed up when it should be pointing down. This has been fixed.
-- Patched a memory leak by removing the coaching overly view from the superview.
-
-## [3.1.0-preview.6] - 2020-02-18
-
-## [3.1.0-preview.4] - 2020-01-08
-### Fixes
-- Fixes an issue with the 2D joint positions from human body tracking.
-
-## [3.1.0-preview.2] - 2019-12-16
-### New
-- Added support for HDR Light Estimation.  HDR Light Estimation only functions during Face-Tracking on ARKit.
-- Exposed native camera configuration object by surfacing the object pointer to the managed ARSubsystems.
-
-### Fixes
-- Correcting the static library meta files that get corrupted when upgrading a project to Unity 2019.3.
-- Fixing an issue where changing the AROcclusionManager.humanSegmentationStencilMode at runtime would sometime have no effect on the ARKit platform.
-- Update documentation links to point to 3.1.
-- Updating dependent version of com.unity.xr.management package to eliminate build warning message.
-
-## [3.1.0-preview.1] - 2019-11-21
-
-### New
-- Added `ARKitXROcclusionSubsystem` for managing occlusion textures, such as the human segmentation stencil and human segmentation depth on some iOS devices.
-
-## [3.0.2] - 2019-12-03
-
+## [3.0.4] - 2020-04-08
 ### Fixes
 - Adding a minimum version restriction to the com.unity.inputsystem package for the conditional code that depends on that package.
+- When auto focus was set to "Fixed" when starting an AR session, the iOS device would still perform auto focus. This has been fixed.
+- Patched a memory leak by removing the coaching overly view from the superview.
+- Fixed a crash that could occur when multithreaded rendering was enabled and [Stop](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/api/UnityEngine.XR.ARSubsystems.XRSubsystem-1.html#UnityEngine_XR_ARSubsystems_XRSubsystem_1_Stop) was called on the `XRCameraSubsystem`. In ARFoundation, this happens when the [`ARCameraManager`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.0/api/UnityEngine.XR.ARFoundation.ARCameraManager.html) is disabled. This happened because the textures owned by the subsystem are later manipulated on the render thread, and stopping the subsystem could invalidate the textures.
+- Static libraries were built with Xcode 11.3.1 (11C505) and Xcode 10.3 (10G8)
+
+### Changes
+- Default ARKit loader for XR Management will now only start and stop the implementations of XRInputSubsystem, XRCameraSubsystem, and XRSessionSubsystem when the _Initialize on Startup_ option in XR Management is enabled.
 
 ## [3.0.1] - 2019-11-27
 - 2020.1 verified release
@@ -69,8 +47,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixes
 - Exclude tvOS as a supported platform.
-- The ["match frame rate"](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.1/api/UnityEngine.XR.ARFoundation.ARSession.html#UnityEngine_XR_ARFoundation_ARSession_matchFrameRate) option could incorrectly cause execution to be blocked while waiting for a new frame, leading to long frame times. This has been fixed.
-- The ["match frame rate"](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.1/api/UnityEngine.XR.ARFoundation.ARSession.html#UnityEngine_XR_ARFoundation_ARSession_matchFrameRate) option did not account for thermal throttling, which can put ARKit into a 30 frames per second update mode while Unity would keep trying to update at 60 frames per second. This could lead to visual artifacts like judder. The calculated frame rate now takes the thermal state into account and will do a better job matching ARKit's update rate.
+- The ["match frame rate"](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.0/api/UnityEngine.XR.ARFoundation.ARSession.html#UnityEngine_XR_ARFoundation_ARSession_matchFrameRate) option could incorrectly cause execution to be blocked while waiting for a new frame, leading to long frame times. This has been fixed.
+- The ["match frame rate"](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.0/api/UnityEngine.XR.ARFoundation.ARSession.html#UnityEngine_XR_ARFoundation_ARSession_matchFrameRate) option did not account for thermal throttling, which can put ARKit into a 30 frames per second update mode while Unity would keep trying to update at 60 frames per second. This could lead to visual artifacts like judder. The calculated frame rate now takes the thermal state into account and will do a better job matching ARKit's update rate.
 
 ## [3.0.0-preview.2] - 2019-09-05
 ### New
@@ -85,8 +63,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.0.0-preview.1] - 2019-08-27
 ### New
-- Add support for [XR Management](https://docs.unity3d.com/Packages/com.unity.xr.management@3.1/manual/index.html).
-- Add support for the [XRParticipantSubsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/participant-subsystem.html), which can track other users in a multi-user collaborative session.
+- Add support for [XR Management](https://docs.unity3d.com/Packages/com.unity.xr.management@3.0/manual/index.html).
+- Add support for the [XRParticipantSubsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/participant-subsystem.html), which can track other users in a multi-user collaborative session.
 - Add support for [exposureDuration](https://developer.apple.com/documentation/arkit/arcamera/3182986-exposureduration?language=objc)
 - Add support for [exposureOffset](https://developer.apple.com/documentation/arkit/arcamera/3194569-exposureoffset?language=objc)
 - Add support for Lightweight Render Pipeline and Universal Render Pipeline.

@@ -3,17 +3,16 @@
 
 Use the *ARKit XR Plugin* package enable ARKit support via Unity's multi-platform XR API. This package implements the following XR Subsystems:
 
-* [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/session-subsystem.html)
-* [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/camera-subsystem.html)
-* [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/depth-subsystem.html)
+* [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/session-subsystem.html)
+* [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/camera-subsystem.html)
+* [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/depth-subsystem.html)
 * [Input](https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.XR.XRInputSubsystem.html)
-* [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/plane-subsystem.html)
-* [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/raycast-subsystem.html)
-* [Anchors](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/anchor-subsystem.html)
-* [Image Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/image-tracking.html)
-* [Object Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/object-tracking.html)
-* [Environment Probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/environment-probe-subsystem.html)
-* [Participants](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/manual/participant-subsystem.html)
+* [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/plane-subsystem.html)
+* [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/raycast-subsystem.html)
+* [Anchors](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/anchor-subsystem.html)
+* [Image Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/image-tracking.html)
+* [Environment Probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/environment-probe-subsystem.html)
+* [Participants](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/manual/participant-subsystem.html)
 
 This version of *ARKit XR Plugin* supports the following features:
 
@@ -27,7 +26,6 @@ This version of *ARKit XR Plugin* supports the following features:
 * Hit Testing
 * Session Management
 * Image Tracking
-* Object Tracking
 * Environment Probes
 * Participants
 
@@ -83,26 +81,9 @@ Setting the plane detection mode to `PlaneDetectionMode.None` is equivalent to `
 
 See [Image Tracking](arkit-image-tracking.md).
 
-## Object Tracking
-
-See [Object Tracking](arkit-object-tracking.md).
-
 ## Participant Tracking
 
 A "participant" represents another device in a multi-user collaborative session. Although you can start and stop the participant subsystem at any time, the session must be fed `ARCollaborationData` from other peers in the multi-user session in order for participants to be detected. See the [ARCollaborationData sample](https://github.com/Unity-Technologies/arfoundation-samples/tree/master/Assets/Scenes/ARCollaborationData).
-
-## Light Estimation
-
-ARKit Light Estimation can only be `enabled` or `disabled` selection between `Disabled`, `Ambient Intensity`, or `Environemental HDR`.  Instead, the current tracking configuration governs what information is surfaced when Light Estimation is enabled.  See the following table for more details.
-
-| Tracking Configuration | Ambient Intensity (Lumens) | Color Temperature | Main Light Direction | Main Light Intensity (Lumens) | Ambient Spherical Harmonics |
-|------------------------|----------------------------|-------------------|----------------------|-------------------------------|-----------------------------|
-| World Tracking         | Yes                        | Yes               | No                   | No                            | No                          |
-| Face Tracking          | Yes                        | Yes               | Yes                  | Yes                           | Yes                         |
-
-## Camera Configuration
-
-[XRCameraConfiguration](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/api/UnityEngine.XR.ARSubsystems.XRCameraConfiguration.html) contains an `IntPtr` field `nativeConfigurationHandle` which is a platform-specific handle.  For ARKit, this handle is a pointer to the native [ARVideoFormat](https://developer.apple.com/documentation/arkit/arvideoformat?language=objc) Objective-C object.
 
 # Technical details
 ## Requirements

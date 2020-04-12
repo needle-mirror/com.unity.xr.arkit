@@ -12,11 +12,9 @@ namespace UnityEngine.XR.ARKit
         private static List<XRPlaneSubsystemDescriptor> s_PlaneSubsystemDescriptors = new List<XRPlaneSubsystemDescriptor>();
         private static List<XRAnchorSubsystemDescriptor> s_AnchorSubsystemDescriptors = new List<XRAnchorSubsystemDescriptor>();
         private static List<XRRaycastSubsystemDescriptor> s_RaycastSubsystemDescriptors = new List<XRRaycastSubsystemDescriptor>();
-        private static List<XRHumanBodySubsystemDescriptor> s_HumanBodySubsystemDescriptors = new List<XRHumanBodySubsystemDescriptor>();
         private static List<XREnvironmentProbeSubsystemDescriptor> s_EnvironmentProbeSubsystemDescriptors = new List<XREnvironmentProbeSubsystemDescriptor>();
         private static List<XRInputSubsystemDescriptor> s_InputSubsystemDescriptors = new List<XRInputSubsystemDescriptor>();
         private static List<XRImageTrackingSubsystemDescriptor> s_ImageTrackingSubsystemDescriptors = new List<XRImageTrackingSubsystemDescriptor>();
-        private static List<XRObjectTrackingSubsystemDescriptor> s_ObjectTrackingSubsystemDescriptors = new List<XRObjectTrackingSubsystemDescriptor>();
         private static List<XRFaceSubsystemDescriptor> s_FaceSubsystemDescriptors = new List<XRFaceSubsystemDescriptor>();
 
         public XRSessionSubsystem sessionSubsystem
@@ -67,14 +65,6 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-        public XRHumanBodySubsystem humanBodySubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRHumanBodySubsystem>();
-            }
-        }
-
         public XREnvironmentProbeSubsystem environmentProbeSubsystem
         {
             get
@@ -99,14 +89,6 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-        public XRObjectTrackingSubsystem objectTrackingSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRObjectTrackingSubsystem>();
-            }
-        }
-
         public XRFaceSubsystem faceSubsystem
         {
             get
@@ -124,13 +106,11 @@ namespace UnityEngine.XR.ARKit
             CreateSubsystem<XRPlaneSubsystemDescriptor, XRPlaneSubsystem>(s_PlaneSubsystemDescriptors, "ARKit-Plane");
             CreateSubsystem<XRAnchorSubsystemDescriptor, XRAnchorSubsystem>(s_AnchorSubsystemDescriptors, "ARKit-Anchor");
             CreateSubsystem<XRRaycastSubsystemDescriptor, XRRaycastSubsystem>(s_RaycastSubsystemDescriptors, "ARKit-Raycast");
-            CreateSubsystem<XRHumanBodySubsystemDescriptor, XRHumanBodySubsystem>(s_HumanBodySubsystemDescriptors, "ARKit-HumanBody");
             CreateSubsystem<XREnvironmentProbeSubsystemDescriptor, XREnvironmentProbeSubsystem>(s_EnvironmentProbeSubsystemDescriptors, "ARKit-EnvironmentProbe");
             CreateSubsystem<XRInputSubsystemDescriptor, XRInputSubsystem>(s_InputSubsystemDescriptors, "ARKit-Input");
 
             // Optional subsystems that might not have been registered, based on the iOS version.
             CreateSubsystem<XRImageTrackingSubsystemDescriptor, XRImageTrackingSubsystem>(s_ImageTrackingSubsystemDescriptors, "ARKit-ImageTracking");
-            CreateSubsystem<XRObjectTrackingSubsystemDescriptor, XRObjectTrackingSubsystem>(s_ObjectTrackingSubsystemDescriptors, "ARKit-ObjectTracking");
             CreateSubsystem<XRFaceSubsystemDescriptor, XRFaceSubsystem>(s_FaceSubsystemDescriptors, "ARKit-Face");
 
             if (sessionSubsystem == null)
@@ -146,43 +126,19 @@ namespace UnityEngine.XR.ARKit
 
         public override bool Start()
         {
-            var settings = GetSettings();
-            if (settings != null && settings.startAndStopSubsystems)
-            {
-                StartSubsystem<XRSessionSubsystem>();
-                StartSubsystem<XRCameraSubsystem>();
-                StartSubsystem<XRDepthSubsystem>();
-                StartSubsystem<XRPlaneSubsystem>();
-                StartSubsystem<XRAnchorSubsystem>();
-                StartSubsystem<XRRaycastSubsystem>();
-                StartSubsystem<XRHumanBodySubsystem>();
-                StartSubsystem<XREnvironmentProbeSubsystem>();
-                StartSubsystem<XRInputSubsystem>();
-                StartSubsystem<XRImageTrackingSubsystem>();
-                StartSubsystem<XRObjectTrackingSubsystem>();
-                StartSubsystem<XRFaceSubsystem>();
-            }
+            StartSubsystem<XRSessionSubsystem>();
+            StartSubsystem<XRCameraSubsystem>();
+            StartSubsystem<XRInputSubsystem>();
+
             return true;
         }
 
         public override bool Stop()
         {
-            var settings = GetSettings();
-            if (settings != null && settings.startAndStopSubsystems)
-            {
-                StopSubsystem<XRSessionSubsystem>();
-                StopSubsystem<XRCameraSubsystem>();
-                StopSubsystem<XRDepthSubsystem>();
-                StopSubsystem<XRPlaneSubsystem>();
-                StopSubsystem<XRAnchorSubsystem>();
-                StopSubsystem<XRRaycastSubsystem>();
-                StopSubsystem<XRHumanBodySubsystem>();
-                StopSubsystem<XREnvironmentProbeSubsystem>();
-                StopSubsystem<XRInputSubsystem>();
-                StopSubsystem<XRImageTrackingSubsystem>();
-                StopSubsystem<XRObjectTrackingSubsystem>();
-                StopSubsystem<XRFaceSubsystem>();
-            }
+            StopSubsystem<XRSessionSubsystem>();
+            StopSubsystem<XRCameraSubsystem>();
+            StopSubsystem<XRInputSubsystem>();
+
             return true;
         }
 
@@ -195,27 +151,12 @@ namespace UnityEngine.XR.ARKit
             DestroySubsystem<XRPlaneSubsystem>();
             DestroySubsystem<XRAnchorSubsystem>();
             DestroySubsystem<XRRaycastSubsystem>();
-            DestroySubsystem<XRHumanBodySubsystem>();
             DestroySubsystem<XREnvironmentProbeSubsystem>();
             DestroySubsystem<XRInputSubsystem>();
             DestroySubsystem<XRImageTrackingSubsystem>();
-            DestroySubsystem<XRObjectTrackingSubsystem>();
             DestroySubsystem<XRFaceSubsystem>();
 #endif
             return true;
-        }
-
-        ARKitLoaderSettings GetSettings()
-        {
-            ARKitLoaderSettings settings = null;
-            // When running in the Unity Editor, we have to load user's customization of configuration data directly from
-            // EditorBuildSettings. At runtime, we need to grab it from the static instance field instead.
-            #if UNITY_EDITOR
-            UnityEditor.EditorBuildSettings.TryGetConfigObject(ARKitLoaderConstants.k_SettingsKey, out settings);
-            #else
-            settings = ARKitLoaderSettings.s_RuntimeInstance;
-            #endif
-            return settings;
         }
     }
 }
