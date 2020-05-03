@@ -4,6 +4,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.0-preview.3] - 2020-05-04
+### New
+- Add support for tracked (i.e., persistent) raycasts.
+- Added support for scene mesh generation through `ARMeshManager`.
+
+### Changes
+- Static libraries were built with Xcode 11.4.1 (11E503a) and Xcode 10.3 (10G8).
+- Updating dependency on com.unity.xr.management to 3.2.10.
+
+### Fixes
+- Fixed all broken or missing scripting API documentation.
+
 ## [4.0.0-preview.1] - 2020-03-11
 ### Changes
 - The ARSubsystem implementions have been updated to reflect changes in the ARSubsystems API.
@@ -13,8 +25,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `ARKitSessionSubsystem.collaborationEnabled` was both gettable and settable; now it is only gettable. To toggle the collaboration feature, set `ARKitSessionSubsystem.collaborationRequested` instead.
 - The static library `UnityARKit.a` has been prefixed with `lib` to follow library naming conventions. Existing projects will need to either rebuild (Build and Run > Replace) the Unity generated Xcode project or manully remove `UnityARKit.a` from the `UnityFramework` "Frameworks and Libraries" section in Xcode.
 
+## [3.1.3] - 2020-04-13
 ### Fixes
-- Fixed a crash that could occur when multithreaded rendering was enabled and [Stop](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.XRSubsystem-1.html#UnityEngine_XR_ARSubsystems_XRSubsystem_1_Stop) was called on the `XRCameraSubsystem`. In ARFoundation, this happens when the [`ARCameraManager`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/api/UnityEngine.XR.ARFoundation.ARCameraManager.html) is disabled. This happened because the textures owned by the subsystem are later manipulated on the render thread, and stopping the subsystem could invalidate the textures.
+- Combines the three background shaders for different rendering pipelines into one shader file with variations. This eliminates compiler errors that started with Unity 2020.1.
+
+## [3.1.0-preview.8] - 2020-03-12
 
 ## [3.1.0-preview.7] - 2020-03-03
 ### Fixes
@@ -44,10 +59,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### New
 - Added `ARKitXROcclusionSubsystem` for managing occlusion textures, such as the human segmentation stencil and human segmentation depth on some iOS devices.
 
-## [3.0.2] - 2019-12-03
-
+## [3.0.4] - 2020-04-08
 ### Fixes
 - Adding a minimum version restriction to the com.unity.inputsystem package for the conditional code that depends on that package.
+- When auto focus was set to "Fixed" when starting an AR session, the iOS device would still perform auto focus. This has been fixed.
+- Patched a memory leak by removing the coaching overly view from the superview.
+- Fixed a crash that could occur when multithreaded rendering was enabled and [Stop](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.XRSubsystem-1.html#UnityEngine_XR_ARSubsystems_XRSubsystem_1_Stop) was called on the `XRCameraSubsystem`. In ARFoundation, this happens when the [`ARCameraManager`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.1/api/UnityEngine.XR.ARFoundation.ARCameraManager.html) is disabled. This happened because the textures owned by the subsystem are later manipulated on the render thread, and stopping the subsystem could invalidate the textures.
+
+### Changes
+- Default ARKit loader for XR Management will now only start and stop the implementations of XRInputSubsystem, XRCameraSubsystem, and XRSessionSubsystem when the _Initialize on Startup_ option in XR Management is enabled.
+- Static libraries were built with Xcode 11.3.1 (11C505) and Xcode 10.3 (10G8)
 
 ## [3.0.1] - 2019-11-27
 - 2020.1 verified release
@@ -63,6 +84,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### New
 - Add getter for the camera focus mode.
 - Add support for plane classification for devices running iOS 12 with A12 CPU or later.
+
+### Changes
 - Static libraries were built with Xcode 11.1 (11A1027) and Xcode 10.3 (10G8)
 
 ### Fixes
@@ -71,9 +94,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.0.0-preview.3] - 2019-09-26
 ### New
-- Build compiled binaries with Xcode 10.3 (10G8) and Xcode 11 (11A420a)
 - Added support for both linear and gamma color spaces.
 - Register AR tracking inputs with the new [Input System](https://github.com/Unity-Technologies/InputSystem)
+
+### Changes
+- Build compiled binaries with Xcode 10.3 (10G8) and Xcode 11 (11A420a)
 
 ### Fixes
 - Exclude tvOS as a supported platform.

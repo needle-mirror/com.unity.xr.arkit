@@ -6,12 +6,10 @@ using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEngine.XR.ARKit
 {
-    [Preserve]
     /// <summary>
-    /// ARKit implementation of the <c>XRImageTrackingSubsystem</c>. You shouldn't
-    /// need to interact directly with this unless using the <see cref="maximumNumberOfTrackedImages"/>
-    /// property.
+    /// ARKit implementation of the <c>XRImageTrackingSubsystem</c>.
     /// </summary>
+    [Preserve]
     public sealed class ARKitImageTrackingSubsystem : XRImageTrackingSubsystem
     {
         class ARKitProvider : Provider
@@ -125,9 +123,10 @@ namespace UnityEngine.XR.ARKit
             });
         }
 
-        protected override Provider CreateProvider()
-        {
-            return new ARKitProvider();
-        }
+        /// <summary>
+        /// Creates the ARKit-specific implementation which will service the `XRImageTrackingSubsystem`.
+        /// </summary>
+        /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
+        protected override Provider CreateProvider() => new ARKitProvider();
     }
 }

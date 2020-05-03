@@ -72,7 +72,7 @@ namespace UnityEngine.XR.ARKit
         /// Activates or deactivates the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview)
         /// </summary>
         /// <param name="active">Whether the coaching overlay should be active or not.</param>
-        /// <param name="animate">The type of transition to use when showing or hiding the coaching overlay.</param>
+        /// <param name="transition">The type of transition to use when showing or hiding the coaching overlay.</param>
         public void SetCoachingActive(bool active, ARCoachingOverlayTransition transition)
         {
             NativeApi.UnityARKit_Session_SetCoachingOverlayActive(self, active, transition == ARCoachingOverlayTransition.Animated);
@@ -198,6 +198,7 @@ namespace UnityEngine.XR.ARKit
         /// Dequeues the oldest collaboration data in the queue. After calling this method, <see cref="collaborationDataCount"/>
         /// will be decremented by one.
         /// </summary>
+        /// <returns>The nextx <see cref="ARCollaborationData"/> in the queue.</returns>
         /// <exception cref="System.NotSupportedException">Thrown if <see cref="supportsCollaboration"/> is false.</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if <see cref="collaborationDataCount"/> is zero.</exception>
         /// <seealso cref="ARCollaborationData"/>
@@ -215,6 +216,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Applies <see cref="ARCollaborationData"/> to the session.
         /// </summary>
+        /// <param name="collaborationData">The <see cref="ARCollaborationData"/> to apply to the session.</param>
         /// <exception cref="System.NotSupportedException">Thrown if <see cref="supportsCollaboration"/> is false.</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="collaborationData"/> is not valid.</exception>
         public void UpdateWithCollaborationData(ARCollaborationData collaborationData)

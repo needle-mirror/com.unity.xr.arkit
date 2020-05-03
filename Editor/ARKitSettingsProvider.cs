@@ -1,10 +1,11 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using UnityEngine;
 
 namespace UnityEditor.XR.ARKit
 {
+    /// <summary>
+    /// Provides settings for the <see cref="ARKitLoader"/>.
+    /// </summary>
     public static class ARKitSettingsProvider
     {
         [SettingsProvider]

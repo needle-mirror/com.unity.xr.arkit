@@ -4,117 +4,94 @@ using UnityEngine.XR.Management;
 
 namespace UnityEngine.XR.ARKit
 {
+    /// <summary>
+    /// Manages the lifecycle of ARKit subsystems.
+    /// </summary>
     public class ARKitLoader : XRLoaderHelper
     {
-        private static List<XRSessionSubsystemDescriptor> s_SessionSubsystemDescriptors = new List<XRSessionSubsystemDescriptor>();
-        private static List<XRCameraSubsystemDescriptor> s_CameraSubsystemDescriptors = new List<XRCameraSubsystemDescriptor>();
-        private static List<XRDepthSubsystemDescriptor> s_DepthSubsystemDescriptors = new List<XRDepthSubsystemDescriptor>();
-        private static List<XRPlaneSubsystemDescriptor> s_PlaneSubsystemDescriptors = new List<XRPlaneSubsystemDescriptor>();
-        private static List<XRAnchorSubsystemDescriptor> s_AnchorSubsystemDescriptors = new List<XRAnchorSubsystemDescriptor>();
-        private static List<XRRaycastSubsystemDescriptor> s_RaycastSubsystemDescriptors = new List<XRRaycastSubsystemDescriptor>();
-        private static List<XRHumanBodySubsystemDescriptor> s_HumanBodySubsystemDescriptors = new List<XRHumanBodySubsystemDescriptor>();
-        private static List<XREnvironmentProbeSubsystemDescriptor> s_EnvironmentProbeSubsystemDescriptors = new List<XREnvironmentProbeSubsystemDescriptor>();
-        private static List<XRInputSubsystemDescriptor> s_InputSubsystemDescriptors = new List<XRInputSubsystemDescriptor>();
-        private static List<XRImageTrackingSubsystemDescriptor> s_ImageTrackingSubsystemDescriptors = new List<XRImageTrackingSubsystemDescriptor>();
-        private static List<XRObjectTrackingSubsystemDescriptor> s_ObjectTrackingSubsystemDescriptors = new List<XRObjectTrackingSubsystemDescriptor>();
-        private static List<XRFaceSubsystemDescriptor> s_FaceSubsystemDescriptors = new List<XRFaceSubsystemDescriptor>();
+        static List<XRSessionSubsystemDescriptor> s_SessionSubsystemDescriptors = new List<XRSessionSubsystemDescriptor>();
+        static List<XRCameraSubsystemDescriptor> s_CameraSubsystemDescriptors = new List<XRCameraSubsystemDescriptor>();
+        static List<XRDepthSubsystemDescriptor> s_DepthSubsystemDescriptors = new List<XRDepthSubsystemDescriptor>();
+        static List<XRPlaneSubsystemDescriptor> s_PlaneSubsystemDescriptors = new List<XRPlaneSubsystemDescriptor>();
+        static List<XRAnchorSubsystemDescriptor> s_AnchorSubsystemDescriptors = new List<XRAnchorSubsystemDescriptor>();
+        static List<XRRaycastSubsystemDescriptor> s_RaycastSubsystemDescriptors = new List<XRRaycastSubsystemDescriptor>();
+        static List<XRHumanBodySubsystemDescriptor> s_HumanBodySubsystemDescriptors = new List<XRHumanBodySubsystemDescriptor>();
+        static List<XREnvironmentProbeSubsystemDescriptor> s_EnvironmentProbeSubsystemDescriptors = new List<XREnvironmentProbeSubsystemDescriptor>();
+        static List<XRInputSubsystemDescriptor> s_InputSubsystemDescriptors = new List<XRInputSubsystemDescriptor>();
+        static List<XRImageTrackingSubsystemDescriptor> s_ImageTrackingSubsystemDescriptors = new List<XRImageTrackingSubsystemDescriptor>();
+        static List<XRObjectTrackingSubsystemDescriptor> s_ObjectTrackingSubsystemDescriptors = new List<XRObjectTrackingSubsystemDescriptor>();
+        static List<XRFaceSubsystemDescriptor> s_FaceSubsystemDescriptors = new List<XRFaceSubsystemDescriptor>();
+        static List<XROcclusionSubsystemDescriptor> s_OcclusionSubsystemDescriptors  = new List<XROcclusionSubsystemDescriptor>();
 
-        public XRSessionSubsystem sessionSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRSessionSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRSessionSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRSessionSubsystem sessionSubsystem => GetLoadedSubsystem<XRSessionSubsystem>();
 
-        public XRCameraSubsystem cameraSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRCameraSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRCameraSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRCameraSubsystem cameraSubsystem => GetLoadedSubsystem<XRCameraSubsystem>();
 
-        public XRDepthSubsystem depthSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRDepthSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRDepthSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRDepthSubsystem depthSubsystem => GetLoadedSubsystem<XRDepthSubsystem>();
 
-        public XRPlaneSubsystem planeSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRPlaneSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRPlaneSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRPlaneSubsystem planeSubsystem => GetLoadedSubsystem<XRPlaneSubsystem>();
 
-        public XRAnchorSubsystem anchorSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRAnchorSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRAnchorSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRAnchorSubsystem anchorSubsystem => GetLoadedSubsystem<XRAnchorSubsystem>();
 
-        public XRRaycastSubsystem raycastSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRRaycastSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRRaycastSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRRaycastSubsystem raycastSubsystem => GetLoadedSubsystem<XRRaycastSubsystem>();
 
-        public XRHumanBodySubsystem humanBodySubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRHumanBodySubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRHumanBodySubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRHumanBodySubsystem humanBodySubsystem => GetLoadedSubsystem<XRHumanBodySubsystem>();
 
-        public XREnvironmentProbeSubsystem environmentProbeSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XREnvironmentProbeSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XREnvironmentProbeSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XREnvironmentProbeSubsystem environmentProbeSubsystem => GetLoadedSubsystem<XREnvironmentProbeSubsystem>();
 
-        public XRInputSubsystem inputSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRInputSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRInputSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRInputSubsystem inputSubsystem => GetLoadedSubsystem<XRInputSubsystem>();
 
-        public XRImageTrackingSubsystem imageTrackingSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRImageTrackingSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRImageTrackingSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRImageTrackingSubsystem imageTrackingSubsystem => GetLoadedSubsystem<XRImageTrackingSubsystem>();
 
-        public XRObjectTrackingSubsystem objectTrackingSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRObjectTrackingSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRObjectTrackingSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRObjectTrackingSubsystem objectTrackingSubsystem => GetLoadedSubsystem<XRObjectTrackingSubsystem>();
 
-        public XRFaceSubsystem faceSubsystem
-        {
-            get
-            {
-                return GetLoadedSubsystem<XRFaceSubsystem>();
-            }
-        }
+        /// <summary>
+        /// The `XRFaceSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRFaceSubsystem faceSubsystem => GetLoadedSubsystem<XRFaceSubsystem>();
 
+        /// <summary>
+        /// The `XROcclusionSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XROcclusionSubsystem occlusionSubsystem => GetLoadedSubsystem<XROcclusionSubsystem>();
+
+        /// <summary>
+        /// Initializes the loader.
+        /// </summary>
+        /// <returns>`True` if the session subsystem was successfully created, otherwise `false`.</returns>
         public override bool Initialize()
         {
 #if UNITY_IOS && !UNITY_EDITOR
@@ -132,6 +109,7 @@ namespace UnityEngine.XR.ARKit
             CreateSubsystem<XRImageTrackingSubsystemDescriptor, XRImageTrackingSubsystem>(s_ImageTrackingSubsystemDescriptors, "ARKit-ImageTracking");
             CreateSubsystem<XRObjectTrackingSubsystemDescriptor, XRObjectTrackingSubsystem>(s_ObjectTrackingSubsystemDescriptors, "ARKit-ObjectTracking");
             CreateSubsystem<XRFaceSubsystemDescriptor, XRFaceSubsystem>(s_FaceSubsystemDescriptors, "ARKit-Face");
+            CreateSubsystem<XROcclusionSubsystemDescriptor, XROcclusionSubsystem>(s_OcclusionSubsystemDescriptors, "ARKit-Occlusion");
 
             if (sessionSubsystem == null)
             {
@@ -144,48 +122,28 @@ namespace UnityEngine.XR.ARKit
 #endif
         }
 
+        /// <summary>
+        /// Starts all subsystems.
+        /// </summary>
+        /// <returns>`True` if the subsystems were started, otherwise `false`.</returns>
         public override bool Start()
         {
-            var settings = GetSettings();
-            if (settings != null && settings.startAndStopSubsystems)
-            {
-                StartSubsystem<XRSessionSubsystem>();
-                StartSubsystem<XRCameraSubsystem>();
-                StartSubsystem<XRDepthSubsystem>();
-                StartSubsystem<XRPlaneSubsystem>();
-                StartSubsystem<XRAnchorSubsystem>();
-                StartSubsystem<XRRaycastSubsystem>();
-                StartSubsystem<XRHumanBodySubsystem>();
-                StartSubsystem<XREnvironmentProbeSubsystem>();
-                StartSubsystem<XRInputSubsystem>();
-                StartSubsystem<XRImageTrackingSubsystem>();
-                StartSubsystem<XRObjectTrackingSubsystem>();
-                StartSubsystem<XRFaceSubsystem>();
-            }
             return true;
         }
 
+        /// <summary>
+        /// Stops all subsystems.
+        /// </summary>
+        /// <returns>`True` if the subsystems were stopped, otherwise `false`.</returns>
         public override bool Stop()
         {
-            var settings = GetSettings();
-            if (settings != null && settings.startAndStopSubsystems)
-            {
-                StopSubsystem<XRSessionSubsystem>();
-                StopSubsystem<XRCameraSubsystem>();
-                StopSubsystem<XRDepthSubsystem>();
-                StopSubsystem<XRPlaneSubsystem>();
-                StopSubsystem<XRAnchorSubsystem>();
-                StopSubsystem<XRRaycastSubsystem>();
-                StopSubsystem<XRHumanBodySubsystem>();
-                StopSubsystem<XREnvironmentProbeSubsystem>();
-                StopSubsystem<XRInputSubsystem>();
-                StopSubsystem<XRImageTrackingSubsystem>();
-                StopSubsystem<XRObjectTrackingSubsystem>();
-                StopSubsystem<XRFaceSubsystem>();
-            }
             return true;
         }
 
+        /// <summary>
+        /// Destroys each subsystem.
+        /// </summary>
+        /// <returns>Always returns `true`.</returns>
         public override bool Deinitialize()
         {
 #if UNITY_IOS && !UNITY_EDITOR
@@ -201,21 +159,9 @@ namespace UnityEngine.XR.ARKit
             DestroySubsystem<XRImageTrackingSubsystem>();
             DestroySubsystem<XRObjectTrackingSubsystem>();
             DestroySubsystem<XRFaceSubsystem>();
+            DestroySubsystem<XROcclusionSubsystem>();
 #endif
             return true;
-        }
-
-        ARKitLoaderSettings GetSettings()
-        {
-            ARKitLoaderSettings settings = null;
-            // When running in the Unity Editor, we have to load user's customization of configuration data directly from
-            // EditorBuildSettings. At runtime, we need to grab it from the static instance field instead.
-            #if UNITY_EDITOR
-            UnityEditor.EditorBuildSettings.TryGetConfigObject(ARKitLoaderConstants.k_SettingsKey, out settings);
-            #else
-            settings = ARKitLoaderSettings.s_RuntimeInstance;
-            #endif
-            return settings;
         }
     }
 }

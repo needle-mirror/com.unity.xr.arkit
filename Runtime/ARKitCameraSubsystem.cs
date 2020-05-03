@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using UnityEngine.Rendering;
 #if MODULE_URP_ENABLED
 using UnityEngine.Rendering.Universal;
-#elif MODULE_LWRP_ENABLED
+#endif // MODULE_URP_ENABLED
+#if MODULE_LWRP_ENABLED
 using UnityEngine.Rendering.LWRP;
-#endif
+#endif // MODULE_LWRP_ENABLED
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -27,31 +29,43 @@ namespace UnityEngine.XR.ARKit
         const string k_SubsystemId = "ARKit-Camera";
 
         /// <summary>
-        /// The name for the shader for rendering the camera texture in the legacy render pipeline.
+        /// The name for the shader for rendering the camera texture.
         /// </summary>
         /// <value>
-        /// The name for the shader for rendering the camera texture in the legacy render pipeline.
+        /// The name for the shader for rendering the camera texture.
         /// </value>
-        const string k_BackgroundLegacyRPShaderName = "Unlit/ARKitBackground";
+        const string k_BackgroundShaderName = "Unlit/ARKitBackground";
 
-#if MODULE_URP_ENABLED
         /// <summary>
-        /// The name for the shader for rendering the camera texture in the universal render pipeline.
+        /// The shader keyword for enabling LWRP rendering.
         /// </summary>
         /// <value>
-        /// The name for the shader for rendering the camera texture in the universal render pipeline.
+        /// The shader keyword for enabling LWRP rendering.
         /// </value>
-        const string k_BackgroundUniversalRPShaderName = "Unlit/ARKitURPBackground";
+        const string k_BackgroundShaderKeywordLWRP = "ARKIT_BACKGROUND_LWRP";
 
-#elif MODULE_LWRP_ENABLED
         /// <summary>
-        /// The name for the shader for rendering the camera texture in the lightweight render pipeline.
+        /// The shader keyword for enabling URP rendering.
         /// </summary>
         /// <value>
-        /// The name for the shader for rendering the camera texture in the lightweight render pipeline.
+        /// The shader keyword for enabling URP rendering.
         /// </value>
-        const string k_BackgroundLightweightRPShaderName = "Unlit/ARKitLWRPBackground";
-#endif
+        const string k_BackgroundShaderKeywordURP = "ARKIT_BACKGROUND_URP";
+
+        /// <summary>
+        /// The list of shader keywords to avoid during compilation.
+        /// </summary>
+        /// <value>
+        /// The list of shader keywords to avoid during compilation.
+        /// </value>
+        static readonly List<string> k_BackgroundShaderKeywordsToNotCompile = new List<string> {
+#if !MODULE_URP_ENABLED
+            k_BackgroundShaderKeywordURP,
+#endif // !MODULE_URP_ENABLED
+#if !MODULE_LWRP_ENABLED
+            k_BackgroundShaderKeywordLWRP,
+#endif // !MODULE_LWRP_ENABLED
+        };
 
         /// <summary>
         /// Resulting values from setting the camera configuration.
@@ -80,41 +94,20 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// The name for the background shader based on the current render pipeline.
+        /// The name for the background shader.
         /// </summary>
         /// <value>
-        /// The name for the background shader based on the current render pipeline. Or, <c>null</c> if the current
-        /// render pipeline is incompatible with the set of shaders.
+        /// The name for the background shader.
         /// </value>
-        /// <remarks>
-        /// The value for the <c>GraphicsSettings.renderPipelineAsset</c> is not expected to change within the lifetime
-        /// of the application.
-        /// </remarks>
-        public static string backgroundShaderName
-        {
-            get
-            {
-                if (GraphicsSettings.renderPipelineAsset == null)
-                {
-                    return k_BackgroundLegacyRPShaderName;
-                }
-#if MODULE_URP_ENABLED
-                else if (GraphicsSettings.renderPipelineAsset is UniversalRenderPipelineAsset)
-                {
-                    return k_BackgroundUniversalRPShaderName;
-                }
-#elif MODULE_LWRP_ENABLED
-                else if (GraphicsSettings.renderPipelineAsset is LightweightRenderPipelineAsset)
-                {
-                    return k_BackgroundLightweightRPShaderName;
-                }
-#endif
-                else
-                {
-                    return null;
-                }
-            }
-        }
+        public static string backgroundShaderName => k_BackgroundShaderName;
+
+        /// <summary>
+        /// The list of shader keywords to avoid during compilation.
+        /// </summary>
+        /// <value>
+        /// The list of shader keywords to avoid during compilation.
+        /// </value>
+        internal static List<string> backgroundShaderKeywordsToNotCompile => k_BackgroundShaderKeywordsToNotCompile;
 
         /// <summary>
         /// Create and register the camera subsystem descriptor to advertise a providing implementation for camera
@@ -196,6 +189,58 @@ namespace UnityEngine.XR.ARKit
             /// The shader property name identifier for the chrominance components of the camera video frame.
             /// </value>
             static readonly int k_TextureCbCrPropertyNameId = Shader.PropertyToID(k_TextureCbCrPropertyName);
+
+            /// <summary>
+            /// The shader keywords to enable when the Legacy RP is enabled.
+            /// </summary>
+            /// <value>
+            /// The shader keywords to enable when the Legacy RP is enabled.
+            /// </value>
+            static readonly List<string> k_LegacyRPEnabledMaterialKeywords = null;
+
+            /// <summary>
+            /// The shader keywords to disable when the Legacy RP is enabled.
+            /// </summary>
+            /// <value>
+            /// The shader keywords to disable when the Legacy RP is enabled.
+            /// </value>
+            static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordLWRP, k_BackgroundShaderKeywordURP};
+
+#if MODULE_URP_ENABLED
+            /// <summary>
+            /// The shader keywords to enable when URP is enabled.
+            /// </summary>
+            /// <value>
+            /// The shader keywords to enable when URP is enabled.
+            /// </value>
+            static readonly List<string> k_URPEnabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordURP};
+
+            /// <summary>
+            /// The shader keywords to disable when URP is enabled.
+            /// </summary>
+            /// <value>
+            /// The shader keywords to disable when URP is enabled.
+            /// </value>
+            static readonly List<string> k_URPDisabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordLWRP};
+#endif // MODULE_URP_ENABLED
+
+#if MODULE_LWRP_ENABLED
+            /// <summary>
+            /// The shader keywords to enable when LWRP is enabled.
+            /// </summary>
+            /// <value>
+            /// The shader keywords to enable when LWRP is enabled.
+            /// </value>
+            static readonly List<string> k_LWRPEnabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordLWRP};
+
+            /// <summary>
+            /// The shader keywords to disable when LWRP is enabled.
+            /// </summary>
+            /// <value>
+            /// The shader keywords to disable when LWRP is enabled.
+            /// </value>
+            static readonly List<string> k_LWRPDisabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordURP};
+#endif // MODULE_LWRP_ENABLED
 
             /// <summary>
             /// Get the material used by <c>XRCameraSubsystem</c> to render the camera texture.
@@ -425,6 +470,39 @@ namespace UnityEngine.XR.ARKit
                 finally
                 {
                     NativeApi.UnityARKit_Camera_ReleaseTextureDescriptors(textureDescriptors);
+                }
+            }
+
+            /// <summary>
+            /// Get the enabled and disabled shader keywords for the material.
+            /// </summary>
+            /// <param name="enabledKeywords">The keywords to enable for the material.</param>
+            /// <param name="disabledKeywords">The keywords to disable for the material.</param>
+            public override void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
+            {
+                if (GraphicsSettings.renderPipelineAsset == null)
+                {
+                    enabledKeywords = k_LegacyRPEnabledMaterialKeywords;
+                    disabledKeywords = k_LegacyRPDisabledMaterialKeywords;
+                }
+#if MODULE_URP_ENABLED
+                else if (GraphicsSettings.renderPipelineAsset is UniversalRenderPipelineAsset)
+                {
+                    enabledKeywords = k_URPEnabledMaterialKeywords;
+                    disabledKeywords = k_URPDisabledMaterialKeywords;
+                }
+#endif // MODULE_URP_ENABLED
+#if MODULE_LWRP_ENABLED
+                else if (GraphicsSettings.renderPipelineAsset is LightweightRenderPipelineAsset)
+                {
+                    enabledMaterialKeywords = k_LWRPEnabledMaterialKeywords;
+                    disabledKeywords = k_LWRPDisabledMaterialKeywords;
+                }
+#endif // MODULE_LWRP_ENABLED
+                else
+                {
+                    enabledKeywords = null;
+                    disabledKeywords = null;
                 }
             }
 

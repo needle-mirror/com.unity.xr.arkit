@@ -12,6 +12,10 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitXRObjectTrackingSubsystem : XRObjectTrackingSubsystem
     {
+        /// <summary>
+        /// Creates the ARKit-specific implementation which will service the `XRObjectTrackingSubsystem`.
+        /// </summary>
+        /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
         protected override Provider CreateProvider() => new ARKitProvider();
 
         class ARKitProvider : Provider
@@ -99,9 +103,11 @@ namespace UnityEngine.XR.ARKit
             public ARKitProvider() => UnityARKit_ObjectTracking_Initialize();
         }
 
-        //this method is run on startup of the app to register this provider with XR Subsystem Manager
+        /// <summary>
+        /// This method is run on startup of the app to register this provider with XR Subsystem Manager
+        /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        public static void RegisterDescriptor()
+        static void RegisterDescriptor()
         {
             // No support before iOS 12.0
             if (!Api.AtLeast12_0())

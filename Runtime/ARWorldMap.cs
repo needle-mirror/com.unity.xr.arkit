@@ -29,23 +29,25 @@ namespace UnityEngine.XR.ARKit
         /// Use this to determine whether this <c>ARWorldMap</c> is valid, or
         /// if it has been disposed.
         /// </summary>
-        public bool valid
-        {
-            get
-            {
-                return
-                    (nativeHandle != k_InvalidHandle) &&
-                    Api.UnityARKit_isWorldMapValid(nativeHandle);
-            }
-        }
+        public bool valid => (nativeHandle != k_InvalidHandle) && Api.UnityARKit_isWorldMapValid(nativeHandle);
 
         /// <summary>
         /// Serialize the <c>ARWorldMap</c> to an array of bytes. This array may be saved to disk
         /// and loaded at another time to persist the session, or sent over a network
         /// to another ARKit-enabled app to share the session.
         /// It is an error to call this method after the <c>ARWorldMap</c> has been disposed.
+        /// The caller owns the returned
+        /// [NativeArray](https://docs.unity3d.com/ScriptReference/Unity.Collections.NativeArray_1.html)
+        /// and is responsible for disposing it.
         /// </summary>
-        /// <returns>An array of bytes representing the serialized <c>ARWorldMap</c>.</returns>
+        /// <param name="allocator">The
+        /// [allocator](https://docs.unity3d.com/ScriptReference/Unity.Collections.Allocator.html)
+        /// to use for the returned
+        /// [NativeArray](https://docs.unity3d.com/ScriptReference/Unity.Collections.NativeArray_1.html) of bytes.</param>
+        /// <returns>An array of bytes representing the serialized <c>ARWorldMap</c>.
+        /// The caller owns the memory and is responsible for disposing the `NativeArray`.</returns>
+        /// <exception cref="System.InvalidOperationException">Thrown if the world map is not <see cref="valid"/>.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if the world map could not be serialized to a byte array.</exception>
         public unsafe NativeArray<byte> Serialize(Allocator allocator)
         {
             if (!valid)
@@ -72,6 +74,8 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <param name="serializedWorldMap">An array of bytes representing a serialized <c>ARWorldMap</c>,
         /// produced by <see cref="Serialize"/>.</param>
+        /// <param name="worldMap">On success, holds the deserialized <see cref="ARWorldMap"/>.</param>
+        /// <returns>'True' if <paramref name="serializedWorldMap"/> was successfully deserialized, otherwise false.</returns>
         public static unsafe bool TryDeserialize(NativeArray<byte> serializedWorldMap, out ARWorldMap worldMap)
         {
             var nativeHandle = Api.UnityARKit_deserializeWorldMap(
@@ -87,33 +91,42 @@ namespace UnityEngine.XR.ARKit
             return true;
         }
 
-        public override int GetHashCode()
-        {
-            return nativeHandle.GetHashCode();
-        }
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
+        public override int GetHashCode() => nativeHandle.GetHashCode();
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ARWorldMap))
-                return false;
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="ARWorldMap"/> and
+        /// <see cref="Equals(ARWorldMap)"/> also returns `true`; otherwise `false`.</returns>
+        public override bool Equals(object obj) => obj is ARWorldMap other && Equals(other);
 
-            return Equals((ARWorldMap)obj);
-        }
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="ARWorldMap"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="ARWorldMap"/>, otherwise false.</returns>
+        public bool Equals(ARWorldMap other) => nativeHandle == other.nativeHandle;
 
-        public bool Equals(ARWorldMap other)
-        {
-            return (nativeHandle == other.nativeHandle);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(ARWorldMap)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(ARWorldMap lhs, ARWorldMap rhs) => lhs.Equals(rhs);
 
-        public static bool operator ==(ARWorldMap lhs, ARWorldMap rhs)
-        {
-            return lhs.Equals(rhs);
-        }
-
-        public static bool operator !=(ARWorldMap lhs, ARWorldMap rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(ARWorldMap)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(ARWorldMap lhs, ARWorldMap rhs) => !lhs.Equals(rhs);
 
         internal ARWorldMap(int nativeHandle)
         {

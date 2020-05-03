@@ -14,6 +14,8 @@ Use the ARKit XR Plugin package to enable ARKit support via Unity's multi-platfo
 * [Object tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/object-tracking.html)
 * [Environment probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/environment-probe-subsystem.html)
 * [Participant](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/participant-subsystem.html)
+* [Meshing](https://docs.unity3d.com/ScriptReference/XR.XRMeshSubsystem.html)
+
 
 This version of ARKit XR Plugin supports the following features:
 
@@ -30,6 +32,7 @@ This version of ARKit XR Plugin supports the following features:
 * Object tracking
 * Environment probes
 * Participant tracking
+* Meshing (as known as Scene Reconstruction)
 
 Apple's App Store will reject any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, face tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/face-tracking.html) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.0).
 
@@ -114,6 +117,10 @@ ARKit light estimation can only be `enabled` or `disabled`. The availability of 
 
 [XRCameraConfiguration](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.XRCameraConfiguration.html) contains an `IntPtr` field `nativeConfigurationHandle` which is a platform-specific handle. For ARKit, this handle is a pointer to the native [ARVideoFormat](https://developer.apple.com/documentation/arkit/arvideoformat?language=objc) Objective-C object.
 
+## Meshing
+
+See [Meshing](arkit-meshing.md).
+
 # Technical details
 ## Requirements
 
@@ -136,15 +143,3 @@ This version of ARKit XR Plugin includes:
 * An Objective-C source file
 * A shader used for rendering the camera image
 * A plugin metadata file
-
-## Document revision history
-
-|Date|Reason|
-|---|---|
-|January 20, 2020|Tech writer review.|
-|April 22, 2019|Update documentation to include new subsystems and the migration of face tracking to a separate package.|
-|April 19, 2018|Documentation update. Added support for vertical planes and boundary points for all planes.|
-|December 18, 2018|Add environment probe support. Updated the requirements to be Unity 2018.3.|
-|November 14, 2018|Add Face Tracking support.|
-|October 9, 2018|Remove lack of ARWorldMap support as a known limitation; it is now supported.|
-

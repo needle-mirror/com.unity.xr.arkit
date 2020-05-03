@@ -121,6 +121,10 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
+        /// <summary>
+        /// Creates the ARKit-specific implementation which will service the `XRDepthSubsystem`.
+        /// </summary>
+        /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
         protected override Provider CreateProvider() => new ARKitProvider();
 
         //this method is run on startup of the app to register this provider with XR Subsystem Manager

@@ -13,6 +13,10 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitXRPlaneSubsystem : XRPlaneSubsystem
     {
+        /// <summary>
+        /// Creates the ARKit-specific implementation which will service the `XRPlaneSubsystem`.
+        /// </summary>
+        /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
         protected override Provider CreateProvider() => new ARKitProvider();
 
         class ARKitProvider : Provider

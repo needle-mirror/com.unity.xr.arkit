@@ -5,5 +5,9 @@
     "inputs": [
     {
         "id": "ARKit-Input"
+    }],
+    "meshings": [
+    {
+        "id": "ARKit-Meshing"
     }]
 }

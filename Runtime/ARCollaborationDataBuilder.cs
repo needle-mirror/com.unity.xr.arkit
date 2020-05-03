@@ -33,8 +33,10 @@ namespace UnityEngine.XR.ARKit
         public int length => m_NSMutableData.created ? m_NSMutableData.length : 0;
 
         /// <summary>
-        /// Converts the bytes accumulated through calls to Append to an <see cref="ARCollaborationData"/>.
+        /// Converts the bytes accumulated through calls to <see cref="Append(byte[],int,int)"/> to an <see cref="ARCollaborationData"/>.
+        /// The caller is responsible for disposing the returned <see cref="ARCollaborationData"/>.
         /// </summary>
+        /// <returns>A new <see cref="ARCollaborationData"/> constructed from the bytes added to this <see cref="ARCollaborationDataBuilder"/>.</returns>
         /// <exception cref="System.NotSupportedException">Thrown if <see cref="ARCollaborationData"/> is not supported.
         /// Check for support with <see cref="ARKitSessionSubsystem.supportsCollaboration"/>.</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if <see cref="hasData"/> is false.</exception>

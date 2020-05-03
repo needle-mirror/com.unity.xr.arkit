@@ -12,13 +12,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Get the status of the request.
         /// </summary>
-        public ARWorldMapRequestStatus status
-        {
-            get
-            {
-                return Api.UnityARKit_getWorldMapRequestStatus(m_RequestId);
-            }
-        }
+        public ARWorldMapRequestStatus status => Api.UnityARKit_getWorldMapRequestStatus(m_RequestId);
 
         /// <summary>
         /// Retrieve the <see cref="ARWorldMap"/>.
@@ -42,43 +36,46 @@ namespace UnityEngine.XR.ARKit
         /// Dispose of the request. You must dispose of the request to avoid
         /// leaking resources.
         /// </summary>
-        public void Dispose()
-        {
-            Api.UnityARKit_disposeWorldMapRequest(m_RequestId);
-        }
+        public void Dispose() => Api.UnityARKit_disposeWorldMapRequest(m_RequestId);
 
-        public override int GetHashCode()
-        {
-            return m_RequestId.GetHashCode();
-        }
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
+        public override int GetHashCode() => m_RequestId.GetHashCode();
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ARWorldMapRequest))
-                return false;
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="ARWorldMapRequest"/> and
+        /// <see cref="Equals(ARWorldMapRequest)"/> also returns `true`; otherwise `false`.</returns>
+        public override bool Equals(object obj) => obj is ARWorldMapRequest other && Equals(other);
 
-            return Equals((ARWorldMapRequest)obj);
-        }
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="ARWorldMapRequest"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="ARWorldMapRequest"/>, otherwise false.</returns>
+        public bool Equals(ARWorldMapRequest other) => m_RequestId == other.m_RequestId;
 
-        public bool Equals(ARWorldMapRequest other)
-        {
-            return (m_RequestId == other.m_RequestId);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(ARWorldMapRequest)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(ARWorldMapRequest lhs, ARWorldMapRequest rhs) => lhs.Equals(rhs);
 
-        public static bool operator ==(ARWorldMapRequest lhs, ARWorldMapRequest rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(ARWorldMapRequest)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(ARWorldMapRequest lhs, ARWorldMapRequest rhs) => !lhs.Equals(rhs);
 
-        public static bool operator !=(ARWorldMapRequest lhs, ARWorldMapRequest rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
-
-        internal ARWorldMapRequest(int requestId)
-        {
-            m_RequestId = requestId;
-        }
+        internal ARWorldMapRequest(int requestId) => m_RequestId = requestId;
 
         int m_RequestId;
     }

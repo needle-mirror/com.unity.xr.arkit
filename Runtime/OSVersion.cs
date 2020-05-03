@@ -117,7 +117,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Generates a hash code suitable for use in a HashSet or Dictionary.
         /// </summary>
-        /// <returns>A hash code. The same <c>OSVersion<c/> will produce the same hash code.</returns>
+        /// <returns>A hash code. The same <c>OSVersion</c> will produce the same hash code.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -149,13 +149,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <param name="obj">The object to compare against.</param>
         /// <returns>Returns false if <paramref name="obj"/> is null or is not of type <c>OSVersion</c>. Otherwise, returns the same value as <see cref="Equals(OSVersion)"/>.</returns>
-        public override bool Equals(object obj)
-        {
-            if (obj == null || !(obj is OSVersion))
-                return false;
-
-            return Equals((OSVersion)obj);
-        }
+        public override bool Equals(object obj) => obj is OSVersion other && Equals(other);
 
         /// <summary>
         /// Compares for equality. The three version components are compared against <paramref name="other"/>'s.
@@ -218,10 +212,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="lhs">The left-hand side of the comparison.</param>
         /// <param name="rhs">The right-hand side of the comparison.</param>
         /// <returns><c>true</c> if <paramref name="lhs"/> is the same version as <paramref name="rhs"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator ==(OSVersion lhs, OSVersion rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        public static bool operator ==(OSVersion lhs, OSVersion rhs) => lhs.Equals(rhs);
 
         /// <summary>
         /// Tests whether <paramref name="lhs"/> is a different version from <paramref name="rhs"/>.
@@ -229,10 +220,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="lhs">The left-hand side of the comparison.</param>
         /// <param name="rhs">The right-hand side of the comparison.</param>
         /// <returns><c>true</c> if <paramref name="lhs"/> is a different version from <paramref name="rhs"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator !=(OSVersion lhs, OSVersion rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public static bool operator !=(OSVersion lhs, OSVersion rhs) => !lhs.Equals(rhs);
 
         /// <summary>
         /// Tests whether <paramref name="lhs"/> is the same or a later version compared to <paramref name="rhs"/>.
@@ -240,10 +228,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="lhs">The left-hand side of the comparison.</param>
         /// <param name="rhs">The right-hand side of the comparison.</param>
         /// <returns><c>true</c> if <paramref name="lhs"/> is the same or a later version compared to <paramref name="rhs"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator >=(OSVersion lhs, OSVersion rhs)
-        {
-            return (lhs > rhs) || (lhs == rhs);
-        }
+        public static bool operator >=(OSVersion lhs, OSVersion rhs) => (lhs > rhs) || (lhs == rhs);
 
         /// <summary>
         /// Tests whether <paramref name="lhs"/> is the same or an earlier version compared to <paramref name="rhs"/>.
@@ -251,10 +236,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="lhs">The left-hand side of the comparison.</param>
         /// <param name="rhs">The right-hand side of the comparison.</param>
         /// <returns><c>true</c> if <paramref name="lhs"/> is the same or an earlier version compared to <paramref name="rhs"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator <=(OSVersion lhs, OSVersion rhs)
-        {
-            return (lhs < rhs) || (lhs == rhs);
-        }
+        public static bool operator <=(OSVersion lhs, OSVersion rhs) => (lhs < rhs) || (lhs == rhs);
 
         /// <summary>
         /// Generates a string representation of the version.
