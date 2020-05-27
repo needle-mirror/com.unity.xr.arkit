@@ -14,11 +14,13 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitRaycastSubsystem : XRRaycastSubsystem
     {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Creates the ARKit-specific implementation which will service the `XRRaycastSubsystem`.
         /// </summary>
         /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
         protected override Provider CreateProvider() => new ARKitProvider();
+#endif
 
         class ARKitProvider : XRRaycastSubsystem.Provider
         {
@@ -113,13 +115,18 @@ namespace UnityEngine.XR.ARKit
             XRRaycastSubsystemDescriptor.RegisterDescriptor(new XRRaycastSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Raycast",
+#if UNITY_2020_2_OR_NEWER
+                providerType = typeof(ARKitRaycastSubsystem.ARKitProvider),
+                subsystemTypeOverride = typeof(ARKitRaycastSubsystem),
+#else
                 subsystemImplementationType = typeof(ARKitRaycastSubsystem),
+#endif
                 supportsViewportBasedRaycast = true,
                 supportsWorldBasedRaycast = false,
                 supportedTrackableTypes =
                     TrackableType.Planes |
                     TrackableType.FeaturePoint,
-                supportsTrackedRaycasts = true,
+                supportsTrackedRaycasts = Api.AtLeast13_0(),
             });
         }
 

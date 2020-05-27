@@ -22,6 +22,8 @@ namespace UnityEngine.XR.ARKit
         static List<XRObjectTrackingSubsystemDescriptor> s_ObjectTrackingSubsystemDescriptors = new List<XRObjectTrackingSubsystemDescriptor>();
         static List<XRFaceSubsystemDescriptor> s_FaceSubsystemDescriptors = new List<XRFaceSubsystemDescriptor>();
         static List<XROcclusionSubsystemDescriptor> s_OcclusionSubsystemDescriptors  = new List<XROcclusionSubsystemDescriptor>();
+        static List<XRParticipantSubsystemDescriptor> s_ParticipantSubsystemDescriptors  = new List<XRParticipantSubsystemDescriptor>();
+        static List<XRMeshSubsystemDescriptor> s_MeshSubsystemDescriptors  = new List<XRMeshSubsystemDescriptor>();
 
         /// <summary>
         /// The `XRSessionSubsystem` whose lifecycle is managed by this loader.
@@ -89,6 +91,17 @@ namespace UnityEngine.XR.ARKit
         public XROcclusionSubsystem occlusionSubsystem => GetLoadedSubsystem<XROcclusionSubsystem>();
 
         /// <summary>
+        /// The `XRParticipantSubsystem` whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRParticipantSubsystem participantSubsystem => GetLoadedSubsystem<XRParticipantSubsystem>();
+
+        /// <summary>
+        /// The [`XRMeshSubsystem`](https://docs.unity3d.com/ScriptReference/XR.XRMeshSubsystem.html) whose lifecycle is
+        /// managed by this loader.
+        /// </summary>
+        public XRMeshSubsystem meshSubsystem => GetLoadedSubsystem<XRMeshSubsystem>();
+
+        /// <summary>
         /// Initializes the loader.
         /// </summary>
         /// <returns>`True` if the session subsystem was successfully created, otherwise `false`.</returns>
@@ -110,6 +123,8 @@ namespace UnityEngine.XR.ARKit
             CreateSubsystem<XRObjectTrackingSubsystemDescriptor, XRObjectTrackingSubsystem>(s_ObjectTrackingSubsystemDescriptors, "ARKit-ObjectTracking");
             CreateSubsystem<XRFaceSubsystemDescriptor, XRFaceSubsystem>(s_FaceSubsystemDescriptors, "ARKit-Face");
             CreateSubsystem<XROcclusionSubsystemDescriptor, XROcclusionSubsystem>(s_OcclusionSubsystemDescriptors, "ARKit-Occlusion");
+            CreateSubsystem<XRParticipantSubsystemDescriptor, XRParticipantSubsystem>(s_ParticipantSubsystemDescriptors, "ARKit-Participant");
+            CreateSubsystem<XRMeshSubsystemDescriptor, XRMeshSubsystem>(s_MeshSubsystemDescriptors, "ARKit-Meshing");
 
             if (sessionSubsystem == null)
             {
@@ -123,21 +138,29 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Starts all subsystems.
+        /// This method does nothing. Subsystems must be started individually.
         /// </summary>
-        /// <returns>`True` if the subsystems were started, otherwise `false`.</returns>
+        /// <returns>Returns `true` on iOS. Returns `false` otherwise.</returns>
         public override bool Start()
         {
+#if UNITY_IOS && !UNITY_EDITOR
             return true;
+#else
+            return false;
+#endif
         }
 
         /// <summary>
-        /// Stops all subsystems.
+        /// This method does nothing. Subsystems must be stopped individually.
         /// </summary>
-        /// <returns>`True` if the subsystems were stopped, otherwise `false`.</returns>
+        /// <returns>Returns `true` on iOS. Returns `false` otherwise.</returns>
         public override bool Stop()
         {
+#if UNITY_IOS && !UNITY_EDITOR
             return true;
+#else
+            return false;
+#endif
         }
 
         /// <summary>
@@ -147,7 +170,6 @@ namespace UnityEngine.XR.ARKit
         public override bool Deinitialize()
         {
 #if UNITY_IOS && !UNITY_EDITOR
-            DestroySubsystem<XRSessionSubsystem>();
             DestroySubsystem<XRCameraSubsystem>();
             DestroySubsystem<XRDepthSubsystem>();
             DestroySubsystem<XRPlaneSubsystem>();
@@ -160,6 +182,9 @@ namespace UnityEngine.XR.ARKit
             DestroySubsystem<XRObjectTrackingSubsystem>();
             DestroySubsystem<XRFaceSubsystem>();
             DestroySubsystem<XROcclusionSubsystem>();
+            DestroySubsystem<XRParticipantSubsystem>();
+            DestroySubsystem<XRMeshSubsystem>();
+            DestroySubsystem<XRSessionSubsystem>();
 #endif
             return true;
         }

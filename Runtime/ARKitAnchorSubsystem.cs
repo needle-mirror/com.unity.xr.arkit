@@ -12,11 +12,13 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitAnchorSubsystem : XRAnchorSubsystem
     {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Creates the ARKit-specific implementation which will service the `XRAnchorSubsystem`.
         /// </summary>
         /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
         protected override Provider CreateProvider() => new ARKitProvider();
+#endif
 
         class ARKitProvider : Provider
         {
@@ -112,7 +114,12 @@ namespace UnityEngine.XR.ARKit
             var cinfo = new XRAnchorSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Anchor",
+#if UNITY_2020_2_OR_NEWER
+                providerType = typeof(ARKitAnchorSubsystem.ARKitProvider),
+                subsystemTypeOverride = typeof(ARKitAnchorSubsystem),
+#else
                 subsystemImplementationType = typeof(ARKitAnchorSubsystem),
+#endif
                 supportsTrackableAttachments = true
             };
 

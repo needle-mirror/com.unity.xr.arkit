@@ -122,7 +122,12 @@ namespace UnityEngine.XR.ARKit
             XRCameraSubsystemCinfo cameraSubsystemCinfo = new XRCameraSubsystemCinfo
             {
                 id = k_SubsystemId,
+#if UNITY_2020_2_OR_NEWER
+                providerType = typeof(ARKitCameraSubsystem.ARKitProvider),
+                subsystemTypeOverride = typeof(ARKitCameraSubsystem),
+#else
                 implementationType = typeof(ARKitCameraSubsystem),
+#endif
                 supportsAverageBrightness = false,
                 supportsAverageColorTemperature = true,
                 supportsColorCorrection = false,
@@ -137,6 +142,7 @@ namespace UnityEngine.XR.ARKit
                 supportsFaceTrackingHDRLightEstimation = true,
                 supportsWorldTrackingAmbientIntensityLightEstimation = true,
                 supportsWorldTrackingHDRLightEstimation = false,
+                supportsCameraGrain = Api.AtLeast13_0(),
             };
 
             if (!XRCameraSubsystem.Register(cameraSubsystemCinfo))
@@ -145,6 +151,7 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Create the ARKit camera functionality provider for the camera subsystem.
         /// </summary>
@@ -152,6 +159,7 @@ namespace UnityEngine.XR.ARKit
         /// The ARKit camera functionality provider for the camera subsystem.
         /// </returns>
         protected override Provider CreateProvider() => new ARKitProvider();
+#endif
 
         /// <summary>
         /// Provides the camera functionality for the ARKit implementation.
@@ -351,7 +359,7 @@ namespace UnityEngine.XR.ARKit
             }
 
             /// <summary>
-            /// Get the camera intrinisics information.
+            /// Get the camera intrinsics information.
             /// </summary>
             /// <param name="cameraIntrinsics">The camera intrinsics information returned from the method.</param>
             /// <returns>
@@ -374,10 +382,8 @@ namespace UnityEngine.XR.ARKit
             public override NativeArray<XRCameraConfiguration> GetConfigurations(XRCameraConfiguration defaultCameraConfiguration,
                                                                                  Allocator allocator)
             {
-                int configurationsCount;
-                int configurationSize;
-                IntPtr configurations = NativeApi.UnityARKit_Camera_AcquireConfigurations(out configurationsCount,
-                                                                                          out configurationSize);
+                IntPtr configurations = NativeApi.UnityARKit_Camera_AcquireConfigurations(out int configurationsCount,
+                                                                                          out int configurationSize);
 
                 try
                 {
@@ -414,8 +420,7 @@ namespace UnityEngine.XR.ARKit
             {
                 get
                 {
-                    XRCameraConfiguration cameraConfiguration;
-                    if (NativeApi.UnityARKit_Camera_TryGetCurrentConfiguration(out cameraConfiguration))
+                    if (NativeApi.UnityARKit_Camera_TryGetCurrentConfiguration(out XRCameraConfiguration cameraConfiguration))
                     {
                         return cameraConfiguration;
                     }
@@ -453,13 +458,12 @@ namespace UnityEngine.XR.ARKit
             /// <param name="defaultDescriptor">Default descriptor.</param>
             /// <param name="allocator">Allocator.</param>
             /// <returns>The texture descriptors.</returns>
-            public unsafe override NativeArray<XRTextureDescriptor> GetTextureDescriptors(
+            public override unsafe NativeArray<XRTextureDescriptor> GetTextureDescriptors(
                 XRTextureDescriptor defaultDescriptor,
                 Allocator allocator)
             {
-                int length, elementSize;
                 var textureDescriptors = NativeApi.UnityARKit_Camera_AcquireTextureDescriptors(
-                    out length, out elementSize);
+                    out int length, out int elementSize);
 
                 try
                 {
@@ -507,164 +511,19 @@ namespace UnityEngine.XR.ARKit
             }
 
             /// <summary>
+            /// An instance of the <see cref="XRCpuImage.Api"/> used to operate on <see cref="XRCpuImage"/> objects.
+            /// </summary>
+            public override XRCpuImage.Api cpuImageApi => ARKitCpuImageApi.instance;
+
+            /// <summary>
             /// Query for the latest native camera image.
             /// </summary>
-            /// <param name="cameraImageCinfo">The metadata required to construct a <see cref="XRCameraImage"/></param>
+            /// <param name="cameraImageCinfo">The metadata required to construct a <see cref="XRCpuImage"/></param>
             /// <returns>
             /// <c>true</c> if the camera image is acquired. Otherwise, <c>false</c>.
             /// </returns>
-            public override bool TryAcquireLatestImage(out CameraImageCinfo cameraImageCinfo)
-            {
-                return NativeApi.UnityARKit_Camera_TryAcquireLatestImage(out cameraImageCinfo);
-            }
-
-            /// <summary>
-            /// Get the status of an existing asynchronous conversion request.
-            /// </summary>
-            /// <param name="requestId">The unique identifier associated with a request.</param>
-            /// <returns>The state of the request.</returns>
-            /// <seealso cref="ConvertAsync(int, XRCameraImageConversionParams)"/>
-            public override AsyncCameraImageConversionStatus GetAsyncRequestStatus(int requestId)
-            {
-                return NativeApi.UnityARKit_Camera_GetAsyncRequestStatus(requestId);
-            }
-
-            /// <summary>
-            /// Dispose an existing native image identified by <paramref name="nativeHandle"/>.
-            /// </summary>
-            /// <param name="nativeHandle">A unique identifier for this camera image.</param>
-            /// <seealso cref="TryAcquireLatestImage"/>
-            public override void DisposeImage(int nativeHandle) => NativeApi.UnityARKit_Camera_DisposeImage(nativeHandle);
-
-            /// <summary>
-            /// Dispose an existing async conversion request.
-            /// </summary>
-            /// <param name="requestId">A unique identifier for the request.</param>
-            /// <seealso cref="ConvertAsync(int, XRCameraImageConversionParams)"/>
-            public override void DisposeAsyncRequest(int requestId) => NativeApi.UnityARKit_Camera_DisposeAsyncRequest(requestId);
-
-            /// <summary>
-            /// Get information about an image plane from a native image handle by index.
-            /// </summary>
-            /// <param name="nativeHandle">A unique identifier for this camera image.</param>
-            /// <param name="planeIndex">The index of the plane to get.</param>
-            /// <param name="planeCinfo">The returned camera plane information if successful.</param>
-            /// <returns>
-            /// <c>true</c> if the image plane was acquired. Otherwise, <c>false</c>.
-            /// </returns>
-            /// <seealso cref="TryAcquireLatestImage"/>
-            public override bool TryGetPlane(
-                int nativeHandle,
-                int planeIndex,
-                out CameraImagePlaneCinfo planeCinfo)
-            {
-               return NativeApi.UnityARKit_Camera_TryGetPlane(nativeHandle, planeIndex, out planeCinfo);
-            }
-
-            /// <summary>
-            /// Determine whether a native image handle returned by <see cref="TryAcquireLatestImage"/> is currently
-            /// valid. An image may become invalid if it has been disposed.
-            /// </summary>
-            /// <remarks>
-            /// If a handle is valid, <see cref="TryConvert"/> and <see cref="TryGetConvertedDataSize"/> should not fail.
-            /// </remarks>
-            /// <param name="nativeHandle">A unique identifier for the camera image in question.</param>
-            /// <returns><c>true</c>, if it is a valid handle. Otherwise, <c>false</c>.</returns>
-            /// <seealso cref="DisposeImage"/>
-            public override bool NativeHandleValid(int nativeHandle) => NativeApi.UnityARKit_Camera_HandleValid(nativeHandle);
-
-            /// <summary>
-            /// Get the number of bytes required to store an image with the iven dimensions and <c>TextureFormat</c>.
-            /// </summary>
-            /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-            /// <param name="dimensions">The dimensions of the output image.</param>
-            /// <param name="format">The <c>TextureFormat</c> for the image.</param>
-            /// <param name="size">The number of bytes required to store the converted image.</param>
-            /// <returns><c>true</c> if the output <paramref name="size"/> was set.</returns>
-            public override bool TryGetConvertedDataSize(
-                int nativeHandle,
-                Vector2Int dimensions,
-                TextureFormat format,
-                out int size)
-            {
-                return NativeApi.UnityARKit_Camera_TryGetConvertedDataSize(nativeHandle, dimensions, format, out size);
-            }
-
-            /// <summary>
-            /// Convert the image with handle <paramref name="nativeHandle"/> using the provided
-            /// <paramref cref="conversionParams"/>.
-            /// </summary>
-            /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-            /// <param name="conversionParams">The parameters to use during the conversion.</param>
-            /// <param name="destinationBuffer">A buffer to write the converted image to.</param>
-            /// <param name="bufferLength">The number of bytes available in the buffer.</param>
-            /// <returns>
-            /// <c>true</c> if the image was converted and stored in <paramref name="destinationBuffer"/>.
-            /// </returns>
-            public override bool TryConvert(
-                int nativeHandle,
-                XRCameraImageConversionParams conversionParams,
-                IntPtr destinationBuffer,
-                int bufferLength)
-            {
-                return NativeApi.UnityARKit_Camera_TryConvert(
-                    nativeHandle, conversionParams, destinationBuffer, bufferLength);
-            }
-
-            /// <summary>
-            /// Create an asynchronous request to convert a camera image, similar to <see cref="TryConvert"/> except
-            /// the conversion should happen on a thread other than the calling (main) thread.
-            /// </summary>
-            /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-            /// <param name="conversionParams">The parameters to use during the conversion.</param>
-            /// <returns>A unique identifier for this request.</returns>
-            public override int ConvertAsync(
-                int nativeHandle,
-                XRCameraImageConversionParams conversionParams)
-            {
-                return NativeApi.UnityARKit_Camera_CreateAsyncConversionRequest(nativeHandle, conversionParams);
-            }
-
-            /// <summary>
-            /// Get a pointer to the image data from a completed asynchronous request. This method should only succeed
-            /// if <see cref="GetAsyncRequestStatus"/> returns <see cref="AsyncCameraImageConversionStatus.Ready"/>.
-            /// </summary>
-            /// <param name="requestId">The unique identifier associated with a request.</param>
-            /// <param name="dataPtr">A pointer to the native buffer containing the data.</param>
-            /// <param name="dataLength">The number of bytes in <paramref name="dataPtr"/>.</param>
-            /// <returns><c>true</c> if <paramref name="dataPtr"/> and <paramref name="dataLength"/> were set and point
-            ///  to the image data.</returns>
-            public override bool TryGetAsyncRequestData(int requestId, out IntPtr dataPtr, out int dataLength)
-            {
-                return NativeApi.UnityARKit_Camera_TryGetAsyncRequestData(requestId, out dataPtr, out dataLength);
-            }
-
-            /// <summary>
-            /// Similar to <see cref="ConvertAsync(int, XRCameraImageConversionParams)"/> but takes a delegate to
-            /// invoke when the request is complete, rather than returning a request id.
-            /// </summary>
-            /// <remarks>
-            /// If the first parameter to <paramref name="callback"/> is
-            /// <see cref="AsyncCameraImageConversionStatus.Ready"/> then the <c>dataPtr</c> parameter must be valid
-            /// for the duration of the invocation. The data may be destroyed immediately upon return. The
-            /// <paramref name="context"/> parameter must be passed back to the <paramref name="callback"/>.
-            /// </remarks>
-            /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-            /// <param name="conversionParams">The parameters to use during the conversion.</param>
-            /// <param name="callback">A delegate which must be invoked when the request is complete, whether the
-            /// conversion was successfully or not.</param>
-            /// <param name="context">A native pointer which must be passed back unaltered to
-            /// <paramref name="callback"/>.</param>
-            public override void ConvertAsync(
-                int nativeHandle,
-                XRCameraImageConversionParams conversionParams,
-                OnImageRequestCompleteDelegate callback,
-                IntPtr context)
-            {
-                NativeApi.UnityARKit_Camera_CreateAsyncConversionRequestWithCallback(
-                    nativeHandle, conversionParams, callback, context);
-            }
-
+            public override bool TryAcquireLatestCpuImage(out XRCpuImage.Cinfo cameraImageCinfo)
+                => ARKitCpuImageApi.TryAcquireLatestImage(ARKitCpuImageApi.ImageType.Camera, out cameraImageCinfo);
         }
 
         /// <summary>
@@ -712,57 +571,12 @@ namespace UnityEngine.XR.ARKit
             public static extern CameraConfigurationResult UnityARKit_Camera_TrySetCurrentConfiguration(XRCameraConfiguration cameraConfiguration);
 
             [DllImport("__Internal")]
-            public static unsafe extern void* UnityARKit_Camera_AcquireTextureDescriptors(
+            public static extern unsafe void* UnityARKit_Camera_AcquireTextureDescriptors(
                 out int length, out int elementSize);
 
             [DllImport("__Internal")]
-            public static unsafe extern void UnityARKit_Camera_ReleaseTextureDescriptors(
+            public static extern unsafe void UnityARKit_Camera_ReleaseTextureDescriptors(
                 void* descriptors);
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_Camera_TryAcquireLatestImage(out CameraImageCinfo cameraImageCinfo);
-
-            [DllImport("__Internal")]
-            public static extern AsyncCameraImageConversionStatus
-                UnityARKit_Camera_GetAsyncRequestStatus(int requestId);
-
-            [DllImport("__Internal")]
-            public static extern void UnityARKit_Camera_DisposeImage(
-                int nativeHandle);
-
-            [DllImport("__Internal")]
-            public static extern void UnityARKit_Camera_DisposeAsyncRequest(
-                int requestHandle);
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_Camera_TryGetPlane(int nativeHandle, int planeIndex,
-                                                                    out CameraImagePlaneCinfo planeCinfo);
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_Camera_HandleValid(
-                int nativeHandle);
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_Camera_TryGetConvertedDataSize(
-                int nativeHandle, Vector2Int dimensions, TextureFormat format, out int size);
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_Camera_TryConvert(
-                int nativeHandle, XRCameraImageConversionParams conversionParams,
-                IntPtr buffer, int bufferLength);
-
-            [DllImport("__Internal")]
-            public static extern int UnityARKit_Camera_CreateAsyncConversionRequest(
-                int nativeHandle, XRCameraImageConversionParams conversionParams);
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_Camera_TryGetAsyncRequestData(
-                int requestHandle, out IntPtr dataPtr, out int dataLength);
-
-            [DllImport("__Internal")]
-            public static extern void UnityARKit_Camera_CreateAsyncConversionRequestWithCallback(
-                int nativeHandle, XRCameraImageConversionParams conversionParams,
-                XRCameraSubsystem.OnImageRequestCompleteDelegate callback, IntPtr context);
 
             [DllImport("__Internal")]
             public static extern Feature UnityARKit_Camera_GetCurrentCamera();

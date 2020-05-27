@@ -7,9 +7,10 @@ using UnityEngine.XR.ARSubsystems;
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
-    /// Registration utility to register the ARKit human body subsystem.
+    /// This subsystem provides implementing functionality for the <c>XRHumanBodySubsystem</c> class.
     /// </summary>
-    internal static class ARKitHumanBodyRegistration
+    [Preserve]
+    class ARKitHumanBodySubsystem : XRHumanBodySubsystem
     {
         /// <summary>
         /// Register the ARKit human body subsystem if iOS and not the editor.
@@ -25,40 +26,21 @@ namespace UnityEngine.XR.ARKit
             XRHumanBodySubsystemCinfo humanBodySubsystemCinfo = new XRHumanBodySubsystemCinfo()
             {
                 id = k_SubsystemId,
+#if UNITY_2020_2_OR_NEWER
+                providerType = typeof(ARKitHumanBodySubsystem.ARKitProvider),
+                subsystemTypeOverride = typeof(ARKitHumanBodySubsystem),
+#else
                 implementationType = typeof(ARKitHumanBodySubsystem),
+#endif
                 supportsHumanBody2D = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose2DEstimation(),
                 supportsHumanBody3D = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation(),
                 supportsHumanBody3DScaleEstimation = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation(),
             };
 
-            if (!XRHumanBodySubsystem.Register(humanBodySubsystemCinfo))
-            {
-                Debug.LogErrorFormat("Cannot register the {0} subsystem", k_SubsystemId);
-            }
+            XRHumanBodySubsystem.Register(humanBodySubsystemCinfo);
         }
 
-        /// <summary>
-        /// Container to wrap the native ARKit human body APIs.
-        /// </summary>
-        static class NativeApi
-        {
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose2DEstimation();
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation();
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation();
-       }
-    }
-
-    /// <summary>
-    /// This subsystem provides implementing functionality for the <c>XRHumanBodySubsystem</c> class.
-    /// </summary>
-    [Preserve]
-    class ARKitHumanBodySubsystem : XRHumanBodySubsystem
-    {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Create the implementation provider.
         /// </summary>
@@ -66,6 +48,7 @@ namespace UnityEngine.XR.ARKit
         /// The implementation provider.
         /// </returns>
         protected override Provider CreateProvider() => new ARKitProvider();
+#endif
 
         /// <summary>
         /// The implementation provider class.
@@ -321,6 +304,15 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_HumanBodyProvider_GetHumanBodyPose3DScaleEstimationEnabled();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose2DEstimation();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation();
         }
     }
 }

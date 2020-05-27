@@ -15,11 +15,13 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitParticipantSubsystem : XRParticipantSubsystem
     {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Creates the ARKit-specific implementation which will service the `XRParticipantSubsystem`.
         /// </summary>
         /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
         protected override Provider CreateProvider() => new ARKitProvider();
+#endif
 
         class ARKitProvider : Provider
         {
@@ -83,7 +85,12 @@ namespace UnityEngine.XR.ARKit
             if (!Api.AtLeast13_0())
                 return;
 
-            XRParticipantSubsystemDescriptor.Register<ARKitParticipantSubsystem>(
+            XRParticipantSubsystemDescriptor.Register<
+#if UNITY_2020_2_OR_NEWER
+                ARKitParticipantSubsystem.ARKitProvider,
+#endif
+                ARKitParticipantSubsystem
+                >(
                 "ARKit-Participant",
                 XRParticipantSubsystemDescriptor.Capabilities.None);
         }

@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.Callbacks;
+using UnityEditor.iOS;
 using UnityEditor.iOS.Xcode;
 using UnityEditor.Rendering;
 using UnityEditor.XR.ARSubsystems;
@@ -89,13 +90,10 @@ namespace UnityEditor.XR.ARKit
             const int k_TargetArchitectureArm64 = 1;
             const int k_TargetArchitectureUniversal = 2;
 
-            void SelectStaticLib()
-            {
-                const string pluginPath = "Packages/com.unity.xr.arkit/Runtime/iOS";
-                LibUtil.SelectPlugin(
-                    PluginImporter.GetAtPath($"{pluginPath}/Xcode1000/libUnityARKit.a") as PluginImporter,
-                    PluginImporter.GetAtPath($"{pluginPath}/Xcode1100/libUnityARKit.a") as PluginImporter);
-            }
+            // The minimum target Xcode version for the plugin
+            const int k_TargetMinimumMajorXcodeVersion = 11;
+            const int k_TargetMinimumMinorXcodeVersion = 0;
+            const int k_TargetMinimumPatchXcodeVersion = 0;
 
             public void OnProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> data)
             {
@@ -126,7 +124,7 @@ namespace UnityEditor.XR.ARKit
                 if (string.IsNullOrEmpty(PlayerSettings.iOS.cameraUsageDescription))
                     throw new BuildFailedException("ARKit requires a Camera Usage Description (Player Settings > iOS > Other Settings > Camera Usage Description)");
 
-                SelectStaticLib();
+                EnsureMinimumXcodeVersion();
 
                 EnsureMetalIsFirstApi();
 
@@ -152,6 +150,22 @@ namespace UnityEditor.XR.ARKit
                         + "ARKit requires at least iOS version 11.0 (See Player Settings > Other Settings > Target minimum iOS Version).");
                 }
 
+            }
+
+            void EnsureMinimumXcodeVersion()
+            {
+#if UNITY_EDITOR_OSX
+                var xcodeIndex = Math.Max(0, XcodeApplications.GetPreferedXcodeIndex());
+                var xcodeVersion = OSVersion.Parse(XcodeApplications.GetXcodeApplicationPublicName(xcodeIndex));
+                if (xcodeVersion == new OSVersion(0))
+                    throw new BuildFailedException($"Could not determine which version of Xcode was selected in the Build Settings. Xcode app was computed as \"{XcodeApplications.GetXcodeApplicationPublicName(xcodeIndex)}\".");
+
+                if (xcodeVersion < new OSVersion(
+                    k_TargetMinimumMajorXcodeVersion,
+                    k_TargetMinimumMinorXcodeVersion,
+                    k_TargetMinimumPatchXcodeVersion))
+                    throw new BuildFailedException($"The selected Xcode version: {xcodeVersion} is below the minimum Xcode required Xcode version for the Unity ARKit Plugin.  Please target at least Xcode version {k_TargetMinimumMajorXcodeVersion}.{k_TargetMinimumMinorXcodeVersion}.{k_TargetMinimumPatchXcodeVersion}.");
+#endif
             }
 
             void EnsureTargetArchitecturesAreSupported(BuildTargetGroup buildTargetGroup)

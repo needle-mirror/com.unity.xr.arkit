@@ -4,13 +4,27 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2020-05-27
+### New
+- Added ARKit Camera Grain exposure support for iOS 13 and above, (Support to convert to Texture3D only available in Unity 2020.2 and above). Can be applied to 3D content to give a camera grain noise effect. See [Camera Grain Documentation](https://developer.apple.com/documentation/arkit/arframe/3255173-cameragraintexture) for more details.
+- Implemented `XROcclusionSubsystem.TryAcquireHumanStencilCpuImage` and `XROcclusionSubsystem.TryAcquireHumanDepthCpuImage` which provides access to the raw texture data on the CPU.
+
+### Changes
+- Updating dependency on AR Subsystems to 4.0.0. 
+- Updated "camera image" APIs to use the new "CPU image" API. See the [ARFoundation migration guide](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/manual/migration-guide-3.html#xrcameraimage-is-now-xrcpuimage) for more details.
+- Removed support for Xcode versions below version 11.0 as per apple app store submission guidelines.  [See App Store submission guidelines for more information](https://developer.apple.com/app-store/submissions)
+- Previously, the trackable id associated with a point cloud was tied to the `XRDepthSubsystem`, and would only change if the subsystem was recreated. Now, the trackable id is tied to the session and will change if the session is recreated or reset. As before, there is only ever one point cloud.
+- ARKitLoader now manages the initialization and destruction of its `XRMeshSubsystem`. This means that using ARKit with [XR Management](https://docs.unity3d.com/Packages/com.unity.xr.management@3.1/manual/index.html) with try to initialize (but not start) the meshing subsystem.
+
+### Fixes
+- Fixed a bug where the [`XRParticipantSubsystem`](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.XRParticipantSubsystem.html) was never initialized and was therefore unavailable.
+
 ## [4.0.0-preview.3] - 2020-05-04
 ### New
 - Add support for tracked (i.e., persistent) raycasts.
 - Added support for scene mesh generation through `ARMeshManager`.
 
 ### Changes
-- Static libraries were built with Xcode 11.4.1 (11E503a) and Xcode 10.3 (10G8).
 - Updating dependency on com.unity.xr.management to 3.2.10.
 
 ### Fixes

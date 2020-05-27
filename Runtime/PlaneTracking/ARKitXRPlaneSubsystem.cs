@@ -13,11 +13,13 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitXRPlaneSubsystem : XRPlaneSubsystem
     {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Creates the ARKit-specific implementation which will service the `XRPlaneSubsystem`.
         /// </summary>
         /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
         protected override Provider CreateProvider() => new ARKitProvider();
+#endif
 
         class ARKitProvider : Provider
         {
@@ -191,7 +193,12 @@ namespace UnityEngine.XR.ARKit
             var cinfo = new XRPlaneSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Plane",
+#if UNITY_2020_2_OR_NEWER
+                providerType = typeof(ARKitXRPlaneSubsystem.ARKitProvider),
+                subsystemTypeOverride = typeof(ARKitXRPlaneSubsystem),
+#else
                 subsystemImplementationType = typeof(ARKitXRPlaneSubsystem),
+#endif
                 supportsHorizontalPlaneDetection = true,
                 supportsVerticalPlaneDetection = Api.AtLeast11_3(),
                 supportsArbitraryPlaneDetection = false,

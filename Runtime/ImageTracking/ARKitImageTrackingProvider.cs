@@ -14,6 +14,11 @@ namespace UnityEngine.XR.ARKit
     {
         class ARKitProvider : Provider
         {
+#if UNITY_2020_2_OR_NEWER
+            public override void Start() { }
+            public override void Stop() { }
+#endif
+
             public unsafe override RuntimeReferenceImageLibrary CreateRuntimeLibrary(
                 XRReferenceImageLibrary serializedLibrary)
             {
@@ -116,17 +121,24 @@ namespace UnityEngine.XR.ARKit
             XRImageTrackingSubsystemDescriptor.Create(new XRImageTrackingSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-ImageTracking",
+#if UNITY_2020_2_OR_NEWER
+                providerType = typeof(ARKitImageTrackingSubsystem.ARKitProvider),
+                subsystemTypeOverride = typeof(ARKitImageTrackingSubsystem),
+#else
                 subsystemImplementationType = typeof(ARKitImageTrackingSubsystem),
+#endif
                 supportsMovingImages = Api.AtLeast12_0(),
                 supportsMutableLibrary = true,
                 requiresPhysicalImageDimensions = true
             });
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Creates the ARKit-specific implementation which will service the `XRImageTrackingSubsystem`.
         /// </summary>
         /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
         protected override Provider CreateProvider() => new ARKitProvider();
+#endif
     }
 }

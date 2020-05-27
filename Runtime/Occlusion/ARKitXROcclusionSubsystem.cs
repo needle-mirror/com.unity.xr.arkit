@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Unity.Collections;
@@ -7,10 +8,21 @@ using UnityEngine.XR.ARSubsystems;
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
-    /// Registration utility to register the ARKit occlusion subsystem.
+    /// This subsystem provides implementing functionality for the <c>XROcclusionSubsystem</c> class.
     /// </summary>
-    internal static class ARKitOcclusionRegistration
+    [Preserve]
+    class ARKitOcclusionSubsystem : XROcclusionSubsystem
     {
+#if !UNITY_2020_2_OR_NEWER
+        /// <summary>
+        /// Create the implementation provider.
+        /// </summary>
+        /// <returns>
+        /// The implementation provider.
+        /// </returns>
+        protected override Provider CreateProvider() => new ARKitProvider();
+#endif
+
         /// <summary>
         /// Register the ARKit occlusion subsystem if iOS and not the editor.
         /// </summary>
@@ -30,44 +42,19 @@ namespace UnityEngine.XR.ARKit
                 XROcclusionSubsystemCinfo occlusionSubsystemCinfo = new XROcclusionSubsystemCinfo()
                 {
                     id = k_SubsystemId,
+#if UNITY_2020_2_OR_NEWER
+                    providerType = typeof(ARKitOcclusionSubsystem.ARKitProvider),
+                    subsystemTypeOverride = typeof(ARKitOcclusionSubsystem),
+#else
                     implementationType = typeof(ARKitOcclusionSubsystem),
+#endif
                     supportsHumanSegmentationStencilImage = supportsHumanSegmentationStencilImage,
                     supportsHumanSegmentationDepthImage = supportsHumanSegmentationDepthImage,
                 };
 
-                if (!XROcclusionSubsystem.Register(occlusionSubsystemCinfo))
-                {
-                    Debug.Log($"Cannot register the {k_SubsystemId} subsystem");
-                }
+                XROcclusionSubsystem.Register(occlusionSubsystemCinfo);
             }
         }
-
-        /// <summary>
-        /// Container to wrap the native ARKit human body APIs.
-        /// </summary>
-        static class NativeApi
-        {
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil();
-
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth();
-        }
-    }
-
-    /// <summary>
-    /// This subsystem provides implementing functionality for the <c>XROcclusionSubsystem</c> class.
-    /// </summary>
-    [Preserve]
-    class ARKitOcclusionSubsystem : XROcclusionSubsystem
-    {
-        /// <summary>
-        /// Create the implementation provider.
-        /// </summary>
-        /// <returns>
-        /// The implementation provider.
-        /// </returns>
-        protected override Provider CreateProvider() => new ARKitProvider();
 
         /// <summary>
         /// The implementation provider class.
@@ -197,6 +184,11 @@ namespace UnityEngine.XR.ARKit
             public override bool TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor)
                 => NativeApi.UnityARKit_OcclusionProvider_TryGetHumanStencil(out humanStencilDescriptor);
 
+            public override XRCpuImage.Api humanStencilCpuImageApi => ARKitCpuImageApi.instance;
+
+            public override bool TryAcquireHumanStencilCpuImage(out XRCpuImage.Cinfo cinfo)
+                => ARKitCpuImageApi.TryAcquireLatestImage(ARKitCpuImageApi.ImageType.HumanStencil, out cinfo);
+
             /// <summary>
             /// Get the human depth texture descriptor.
             /// </summary>
@@ -209,13 +201,18 @@ namespace UnityEngine.XR.ARKit
             public override bool TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor)
                 => NativeApi.UnityARKit_OcclusionProvider_TryGetHumanDepth(out humanDepthDescriptor);
 
+            public override XRCpuImage.Api humanDepthCpuImageApi => ARKitCpuImageApi.instance;
+
+            public override bool TryAcquireHumanDepthCpuImage(out XRCpuImage.Cinfo cinfo)
+                => ARKitCpuImageApi.TryAcquireLatestImage(ARKitCpuImageApi.ImageType.HumanDepth, out cinfo);
+
             /// <summary>
             /// Gets the occlusion texture descriptors associated with the current AR frame.
             /// </summary>
             /// <param name="defaultDescriptor">The default descriptor value.</param>
             /// <param name="allocator">The allocator to use when creating the returned <c>NativeArray</c>.</param>
             /// <returns>The occlusion texture descriptors.</returns>
-            public unsafe override NativeArray<XRTextureDescriptor> GetTextureDescriptors(XRTextureDescriptor defaultDescriptor,
+            public override unsafe NativeArray<XRTextureDescriptor> GetTextureDescriptors(XRTextureDescriptor defaultDescriptor,
                                                                                           Allocator allocator)
             {
                 var textureDescriptors = NativeApi.UnityARKit_OcclusionProvider_AcquireTextureDescriptors(out int length,
@@ -237,17 +234,17 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             /// <param name="enabledKeywords">The keywords to enable for the material.</param>
             /// <param name="disabledKeywords">The keywords to disable for the material.</param>
-            public override void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeyWords)
+            public override void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
             {
                 if (NativeApi.UnityARKit_OcclusionProvider_IsHumanEnabled())
                 {
                     enabledKeywords = m_HumanEnabledMaterialKeywords;
-                    disabledKeyWords = null;
+                    disabledKeywords = null;
                 }
                 else
                 {
                     enabledKeywords = null;
-                    disabledKeyWords = m_HumanEnabledMaterialKeywords;
+                    disabledKeywords = m_HumanEnabledMaterialKeywords;
                 }
             }
         }
@@ -289,19 +286,25 @@ namespace UnityEngine.XR.ARKit
             public static extern HumanSegmentationDepthMode UnityARKit_OcclusionProvider_GetCurrentSegmentationDepthMode();
 
             [DllImport("__Internal")]
-            public static unsafe extern bool UnityARKit_OcclusionProvider_TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor);
+            public static extern unsafe bool UnityARKit_OcclusionProvider_TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor);
 
             [DllImport("__Internal")]
-            public static unsafe extern bool UnityARKit_OcclusionProvider_TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor);
+            public static extern unsafe bool UnityARKit_OcclusionProvider_TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor);
 
             [DllImport("__Internal")]
-            public static unsafe extern void* UnityARKit_OcclusionProvider_AcquireTextureDescriptors(out int length, out int elementSize);
+            public static extern unsafe void* UnityARKit_OcclusionProvider_AcquireTextureDescriptors(out int length, out int elementSize);
 
             [DllImport("__Internal")]
-            public static unsafe extern void UnityARKit_OcclusionProvider_ReleaseTextureDescriptors(void* descriptors);
+            public static extern unsafe void UnityARKit_OcclusionProvider_ReleaseTextureDescriptors(void* descriptors);
 
             [DllImport("__Internal")]
-            public static unsafe extern bool UnityARKit_OcclusionProvider_IsHumanEnabled();
+            public static extern bool UnityARKit_OcclusionProvider_IsHumanEnabled();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil();
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth();
         }
     }
 }

@@ -12,14 +12,28 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitXRObjectTrackingSubsystem : XRObjectTrackingSubsystem
     {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Creates the ARKit-specific implementation which will service the `XRObjectTrackingSubsystem`.
         /// </summary>
         /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
         protected override Provider CreateProvider() => new ARKitProvider();
+#endif
 
         class ARKitProvider : Provider
         {
+#if UNITY_2020_2_OR_NEWER
+            /// <summary>
+            /// Invoked when <c>Start</c> is called on the subsystem. This method is only called if the subsystem was not previously running.
+            /// </summary>
+            public override void Start() { }
+
+            /// <summary>
+            /// Invoked when <c>Stop</c> is called on the subsystem. This method is only called if the subsystem was previously running.
+            /// </summary>
+            public override void Stop() { }
+#endif
+
             [DllImport("__Internal")]
             static extern void UnityARKit_ObjectTracking_Initialize();
 
@@ -116,8 +130,12 @@ namespace UnityEngine.XR.ARKit
             var capabilities = new XRObjectTrackingSubsystemDescriptor.Capabilities
             {
             };
-
+            
+#if UNITY_2020_2_OR_NEWER
+            Register<ARKitXRObjectTrackingSubsystem.ARKitProvider, ARKitXRObjectTrackingSubsystem>("ARKit-ObjectTracking", capabilities);
+#else
             Register<ARKitXRObjectTrackingSubsystem>("ARKit-ObjectTracking", capabilities);
+#endif
         }
     }
 }

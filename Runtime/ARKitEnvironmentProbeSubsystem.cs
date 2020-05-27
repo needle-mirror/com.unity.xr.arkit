@@ -6,10 +6,10 @@ using UnityEngine.XR.ARSubsystems;
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
-    /// An internal class with only static methods to register the environment probe subsystem before the scene is
-    /// loaded.
+    /// This subsystem provides implementing functionality for the <c>XREnvironmentProbeSubsystem</c> class.
     /// </summary>
-    internal static class ARKitEnvironmentProbeRegistration
+    [Preserve]
+    class ARKitEnvironmentProbeSubsystem : XREnvironmentProbeSubsystem
     {
         /// <summary>
         /// Create and register the environment probe subsystem descriptor to advertise a providing implementation for
@@ -25,7 +25,12 @@ namespace UnityEngine.XR.ARKit
             XREnvironmentProbeSubsystemCinfo environmentProbeSubsystemInfo = new XREnvironmentProbeSubsystemCinfo()
             {
                 id = subsystemId,
+#if UNITY_2020_2_OR_NEWER
+                providerType = typeof(ARKitEnvironmentProbeSubsystem.ARKitProvider),
+                subsystemTypeOverride = typeof(ARKitEnvironmentProbeSubsystem),
+#else
                 implementationType = typeof(ARKitEnvironmentProbeSubsystem),
+#endif
                 supportsManualPlacement = true,
                 supportsRemovalOfManual = true,
                 supportsAutomaticPlacement = true,
@@ -34,20 +39,12 @@ namespace UnityEngine.XR.ARKit
                 supportsEnvironmentTextureHDR = Api.AtLeast13_0(),
             };
 
-            if (!XREnvironmentProbeSubsystem.Register(environmentProbeSubsystemInfo))
-            {
-                Debug.LogErrorFormat("Cannot register the {0} subsystem", subsystemId);
-            }
+            XREnvironmentProbeSubsystem.Register(environmentProbeSubsystemInfo);
         }
-    }
 
-    /// <summary>
-    /// This subsystem provides implementing functionality for the <c>XREnvironmentProbeSubsystem</c> class.
-    /// </summary>
-    [Preserve]
-    class ARKitEnvironmentProbeSubsystem : XREnvironmentProbeSubsystem
-    {
+#if !UNITY_2020_2_OR_NEWER
         protected override Provider CreateProvider() => new ARKitProvider();
+#endif
 
         class ARKitProvider : Provider
         {

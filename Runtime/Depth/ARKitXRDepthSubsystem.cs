@@ -1,4 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
+using AOT;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
@@ -15,6 +17,12 @@ namespace UnityEngine.XR.ARKit
     {
         class ARKitProvider : Provider
         {
+            [DllImport("__Internal")]
+            static extern void UnityARKit_depth_start();
+
+            [DllImport("__Internal")]
+            static extern void UnityARKit_depth_stop();
+
             [DllImport("__Internal")]
             static extern void UnityARKit_depth_destroy();
 
@@ -42,14 +50,11 @@ namespace UnityEngine.XR.ARKit
                 XRPointCloud defaultPointCloud,
                 Allocator allocator)
             {
-                int addedLength, updatedLength, removedLength, elementSize;
-                void* addedPtr, updatedPtr, removedPtr;
-
                 var context = UnityARKit_depth_acquireChanges(
-                    out addedPtr, out addedLength,
-                    out updatedPtr, out updatedLength,
-                    out removedPtr, out removedLength,
-                    out elementSize);
+                    out var addedPtr, out var addedLength,
+                    out var updatedPtr, out var updatedLength,
+                    out var removedPtr, out var removedLength,
+                    out var elementSize);
 
                 try
                 {
@@ -66,17 +71,19 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
+            public override void Start() => UnityARKit_depth_start();
+
+            public override void Stop() => UnityARKit_depth_stop();
+
             public override void Destroy() => UnityARKit_depth_destroy();
 
             public override unsafe XRPointCloudData GetPointCloudData(
                 TrackableId trackableId,
                 Allocator allocator)
             {
-                void* positionsPtr, identifiersPtr;
-                int numPoints;
                 var pointCloud = UnityARKit_depth_acquirePointCloud(
                     trackableId,
-                    out positionsPtr, out identifiersPtr, out numPoints);
+                    out var positionsPtr, out var identifiersPtr, out var numPoints);
 
                 try
                 {
@@ -121,11 +128,13 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Creates the ARKit-specific implementation which will service the `XRDepthSubsystem`.
         /// </summary>
         /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
         protected override Provider CreateProvider() => new ARKitProvider();
+#endif
 
         //this method is run on startup of the app to register this provider with XR Subsystem Manager
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -135,7 +144,12 @@ namespace UnityEngine.XR.ARKit
             var descriptorParams = new XRDepthSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Depth",
+#if UNITY_2020_2_OR_NEWER
+                providerType = typeof(ARKitXRDepthSubsystem.ARKitProvider),
+                subsystemTypeOverride = typeof(ARKitXRDepthSubsystem),
+#else
                 implementationType = typeof(ARKitXRDepthSubsystem),
+#endif
                 supportsFeaturePoints = true,
                 supportsConfidence = false,
                 supportsUniqueIds = true

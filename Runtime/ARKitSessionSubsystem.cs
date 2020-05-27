@@ -15,9 +15,12 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitSessionSubsystem : XRSessionSubsystem
     {
-        ARKitProvider m_Provider;
-
-        IntPtr self => m_Provider.self;
+#if UNITY_2020_2_OR_NEWER
+        IntPtr self => ((ARKitProvider)provider).self;
+#else
+        ARKitProvider provider;
+        IntPtr self => provider.self;
+#endif
 
         /// <summary>
         /// <c>true</c> if [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview) is supported, otherwise <c>false</c>.
@@ -46,7 +49,7 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Requestes the [Coaching Goal](https://developer.apple.com/documentation/arkit/arcoachingoverlayview/3192180-goal).
+        /// Requests the [Coaching Goal](https://developer.apple.com/documentation/arkit/arcoachingoverlayview/3192180-goal).
         /// This should be based on your app's tracking requirements and affects the UI that the coaching overlay presents.
         /// </summary>
         /// <value>The type of goal the coaching overlay should guide the user through.</value>
@@ -230,15 +233,17 @@ namespace UnityEngine.XR.ARKit
             NativeApi.UnityARKit_Session_UpdateWithCollaborationData(self, collaborationData.m_NativePtr);
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Creates the provider interface.
         /// </summary>
         /// <returns>The provider interface for ARKit</returns>
         protected override Provider CreateProvider()
         {
-            m_Provider = new ARKitProvider();
-            return m_Provider;
+            provider = new ARKitProvider();
+            return provider;
         }
+#endif
 
         static ARKitSessionSubsystem()
         {
@@ -266,8 +271,6 @@ namespace UnityEngine.XR.ARKit
             handle.Free();
         }
 
-        ARKitProvider m_ARKitProvider;
-
         class ARKitProvider : Provider
         {
             IntPtr m_Self;
@@ -275,9 +278,15 @@ namespace UnityEngine.XR.ARKit
 
             public ARKitProvider() => m_Self = NativeApi.UnityARKit_Session_Construct();
 
+#if UNITY_2020_2_OR_NEWER
+            public override void Start() => NativeApi.UnityARKit_Session_Resume(m_Self);
+
+            public override void Stop() => NativeApi.UnityARKit_Session_Pause(m_Self);
+#else
             public override void Resume() => NativeApi.UnityARKit_Session_Resume(m_Self);
 
             public override void Pause() => NativeApi.UnityARKit_Session_Pause(m_Self);
+#endif
 
             public override void Update(XRSessionUpdateParams updateParams)
                 => throw new NotSupportedException("Update requires a configuration.");
@@ -325,7 +334,7 @@ namespace UnityEngine.XR.ARKit
                 get => Api.GetRequestedFeatures();
                 set
                 {
-                    Api.SetFeatureRequested(Feature.AnyTracking, false);
+                    Api.SetFeatureRequested(Feature.AnyTrackingMode, false);
                     Api.SetFeatureRequested(value, true);
                 }
             }
@@ -359,7 +368,12 @@ namespace UnityEngine.XR.ARKit
             XRSessionSubsystemDescriptor.RegisterDescriptor(new XRSessionSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Session",
+#if UNITY_2020_2_OR_NEWER
+                providerType = typeof(ARKitSessionSubsystem.ARKitProvider),
+                subsystemTypeOverride = typeof(ARKitSessionSubsystem),
+#else
                 subsystemImplementationType = typeof(ARKitSessionSubsystem),
+#endif
                 supportsInstall = false,
                 supportsMatchFrameRate = true,
             });
