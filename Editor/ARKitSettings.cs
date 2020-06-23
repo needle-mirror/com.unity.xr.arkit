@@ -1,10 +1,19 @@
 using UnityEngine;
+using UnityEngine.XR.Management;
+
+using UnityEditor.PackageManager;
+using UnityEditor.PackageManager.Requests;
+
+using System.IO;
+using System.Linq;
 
 namespace UnityEditor.XR.ARKit
 {
     /// <summary>
     /// Holds settings that are used to configure the ARKit XR Plugin.
     /// </summary>
+    [System.Serializable]
+    [XRConfigurationData("ARKit", "UnityEditor.XR.ARKit.ARKitSettings")]
     public class ARKitSettings : ScriptableObject
     {
         /// <summary>
@@ -36,6 +45,18 @@ namespace UnityEditor.XR.ARKit
         }
 
         /// <summary>
+        /// Installs ARKit Face Tracking package when set to true and ARKit Face Tracking is not already installed. False indicates that ARKit Face Tracking is not currently installed.
+        /// </summary>
+        public bool faceTracking
+        {
+            get { return m_FaceTracking; }
+            set { m_FaceTracking = value; }
+        }
+
+        [SerializeField, Tooltip("Installs ARKit Face Tracking package when toggled on and ARKit Face Tracking is not installed. Does not uninstall the package when unchecked")]
+        bool m_FaceTracking;
+
+        /// <summary>
         /// Gets the currently selected settings, or create a default one if no <see cref="ARKitSettings"/> has been set in Player Settings.
         /// </summary>
         /// <returns>The ARKit settings to use for the current Player build.</returns>
@@ -53,25 +74,17 @@ namespace UnityEditor.XR.ARKit
         /// </summary>
         public static ARKitSettings currentSettings
         {
-            get
-            {
-                ARKitSettings settings = null;
-                if (EditorBuildSettings.TryGetConfigObject(k_ConfigObjectName, out settings) == false)
-                {
-                    settings = null;
-                }
-                return settings;
-            }
+            get => EditorBuildSettings.TryGetConfigObject(k_SettingsKey, out ARKitSettings settings) ? settings : null;
 
             set
             {
                 if (value == null)
                 {
-                    EditorBuildSettings.RemoveConfigObject(k_ConfigObjectName);
+                    EditorBuildSettings.RemoveConfigObject(k_SettingsKey);
                 }
                 else
                 {
-                    EditorBuildSettings.AddConfigObject(k_ConfigObjectName, value, true);
+                    EditorBuildSettings.AddConfigObject(k_SettingsKey, value, true);
                 }
             }
         }
@@ -86,11 +99,83 @@ namespace UnityEditor.XR.ARKit
             return true;
         }
 
+       static void HandleInstallFaceTracking()
+        {
+            EditorApplication.update -= HandleInstallFaceTracking;
+            if(currentSettings.m_FaceTracking == true)
+            {
+                Client.Add(k_FaceTrackingPackageName + k_FaceTrackingPackageVersion);
+            }
+            else
+            {
+                EditorApplication.update += HandleInstallFaceTracking;
+            }
+        }
+
         internal static SerializedObject GetSerializedSettings()
         {
             return new SerializedObject(GetOrCreateSettings());
         }
 
-        static readonly string k_ConfigObjectName = "com.unity.xr.arkit.PlayerSettings";
+        void Awake()
+        {
+            if (EditorBuildSettings.TryGetConfigObject(k_OldConfigObjectName, out ARKitSettings result))
+            {
+                EditorBuildSettings.RemoveConfigObject(k_OldConfigObjectName);
+            }
+            s_ListRequest = Client.List();
+            EditorApplication.update += CheckInstalledFaceTrackingInstalled;
+        }
+
+        static void CheckInstalledFaceTrackingInstalled()
+        {
+            EditorApplication.update -= CheckInstalledFaceTrackingInstalled;
+            if(s_ListRequest.IsCompleted)
+            {
+               if (s_ListRequest.Status == StatusCode.Success)
+                {
+                    if (s_ListRequest.Result.Any(package => package.name == k_FaceTrackingPackageName))
+                    {
+                        currentSettings.m_FaceTracking = true;
+                    }
+                    else
+                    {
+                        EditorApplication.update += HandleInstallFaceTracking;
+                        currentSettings.m_FaceTracking = false;
+                    }
+                }
+               else if (s_ListRequest.Status >= StatusCode.Failure)
+               {
+                   Debug.LogError($"Error installing ARKit face tracking package: {s_ListRequest.Error.message}");
+               }
+            }
+            else
+            {
+               EditorApplication.update += CheckInstalledFaceTrackingInstalled;
+            }
+        }
+
+        void OnEnable()
+        {
+            AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
+        }
+
+        void OnDisable()
+        {
+            AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
+        }
+
+        public void OnAfterAssemblyReload()
+        {
+            s_ListRequest = Client.List();
+            EditorApplication.update += CheckInstalledFaceTrackingInstalled;
+        }
+
+        static ListRequest s_ListRequest;
+        const string k_FaceTrackingPackageName = "com.unity.xr.arkit-face-tracking";
+        const string k_FaceTrackingPackageVersion = "@4.1.0-preview.1";
+        const string k_SettingsKey = "UnityEditor.XR.ARKit.ARKitSettings";
+        const string k_OldConfigObjectName = "com.unity.xr.arkit.PlayerSettings";
+
     }
 }

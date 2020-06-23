@@ -6,6 +6,7 @@ Shader "Unlit/ARKitBackground"
         _textureCbCr ("TextureCbCr", 2D) = "black" {}
         _HumanStencil ("HumanStencil", 2D) = "black" {}
         _HumanDepth ("HumanDepth", 2D) = "black" {}
+        _EnvironmentDepth ("EnvironmentDepth", 2D) = "black" {}
     }
     SubShader
     {
@@ -35,7 +36,7 @@ Shader "Unlit/ARKitBackground"
             #pragma fragment frag
 
             #pragma multi_compile_local __ ARKIT_BACKGROUND_URP ARKIT_BACKGROUND_LWRP
-            #pragma multi_compile_local __ ARKIT_HUMAN_SEGMENTATION_ENABLED
+            #pragma multi_compile_local __ ARKIT_HUMAN_SEGMENTATION_ENABLED ARKIT_ENVIRONMENT_DEPTH_ENABLED
 
 
 #if ARKIT_BACKGROUND_URP
@@ -139,7 +140,10 @@ Shader "Unlit/ARKitBackground"
             ARKIT_SAMPLER_HALF(sampler_textureY);
             ARKIT_TEXTURE2D_HALF(_textureCbCr);
             ARKIT_SAMPLER_HALF(sampler_textureCbCr);
-#if ARKIT_HUMAN_SEGMENTATION_ENABLED
+#if ARKIT_ENVIRONMENT_DEPTH_ENABLED
+            ARKIT_TEXTURE2D_FLOAT(_EnvironmentDepth);
+            ARKIT_SAMPLER_FLOAT(sampler_EnvironmentDepth);
+#elif ARKIT_HUMAN_SEGMENTATION_ENABLED
             ARKIT_TEXTURE2D_HALF(_HumanStencil);
             ARKIT_SAMPLER_HALF(sampler_HumanStencil);
             ARKIT_TEXTURE2D_FLOAT(_HumanDepth);
@@ -165,7 +169,13 @@ Shader "Unlit/ARKitBackground"
                 // Assume the background depth is the back of the depth clipping volume.
                 float depthValue = 0.0f;
 
-#if ARKIT_HUMAN_SEGMENTATION_ENABLED
+#if ARKIT_ENVIRONMENT_DEPTH_ENABLED
+                // Sample the environment depth (in meters).
+                float envDistance = ARKIT_SAMPLE_TEXTURE2D(_EnvironmentDepth, sampler_EnvironmentDepth, i.texcoord).r;
+
+                // Convert the distance to depth.
+                depthValue = ConvertDistanceToDepth(envDistance);
+#elif ARKIT_HUMAN_SEGMENTATION_ENABLED
                 // Check the human stencil, and skip non-human pixels.
                 if (ARKIT_SAMPLE_TEXTURE2D(_HumanStencil, sampler_HumanStencil, i.texcoord).r > 0.5h)
                 {

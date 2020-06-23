@@ -15,6 +15,8 @@ namespace UnityEngine.XR.ARKit
             Camera,
             HumanDepth,
             HumanStencil,
+            EnvironmentDepth,
+            EnvironmentDepthConfidence,
         }
 
         /// <summary>

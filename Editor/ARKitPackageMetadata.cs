@@ -34,7 +34,7 @@ namespace UnityEditor.XR.ARKit
         {
             packageName = "ARKit XR Plugin",
             packageId = "com.unity.xr.arkit",
-            settingsType = typeof(ARKitLoaderSettings).FullName,
+            settingsType = typeof(ARKitSettings).FullName,
             loaderMetadata = new List<IXRLoaderMetadata>()
             {
                 new ARKitLoaderMetadata()
@@ -53,7 +53,15 @@ namespace UnityEditor.XR.ARKit
 
         public bool PopulateNewSettingsInstance(ScriptableObject obj)
         {
-            return true;
+            if (obj is ARKitSettings settings)
+            {
+                ARKitSettings.currentSettings = settings;
+                settings.requirement = ARKitSettings.Requirement.Required;
+                settings.faceTracking = false;
+                return true;
+            }
+
+            return false;
         }
     }
 }
