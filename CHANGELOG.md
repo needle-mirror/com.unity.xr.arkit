@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.2] - 2020-06-24
+### Fixes
+- Added a workaround for an issue where environment depth and human stencil & depth do not work together as expected. This workaround uses the OcclusionPreferenceMode setting to decide which mode should be enabled. This workaround will be removed once the original issue is fixed.
+- Fixed a bug which caused the `ARKitRaycastSubsystem` to throw on devices running versions of iOS prior to 13. This would most commonly be seen when using ARFoundation's [ARRaycastManager](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARRaycastManager.html).
+
+### Changes
+- Adding documentation for the ARKit meshing and occlusion functionalities.
+
 ## [4.1.0-preview.1] - 2020-06-23
 ### New
 - Add support for ARKit environment depth through the AROcclusionManager/XROcclusionSubsystem.

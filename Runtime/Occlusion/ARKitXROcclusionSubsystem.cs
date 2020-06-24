@@ -1,3 +1,5 @@
+#define ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -192,6 +194,45 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             public override void Destroy() => NativeApi.UnityARKit_OcclusionProvider_Destruct();
 
+
+#if ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
+            void ConfigureOcclusionModeWorkaround()
+            {
+                HumanSegmentationStencilMode humanStencilMode = requestedHumanStencilMode;
+                HumanSegmentationDepthMode humanDepthMode = requestedHumanDepthMode;
+                EnvironmentDepthMode envDepthMode = requestedEnvironmentDepthMode;
+                OcclusionPreferenceMode prefMode = requestedOcclusionPreferenceMode;
+
+                bool humanEnabled = humanStencilMode.Enabled() || humanDepthMode.Enabled();
+                bool envEnabled = envDepthMode.Enabled();
+
+                if (humanEnabled && envEnabled)
+                {
+                    switch (prefMode)
+                    {
+                        case OcclusionPreferenceMode.PreferHumanOcclusion:
+                            envDepthMode = EnvironmentDepthMode.Disabled;
+                            Debug.LogWarning("Environment depth mode and human stencil & depth modes do not work "
+                                             + "together currently. Environment depth is being disabled because "
+                                             + $"OcclusionPreferenceMode is set to {prefMode}.");
+                            break;
+                        case OcclusionPreferenceMode.PreferEnvironmentOcclusion:
+                        default:
+                            humanStencilMode = HumanSegmentationStencilMode.Disabled;
+                            humanDepthMode = HumanSegmentationDepthMode.Disabled;
+                            Debug.LogWarning("Environment depth mode and human stencil & depth modes do not work "
+                                             + "together currently. Human stencil & depth are being disabled because "
+                                             + $"OcclusionPreferenceMode is set to {prefMode}.");
+                            break;
+                    }
+                }
+
+                Api.SetFeatureRequested(Feature.PeopleOcclusionStencil, humanStencilMode.Enabled());
+                Api.SetFeatureRequested(Feature.PeopleOcclusionDepth, humanDepthMode.Enabled());
+                Api.SetFeatureRequested(Feature.EnvironmentDepth, envDepthMode.Enabled());
+            }
+#endif // ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
+
             /// <summary>
             /// Property to get/set the requested human segmentation stencil mode.
             /// </summary>
@@ -206,7 +247,11 @@ namespace UnityEngine.XR.ARKit
                 set
                 {
                     NativeApi.UnityARKit_OcclusionProvider_SetRequestedSegmentationStencilMode(value);
+#if ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
+                    ConfigureOcclusionModeWorkaround();
+#else // ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
                     Api.SetFeatureRequested(Feature.PeopleOcclusionStencil, value.Enabled());
+#endif // ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
                 }
             }
 
@@ -230,7 +275,11 @@ namespace UnityEngine.XR.ARKit
                 set
                 {
                     NativeApi.UnityARKit_OcclusionProvider_SetRequestedSegmentationDepthMode(value);
+#if ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
+                    ConfigureOcclusionModeWorkaround();
+#else // ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
                     Api.SetFeatureRequested(Feature.PeopleOcclusionDepth, value.Enabled());
+#endif // ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
                 }
             }
 
@@ -254,7 +303,11 @@ namespace UnityEngine.XR.ARKit
                 set
                 {
                     NativeApi.UnityARKit_OcclusionProvider_SetRequestedEnvironmentDepthMode(value);
+#if ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
+                    ConfigureOcclusionModeWorkaround();
+#else // ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
                     Api.SetFeatureRequested(Feature.EnvironmentDepth, value.Enabled());
+#endif // ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
                 }
             }
 
@@ -273,7 +326,15 @@ namespace UnityEngine.XR.ARKit
             public override OcclusionPreferenceMode requestedOcclusionPreferenceMode
             {
                 get => m_OcclusionPreferenceMode;
+#if ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
+                set
+                {
+                    m_OcclusionPreferenceMode = value;
+                    ConfigureOcclusionModeWorkaround();
+                }
+#else // ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
                 set => m_OcclusionPreferenceMode = value;
+#endif // ARKIT_ENVIRONMENT_AND_HUMAN_DEPTH_WORKAROUND
             }
 
             /// <summary>
