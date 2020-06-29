@@ -4,13 +4,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.2] - 2020-06-29
+### Fixes
+- Fixed a bug which caused the `ARKitRaycastSubsystem` to throw on devices running versions of iOS prior to 13. This would most commonly be seen when using ARFoundation's [ARRaycastManager](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/api/UnityEngine.XR.ARFoundation.ARRaycastManager.html).
+- Updated the `ARObjectImporter` to account for a namespace which changed from `UnityEditor.Experimental.AssetImporters` to `UnityEditor.AssetImporters` in 2020.2.0a17.
+
 ## [4.0.1] - 2020-05-27
 ### New
 - Added ARKit Camera Grain exposure support for iOS 13 and above, (Support to convert to Texture3D only available in Unity 2020.2 and above). Can be applied to 3D content to give a camera grain noise effect. See [Camera Grain Documentation](https://developer.apple.com/documentation/arkit/arframe/3255173-cameragraintexture) for more details.
 - Implemented `XROcclusionSubsystem.TryAcquireHumanStencilCpuImage` and `XROcclusionSubsystem.TryAcquireHumanDepthCpuImage` which provides access to the raw texture data on the CPU.
 
 ### Changes
-- Updating dependency on AR Subsystems to 4.0.0. 
+- Updating dependency on AR Subsystems to 4.0.0.
 - Updated "camera image" APIs to use the new "CPU image" API. See the [ARFoundation migration guide](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/manual/migration-guide-3.html#xrcameraimage-is-now-xrcpuimage) for more details.
 - Removed support for Xcode versions below version 11.0 as per apple app store submission guidelines.  [See App Store submission guidelines for more information](https://developer.apple.com/app-store/submissions)
 - Previously, the trackable id associated with a point cloud was tied to the `XRDepthSubsystem`, and would only change if the subsystem was recreated. Now, the trackable id is tied to the session and will change if the session is recreated or reset. As before, there is only ever one point cloud.

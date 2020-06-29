@@ -2,7 +2,6 @@ using System;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using UnityEngine.Assertions;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -30,25 +29,33 @@ namespace UnityEngine.XR.ARKit
 
             public override void Start()
             {
-                Assert.AreNotEqual(IntPtr.Zero, m_Self);
-                NativeApi.Start(m_Self);
+                if (m_Self != IntPtr.Zero)
+                {
+                    NativeApi.Start(m_Self);
+                }
             }
 
             public override void Stop()
             {
-                Assert.AreNotEqual(IntPtr.Zero, m_Self);
-                NativeApi.Stop(m_Self);
+                if (m_Self != IntPtr.Zero)
+                {
+                    NativeApi.Stop(m_Self);
+                }
             }
 
             public override void Destroy()
             {
-                Assert.AreNotEqual(IntPtr.Zero, m_Self);
-                Api.CFRelease(ref m_Self);
+                if (m_Self != IntPtr.Zero)
+                {
+                    Api.CFRelease(ref m_Self);
+                }
             }
 
             public override unsafe TrackableChanges<XRRaycast> GetChanges(XRRaycast defaultRaycast, Allocator allocator)
             {
-                Assert.AreNotEqual(IntPtr.Zero, m_Self);
+                if (m_Self == IntPtr.Zero)
+                    return default;
+
                 NativeApi.AcquireChanges(m_Self,
                     out XRRaycast* added, out int addedCount,
                     out XRRaycast* updated, out int updatedCount,
@@ -71,14 +78,21 @@ namespace UnityEngine.XR.ARKit
 
             public override bool TryAddRaycast(Ray ray, float estimatedDistance, out XRRaycast sessionRelativeData)
             {
-                Assert.AreNotEqual(IntPtr.Zero, m_Self);
+                if (m_Self == IntPtr.Zero)
+                {
+                    sessionRelativeData = default;
+                    return false;
+                }
+
                 return NativeApi.TryAddRaycast(m_Self, ray.origin, ray.direction, estimatedDistance, out sessionRelativeData);
             }
 
             public override void RemoveRaycast(TrackableId trackableId)
             {
-                Assert.AreNotEqual(IntPtr.Zero, m_Self);
-                NativeApi.RemoveRaycast(m_Self, trackableId);
+                if (m_Self != IntPtr.Zero)
+                {
+                    NativeApi.RemoveRaycast(m_Self, trackableId);
+                }
             }
 
             public override unsafe NativeArray<XRRaycastHit> Raycast(

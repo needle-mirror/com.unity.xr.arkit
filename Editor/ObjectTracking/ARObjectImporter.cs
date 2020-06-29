@@ -2,11 +2,13 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Xml;
+#if UNITY_2020_2_OR_NEWER
+using UnityEditor.AssetImporters;
+#else
 using UnityEditor.Experimental.AssetImporters;
-using UnityEditor.XR.ARSubsystems;
+#endif
 using UnityEngine;
 using UnityEngine.XR.ARKit;
-using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEditor.XR.ARKit
 {
