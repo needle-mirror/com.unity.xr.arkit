@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.3] - 2020-07-09
+### Fixes
+- Updated the `ARObjectImporter` to account for a namespace which changed from `UnityEditor.Experimental.AssetImporters` to `UnityEditor.AssetImporters` in 2020.2.0a17.
+- Fixed a crash when using [mesh face classifications](https://docs.unity3d.com/Packages/com.unity.xr.arkit@4.1/api/UnityEngine.XR.ARKit.ARKitMeshSubsystemExtensions.html#UnityEngine_XR_ARKit_ARKitMeshSubsystemExtensions_GetFaceClassifications_XRMeshSubsystem_TrackableId_Allocator_).
+- Minor documentation fixes.
+
+### Changes
+- Static library was built with Xcode 12.0 beta 2 (12A6163b)
+- Update [XR Plug-in Management](https://docs.unity3d.com/Packages/com.unity.xr.management@3.2) to 3.2.13.
+
 ## [4.1.0-preview.2] - 2020-06-24
 ### Fixes
 - Added a workaround for an issue where environment depth and human stencil & depth do not work together as expected. This workaround uses the OcclusionPreferenceMode setting to decide which mode should be enabled. This workaround will be removed once the original issue is fixed.

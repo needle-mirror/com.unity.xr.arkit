@@ -2,11 +2,10 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Xml;
+using UnityEditor.AssetImporters;
 using UnityEditor.Experimental.AssetImporters;
-using UnityEditor.XR.ARSubsystems;
 using UnityEngine;
 using UnityEngine.XR.ARKit;
-using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEditor.XR.ARKit
 {

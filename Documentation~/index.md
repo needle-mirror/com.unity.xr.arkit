@@ -36,7 +36,7 @@ This version of ARKit XR Plugin supports the following features:
 * Meshes (also known as Scene Reconstruction)
 * Occlusion
 
-Apple's App Store will reject any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, face tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/face-tracking.html) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.1).
+Apple's App Store will reject any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, [face tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/face-tracking.html) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.1).
 
 # Installing ARKit XR Plugin
 

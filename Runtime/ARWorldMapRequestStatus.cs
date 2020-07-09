@@ -2,8 +2,9 @@ namespace UnityEngine.XR.ARKit
 {
     /// <summary>
     /// The status of a session serialization request.
-    /// See also <see cref="AsyncSessionSaveRequest"/> and <see cref="AsyncSessionLoadRequest"/>.
     /// </summary>
+    /// <seealso cref="ARKitSessionSubsystem.GetARWorldMapAsync(System.Action{ARWorldMapRequestStatus,ARWorldMap})"/>
+    /// <seealso cref="ARKitSessionSubsystem.worldMappingStatus"/>
     public enum ARWorldMapRequestStatus
     {
         /// <summary>
@@ -52,9 +53,12 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Whether the serialization request is complete. <c>IsDone</c> does not mean the
         /// request completed successfully. See <see cref="HasError(ARWorldMapRequestStatus)"/>.
+        /// request completed successfully. See <see cref="IsError(ARWorldMapRequestStatus)"/>.
         /// </summary>
         /// <param name="status">The <see cref="ARWorldMapRequestStatus"/> being extended.</param>
         /// <returns><c>true</c> if <paramref name="status"/> indicates the request has completed.</returns>
+        /// <returns>Returns `true` if <paramref name="status"/> indicates the request has completed.
+        ///     Returns `false` otherwise.</returns>
         public static bool IsDone(this ARWorldMapRequestStatus status)
         {
             return status != ARWorldMapRequestStatus.Pending;
@@ -65,6 +69,8 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <param name="status">The <see cref="ARWorldMapRequestStatus"/> being extended.</param>
         /// <returns><c>true</c> if <paramref name="status"/> indicates an error status.</returns>
+        /// <returns>Returns `true` if <paramref name="status"/> indicates an error status.
+        ///     Returns `false` otherwise.</returns>
         public static bool IsError(this ARWorldMapRequestStatus status)
         {
             switch (status)

@@ -165,7 +165,7 @@ namespace UnityEditor.XR.ARKit
             AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
         }
 
-        public void OnAfterAssemblyReload()
+        void OnAfterAssemblyReload()
         {
             s_ListRequest = Client.List();
             EditorApplication.update += CheckInstalledFaceTrackingInstalled;
@@ -173,7 +173,7 @@ namespace UnityEditor.XR.ARKit
 
         static ListRequest s_ListRequest;
         const string k_FaceTrackingPackageName = "com.unity.xr.arkit-face-tracking";
-        const string k_FaceTrackingPackageVersion = "@4.1.0-preview.2";
+        const string k_FaceTrackingPackageVersion = "@4.1.0-preview.3";
         const string k_SettingsKey = "UnityEditor.XR.ARKit.ARKitSettings";
         const string k_OldConfigObjectName = "com.unity.xr.arkit.PlayerSettings";
 

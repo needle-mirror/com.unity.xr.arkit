@@ -8,11 +8,11 @@ namespace UnityEditor.XR.ARKit
     /// for instructions on how to generate these files.
     /// </summary>
     /// <seealso cref="ARObjectInfo"/>
-    /// <seealso cref="ARKitReferenceObjectEntry"/>
+    /// <seealso cref="UnityEngine.XR.ARKit.ARKitReferenceObjectEntry"/>
     public struct ARObject
     {
         /// <summary>
-        /// Constructs a <see cref="ARObject"/>.
+        /// Constructs an <see cref="ARObject"/>.
         /// </summary>
         /// <param name="info">The <see cref="ARObjectInfo"/> associated with this <see cref="ARObject"/>.</param>
         /// <param name="preview">A preview image associated with the <c>ARObject</c>.</param>

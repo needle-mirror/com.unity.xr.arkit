@@ -239,8 +239,6 @@ namespace UnityEngine.XR.ARKit
             /// <value>
             /// The requested human segmentation stencil mode.
             /// </value>
-            /// <exception cref="System.NotSupportedException">Thrown when setting the human segmentation stencil mode
-            /// to enabled if the implementation does not support human segmentation.</exception>
             public override HumanSegmentationStencilMode requestedHumanStencilMode
             {
                 get => NativeApi.UnityARKit_OcclusionProvider_GetRequestedSegmentationStencilMode();
@@ -295,8 +293,6 @@ namespace UnityEngine.XR.ARKit
             /// <value>
             /// The requested environment depth mode.
             /// </value>
-            /// <exception cref="System.NotSupportedException">Thrown when setting the environment depth mode to
-            /// enabled if the implementation does not support environment depth.</exception>
             public override EnvironmentDepthMode requestedEnvironmentDepthMode
             {
                 get => NativeApi.UnityARKit_OcclusionProvider_GetRequestedEnvironmentDepthMode();
@@ -435,8 +431,6 @@ namespace UnityEngine.XR.ARKit
             /// <c>true</c> if the environment depth confidence texture descriptor is available and is returned.
             /// Otherwise, <c>false</c>.
             /// </returns>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support environment
-            /// depth confidence texture.</exception>
             public override bool TryGetEnvironmentDepthConfidence(out XRTextureDescriptor environmentDepthConfidenceDescriptor)
                 => NativeApi.UnityARKit_OcclusionProvider_TryGetEnvironmentDepthConfidence(out environmentDepthConfidenceDescriptor);
 
