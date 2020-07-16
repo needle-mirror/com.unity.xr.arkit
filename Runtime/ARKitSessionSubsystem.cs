@@ -393,6 +393,7 @@ namespace UnityEngine.XR.ARKit
                 int worldMapId,
                 IntPtr context);
 
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             public static extern int UnityARKit_createWorldMapRequest();
 
@@ -497,6 +498,142 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern Feature UnityARKit_Session_GetCurrentTrackingMode(IntPtr self);
+#else
+            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+
+            public static int UnityARKit_createWorldMapRequest()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_createWorldMapRequestWithCallback(
+                OnAsyncConversionCompleteDelegate callback,
+                IntPtr context)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static ARWorldMappingStatus UnityARKit_getWorldMapRequestStatus()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_applyWorldMap(int worldMapId)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static IntPtr UnityARKit_Session_GetNativePtr(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_Session_IsSupported() => false;
+
+            public static void UnityARKit_Session_Update(IntPtr self, IntPtr desiredConfigurationClass, Feature features)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static int UnityARKit_Session_GetConfigurationDescriptors(IntPtr self, IntPtr buffer, int capacity, int stride)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static IntPtr UnityARKit_Session_Construct()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Session_Resume(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Session_Pause(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Session_Reset(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static TrackingState UnityARKit_Session_GetTrackingState(IntPtr self) => TrackingState.None;
+
+            public static NotTrackingReason UnityARKit_Session_GetNotTrackingReason(IntPtr self) => NotTrackingReason.Unsupported;
+
+            public static IntPtr UnityARKit_Session_DequeueCollaborationData(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static int UnityARKit_Session_GetCollaborationDataQueueSize(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Session_UpdateWithCollaborationData(IntPtr self, IntPtr data)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_Session_GetCollaborationEnabled(IntPtr self) => false;
+
+            public static Guid UnityARKit_Session_GetSessionIdentifier(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_Session_GetMatchFrameRateEnabled(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Session_SetMatchFrameRateEnabled(IntPtr self, bool enabled)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static int UnityARKit_Session_GetFrameRate(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_Session_GetCoachingOverlayActivatesAutomatically(IntPtr self) => false;
+
+            public static void UnityARKit_Session_SetCoachingOverlayActivatesAutomatically(IntPtr self, bool activatesAutomatically)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_Session_IsCoachingOverlayActive(IntPtr self) => false;
+
+            public static ARCoachingGoal UnityARKit_Session_GetRequestedCoachingGoal(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Session_SetRequestedCoachingGoal(IntPtr self, ARCoachingGoal value)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static ARCoachingGoal UnityARKit_Session_GetCurrentCoachingGoal(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Session_SetCoachingOverlayActive(IntPtr self, bool active, bool animated)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static ARWorldMappingStatus UnityARKit_Session_GetWorldMappingStatus(IntPtr self) => ARWorldMappingStatus.NotAvailable;
+
+            public static Feature UnityARKit_Session_GetCurrentTrackingMode(IntPtr self) => Feature.None;
+#endif
         }
     }
 }

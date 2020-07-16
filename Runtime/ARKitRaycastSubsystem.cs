@@ -146,6 +146,7 @@ namespace UnityEngine.XR.ARKit
 
         static class NativeApi
         {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal", EntryPoint = "UnityARKit_Raycast_AcquireHitResults")]
             public static unsafe extern void UnityARKit_Raycast_AcquireHitResults(
                 Vector2 screenPoint,
@@ -184,6 +185,67 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal", EntryPoint = "UnityARKit_Raycast_RemoveRaycast")]
             public static extern void RemoveRaycast(IntPtr self, TrackableId trackableId);
+#else
+            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+
+            public static unsafe void UnityARKit_Raycast_AcquireHitResults(
+                Vector2 screenPoint,
+                TrackableType filter,
+                out void* hitResults,
+                out int hitCount)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void UnityARKit_Raycast_CopyAndReleaseHitResults(
+                void* defaultHit,
+                int stride,
+                void* hitResults,
+                void* dstBuffer)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static IntPtr Construct()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void Start(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void Stop(IntPtr self)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void AcquireChanges(IntPtr self,
+                out XRRaycast* added, out int addedCount,
+                out XRRaycast* updated, out int updatedCount,
+                out TrackableId* removed, out int removedCount,
+                out int elementSize)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void ReleaseChanges(XRRaycast* added, XRRaycast* updated, TrackableId* removed)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool TryAddRaycast(IntPtr self, Vector3 origin, Vector3 direction, float estimatedDistance, out XRRaycast raycast)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void RemoveRaycast(IntPtr self, TrackableId trackableId)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+#endif
+
         }
     }
 }

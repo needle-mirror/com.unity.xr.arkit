@@ -82,7 +82,7 @@ namespace UnityEngine.XR.ARKit
 
             public override int currentMaxNumberOfMovingImages => UnityARKit_ImageTracking_GetCurrentMaximumNumberOfTrackedImages();
         }
-
+#if UNITY_XR_ARKIT_LOADER_ENABLED
         [DllImport("__Internal")]
         static extern int UnityARKit_ImageTracking_GetRequestedMaximumNumberOfTrackedImages();
 
@@ -110,7 +110,53 @@ namespace UnityEngine.XR.ARKit
 
         [DllImport("__Internal")]
         static extern unsafe void UnityARKit_ImageTracking_ReleaseChanges(void* changes);
+#else
+        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
+        static int UnityARKit_ImageTracking_GetRequestedMaximumNumberOfTrackedImages()
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static void UnityARKit_ImageTracking_SetRequestedMaximumNumberOfTrackedImages(int maxNumTrackedImages)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static int UnityARKit_ImageTracking_GetCurrentMaximumNumberOfTrackedImages()
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static void UnityARKit_ImageTracking_SetDatabase(IntPtr database)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static void UnityARKit_ImageTracking_Stop()
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static void UnityARKit_ImageTracking_Destroy()
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static unsafe void* UnityARKit_ImageTracking_AcquireChanges(
+            out void* addedPtr, out int addedLength,
+            out void* updatedPtr, out int updatedLength,
+            out void* removedPtr, out int removedLength,
+            out int stride)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static unsafe void UnityARKit_ImageTracking_ReleaseChanges(void* changes)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+#endif
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {

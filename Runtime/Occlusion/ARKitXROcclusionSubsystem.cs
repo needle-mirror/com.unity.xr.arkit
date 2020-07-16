@@ -509,6 +509,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         static class NativeApi
         {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             public static extern void UnityARKit_OcclusionProvider_Construct(int textureHumanStencilPropertyId,
                                                                              int textureHumanDepthPropertyId,
@@ -581,9 +582,119 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             public static extern bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth();
 
-            [DllImport("__Internal")]
-            public static extern bool UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth();
+			[DllImport("__Internal")]
+			public static extern bool UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth();
+#else
+            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
+            public static void UnityARKit_OcclusionProvider_Construct(int textureHumanStencilPropertyId,
+                                                                      int textureHumanDepthPropertyId,
+                                                                      int textureEnvDepthPropertyId,
+                                                                      int textureEnvDepthConfidencePropertyId)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_OcclusionProvider_Start()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_OcclusionProvider_Stop()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_OcclusionProvider_Destruct()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static HumanSegmentationStencilMode UnityARKit_OcclusionProvider_GetRequestedSegmentationStencilMode()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_OcclusionProvider_SetRequestedSegmentationStencilMode(HumanSegmentationStencilMode humanSegmentationStencilMode)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static HumanSegmentationStencilMode UnityARKit_OcclusionProvider_GetCurrentSegmentationStencilMode()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static HumanSegmentationDepthMode UnityARKit_OcclusionProvider_GetRequestedSegmentationDepthMode()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_OcclusionProvider_SetRequestedSegmentationDepthMode(HumanSegmentationDepthMode humanSegmentationDepthMode)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static HumanSegmentationDepthMode UnityARKit_OcclusionProvider_GetCurrentSegmentationDepthMode()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static EnvironmentDepthMode UnityARKit_OcclusionProvider_GetRequestedEnvironmentDepthMode()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_OcclusionProvider_SetRequestedEnvironmentDepthMode(EnvironmentDepthMode environmentDepthMode)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static EnvironmentDepthMode UnityARKit_OcclusionProvider_GetCurrentEnvironmentDepthMode()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe bool UnityARKit_OcclusionProvider_TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe bool UnityARKit_OcclusionProvider_TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe bool UnityARKit_OcclusionProvider_TryGetEnvironmentDepth(out XRTextureDescriptor envDepthDescriptor)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe bool UnityARKit_OcclusionProvider_TryGetEnvironmentDepthConfidence(out XRTextureDescriptor envDepthConfidenceDescriptor)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void* UnityARKit_OcclusionProvider_AcquireTextureDescriptors(out int length, out int elementSize)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void UnityARKit_OcclusionProvider_ReleaseTextureDescriptors(void* descriptors)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_OcclusionProvider_IsHumanEnabled() => false;
+
+			public static bool UnityARKit_OcclusionProvider_IsEnvironmentEnabled() => false;
+
+            public static bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil() => false;
+
+            public static bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth() => false;
+
+			public static bool UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth() => false;
+#endif
         }
     }
 }

@@ -23,6 +23,7 @@ namespace UnityEngine.XR.ARKit
         public static bool operator ==(NativeChanges lhs, NativeChanges rhs) => lhs.Equals(rhs);
         public static bool operator !=(NativeChanges lhs, NativeChanges rhs) => !lhs.Equals(rhs);
 
+#if UNITY_XR_ARKIT_LOADER_ENABLED
         [DllImport("__Internal", EntryPoint="UnityARKit_TrackableChanges_addedLength")]
         static extern int GetAddedLength(NativeChanges self);
 
@@ -37,5 +38,30 @@ namespace UnityEngine.XR.ARKit
 
         [DllImport("__Internal", EntryPoint="UnityARKit_TrackableChanges_trackingState")]
         static extern TrackingState GetTrackingState(NativeChanges self);
+#else
+        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+
+        static int GetAddedLength(NativeChanges self)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static int GetUpdatedLength(NativeChanges self)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static int GetRemovedLength(NativeChanges self)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static MemoryLayout GetMemoryLayout(NativeChanges self)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static TrackingState GetTrackingState(NativeChanges self) => TrackingState.None;
+#endif
     }
 }

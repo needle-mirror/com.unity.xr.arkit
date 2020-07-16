@@ -259,6 +259,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         static class NativeApi
         {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             public static extern void UnityARKit_HumanBodyProvider_Construct();
 
@@ -313,6 +314,96 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation();
+#else
+            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+
+            public static void UnityARKit_HumanBodyProvider_Construct()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_HumanBodyProvider_Start()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_HumanBodyProvider_Stop()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_HumanBodyProvider_Destruct()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void* UnityARKit_HumanBodyProvider_AcquireChanges(out int numAddedHumanBodies, out void* addedBodys,
+                                                                                          out int numUpdatedHumanBodies, out void* updatedBodys,
+                                                                                          out int numRemovedHumanBodyIds, out void* removedBodyIds,
+                                                                                          out int stride)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void UnityARKit_HumanBodyProvider_ReleaseChanges(void* context)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void* UnityARKit_HumanBodyProvider_AcquireJoints(TrackableId trackableId, out int numJoints)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void UnityARKit_HumanBodyProvider_ReleaseJoints(void* joints)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void* UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(int screenWidth,
+                                                                                                        int screenHeight,
+                                                                                                        ScreenOrientation screenOrientation,
+                                                                                                        out int length,
+                                                                                                        out int elementSize)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void UnityARKit_HumanBodyProvider_ReleaseHumanBodyPose2DJoints(void* joints)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_HumanBodyProvider_GetHumanBodyPose2DEstimationEnabled()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_HumanBodyProvider_GetHumanBodyPose3DEstimationEnabled()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_HumanBodyProvider_GetHumanBodyPose3DScaleEstimationEnabled()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose2DEstimation()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+#endif
         }
     }
 }

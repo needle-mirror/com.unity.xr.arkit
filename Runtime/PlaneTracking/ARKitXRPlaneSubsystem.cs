@@ -142,6 +142,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         static class NativeApi
         {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             static internal extern unsafe bool UnityARKit_Planes_SupportsClassification();
 
@@ -182,6 +183,69 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             static internal extern unsafe void UnityARKit_Planes_ReleaseBoundary(
                 void* boundary);
+#else
+            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+
+            static internal unsafe bool UnityARKit_Planes_SupportsClassification() => false;
+
+            static internal void UnityARKit_Planes_Shutdown()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static internal void UnityARKit_Planes_Start()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static internal void UnityARKit_Planes_Stop()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static internal unsafe void* UnityARKit_Planes_AcquireChanges(
+                out void* addedPtr, out int addedLength,
+                out void* updatedPtr, out int updatedLength,
+                out void* removedPtr, out int removedLength,
+                out int elementSize)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static internal unsafe void UnityARKit_Planes_ReleaseChanges(void* changes)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static internal PlaneDetectionMode UnityARKit_Planes_GetRequestedPlaneDetectionMode()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static internal void UnityARKit_Planes_SetRequestedPlaneDetectionMode(PlaneDetectionMode mode)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static internal PlaneDetectionMode UnityARKit_Planes_GetCurrentPlaneDetectionMode()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static internal unsafe void* UnityARKit_Planes_AcquireBoundary(
+                TrackableId trackableId,
+                out void* verticiesPtr,
+                out int numPoints)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static internal unsafe void UnityARKit_Planes_ReleaseBoundary(
+                void* boundary)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+#endif
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

@@ -484,20 +484,20 @@ namespace UnityEngine.XR.ARKit
             /// <param name="disabledKeywords">The keywords to disable for the material.</param>
             public override void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
             {
-                if (GraphicsSettings.renderPipelineAsset == null)
+                if (GraphicsSettings.currentRenderPipeline == null)
                 {
                     enabledKeywords = k_LegacyRPEnabledMaterialKeywords;
                     disabledKeywords = k_LegacyRPDisabledMaterialKeywords;
                 }
 #if MODULE_URP_ENABLED
-                else if (GraphicsSettings.renderPipelineAsset is UniversalRenderPipelineAsset)
+                else if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
                 {
                     enabledKeywords = k_URPEnabledMaterialKeywords;
                     disabledKeywords = k_URPDisabledMaterialKeywords;
                 }
 #endif // MODULE_URP_ENABLED
 #if MODULE_LWRP_ENABLED
-                else if (GraphicsSettings.renderPipelineAsset is LightweightRenderPipelineAsset)
+                else if (GraphicsSettings.currentRenderPipeline is LightweightRenderPipelineAsset)
                 {
                     enabledMaterialKeywords = k_LWRPEnabledMaterialKeywords;
                     disabledKeywords = k_LWRPDisabledMaterialKeywords;
@@ -531,6 +531,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         static class NativeApi
         {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal", EntryPoint="UnityARKit_Camera_GetCurrentLightEstimation")]
             public static extern Feature GetCurrentLightEstimation();
 
@@ -583,6 +584,82 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_Camera_GetAutoFocusEnabled();
+#else
+            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+
+            public static Feature GetCurrentLightEstimation() => Feature.None;
+
+            public static void UnityARKit_Camera_Construct(int textureYPropertyNameId,
+                                                                  int textureCbCrPropertyNameId)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Camera_Destruct()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Camera_Start()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Camera_Stop()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_Camera_TryGetFrame(XRCameraParams cameraParams,
+                                                                    out XRCameraFrame cameraFrame)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_Camera_TryGetIntrinsics(out XRCameraIntrinsics cameraIntrinsics)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_Camera_IsCameraPermissionGranted() => false;
+
+            public static IntPtr UnityARKit_Camera_AcquireConfigurations(out int configurationsCount,
+                                                                                out int configurationSize)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Camera_ReleaseConfigurations(IntPtr configurations)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool UnityARKit_Camera_TryGetCurrentConfiguration(out XRCameraConfiguration cameraConfiguration)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static CameraConfigurationResult UnityARKit_Camera_TrySetCurrentConfiguration(XRCameraConfiguration cameraConfiguration)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void* UnityARKit_Camera_AcquireTextureDescriptors(
+                out int length, out int elementSize)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void UnityARKit_Camera_ReleaseTextureDescriptors(
+                void* descriptors)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static Feature UnityARKit_Camera_GetCurrentCamera() => Feature.None;
+
+            public static bool UnityARKit_Camera_GetAutoFocusEnabled() => false;
+#endif
         }
     }
 }

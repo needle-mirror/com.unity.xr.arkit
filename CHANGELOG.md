@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.5] - 2020-07-16
+### Changes
+- Updated the CBUFFER name containing the UnityDisplayTransform matrix from AR Foundation to avoid collision.
+- The ARKit static library is no longer part of the generated Xcode project when the ARKit loader is disabled in the ARKit settings in the `XR Plug-in Management` UI. Added default implementations of calls to native code when this static library is excluded so that linker errors do not occur.
+- Updated the ARKit meshing documentation.
+- Static library was built with Xcode 12.0 beta 2 (12A6163b).
+
+### Fixes
+- When using the Universal Rendering Pipeline, the background rendering used the graphics setting's render pipeline asset instead of the current render pipeline. This meant that render pipeline assets assigned to a quality level would not be respected. This has been fixed.
+
 ## [4.1.0-preview.3] - 2020-07-09
 ### Fixes
 - Updated the `ARObjectImporter` to account for a namespace which changed from `UnityEditor.Experimental.AssetImporters` to `UnityEditor.AssetImporters` in 2020.2.0a17.

@@ -199,13 +199,24 @@ namespace UnityEngine.XR.ARKit
                 UnityARKit_CFRelease(database);
             }
 
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             static extern unsafe bool UnityARKit_ImageDatabase_AddImage(
                 IntPtr database, void* bytes, TextureFormat format,
                 int width, int height, float physicalWidth,
                 ref ManagedReferenceImage managedReferenceImage);
+#else
+            static unsafe bool UnityARKit_ImageDatabase_AddImage(
+                IntPtr database, void* bytes, TextureFormat format,
+                int width, int height, float physicalWidth,
+                ref ManagedReferenceImage managedReferenceImage)
+            {
+                throw new System.NotImplementedException("ARKit Plugin Provider not enabled in project settings.");
+            }
+#endif
         }
 
+#if UNITY_XR_ARKIT_LOADER_ENABLED
         [DllImport("__Internal")]
         static extern void UnityARKit_CFRetain(IntPtr ptr);
 
@@ -226,5 +237,41 @@ namespace UnityEngine.XR.ARKit
 
         [DllImport("__Internal")]
         static extern int UnityARKit_ImageDatabase_GetReferenceImageCount(IntPtr database);
+#else
+        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+
+        static void UnityARKit_CFRetain(IntPtr ptr)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static void UnityARKit_CFRelease(IntPtr ptr)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static IntPtr UnityARKit_ImageDatabase_createEmpty()
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static unsafe SetReferenceLibraryResult UnityARKit_ImageDatabase_tryCreateFromResourceGroup(
+            [MarshalAs(UnmanagedType.LPWStr)] string name, int nameLength, Guid guid,
+            void* managedReferenceImages, int managedReferenceImageCount,
+            out IntPtr ptr)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static ManagedReferenceImage UnityARKit_ImageDatabase_GetReferenceImage(IntPtr database, int index)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static int UnityARKit_ImageDatabase_GetReferenceImageCount(IntPtr database)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+#endif
     }
 }

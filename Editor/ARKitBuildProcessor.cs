@@ -1,5 +1,6 @@
 #if UNITY_IOS
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,10 +15,13 @@ using UnityEditor.iOS;
 using UnityEditor.iOS.Xcode;
 using UnityEditor.Rendering;
 using UnityEditor.XR.ARSubsystems;
+using UnityEditor.XR.Management;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.ARKit;
+using UnityEngine.XR.Management;
+using Unity.EditorCoroutines.Editor;
 
 using OSVersion = UnityEngine.XR.ARKit.OSVersion;
 
@@ -38,7 +42,7 @@ namespace UnityEditor.XR.ARKit
         {
             public int callbackOrder { get { return 0; } }
 
-            public void OnPostprocessBuild(BuildReport report)
+            void PostprocessBuild(BuildReport report)
             {
                 if (report.summary.platform != BuildTarget.iOS)
                 {
@@ -47,6 +51,13 @@ namespace UnityEditor.XR.ARKit
 
                 BuildHelper.RemoveShaderFromProject(ARKitCameraSubsystem.backgroundShaderName);
                 HandleARKitRequiredFlag(report.summary.outputPath);
+            }
+
+            public void OnPostprocessBuild(BuildReport report)
+            {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
+                PostprocessBuild(report);
+#endif
             }
 
             static void HandleARKitRequiredFlag(string pathToBuiltProject)
@@ -95,7 +106,7 @@ namespace UnityEditor.XR.ARKit
             const int k_TargetMinimumMinorXcodeVersion = 0;
             const int k_TargetMinimumPatchXcodeVersion = 0;
 
-            public void OnProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> data)
+            void ProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> data)
             {
                 // Remove shader variants for the camera background shader that will fail compilation because of package dependencies.
                 string backgroundShaderName = ARKitCameraSubsystem.backgroundShaderName;
@@ -116,9 +127,16 @@ namespace UnityEditor.XR.ARKit
                 }
             }
 
-            public void OnPreprocessBuild(BuildReport report)
+            public void OnProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> data)
             {
-                if (report.summary.platform != BuildTarget.iOS)
+#if UNITY_XR_ARKIT_LOADER_ENABLED
+                ProcessShader(shader, snippet, data);
+#endif
+            }
+
+            void PreprocessBuild(BuildReport report)
+            {
+                if (s_LoaderEnabled && report.summary.platform != BuildTarget.iOS)
                     return;
 
                 if (string.IsNullOrEmpty(PlayerSettings.iOS.cameraUsageDescription))
@@ -141,6 +159,15 @@ namespace UnityEditor.XR.ARKit
                 BuildHelper.AddBackgroundShaderToProject(ARKitCameraSubsystem.backgroundShaderName);
             }
 
+            public void OnPreprocessBuild(BuildReport report)
+            {
+                SetRuntimePluginCopyDelegate();
+
+#if UNITY_XR_ARKIT_LOADER_ENABLED
+                PreprocessBuild(report);
+#endif
+            }
+
             void EnsureMinimumBuildTarget()
             {
                 var userSetTargetVersion = OSVersion.Parse(PlayerSettings.iOS.targetOSVersionString);
@@ -149,7 +176,6 @@ namespace UnityEditor.XR.ARKit
                     throw new BuildFailedException($"You have selected a minimum target iOS version of {userSetTargetVersion} and have the ARKit package installed."
                         + "ARKit requires at least iOS version 11.0 (See Player Settings > Other Settings > Target minimum iOS Version).");
                 }
-
             }
 
             void EnsureMinimumXcodeVersion()
@@ -199,7 +225,135 @@ namespace UnityEditor.XR.ARKit
 
             }
 
+            readonly string[] runtimePluginNames = new string[]
+            {
+                "libUnityARKit.a",
+                "UnityARKit.m",
+                "libUnityARKitFaceTracking.a",
+            };
+
+            bool ShouldIncludeRuntimePluginsInBuild(string path)
+            {
+                if (!s_LoaderEnabled)
+                    return false;
+
+                if (path.Contains("libUnityARKitFaceTracking.a"))
+                    return s_FaceTrackingEnabled;
+
+                return true;
+            }
+
+            void SetRuntimePluginCopyDelegate()
+            {
+                var allPlugins = PluginImporter.GetAllImporters();
+                foreach (var plugin in allPlugins)
+                {
+                    if (plugin.isNativePlugin)
+                    {
+                        foreach (var pluginName in runtimePluginNames)
+                        {
+                            if (plugin.assetPath.Contains(pluginName))
+                            {
+                                plugin.SetIncludeInBuildDelegate(ShouldIncludeRuntimePluginsInBuild);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
             public int callbackOrder { get { return 0; } }
+        }
+
+        public static bool s_LoaderEnabled;
+        public static bool s_FaceTrackingEnabled;
+    }
+
+    static class AddDefineSymbols
+    {
+        public static void Add(string define)
+        {
+            string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+            var allDefines = new HashSet<string>(definesString.Split(';'));
+
+            if (allDefines.Contains(define))
+            {
+                return;
+            }
+
+            allDefines.Add(define);
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(
+                EditorUserBuildSettings.selectedBuildTargetGroup,
+                string.Join(";", allDefines));
+        }
+
+        public static void Remove(string define)
+        {
+            string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+            var allDefines = new HashSet<string>(definesString.Split(';'));
+            allDefines.Remove(define);
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(
+                EditorUserBuildSettings.selectedBuildTargetGroup,
+                string.Join(";", allDefines));
+        }
+    }
+
+    [InitializeOnLoad]
+    class LoaderEnabledCheck
+    {
+        static LoaderEnabledCheck()
+        {
+            s_ARKitSettings = ARKitSettings.GetOrCreateSettings();
+            ARKitBuildProcessor.s_LoaderEnabled = s_ARKitSettings.faceTracking;
+            EditorCoroutineUtility.StartCoroutineOwnerless(UpdateARKitDefines());
+        }
+
+        static ARKitSettings s_ARKitSettings;
+
+        static IEnumerator UpdateARKitDefines()
+        {
+            var waitObj = new EditorWaitForSeconds(.25f);
+
+            while (true)
+            {
+                yield return waitObj;
+
+                bool previousLoaderEnabled = ARKitBuildProcessor.s_LoaderEnabled;
+
+                var generalSettings = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+                if (generalSettings != null)
+                {
+                    ARKitBuildProcessor.s_LoaderEnabled = false;
+                    foreach (var loader in generalSettings.Manager.loaders)
+                    {
+                        if (loader is ARKitLoader)
+                        {
+                            ARKitBuildProcessor.s_LoaderEnabled = true;
+                            break;
+                        }
+                    }
+
+                    if (ARKitBuildProcessor.s_LoaderEnabled && !previousLoaderEnabled)
+                    {
+                        AddDefineSymbols.Add("UNITY_XR_ARKIT_LOADER_ENABLED");
+                    }
+                    else if (!ARKitBuildProcessor.s_LoaderEnabled && previousLoaderEnabled)
+                    {
+                        AddDefineSymbols.Remove("UNITY_XR_ARKIT_LOADER_ENABLED");
+                    }
+
+                    if (s_ARKitSettings.faceTracking && !ARKitBuildProcessor.s_FaceTrackingEnabled)
+                    {
+                        AddDefineSymbols.Add("UNITY_XR_ARKIT_FACE_TRACKING_ENABLED");
+                    }
+                    else if (!s_ARKitSettings.faceTracking && ARKitBuildProcessor.s_FaceTrackingEnabled)
+                    {
+                        AddDefineSymbols.Remove("UNITY_XR_ARKIT_FACE_TRACKING_ENABLED");
+                    }
+
+                    ARKitBuildProcessor.s_FaceTrackingEnabled = s_ARKitSettings.faceTracking;
+                }
+            }
         }
     }
 }

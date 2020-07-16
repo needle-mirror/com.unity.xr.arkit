@@ -2,11 +2,13 @@
 
 ARKit provides support for the scene reconstruction feature that became available in ARKit 3.5 and is enabled on the new iPad Pro with LiDAR scanner.
 
+ARKit scene reconstruction provides a meshing feature that generates a mesh based on scanned real-world geometry. The mesh manager enables and configures this functionality.
+
 ## Requirements
 
 This new mesh functionality requires Xcode 11.4 or later, and it only works on iOS devices with the LiDAR scanner, such as the new iPad Pro.
 
-This ARKit package requires Unity 2019.3 or later.
+This ARKit package requires Unity 2019.4 or later.
 
 ## Using meshing in a scene
 
@@ -18,23 +20,23 @@ To use ARKit meshing with AR Foundation, you need to add the [`ARMeshManager`](h
 
 ### Mesh Prefab
 
-You need to set the [`meshPrefab`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab) to a prefab that is instantiated for each scanned mesh. The [`meshPrefab`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab) must contain at least a [`MeshFilter`](https://docs.unity3d.com/ScriptReference/MeshFilter.html) component.
+You need to set the [`meshPrefab`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab) to a Prefab that is instantiated for each scanned mesh. The [`meshPrefab`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab) must contain at least a [`MeshFilter`](https://docs.unity3d.com/ScriptReference/MeshFilter.html) component.
 
-If you want to render the scanned meshes, you will need add a [`MeshRenderer`](https://docs.unity3d.com/ScriptReference/MeshRenderer.html) component and a [`Material`](https://docs.unity3d.com/ScriptReference/Material.html) component to the [`meshPrefab`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab)'s game object.
+If you want to render the scanned meshes, you need to add a [`MeshRenderer`](https://docs.unity3d.com/ScriptReference/MeshRenderer.html) component and a [`Material`](https://docs.unity3d.com/ScriptReference/Material.html) component to the [`meshPrefab`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab)'s GameObject.
 
-If you want to have virtual content that interacts physically with the real world scanned meshes, you will need to add [`MeshCollider`](https://docs.unity3d.com/ScriptReference/MeshCollider.html) component to the [`meshPrefab`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab)'s game object.
+If you want to have virtual content that interacts physically with the real-world scanned meshes, you will need to add [`MeshCollider`](https://docs.unity3d.com/ScriptReference/MeshCollider.html) component to the [`meshPrefab`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab)'s GameObject.
 
-This image demonstrates a mesh prefab configured with the required [`MeshFilter`](https://docs.unity3d.com/ScriptReference/MeshFilter.html) component, an optional [`MeshCollider`](https://docs.unity3d.com/ScriptReference/MeshCollider.html) component to allow for physics interactions, and optional [`MeshRenderer`](https://docs.unity3d.com/ScriptReference/MeshRenderer.html) & [`Material`](https://docs.unity3d.com/ScriptReference/Material.html) components to render the mesh.
+This image demonstrates a mesh Prefab configured with the required [`MeshFilter`](https://docs.unity3d.com/ScriptReference/MeshFilter.html) component, an optional [`MeshCollider`](https://docs.unity3d.com/ScriptReference/MeshCollider.html) component to allow for physics interactions, and optional [`MeshRenderer`](https://docs.unity3d.com/ScriptReference/MeshRenderer.html) and [`Material`](https://docs.unity3d.com/ScriptReference/Material.html) components to render the mesh.
 
 ![Mesh prefab example](images/arfoundation-mesh-prefab.png)
 
 ### Normals
 
-As ARKit is constructing the mesh geometry, the vertex normals for the mesh are calculated. Disable [`normals`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_normals) if you do not require the mesh vertex normals to save on memory and CPU time.
+As ARKit is constructing the mesh geometry, the vertex normals for the mesh are calculated. If you don't need the mesh vertex normals, disable [`normals`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_normals) to save on memory and CPU time.
 
 ### Concurrent Queue Size
 
-To avoid blocking the main thread, the tasks of converting the ARKit mesh into a Unity mesh and creating the physics collision mesh (if the [`meshPrefab`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab)'s game object contains a [`MeshCollider`](https://docs.unity3d.com/ScriptReference/MeshCollider.html) component) are moved into a job queue processed on a background thread. [`concurrentQueueSize`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_concurrentQueueSize) specifies the number of meshes to be processed concurrently.
+To avoid blocking the main thread, the tasks of converting the ARKit mesh into a Unity mesh and creating the physics collision mesh (if the [`meshPrefab`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab)'s GameObject contains a [`MeshCollider`](https://docs.unity3d.com/ScriptReference/MeshCollider.html) component) are moved into a job queue processed on a background thread. [`concurrentQueueSize`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_concurrentQueueSize) specifies the number of meshes to be processed concurrently.
 
 ### Other `ARMeshManager` settings
 

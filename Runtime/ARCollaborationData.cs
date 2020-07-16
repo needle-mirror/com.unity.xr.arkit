@@ -193,6 +193,7 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
+#if UNITY_XR_ARKIT_LOADER_ENABLED
         [DllImport("__Internal")]
         static extern void UnityARKit_CFRelease(IntPtr ptr);
 
@@ -204,7 +205,30 @@ namespace UnityEngine.XR.ARKit
 
         [DllImport("__Internal")]
         static extern ARCollaborationDataPriority UnityARKit_CollaborationData_GetPriority(IntPtr collaborationData);
+#else
+        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
+        static void UnityARKit_CFRelease(IntPtr ptr)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static IntPtr UnityARKit_CollaborationData_DeserializeFromNSData(IntPtr nsData)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static IntPtr UnityARKit_CollaborationData_SerializeToNSData(IntPtr collaborationData)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static ARCollaborationDataPriority UnityARKit_CollaborationData_GetPriority(IntPtr collaborationData)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+#endif
         internal IntPtr m_NativePtr;
     }
 }

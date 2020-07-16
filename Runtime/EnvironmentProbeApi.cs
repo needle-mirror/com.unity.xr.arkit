@@ -6,7 +6,7 @@ namespace UnityEngine.XR.ARKit
 {
     internal static class EnvironmentProbeApi
     {
-#if UNITY_IOS && !UNITY_EDITOR
+#if UNITY_IOS && !UNITY_EDITOR && UNITY_XR_ARKIT_LOADER_ENABLED
         [DllImport("__Internal")]
         internal static extern void UnityARKit_EnvironmentProbeProvider_Construct();
 

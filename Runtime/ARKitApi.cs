@@ -6,6 +6,7 @@ namespace UnityEngine.XR.ARKit
 {
     internal static class Api
     {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
         [DllImport("__Internal")]
         public static extern IntPtr UnityARKit_TrackableProvider_start(IntPtr self);
 
@@ -19,8 +20,33 @@ namespace UnityEngine.XR.ARKit
         public static extern unsafe void UnityARKit_TrackableProvider_copyChanges(
             IntPtr self, NativeChanges changes, int stride,
             void* added, void* updated, void* removed);
+#else
+        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
-#if UNITY_IOS && !UNITY_EDITOR
+        public static IntPtr UnityARKit_TrackableProvider_start(IntPtr self)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        public static IntPtr UnityARKit_TrackableProvider_stop(IntPtr self)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        public static NativeChanges UnityARKit_TrackableProvider_acquireChanges(IntPtr self)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        public static unsafe void UnityARKit_TrackableProvider_copyChanges(
+            IntPtr self, NativeChanges changes, int stride,
+            void* added, void* updated, void* removed)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+#endif
+
+#if UNITY_IOS && !UNITY_EDITOR && UNITY_XR_ARKIT_LOADER_ENABLED
         [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast11_0")]
         public static extern bool AtLeast11_0();
 

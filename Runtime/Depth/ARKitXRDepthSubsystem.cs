@@ -17,6 +17,7 @@ namespace UnityEngine.XR.ARKit
     {
         class ARKitProvider : Provider
         {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             static extern void UnityARKit_depth_start();
 
@@ -45,7 +46,53 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             static extern unsafe void UnityARKit_depth_releasePointCloud(
                 void* pointCloud);
+#else
+            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
+            static void UnityARKit_depth_start()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static void UnityARKit_depth_stop()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static void UnityARKit_depth_destroy()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static unsafe void* UnityARKit_depth_acquireChanges(
+                out void* addedPtr, out int addedLength,
+                out void* updatedPtr, out int updatedLength,
+                out void* removedPtr, out int removedLength,
+                out int elementSize)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static unsafe void UnityARKit_depth_releaseChanges(
+                void* changes)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static unsafe void* UnityARKit_depth_acquirePointCloud(
+                TrackableId trackableId,
+                out void* positionsPtr, out void* identifiersPtr, out int numPoints)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static unsafe void UnityARKit_depth_releasePointCloud(
+                void* pointCloud)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+#endif
             public override unsafe TrackableChanges<XRPointCloud> GetChanges(
                 XRPointCloud defaultPointCloud,
                 Allocator allocator)
@@ -140,6 +187,9 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
+            if (!Api.AtLeast11_0())
+                return;
+
 #if UNITY_IOS && !UNITY_EDITOR
             var descriptorParams = new XRDepthSubsystemDescriptor.Cinfo
             {

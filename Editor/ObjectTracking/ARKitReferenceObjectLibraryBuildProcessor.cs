@@ -97,6 +97,7 @@ namespace UnityEditor.XR.ARKit
             // Validates the ARKit reference objects
             public void OnPreprocessBuild(BuildReport report)
             {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
                 if (report.summary.platform != BuildTarget.iOS)
                     return;
 
@@ -105,6 +106,7 @@ namespace UnityEditor.XR.ARKit
                     // Generating a resource group will throw exceptions
                     // if any of the reference objects are invalid.
                 }
+#endif
             }
         }
 
@@ -114,6 +116,7 @@ namespace UnityEditor.XR.ARKit
 
             public void OnPostprocessBuild(BuildReport report)
             {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
                 if (report.summary.platform != BuildTarget.iOS)
                     return;
 
@@ -138,6 +141,7 @@ namespace UnityEditor.XR.ARKit
 
                 // Write out the updated Xcode project
                 File.WriteAllText(pbxProjectPath, pbxProject.WriteToString());
+#endif
             }
         }
     }

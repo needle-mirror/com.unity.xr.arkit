@@ -212,6 +212,7 @@ namespace UnityEngine.XR.ARKit
 
         public static class Native
         {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal", EntryPoint = "UnityARKit_CpuImage_TryAcquireLatestImage")]
             public static extern bool TryAcquireLatestImage(ImageType imageType, out XRCpuImage.Cinfo cinfo);
 
@@ -253,6 +254,73 @@ namespace UnityEngine.XR.ARKit
             public static extern void CreateAsyncConversionRequestWithCallback(
                 int nativeHandle, XRCpuImage.ConversionParams conversionParams,
                 OnImageRequestCompleteDelegate callback, IntPtr context);
+#else
+            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+
+            public static bool TryAcquireLatestImage(ImageType imageType, out XRCpuImage.Cinfo cinfo)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void DisposeImage(int nativeHandle)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool TryGetPlane(
+                int nativeHandle, int planeIndex,
+                out XRCpuImage.Plane.Cinfo planeCinfo)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool HandleValid(int nativeHandle)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static XRCpuImage.AsyncConversionStatus GetAsyncRequestStatus(int requestId)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void DisposeAsyncRequest(int requestHandle)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool TryGetConvertedDataSize(
+                int nativeHandle, Vector2Int dimensions, TextureFormat format, out int size)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool TryConvert(
+                int nativeHandle, XRCpuImage.ConversionParams conversionParams,
+                IntPtr buffer, int bufferLength)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static int CreateAsyncConversionRequest(
+                int nativeHandle, XRCpuImage.ConversionParams conversionParams)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static bool TryGetAsyncRequestData(
+                int requestHandle, out IntPtr dataPtr, out int dataLength)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void CreateAsyncConversionRequestWithCallback(
+                int nativeHandle, XRCpuImage.ConversionParams conversionParams,
+                OnImageRequestCompleteDelegate callback, IntPtr context)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+#endif
         }
     }
 }

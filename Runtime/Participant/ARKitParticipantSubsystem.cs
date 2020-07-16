@@ -74,9 +74,15 @@ namespace UnityEngine.XR.ARKit
                     return changes;
                 }
             }
-
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             static extern IntPtr UnityARKit_Participant_init();
+#else
+            static IntPtr UnityARKit_Participant_init()
+            {
+                throw new System.NotImplementedException("ARKit Plugin Provider not enabled in project settings.");
+            }
+#endif
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

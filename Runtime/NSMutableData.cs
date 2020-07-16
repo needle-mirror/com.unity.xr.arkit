@@ -52,6 +52,7 @@ namespace UnityEngine.XR.ARKit
         public static bool operator ==(NSMutableData lhs, NSMutableData rhs) => lhs.Equals(rhs);
         public static bool operator !=(NSMutableData lhs, NSMutableData rhs) => !lhs.Equals(rhs);
 
+#if UNITY_XR_ARKIT_LOADER_ENABLED
         [DllImport("__Internal")]
         static extern void UnityARKit_CFRelease(IntPtr ptr);
 
@@ -65,5 +66,28 @@ namespace UnityEngine.XR.ARKit
         static extern unsafe IntPtr UnityARKit_NSMutableData_createWithBytes(
             void* bytes,
             int length);
+#else
+        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+
+        static void UnityARKit_CFRelease(IntPtr ptr)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static unsafe void UnityARKit_NSMutableData_append(
+            IntPtr nsMutableData,
+            void* bytes,
+            int length)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+
+        static unsafe IntPtr UnityARKit_NSMutableData_createWithBytes(
+            void* bytes,
+            int length)
+        {
+            throw new System.NotImplementedException(k_ExceptionMsg);
+        }
+#endif
     }
 }

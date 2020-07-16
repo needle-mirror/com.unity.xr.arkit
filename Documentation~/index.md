@@ -6,7 +6,7 @@ Use the ARKit XR Plugin package to enable ARKit support via Unity's multi-platfo
 * [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/session-subsystem.html)
 * [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/camera-subsystem.html)
 * [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/depth-subsystem.html)
-* [Input](https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.XR.XRInputSubsystem.html)
+* [Input](https://docs.unity3d.com/ScriptReference/XR.XRInputSubsystem.html)
 * [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/plane-subsystem.html)
 * [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/raycast-subsystem.html)
 * [Anchors](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/anchor-subsystem.html)
@@ -132,7 +132,9 @@ See [Occlusion](arkit-occlusion.md).
 
 This version of ARKit XR Plugin is compatible with the following versions of the Unity Editor:
 
-* 2019.3 and later (recommended)
+* 2019.4
+* 2020.1
+* 2020.2
 
 ## Known limitations
 

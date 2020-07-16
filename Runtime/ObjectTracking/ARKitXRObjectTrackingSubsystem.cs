@@ -34,6 +34,7 @@ namespace UnityEngine.XR.ARKit
             public override void Stop() { }
 #endif
 
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             static extern void UnityARKit_ObjectTracking_Initialize();
 
@@ -56,7 +57,44 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             static extern unsafe void UnityARKit_ObjectTracking_ReleaseChanges(void* changes);
+#else
+            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
+            static void UnityARKit_ObjectTracking_Initialize()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static void UnityARKit_ObjectTracking_Shutdown()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static void UnityARKit_ObjectTracking_Stop()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static SetReferenceLibraryResult UnityARKit_ObjectTracking_TrySetLibrary(
+                [MarshalAs(UnmanagedType.LPWStr)] string name, int nameLength, Guid guid)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static unsafe void* UnityARKit_ObjectTracking_AcquireChanges(
+                out void* addedPtr, out int addedLength,
+                out void* updatedPtr, out int updatedLength,
+                out void* removedPtr, out int removedLength,
+                out int elementSize)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            static unsafe void UnityARKit_ObjectTracking_ReleaseChanges(void* changes)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+#endif
             public override unsafe XRReferenceObjectLibrary library
             {
                 set
@@ -130,7 +168,7 @@ namespace UnityEngine.XR.ARKit
             var capabilities = new XRObjectTrackingSubsystemDescriptor.Capabilities
             {
             };
-            
+
 #if UNITY_2020_2_OR_NEWER
             Register<ARKitXRObjectTrackingSubsystem.ARKitProvider, ARKitXRObjectTrackingSubsystem>("ARKit-ObjectTracking", capabilities);
 #else

@@ -14,6 +14,7 @@ namespace UnityEngine.XR.ARKit
     {
         static class NativeApi
         {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             public static extern unsafe void* UnityARKit_MeshProvider_AcquireClassifications(TrackableId trackableId, out int numClassifications);
 
@@ -25,6 +26,29 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern unsafe void UnityARKit_MeshProvider_SetClassificationEnabled(bool enabled);
+#else
+            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+
+            public static unsafe void* UnityARKit_MeshProvider_AcquireClassifications(TrackableId trackableId, out int numClassifications)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void UnityARKit_MeshProvider_ReleaseClassifications(void* classifications)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe bool UnityARKit_MeshProvider_IsClassificationEnabled()
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static unsafe void UnityARKit_MeshProvider_SetClassificationEnabled(bool enabled)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+#endif
         }
 
         /// <summary>
