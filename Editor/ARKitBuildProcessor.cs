@@ -40,7 +40,9 @@ namespace UnityEditor.XR.ARKit
 
         class PostProcessor : IPostprocessBuildWithReport
         {
-            public int callbackOrder { get { return 0; } }
+            // NB: Needs to be > 0 to make sure we remove the shader since the
+            //     Input System overwrites the preloaded assets array
+            public int callbackOrder => 1;
 
             void PostprocessBuild(BuildReport report)
             {

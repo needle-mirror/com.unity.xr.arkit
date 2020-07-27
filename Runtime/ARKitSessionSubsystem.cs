@@ -278,6 +278,8 @@ namespace UnityEngine.XR.ARKit
 
             public ARKitProvider() => m_Self = NativeApi.UnityARKit_Session_Construct();
 
+            bool AtLeastOneConfigurationExists() => NativeApi.UnityARKit_Session_GetConfigurationDescriptors(m_Self, IntPtr.Zero, 0, 0) > 0;
+
 #if UNITY_2020_2_OR_NEWER
             public override void Start() => NativeApi.UnityARKit_Session_Resume(m_Self);
 
@@ -316,7 +318,7 @@ namespace UnityEngine.XR.ARKit
             public override void Reset() => NativeApi.UnityARKit_Session_Reset(m_Self);
 
             public override Promise<SessionAvailability> GetAvailabilityAsync() => Promise<SessionAvailability>.CreateResolvedPromise(
-                NativeApi.UnityARKit_Session_IsSupported() ? SessionAvailability.Installed | SessionAvailability.Supported : SessionAvailability.None);
+                NativeApi.UnityARKit_Session_IsSupported() && AtLeastOneConfigurationExists()? SessionAvailability.Installed | SessionAvailability.Supported : SessionAvailability.None);
 
             public override Promise<SessionInstallationStatus> InstallAsync() =>
                 throw new NotSupportedException("ARKit cannot be installed.");

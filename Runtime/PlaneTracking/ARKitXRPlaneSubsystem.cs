@@ -29,6 +29,11 @@ namespace UnityEngine.XR.ARKit
 
             public override void Stop() => NativeApi.UnityARKit_Planes_Stop();
 
+            /// <summary>
+            /// Get the current plane detection mode in use.
+            /// </summary>
+            public override PlaneDetectionMode currentPlaneDetectionMode => NativeApi.UnityARKit_Planes_GetCurrentPlaneDetectionMode();
+
             public override unsafe void GetBoundary(
                 TrackableId trackableId,
                 Allocator allocator,

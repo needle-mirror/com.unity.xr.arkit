@@ -4,6 +4,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.6] - 2020-07-27
+### Changes
+- Static library was built with Xcode 12.0 beta 3 (12A8169g). Please note that target devices supporting environment depth now require iOS 14 beta 3.
+
+### Fixes
+- Fixing issue where [`ARPlaneManager.currentDetectionMode`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARPlaneManager.html#UnityEngine_XR_ARFoundation_ARPlaneManager_currentDetectionMode) was always reporting [`PlaneDetectionMode.None`](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.PlaneDetectionMode.html).
+- Removing a work around preventing environment depth and human segmentation to be simultaneously enabled because the source issue has been resolved with Xcode 12 beta 3 and iOS 14 beta 3.
+- Fixed an issue where ARKit shaders could incorrectly remain in the [Preloaded Assets](https://docs.unity3d.com/ScriptReference/PlayerSettings.GetPreloadedAssets.html) array, which could interfere with builds on other platforms. For example, in some cases, if first you built for iOS, and then built for Android, you might have seen an error message like
+```
+Shader error in 'Unlit/ARKitBackground': failed to open source file: 'Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl' at line 44 (on gles3)
+```
+- Fixed crash on startup caused by devices that support iOS 11 but not ARKit.
+
 ## [4.1.0-preview.5] - 2020-07-16
 ### Changes
 - Updated the CBUFFER name containing the UnityDisplayTransform matrix from AR Foundation to avoid collision.
