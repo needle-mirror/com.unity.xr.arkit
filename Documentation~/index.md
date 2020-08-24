@@ -6,7 +6,7 @@ Use the ARKit XR Plugin package to enable ARKit support via Unity's multi-platfo
 * [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/session-subsystem.html)
 * [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/camera-subsystem.html)
 * [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/depth-subsystem.html)
-* [Input](https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.XR.XRInputSubsystem.html)
+* [Input](https://docs.unity3d.com/ScriptReference/XR.XRInputSubsystem.html)
 * [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/plane-subsystem.html)
 * [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/raycast-subsystem.html)
 * [Anchors](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/anchor-subsystem.html)
@@ -14,7 +14,7 @@ Use the ARKit XR Plugin package to enable ARKit support via Unity's multi-platfo
 * [Object tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/object-tracking.html)
 * [Environment probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/environment-probe-subsystem.html)
 * [Participant](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/participant-subsystem.html)
-* [Meshing](https://docs.unity3d.com/ScriptReference/XR.XRMeshSubsystem.html)
+* [Meshes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/mesh-subsystem.html)
 
 
 This version of ARKit XR Plugin supports the following features:
@@ -32,9 +32,9 @@ This version of ARKit XR Plugin supports the following features:
 * Object tracking
 * Environment probes
 * Participant tracking
-* Meshing (as known as Scene Reconstruction)
+* Meshes (also known as Scene Reconstruction)
 
-Apple's App Store will reject any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, face tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/face-tracking.html) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.0).
+Apple's App Store will reject any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, [face tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/manual/face-tracking.html) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.0).
 
 # Installing ARKit XR Plugin
 
@@ -126,7 +126,9 @@ See [Meshing](arkit-meshing.md).
 
 This version of ARKit XR Plugin is compatible with the following versions of the Unity Editor:
 
-* 2019.3 and later (recommended)
+* 2019.4
+* 2020.1
+* 2020.2
 
 ## Known limitations
 

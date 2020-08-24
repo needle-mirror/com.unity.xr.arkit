@@ -484,20 +484,20 @@ namespace UnityEngine.XR.ARKit
             /// <param name="disabledKeywords">The keywords to disable for the material.</param>
             public override void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
             {
-                if (GraphicsSettings.renderPipelineAsset == null)
+                if (GraphicsSettings.currentRenderPipeline == null)
                 {
                     enabledKeywords = k_LegacyRPEnabledMaterialKeywords;
                     disabledKeywords = k_LegacyRPDisabledMaterialKeywords;
                 }
 #if MODULE_URP_ENABLED
-                else if (GraphicsSettings.renderPipelineAsset is UniversalRenderPipelineAsset)
+                else if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
                 {
                     enabledKeywords = k_URPEnabledMaterialKeywords;
                     disabledKeywords = k_URPDisabledMaterialKeywords;
                 }
 #endif // MODULE_URP_ENABLED
 #if MODULE_LWRP_ENABLED
-                else if (GraphicsSettings.renderPipelineAsset is LightweightRenderPipelineAsset)
+                else if (GraphicsSettings.currentRenderPipeline is LightweightRenderPipelineAsset)
                 {
                     enabledMaterialKeywords = k_LWRPEnabledMaterialKeywords;
                     disabledKeywords = k_LWRPDisabledMaterialKeywords;

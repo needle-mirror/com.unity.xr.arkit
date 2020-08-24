@@ -1,10 +1,16 @@
 using UnityEngine;
+using UnityEngine.XR.Management;
+
+using System.IO;
+using System.Linq;
 
 namespace UnityEditor.XR.ARKit
 {
     /// <summary>
     /// Holds settings that are used to configure the ARKit XR Plugin.
     /// </summary>
+    [System.Serializable]
+    [XRConfigurationData("ARKit", "UnityEditor.XR.ARKit.ARKitSettings")]
     public class ARKitSettings : ScriptableObject
     {
         /// <summary>
@@ -53,25 +59,17 @@ namespace UnityEditor.XR.ARKit
         /// </summary>
         public static ARKitSettings currentSettings
         {
-            get
-            {
-                ARKitSettings settings = null;
-                if (EditorBuildSettings.TryGetConfigObject(k_ConfigObjectName, out settings) == false)
-                {
-                    settings = null;
-                }
-                return settings;
-            }
+            get => EditorBuildSettings.TryGetConfigObject(k_SettingsKey, out ARKitSettings settings) ? settings : null;
 
             set
             {
                 if (value == null)
                 {
-                    EditorBuildSettings.RemoveConfigObject(k_ConfigObjectName);
+                    EditorBuildSettings.RemoveConfigObject(k_SettingsKey);
                 }
                 else
                 {
-                    EditorBuildSettings.AddConfigObject(k_ConfigObjectName, value, true);
+                    EditorBuildSettings.AddConfigObject(k_SettingsKey, value, true);
                 }
             }
         }
@@ -91,6 +89,8 @@ namespace UnityEditor.XR.ARKit
             return new SerializedObject(GetOrCreateSettings());
         }
 
-        static readonly string k_ConfigObjectName = "com.unity.xr.arkit.PlayerSettings";
+        const string k_SettingsKey = "UnityEditor.XR.ARKit.ARKitSettings";
+        const string k_OldConfigObjectName = "com.unity.xr.arkit.PlayerSettings";
+
     }
 }

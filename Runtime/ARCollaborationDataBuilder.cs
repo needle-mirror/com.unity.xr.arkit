@@ -19,7 +19,7 @@ namespace UnityEngine.XR.ARKit
         /// Whether the <see cref="ARCollaborationDataBuilder"/> has allocated any data. If <c>true</c>,
         /// this struct must be disposed to avoid leaking native resources. If <c>false</c>, this struct
         /// either never allocated memory
-        /// (with <see cref="Append(byte[], int)"/> or <see cref="Append(NativeArray{byte}, int)"/>)
+        /// (with <see cref="Append(byte[],int,int)"/> or <see cref="Append(Unity.Collections.NativeSlice{byte})"/>)
         /// or it has already been <see cref="Dispose"/>d.
         /// </summary>
         public bool hasData => m_NSMutableData.created;
@@ -28,8 +28,8 @@ namespace UnityEngine.XR.ARKit
         /// The number of bytes owned by this struct.
         /// </summary>
         /// <seealso cref="Append(byte[])"/>
-        /// <seealso cref="Append(byte[], int)"/>
-        /// <seealso cref="Append(NativeSlice{byte}, int)"/>.
+        /// <seealso cref="Append(byte[],int,int)"/>
+        /// <seealso cref="Append(Unity.Collections.NativeSlice{byte})"/>.
         public int length => m_NSMutableData.created ? m_NSMutableData.length : 0;
 
         /// <summary>

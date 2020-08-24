@@ -4,7 +4,28 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.8] - 2020-08-24
+### Fixes
+- Fixed an issue where ARKit shaders could incorrectly remain in the [Preloaded Assets](https://docs.unity3d.com/ScriptReference/PlayerSettings.GetPreloadedAssets.html) array, which could interfere with builds on other platforms. For example, in some cases, if first you built for iOS, and then built for Android, you might have seen an error message like
+```
+Shader error in 'Unlit/ARKitBackground': failed to open source file: 'Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl' at line 44 (on gles3)
+```
+- Fixed crash on startup caused by devices that support iOS 11 but not ARKit.
+- Fixed memory leak in the meshing subsystem implementation from unreleased MTLBuffers.
+
+## [4.0.6] - 2020-07-27
+### Fixes
+- Fixed a crash when using [mesh face classifications](https://docs.unity3d.com/Packages/com.unity.xr.arkit@4.0/api/UnityEngine.XR.ARKit.ARKitMeshSubsystemExtensions.html#UnityEngine_XR_ARKit_ARKitMeshSubsystemExtensions_GetFaceClassifications_XRMeshSubsystem_TrackableId_Allocator_).
+- When using the Universal Rendering Pipeline, the background rendering used the graphics setting's render pipeline asset instead of the current render pipeline. This meant that render pipeline assets assigned to a quality level would not be respected. This has been fixed.
+- Updated the CBUFFER name containing the UnityDisplayTransform matrix from AR Foundation to avoid collision.
+
+### Changes
+- Update [XR Plug-in Management](https://docs.unity3d.com/Packages/com.unity.xr.management@3.2) to 3.2.13.
+- The [ARKit Settings](https://docs.unity3d.com/Packages/com.unity.xr.arkit@4.0/api/UnityEditor.XR.ARKit.ARKitSettings.html) has been moved from Project Settings > XR to Project Settings > XR Plug-in Management for consistency with other XR platforms. ARKit build settings no longer need to be created manually; installing the package will automatically create ARKit settings.
+- Static library was built with Xcode 11.6 (11E708).
+
 ## [4.0.2] - 2020-06-29
+
 ### Fixes
 - Fixed a bug which caused the `ARKitRaycastSubsystem` to throw on devices running versions of iOS prior to 13. This would most commonly be seen when using ARFoundation's [ARRaycastManager](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/api/UnityEngine.XR.ARFoundation.ARRaycastManager.html).
 - Updated the `ARObjectImporter` to account for a namespace which changed from `UnityEditor.Experimental.AssetImporters` to `UnityEditor.AssetImporters` in 2020.2.0a17.

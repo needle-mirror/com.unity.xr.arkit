@@ -7,11 +7,11 @@ namespace UnityEditor.XR.ARKit
 {
     /// <summary>
     /// Represents metadata associated with a <c>.arobject</c> archive. These archives
-    /// are the source data for <see cref="ARKitReferenceObjectEntry"/>.
+    /// are the source data for <see cref="UnityEngine.XR.ARKit.ARKitReferenceObjectEntry"/>.
     /// </summary>
     /// <seealso cref="ARObject"/>
     /// <seealso cref="ARObjectImporter"/>
-    /// <seealso cref="ARKitReferenceObjectEntry"/>
+    /// <seealso cref="UnityEngine.XR.ARKit.ARKitReferenceObjectEntry"/>
     public struct ARObjectInfo : IEquatable<ARObjectInfo>
     {
         /// <summary>
@@ -26,7 +26,6 @@ namespace UnityEditor.XR.ARKit
 
             // Parse the plist
             var root = plist.DocumentElement;
-            var namespaceManager = new XmlNamespaceManager(plist.NameTable);
             var node = root.SelectSingleNode("descendant::dict");
             var dict = ParseDict(node);
 
