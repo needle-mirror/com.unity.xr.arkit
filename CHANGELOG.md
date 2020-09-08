@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.7] - 2020-09-08
+### Changes
+- The ARKit Settings has been moved from Project Settings > XR to Project Settings > XR Plug-in Management for consistency with other XR platforms. See [ARKitSettings](https://docs.unity3d.com/Packages/com.unity.xr.arkit@3.1/api/UnityEditor.XR.ARKit.ARKitSettings.html) for more information. ARKit build settings will no longer have to be created manually, installing the package will automatically create ARKit settings.
+
+### Fixes
+- Fixed an issue where ARKit shaders could incorrectly remain in the [Preloaded Assets](https://docs.unity3d.com/ScriptReference/PlayerSettings.GetPreloadedAssets.html) array, which could interfere with builds on other platforms. For example, in some cases, if first you built for iOS, and then built for Android, you might have seen an error message like
+```
+Shader error in 'Unlit/ARKitBackground': failed to open source file: 'Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl' at line 44 (on gles3)
+```
+- Updated the CBUFFER name containing the UnityDisplayTransform matrix from AR Foundation to avoid collision.
+
 ## [3.1.3] - 2020-04-13
 ### Fixes
 - Combines the three background shaders for different rendering pipelines into one shader file with variations. This eliminates compiler errors that started with Unity 2020.1.
