@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using UnityEngine;
 
@@ -97,9 +98,9 @@ namespace UnityEditor.XR.ARKit
                 return defaultValue;
 
             return new Vector3(
-                 float.Parse(reals[0].InnerText),
-                 float.Parse(reals[1].InnerText),
-                -float.Parse(reals[2].InnerText));
+                 float.Parse(reals[0].InnerText, CultureInfo.InvariantCulture),
+                 float.Parse(reals[1].InnerText, CultureInfo.InvariantCulture),
+                -float.Parse(reals[2].InnerText, CultureInfo.InvariantCulture));
         }
 
         static Quaternion GetWithDefault(Dictionary<string, XmlNode> dict, string key, Quaternion defaultValue)
@@ -116,10 +117,10 @@ namespace UnityEditor.XR.ARKit
                 return defaultValue;
 
             return new Quaternion(
-                 float.Parse(reals[0].InnerText),
-                 float.Parse(reals[1].InnerText),
-                -float.Parse(reals[2].InnerText),
-                -float.Parse(reals[3].InnerText));
+                 float.Parse(reals[0].InnerText, CultureInfo.InvariantCulture),
+                 float.Parse(reals[1].InnerText, CultureInfo.InvariantCulture),
+                -float.Parse(reals[2].InnerText, CultureInfo.InvariantCulture),
+                -float.Parse(reals[3].InnerText, CultureInfo.InvariantCulture));
         }
 
         /// <summary>

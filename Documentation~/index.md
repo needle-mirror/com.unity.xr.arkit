@@ -1,22 +1,23 @@
+---
+uid: arkit-manual
+---
 # About ARKit XR Plugin
-
 
 Use the ARKit XR Plugin package to enable ARKit support via Unity's multi-platform XR API. This package implements the following XR Subsystems:
 
-* [Session](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/session-subsystem.html)
-* [Camera](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/camera-subsystem.html)
-* [Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/depth-subsystem.html)
-* [Input](https://docs.unity3d.com/ScriptReference/XR.XRInputSubsystem.html)
-* [Planes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/plane-subsystem.html)
-* [Raycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/raycast-subsystem.html)
-* [Anchors](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/anchor-subsystem.html)
-* [Image tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/image-tracking.html)
-* [Object tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/object-tracking.html)
-* [Environment probes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/environment-probe-subsystem.html)
-* [Participant](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/participant-subsystem.html)
-* [Meshes](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/mesh-subsystem.html)
-* [Occlusion](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/occlusion-subsystem.html)
-
+* [Session](xref:arsubsystems-session-subsystem)
+* [Camera](xref:arsubsystems-camera-subsystem)
+* [Depth](xref:arsubsystems-depth-subsystem)
+* [Input](xref:UnityEngine.XR.XRInputSubsystem)
+* [Planes](xref:arsubsystems-plane-subsystem)
+* [Raycast](xref:arsubsystems-raycast-subsystem)
+* [Anchors](xref:arsubsystems-anchor-subsystem)
+* [Image tracking](xref:arsubsystems-image-tracking-subsystem)
+* [Environment probes](xref:arsubsystems-environment-probe-subsystem)
+* [Body tracking](xref:UnityEngine.XR.ARSubsystems.XRHumanBodySubsystem)
+* [Occlusion](xref:arsubsystems-occlusion-subsystem)
+* [Participant](xref:arsubsystems-participant-subsystem)
+* [Meshes](xref:arsubsystems-mesh-subsystem)
 
 This version of ARKit XR Plugin supports the following features:
 
@@ -36,7 +37,7 @@ This version of ARKit XR Plugin supports the following features:
 * Meshes (also known as Scene Reconstruction)
 * Occlusion
 
-Apple's App Store will reject any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, [face tracking](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/face-tracking.html) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.1).
+Apple's App Store will reject any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, [face tracking](xref:arsubsystems-face-subsystem) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.1).
 
 # Installing ARKit XR Plugin
 
@@ -70,7 +71,7 @@ To target 32-bit devices _OpenGLES2_ must be included in the list of Graphics AP
 
 ## Session
 
-ARKit implements `XRSessionSubsystem.GetAvailabilityAsync`, which consists of the device checking that it's running on iOS 11.0 or above. For more information, see the [ARSubsystems session documentation](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/session-subsystem.html).
+ARKit implements [XRSessionSubsystem.GetAvailabilityAsync](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem.GetAvailabilityAsync), which consists of the device checking that it's running on iOS 11.0 or above. For more information, see the [ARSubsystems session documentation](xref:arsubsystems-session-subsystem).
 
 ## Depth subsystem
 
@@ -78,9 +79,9 @@ Raycasts always return a `Pose` for the item the raycast hit. When raycasting ag
 
 The depth subsystem doesn't require additional resources, so enabling it doesn't affect performance
 
-ARKit's depth subsystem will only ever produce a single [`XRPointCloud`](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.XRPointCloud.html).
+ARKit's depth subsystem will only ever produce a single [XRPointCloud](xref:UnityEngine.XR.ARSubsystems.XRPointCloud).
 
-For more information, see the [ARSubsystems depth subsystem documentation](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/depth-subsystem.html).
+For more information, see the [ARSubsystems depth subsystem documentation](xref:arsubsystems-depth-subsystem).
 
 ## Plane tracking
 
@@ -90,17 +91,9 @@ ARKit provides boundary points for all its planes on iOS 11.3 and later.
 
 The ARKit plane subsystem requires additional CPU resources and can be energy-intensive. Enabling both horizontal and vertical plane detection (available in iOS 11.3+) requires additional resources. Consider disabling plane detection when your app doesn't need it to save energy.
 
-Setting the plane detection mode to `PlaneDetectionMode.None` is equivalent to `Stop`ping subsystem.
+Setting the plane detection mode to [PlaneDetectionMode.None](xref:UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None) is equivalent to `Stop`ping subsystem.
 
-For more information, see the [ARSubsystems plane subsystem documentation](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/manual/plane-subsystem.html).
-
-## Image tracking
-
-See [Image tracking](arkit-image-tracking.md).
-
-## Object tracking
-
-See [Object tracking](arkit-object-tracking.md).
+For more information, see the [ARSubsystems plane subsystem documentation](xref:arsubsystems-plane-subsystem).
 
 ## Participant tracking
 
@@ -117,15 +110,7 @@ ARKit light estimation can only be `enabled` or `disabled`. The availability of 
 
 ## Camera configuration
 
-[XRCameraConfiguration](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.XRCameraConfiguration.html) contains an `IntPtr` field `nativeConfigurationHandle` which is a platform-specific handle. For ARKit, this handle is a pointer to the native [ARVideoFormat](https://developer.apple.com/documentation/arkit/arvideoformat?language=objc) Objective-C object.
-
-## Meshing
-
-See [Meshing](arkit-meshing.md).
-
-## Occlusion
-
-See [Occlusion](arkit-occlusion.md).
+[XRCameraConfiguration](xref:UnityEngine.XR.ARSubsystems.XRCameraConfiguration) contains an `IntPtr` field `nativeConfigurationHandle` which is a platform-specific handle. For ARKit, this handle is a pointer to the native [ARVideoFormat](https://developer.apple.com/documentation/arkit/arvideoformat?language=objc) Objective-C object.
 
 # Technical details
 ## Requirements

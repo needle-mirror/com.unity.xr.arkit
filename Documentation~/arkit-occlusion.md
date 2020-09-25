@@ -1,8 +1,11 @@
+---
+uid: arkit-occlusion
+---
 # Occlusion
 
-ARKit provides support for occlusion based on depth images generated each frame by ARKit. 
+ARKit provides support for occlusion based on depth images generated each frame by ARKit.
 
-There are three types of depth images ARKit exposes through the provider's implementation of [XROcclusionSubsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.html) implementation:
+There are three types of depth images ARKit exposes through the provider's implementation of [XROcclusionSubsystem](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem) implementation:
 - _Environment Depth_: distance from the device to any part of the environment in the camera field of view
 - _Human Depth_: distance from the device to any part of a human recognized within the camera field of view
 - _Human Stencil_: value designating, for each pixel, whether that pixel contains a recognized human

@@ -27,7 +27,7 @@ using OSVersion = UnityEngine.XR.ARKit.OSVersion;
 
 namespace UnityEditor.XR.ARKit
 {
-    internal class ARKitBuildProcessor
+    class ARKitBuildProcessor
     {
         public static IEnumerable<T> AssetsOfType<T>() where T : UnityEngine.Object
         {
@@ -307,54 +307,60 @@ namespace UnityEditor.XR.ARKit
         {
             s_ARKitSettings = ARKitSettings.GetOrCreateSettings();
             ARKitBuildProcessor.s_LoaderEnabled = s_ARKitSettings.faceTracking;
-            EditorCoroutineUtility.StartCoroutineOwnerless(UpdateARKitDefines());
+
+            UpdateARKitDefines();
+            EditorCoroutineUtility.StartCoroutineOwnerless(UpdateARKitDefinesCoroutine());
         }
 
         static ARKitSettings s_ARKitSettings;
 
-        static IEnumerator UpdateARKitDefines()
+        static IEnumerator UpdateARKitDefinesCoroutine()
         {
             var waitObj = new EditorWaitForSeconds(.25f);
 
             while (true)
             {
+                UpdateARKitDefines();
                 yield return waitObj;
+            }
+        }
 
-                bool previousLoaderEnabled = ARKitBuildProcessor.s_LoaderEnabled;
+        static void UpdateARKitDefines()
+        {
+            bool previousLoaderEnabled = ARKitBuildProcessor.s_LoaderEnabled;
 
-                var generalSettings = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
-                if (generalSettings != null)
+            var generalSettings = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+            if (generalSettings != null)
+            {
+                ARKitBuildProcessor.s_LoaderEnabled = false;
+                foreach (var loader in generalSettings.Manager.loaders)
                 {
-                    ARKitBuildProcessor.s_LoaderEnabled = false;
-                    foreach (var loader in generalSettings.Manager.loaders)
+                    if (loader is ARKitLoader)
                     {
-                        if (loader is ARKitLoader)
-                        {
-                            ARKitBuildProcessor.s_LoaderEnabled = true;
-                            break;
-                        }
+                        ARKitBuildProcessor.s_LoaderEnabled = true;
+                        break;
                     }
-
-                    if (ARKitBuildProcessor.s_LoaderEnabled && !previousLoaderEnabled)
-                    {
-                        AddDefineSymbols.Add("UNITY_XR_ARKIT_LOADER_ENABLED");
-                    }
-                    else if (!ARKitBuildProcessor.s_LoaderEnabled && previousLoaderEnabled)
-                    {
-                        AddDefineSymbols.Remove("UNITY_XR_ARKIT_LOADER_ENABLED");
-                    }
-
-                    if (s_ARKitSettings.faceTracking && !ARKitBuildProcessor.s_FaceTrackingEnabled)
-                    {
-                        AddDefineSymbols.Add("UNITY_XR_ARKIT_FACE_TRACKING_ENABLED");
-                    }
-                    else if (!s_ARKitSettings.faceTracking && ARKitBuildProcessor.s_FaceTrackingEnabled)
-                    {
-                        AddDefineSymbols.Remove("UNITY_XR_ARKIT_FACE_TRACKING_ENABLED");
-                    }
-
-                    ARKitBuildProcessor.s_FaceTrackingEnabled = s_ARKitSettings.faceTracking;
                 }
+
+                if (ARKitBuildProcessor.s_LoaderEnabled && !previousLoaderEnabled)
+                {
+                    AddDefineSymbols.Add("UNITY_XR_ARKIT_LOADER_ENABLED");
+                }
+                else if (!ARKitBuildProcessor.s_LoaderEnabled && previousLoaderEnabled)
+                {
+                    AddDefineSymbols.Remove("UNITY_XR_ARKIT_LOADER_ENABLED");
+                }
+
+                if (s_ARKitSettings.faceTracking && !ARKitBuildProcessor.s_FaceTrackingEnabled)
+                {
+                    AddDefineSymbols.Add("UNITY_XR_ARKIT_FACE_TRACKING_ENABLED");
+                }
+                else if (!s_ARKitSettings.faceTracking && ARKitBuildProcessor.s_FaceTrackingEnabled)
+                {
+                    AddDefineSymbols.Remove("UNITY_XR_ARKIT_FACE_TRACKING_ENABLED");
+                }
+
+                ARKitBuildProcessor.s_FaceTrackingEnabled = s_ARKitSettings.faceTracking;
             }
         }
     }

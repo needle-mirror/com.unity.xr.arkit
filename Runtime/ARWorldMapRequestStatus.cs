@@ -51,8 +51,7 @@ namespace UnityEngine.XR.ARKit
     public static class ARWorldMapRequestStatusExtensions
     {
         /// <summary>
-        /// Whether the serialization request is complete. <c>IsDone</c> does not mean the
-        /// request completed successfully. See <see cref="HasError(ARWorldMapRequestStatus)"/>.
+        /// Whether the serialization request is complete. `IsDone` does not mean the
         /// request completed successfully. See <see cref="IsError(ARWorldMapRequestStatus)"/>.
         /// </summary>
         /// <param name="status">The <see cref="ARWorldMapRequestStatus"/> being extended.</param>

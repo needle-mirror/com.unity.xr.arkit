@@ -4,6 +4,20 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.9] - 2020-09-25
+### Changes
+- Static library was built with Xcode 12.0.1 (12A7300).
+
+### Fixes
+- Fixed issue where ARKitSettings could throw a `NullReferenceException` when checking for face tracking.
+- Fixed an issue with the importer for `ARObject`s (ARKit's format for object tracking targets) which could incorrectly parse floating point numbers when the host machine used a different floating point format (e.g., swapping `,` and `.`).
+- Fixed some documentation links.
+- Fixed a hang in the meshing subsystem implementation caused by resource contention.
+- Fixed an issue where the environment depth confidence texture was not able to be sampled in a shader. Changed the texture format from MTLPixelFormatR8Uint to MTLPixelFormatR8Unorm.
+- Handle non-unit scale in the background shader when calculating depth for occlusion.
+- Fixed a sporadic app freeze after an ARKit session is destroyed.
+- Fix ["batchmode" builds](https://docs.unity3d.com/Manual/CommandLineArguments.html), i.e., building the iOS Xcode project from the command line. Previously, this could errornously exclude `liblibUnityARKitFaceTracking.a` from the build.
+
 ## [4.1.0-preview.7] - 2020-08-26
 ### Changes
 - Static library was built with Xcode 12.0 beta 6 (12A8189n).
@@ -19,9 +33,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixing issue where [`ARPlaneManager.currentDetectionMode`](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/api/UnityEngine.XR.ARFoundation.ARPlaneManager.html#UnityEngine_XR_ARFoundation_ARPlaneManager_currentDetectionMode) was always reporting [`PlaneDetectionMode.None`](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.PlaneDetectionMode.html).
 - Removing a work around preventing environment depth and human segmentation to be simultaneously enabled because the source issue has been resolved with Xcode 12 beta 3 and iOS 14 beta 3.
 - Fixed an issue where ARKit shaders could incorrectly remain in the [Preloaded Assets](https://docs.unity3d.com/ScriptReference/PlayerSettings.GetPreloadedAssets.html) array, which could interfere with builds on other platforms. For example, in some cases, if first you built for iOS, and then built for Android, you might have seen an error message like
-```
+<pre>
 Shader error in 'Unlit/ARKitBackground': failed to open source file: 'Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl' at line 44 (on gles3)
-```
+</pre>
 - Fixed crash on startup caused by devices that support iOS 11 but not ARKit.
 
 ## [4.1.0-preview.5] - 2020-07-16
