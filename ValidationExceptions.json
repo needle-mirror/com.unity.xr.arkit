@@ -4,12 +4,12 @@
         {
             "ValidationTest": "Restricted File Type Validation",
             "ExceptionError": "/Editor/csc.rsp cannot be included in a package.",
-            "PackageVersion": "4.0.8"
+            "PackageVersion": "4.0.9"
         },
         {
             "ValidationTest": "API Validation",
             "ExceptionError": "",
-            "PackageVersion": "4.0.8"
+            "PackageVersion": "4.0.9"
         }
     ]
 }

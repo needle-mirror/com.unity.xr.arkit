@@ -143,19 +143,22 @@ namespace UnityEngine.XR.ARKit
         public ARWorldMappingStatus worldMappingStatus => NativeApi.UnityARKit_Session_GetWorldMappingStatus(self);
 
         /// <summary>
-        /// Apply an existing <see cref="ARWorldMap"/> to the session. This will attempt
-        /// to relocalize the current session to the given <paramref name="worldMap"/>.
-        /// If relocalization is successful, the stored planes and anchors from
-        /// the <paramref name="worldMap"/> will be added to the current session.
-        /// This is equivalent to setting the <a href="https://developer.apple.com/documentation/arkit/arworldtrackingconfiguration/2968180-initialworldmap">initialWorldMap</a>
-        /// property on the session's <a href="https://developer.apple.com/documentation/arkit/arworldtrackingconfiguration">ARWorldTrackingConfiguration</a>.
+        /// Applies an <see cref="ARWorldMap"/> to the session.
         /// </summary>
+        /// <remarks>
+        /// This will attempt to relocalize the current session to the given <paramref name="worldMap"/>. If
+        /// relocalization is successful, the stored planes and anchors from the <paramref name="worldMap"/> will be
+        /// added to the current session. This is equivalent to setting the
+        /// [initialWorldMap](https://developer.apple.com/documentation/arkit/arworldtrackingconfiguration/2968180-initialworldmap)
+        /// property on the session's
+        /// [ARWorldTrackingConfiguration](https://developer.apple.com/documentation/arkit/arworldtrackingconfiguration).
+        ///
+        /// If <paramref name="worldMap"/> is not <see cref="ARWorldMap.valid"/>, this method sets the
+        /// `initialWorldMap` configuration property to `nil`.
+        /// </remarks>
         /// <param name="worldMap">An <see cref="ARWorldMap"/> with which to relocalize the session.</param>
         public void ApplyWorldMap(ARWorldMap worldMap)
         {
-            if (worldMap.nativeHandle == ARWorldMap.k_InvalidHandle)
-                throw new InvalidOperationException("ARWorldMap has been disposed.");
-
             NativeApi.UnityARKit_applyWorldMap(worldMap.nativeHandle);
         }
 

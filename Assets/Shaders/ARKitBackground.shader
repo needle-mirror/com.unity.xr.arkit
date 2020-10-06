@@ -100,6 +100,7 @@ Shader "Unlit/ARKitBackground"
             CBUFFER_START(UnityARFoundationPerFrame)
             // Device display transform is provided by the AR Foundation camera background renderer.
             float4x4 _UnityDisplayTransform;
+            float _UnityCameraForwardScale;
             CBUFFER_END
 
 
@@ -130,6 +131,9 @@ Shader "Unlit/ARKitBackground"
 
             inline float ConvertDistanceToDepth(float d)
             {
+                // Account for scale
+                d = _UnityCameraForwardScale > 0.0 ? _UnityCameraForwardScale * d : d;
+
                 // Clip any distances smaller than the near clip plane, and compute the depth value from the distance.
                 return (d < _ProjectionParams.y) ? 0.0f : ((0.5f / _ZBufferParams.z) * ((1.0f / d) - _ZBufferParams.w));
             }

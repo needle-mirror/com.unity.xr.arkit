@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.9] - 2020-10-06
+### Changes
+- The session configuration's [ARWorldMap](xref:UnityEngine.XR.ARKit.ARWorldMap) can be cleared by calling [ApplyWorldMap](xref:UnityEngine.XR.ARKit.ARKitSessionSubsystem.ApplyWorldMap(UnityEngine.XR.ARKit.ARWorldMap)) with a default-constructed `ARWorldMap`. Previously, this method would throw if the `ARWorldMap` was not valid.
+
+### Fixes
+- Fixed an issue with the importer for `ARObject`s (ARKit's format for object tracking targets) which could incorrectly parse floating point numbers when the host machine used a different floating point format (e.g., swapping `,` and `.`).
+- Fixed some documentation links.
+- Fixed a hang in the meshing subsystem implementation caused by resource contention.
+- Handle non-unit scale in the background shader when calculating depth for occlusion.
+- Fixed a sporadic app freeze after an ARKit session is destroyed.
+
 ## [4.0.8] - 2020-08-24
 ### Fixes
 - Fixed an issue where ARKit shaders could incorrectly remain in the [Preloaded Assets](https://docs.unity3d.com/ScriptReference/PlayerSettings.GetPreloadedAssets.html) array, which could interfere with builds on other platforms. For example, in some cases, if first you built for iOS, and then built for Android, you might have seen an error message like
