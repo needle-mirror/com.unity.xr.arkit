@@ -17,7 +17,7 @@ Shader "Unlit/ARKit"
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			
+
 			#include "UnityCG.cginc"
 
 			float4x4 _UnityDisplayTransform;
@@ -37,17 +37,17 @@ Shader "Unlit/ARKit"
 			TexCoordInOut vert (Vertex vertex)
 			{
 				TexCoordInOut o;
-				o.position = UnityObjectToClipPos(vertex.position); 
+				o.position = UnityObjectToClipPos(vertex.position);
 
 				float texX = vertex.texcoord.x;
 				float texY = vertex.texcoord.y;
-				
+
 				o.texcoord.x = (_UnityDisplayTransform[0].x * texX + _UnityDisplayTransform[1].x * (texY) + _UnityDisplayTransform[2].x);
  			 	o.texcoord.y = (_UnityDisplayTransform[0].y * texX + _UnityDisplayTransform[1].y * (texY) + (_UnityDisplayTransform[2].y));
-	            
+
 				return o;
 			}
-			
+
             // samplers
             sampler2D _textureY;
             sampler2D _textureCbCr;
@@ -66,7 +66,14 @@ Shader "Unlit/ARKit"
 						float4(0.0, +0.0000, +0.0000, +1.0000)
 					);
 
-                return mul(ycbcrToRGBTransform, ycbcr);
+                float4 videoColor = mul(ycbcrToRGBTransform, ycbcr);
+
+#if !UNITY_COLORSPACE_GAMMA
+                // If rendering in linear color space, convert from sRGB to RGB.
+                videoColor.xyz = GammaToLinearSpace(videoColor.xyz);
+#endif // !UNITY_COLORSPACE_GAMMA
+
+                return videoColor;
 			}
 			ENDCG
 		}
