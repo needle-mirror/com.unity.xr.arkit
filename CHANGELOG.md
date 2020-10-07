@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.8] - 2020-10-07
+### Changes
+- Update dependecy on AR Subsystems to 3.1.6.
+
 ## [3.1.7] - 2020-09-08
 ### Changes
 - The ARKit Settings has been moved from Project Settings > XR to Project Settings > XR Plug-in Management for consistency with other XR platforms. See [ARKitSettings](https://docs.unity3d.com/Packages/com.unity.xr.arkit@3.1/api/UnityEditor.XR.ARKit.ARKitSettings.html) for more information. ARKit build settings will no longer have to be created manually, installing the package will automatically create ARKit settings.
