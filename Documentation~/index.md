@@ -120,6 +120,7 @@ This version of ARKit XR Plugin is compatible with the following versions of the
 * 2019.4
 * 2020.1
 * 2020.2
+* 2021.1
 
 ## Known limitations
 
