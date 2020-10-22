@@ -18,6 +18,11 @@ namespace UnityEngine.XR.ARKit
         IntPtr self => ((ARKitProvider)provider).self;
 
         /// <summary>
+        /// The <see cref="ARKitSessionDelegate"/> to use for session-related callbacks.
+        /// </summary>
+        public ARKitSessionDelegate sessionDelegate { get; set; } = new DefaultARKitSessionDelegate();
+
+        /// <summary>
         /// <c>true</c> if [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview) is supported, otherwise <c>false</c>.
         /// </summary>
         public static bool coachingOverlaySupported => Api.AtLeast13_0();
@@ -196,6 +201,25 @@ namespace UnityEngine.XR.ARKit
         public int collaborationDataCount => NativeApi.UnityARKit_Session_GetCollaborationDataQueueSize(self);
 
         /// <summary>
+        /// The requested <see cref="ARWorldAlignment"/> for the session.
+        /// </summary>
+        /// <remarks>
+        /// **Note:** <see cref="ARWorldAlignment.GravityAndHeading"/> requires location services to be enabled and the
+        /// user must grant your app permission to use location services. You must therefore provide a
+        /// [Location Usage Description](xref:PlayerSettingsiOS-Other) entry in the Player Settings.
+        /// </remarks>
+        public ARWorldAlignment requestedWorldAlignment
+        {
+            get => NativeApi.GetRequestedWorldAlignment(self);
+            set => NativeApi.SetRequestedWorldAlignment(self, value);
+        }
+
+        /// <summary>
+        /// The current <see cref="ARWorldAlignment"/> for the session.
+        /// </summary>
+        public ARWorldAlignment currentWorldAlignment => NativeApi.GetCurrentWorldAlignment(self);
+
+        /// <summary>
         /// Dequeues the oldest collaboration data in the queue. After calling this method, <see cref="collaborationDataCount"/>
         /// will be decremented by one.
         /// </summary>
@@ -231,13 +255,28 @@ namespace UnityEngine.XR.ARKit
             NativeApi.UnityARKit_Session_UpdateWithCollaborationData(self, collaborationData.m_NativePtr);
         }
 
-#if !UNITY_2020_2_OR_NEWER
+#if UNITY_2020_2_OR_NEWER
+        protected override void OnCreate()
+        {
+            SetupProvider((ARKitProvider)provider);
+        }
+#else
         /// <summary>
         /// Creates the provider interface.
         /// </summary>
         /// <returns>The provider interface for ARKit</returns>
-        protected override Provider CreateProvider() => new ARKitProvider();
+        protected override Provider CreateProvider()
+        {
+            var provider = new ARKitProvider();
+            SetupProvider(provider);
+            return provider;
+        }
 #endif
+
+        void SetupProvider(ARKitProvider provider)
+        {
+            provider.SetupSessionDelegate(this);
+        }
 
         static ARKitSessionSubsystem()
         {
@@ -268,9 +307,25 @@ namespace UnityEngine.XR.ARKit
         class ARKitProvider : Provider
         {
             IntPtr m_Self;
+
+            GCHandle m_SubsystemHandle;
+
             public IntPtr self => m_Self;
 
-            public ARKitProvider() => m_Self = NativeApi.UnityARKit_Session_Construct();
+            public ARKitProvider()
+            {
+                m_Self = NativeApi.UnityARKit_Session_Construct();
+            }
+
+            public void SetupSessionDelegate(ARKitSessionSubsystem subsystem)
+            {
+                m_SubsystemHandle = GCHandle.Alloc(subsystem);
+                NativeApi.SetSubsystemHandle(m_Self, (IntPtr)m_SubsystemHandle);
+                NativeApi.SetSessionDidFailWithErrorCallback(m_Self, ARKitSessionDelegate.s_SessionDidFailWithError);
+                NativeApi.SetCoachingOverlayViewWillActivateCallback(m_Self, ARKitSessionDelegate.s_CoachingOverlayViewWillActivate);
+                NativeApi.SetCoachingOverlayViewDidDeactivateCallback(m_Self, ARKitSessionDelegate.s_CoachingOverlayViewDidDeactivate);
+                NativeApi.SetConfigurationChangedCallback(m_Self, ARKitSessionDelegate.s_ConfigurationChanged);
+            }
 
             bool AtLeastOneConfigurationExists() => NativeApi.UnityARKit_Session_GetConfigurationDescriptors(m_Self, IntPtr.Zero, 0, 0) > 0;
 
@@ -290,7 +345,7 @@ namespace UnityEngine.XR.ARKit
             public override void Update(XRSessionUpdateParams updateParams, Configuration configuration)
                 => NativeApi.UnityARKit_Session_Update(m_Self, configuration.descriptor.identifier, configuration.features);
 
-            public unsafe override NativeArray<ConfigurationDescriptor> GetConfigurationDescriptors(Allocator allocator)
+            public override unsafe NativeArray<ConfigurationDescriptor> GetConfigurationDescriptors(Allocator allocator)
             {
                 int count = NativeApi.UnityARKit_Session_GetConfigurationDescriptors(m_Self, IntPtr.Zero, 0, 0);
                 Assert.IsTrue(count > 0, "There are no configuration descriptors.");
@@ -306,6 +361,8 @@ namespace UnityEngine.XR.ARKit
             public override void Destroy()
             {
                 Assert.AreNotEqual(IntPtr.Zero, m_Self, $"Tried to destroy an already destroyed {nameof(ARKitSessionSubsystem)}.");
+                m_SubsystemHandle.Free();
+                m_SubsystemHandle = default;
                 Api.CFRelease(ref m_Self);
             }
 
@@ -494,6 +551,30 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern Feature UnityARKit_Session_GetCurrentTrackingMode(IntPtr self);
+
+            [DllImport("__Internal", EntryPoint = "UnityARKit_Session_GetRequestedWorldAlignment")]
+            public static extern ARWorldAlignment GetRequestedWorldAlignment(IntPtr self);
+
+            [DllImport("__Internal", EntryPoint = "UnityARKit_Session_SetRequestedWorldAlignment")]
+            public static extern void SetRequestedWorldAlignment(IntPtr self, ARWorldAlignment value);
+
+            [DllImport("__Internal", EntryPoint = "UnityARKit_Session_GetCurrentWorldAlignment")]
+            public static extern ARWorldAlignment GetCurrentWorldAlignment(IntPtr self);
+
+            [DllImport("__Internal", EntryPoint = "UnityARKit_Session_SetSubsystemHandle")]
+            public static extern void SetSubsystemHandle(IntPtr self, IntPtr subsystemHandle);
+
+            [DllImport("__Internal", EntryPoint = "UnityARKit_Session_SetSessionDidFailWithErrorCallback")]
+            public static extern void SetSessionDidFailWithErrorCallback(IntPtr self, Action<IntPtr, NSError> callback);
+
+            [DllImport("__Internal", EntryPoint = "UnityARKit_Session_SetCoachingOverlayViewWillActivateCallback")]
+            public static extern void SetCoachingOverlayViewWillActivateCallback(IntPtr self, Action<IntPtr> callback);
+
+            [DllImport("__Internal", EntryPoint = "UnityARKit_Session_SetCoachingOverlayViewDidDeactivateCallback")]
+            public static extern void SetCoachingOverlayViewDidDeactivateCallback(IntPtr self, Action<IntPtr> callback);
+
+            [DllImport("__Internal", EntryPoint = "UnityARKit_Session_SetConfigurationChangedCallback")]
+            public static extern void SetConfigurationChangedCallback(IntPtr self, Action<IntPtr> callback);
 #else
             static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
@@ -629,6 +710,22 @@ namespace UnityEngine.XR.ARKit
             public static ARWorldMappingStatus UnityARKit_Session_GetWorldMappingStatus(IntPtr self) => ARWorldMappingStatus.NotAvailable;
 
             public static Feature UnityARKit_Session_GetCurrentTrackingMode(IntPtr self) => Feature.None;
+
+            public static ARWorldAlignment GetRequestedWorldAlignment(IntPtr self) => default;
+
+            public static void SetRequestedWorldAlignment(IntPtr self, ARWorldAlignment value) { }
+
+            public static ARWorldAlignment GetCurrentWorldAlignment(IntPtr self) => default;
+
+            public static void SetSubsystemHandle(IntPtr self, IntPtr subsystemHandle) { }
+
+            public static void SetSessionDidFailWithErrorCallback(IntPtr self, Action<IntPtr, NSError> callback) { }
+
+            public static void SetCoachingOverlayViewWillActivateCallback(IntPtr self, Action<IntPtr> callback) { }
+
+            public static void SetCoachingOverlayViewDidDeactivateCallback(IntPtr self, Action<IntPtr> callback) { }
+
+            public static void SetConfigurationChangedCallback(IntPtr self, Action<IntPtr> callback) { }
 #endif
         }
     }

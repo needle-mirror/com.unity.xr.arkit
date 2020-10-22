@@ -5,7 +5,7 @@ using Unity.Collections.LowLevel.Unsafe;
 
 namespace UnityEngine.XR.ARKit
 {
-    internal struct NSMutableData : IDisposable, IEquatable<NSMutableData>
+    struct NSMutableData : IDisposable, IEquatable<NSMutableData>
     {
         IntPtr m_NativePtr;
 

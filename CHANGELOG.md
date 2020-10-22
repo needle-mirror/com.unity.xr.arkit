@@ -4,6 +4,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.11] - 2020-10-22
+### New
+- Added a mechanism to receive callbacks for some ARKit-specific session events. See [ARKitSessionDelegate](xref:UnityEngine.XR.ARKit.ARKitSessionDelegate). This allows you to be notified when:
+  - The [ARSession](https://developer.apple.com/documentation/arkit/arsession?language=objc) fails.
+  - The [ARConfiguration](https://developer.apple.com/documentation/arkit/arconfiguration?language=objc) changes.
+  - The [coaching overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview?language=objc) [activates](https://developer.apple.com/documentation/arkit/arcoachingoverlayviewdelegate/3152985-coachingoverlayviewwillactivate?language=objc).
+  - The [coaching overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview?language=objc) [deactivates](https://developer.apple.com/documentation/arkit/arcoachingoverlayviewdelegate/3152983-coachingoverlayviewdiddeactivate?language=objc).
+- Added support for the new method [ScheduleAddImageWithValidationJob](xref:UnityEngine.XR.ARSubsystems.MutableRuntimeReferenceImageLibrary.ScheduleAddImageWithValidationJob(Unity.Collections.NativeSlice{System.Byte},UnityEngine.Vector2Int,UnityEngine.TextureFormat,UnityEngine.XR.ARSubsystems.XRReferenceImage,Unity.Jobs.JobHandle)) on the [MutableRuntimeReferenceImageLibrary](xref:UnityEngine.XR.ARSubsystems.MutableRuntimeReferenceImageLibrary).
+
+### Changes
+- The implementation of [XRCpuImage.ConvertAsync](xref:UnityEngine.XR.ARSubsystems.XRCpuImage.ConvertAsync(UnityEngine.XR.ARSubsystems.XRCpuImage.ConversionParams)) is now multithreaded across all hardware cores to produce the result faster. Previously, only the [synchronous version](xref:UnityEngine.XR.ARSubsystems.XRCpuImage.Convert(UnityEngine.XR.ARSubsystems.XRCpuImage.ConversionParams,System.IntPtr,System.Int32)) was multithreaded. However, on newer devices with high camera resolutions, the single threaded asynchronous conversion would often take multiple frames to complete. Now, both synchronous and asynchronous conversions are multithreaded.
+- Static library was built with Xcode 12.1 (12A7403).
+
 ## [4.1.0-preview.10] - 2020-10-12
 ### New
 - The session configuration's [ARWorldMap](xref:UnityEngine.XR.ARKit.ARWorldMap) can be cleared by calling [ApplyWorldMap](xref:UnityEngine.XR.ARKit.ARKitSessionSubsystem.ApplyWorldMap(UnityEngine.XR.ARKit.ARWorldMap)) with a default-constructed `ARWorldMap`. Previously, this method would throw if the `ARWorldMap` was not valid.

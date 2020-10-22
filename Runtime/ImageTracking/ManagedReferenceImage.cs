@@ -5,7 +5,7 @@ using UnityEngine.XR.ARSubsystems;
 namespace UnityEngine.XR.ARKit
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct ManagedReferenceImage : IDisposable
+    struct ManagedReferenceImage : IDisposable
     {
         public ManagedReferenceImage(XRReferenceImage referenceImage)
         {

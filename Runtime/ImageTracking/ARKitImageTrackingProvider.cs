@@ -19,7 +19,7 @@ namespace UnityEngine.XR.ARKit
             public override void Stop() { }
 #endif
 
-            public unsafe override RuntimeReferenceImageLibrary CreateRuntimeLibrary(
+            public override RuntimeReferenceImageLibrary CreateRuntimeLibrary(
                 XRReferenceImageLibrary serializedLibrary)
             {
                 return new ARKitImageDatabase(serializedLibrary);
@@ -175,7 +175,8 @@ namespace UnityEngine.XR.ARKit
 #endif
                 supportsMovingImages = Api.AtLeast12_0(),
                 supportsMutableLibrary = true,
-                requiresPhysicalImageDimensions = true
+                requiresPhysicalImageDimensions = true,
+                supportsImageValidation = Api.AtLeast13_0(),
             });
         }
 

@@ -4,7 +4,7 @@ using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEngine.XR.ARKit
 {
-    internal static class Api
+    static class Api
     {
 #if UNITY_XR_ARKIT_LOADER_ENABLED
         [DllImport("__Internal")]

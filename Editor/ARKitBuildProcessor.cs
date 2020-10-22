@@ -231,6 +231,7 @@ namespace UnityEditor.XR.ARKit
             {
                 "libUnityARKit.a",
                 "UnityARKit.m",
+                "NativeInterop.m",
                 "libUnityARKitFaceTracking.a",
             };
 

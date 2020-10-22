@@ -8,9 +8,9 @@ using UnityEngine.Assertions;
 
 namespace UnityEngine.XR.ARKit
 {
-    internal sealed class ARKitImageDatabase : MutableRuntimeReferenceImageLibrary
+    sealed class ARKitImageDatabase : MutableRuntimeReferenceImageLibrary
     {
-        internal IntPtr nativePtr { get; private set; }
+        internal IntPtr nativePtr { get; }
 
         ~ARKitImageDatabase()
         {
@@ -30,7 +30,7 @@ namespace UnityEngine.XR.ARKit
         {
             if (serializedLibrary == null)
             {
-                nativePtr = UnityARKit_ImageDatabase_createEmpty();
+                nativePtr = UnityARKit_ImageDatabase_CreateEmpty();
             }
             else
             {
@@ -42,7 +42,7 @@ namespace UnityEngine.XR.ARKit
 
                 using (managedReferenceImages)
                 {
-                    var nativeReturnCode = UnityARKit_ImageDatabase_tryCreateFromResourceGroup(
+                    var nativeReturnCode = UnityARKit_ImageDatabase_TryCreateFromResourceGroup(
                         serializedLibrary.name, serializedLibrary.name.Length, serializedLibrary.guid,
                         managedReferenceImages.GetUnsafePtr(), managedReferenceImages.Length,
                         out IntPtr ptr);
@@ -66,7 +66,12 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-        protected override unsafe JobHandle ScheduleAddImageJobImpl(
+        /// <summary>
+        /// (Read Only) Whether image validation is supported. `True` on iOS 13 and later.
+        /// </summary>
+        public override bool supportsValidation => Api.AtLeast13_0();
+
+        protected override AddReferenceImageJobState ScheduleAddImageWithValidationJobImpl(
             NativeSlice<byte> imageBytes,
             Vector2Int sizeInPixels,
             TextureFormat format,
@@ -76,17 +81,63 @@ namespace UnityEngine.XR.ARKit
             if (!referenceImage.specifySize)
                 throw new InvalidOperationException("ARKit requires physical dimensions for all reference images.");
 
-            // Add a reference to keep the native object alive
-            // even if we get finalized while a job is running
-            UnityARKit_CFRetain(nativePtr);
+            // Add a reference to keep the native object alive even if we get finalized while a job is running
+            var convertedImage = new NativeArray<byte>();
+            var validator = IntPtr.Zero;
+            try
+            {
+                UnityARKit_CFRetain(nativePtr);
 
+                // Schedules a job to convert the image bytes if necessary
+                convertedImage = GetImageBytesToConvert(imageBytes, sizeInPixels, ref format, ref inputDeps);
+
+                // Create a native object to contain the validation status
+                validator = CreateValidator(nativePtr);
+
+                inputDeps = new AddImageJob
+                {
+                    image = convertedImage.IsCreated ? new NativeSlice<byte>(convertedImage) : imageBytes,
+                    database = nativePtr,
+                    validator = validator,
+                    width = sizeInPixels.x,
+                    height = sizeInPixels.y,
+                    physicalWidth = referenceImage.size.x,
+                    format = format,
+                    managedReferenceImage = new ManagedReferenceImage(referenceImage)
+                }.Schedule(inputDeps);
+            }
+            catch
+            {
+                DestroyValidator(nativePtr, validator);
+                throw;
+            }
+            finally
+            {
+                // Release our native counterpart that we previously retained
+                inputDeps = ScheduleReleaseJob(inputDeps);
+
+                // If we had to perform a conversion, then release that memory
+                if (convertedImage.IsCreated)
+                {
+                    inputDeps = new DeallocateNativeArrayJob<byte> { array = convertedImage }.Schedule(inputDeps);
+                }
+            }
+
+            return CreateAddJobState(validator, inputDeps);
+        }
+
+        protected override AddReferenceImageJobStatus GetAddReferenceImageJobStatus(AddReferenceImageJobState handle)
+            => GetValidatorStatus((IntPtr)handle);
+
+        NativeArray<byte> GetImageBytesToConvert(
+            NativeSlice<byte> imageBytes, Vector2Int sizeInPixels, ref TextureFormat format, ref JobHandle inputDeps)
+        {
             // RGBA32 is not supported by CVPixelBuffer, but ARGB32 is, so
             // we offer a conversion for this common case.
-            var convertedImage = new NativeArray<byte>();
             if (format == TextureFormat.RGBA32)
             {
                 int numPixels = sizeInPixels.x * sizeInPixels.y;
-                convertedImage = new NativeArray<byte>(
+                var argb32ImageBytes = new NativeArray<byte>(
                     numPixels * 4,
                     Allocator.Persistent,
                     NativeArrayOptions.UninitializedMemory);
@@ -94,33 +145,27 @@ namespace UnityEngine.XR.ARKit
                 inputDeps = new ConvertRGBA32ToARGB32Job
                 {
                     rgbaImage = imageBytes.SliceConvert<uint>(),
-                    argbImage = convertedImage.Slice().SliceConvert<uint>()
+                    argbImage = argb32ImageBytes.Slice().SliceConvert<uint>()
                 }.Schedule(numPixels, 64, inputDeps);
 
                 // Format is now ARGB32
                 format = TextureFormat.ARGB32;
+
+                return argb32ImageBytes;
             }
 
-            // Schedule the actual addition of the image to the database
-            inputDeps = new AddImageJob
-            {
-                image = convertedImage.IsCreated ? new NativeSlice<byte>(convertedImage) : imageBytes,
-                database = nativePtr,
-                width = sizeInPixels.x,
-                height = sizeInPixels.y,
-                physicalWidth = referenceImage.size.x,
-                format = format,
-                managedReferenceImage = new ManagedReferenceImage(referenceImage)
-            }.Schedule(inputDeps);
-
-            // If we had to perform a conversion, then release that memory
-            if (convertedImage.IsCreated)
-            {
-                inputDeps = new DeallocateNativeArrayJob<byte> { array = convertedImage }.Schedule(inputDeps);
-            }
-
-            return inputDeps;
+            // No conversion necessary; echo back inputs
+            return default;
         }
+
+        // Just forwards the call to ScheduleAddImageWithValidationJobImpl
+        protected override JobHandle ScheduleAddImageJobImpl(
+            NativeSlice<byte> imageBytes,
+            Vector2Int sizeInPixels,
+            TextureFormat format,
+            XRReferenceImage referenceImage,
+            JobHandle inputDeps) =>
+            ScheduleAddImageWithValidationJobImpl(imageBytes, sizeInPixels, format, referenceImage, inputDeps).jobHandle;
 
         static readonly TextureFormat[] k_SupportedFormats =
         {
@@ -153,6 +198,17 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
+        JobHandle ScheduleReleaseJob(JobHandle inputDeps) => new ReleaseDatabaseJob
+        {
+            database = nativePtr
+        }.Schedule(inputDeps);
+
+        struct ReleaseDatabaseJob : IJob
+        {
+            public IntPtr database;
+            public void Execute() => UnityARKit_CFRelease(database);
+        }
+
         struct DeallocateNativeArrayJob<T> : IJob where T : struct
         {
             [DeallocateOnJobCompletion]
@@ -177,46 +233,40 @@ namespace UnityEngine.XR.ARKit
         struct AddImageJob : IJob
         {
             public NativeSlice<byte> image;
-
             public IntPtr database;
-
+            public IntPtr validator;
             public int width;
-
             public int height;
-
             public float physicalWidth;
-
             public TextureFormat format;
-
             public ManagedReferenceImage managedReferenceImage;
 
             public unsafe void Execute()
             {
-                bool success = UnityARKit_ImageDatabase_AddImage(database, image.GetUnsafePtr(), format, width, height, physicalWidth, ref managedReferenceImage);
-                if (!success)
+                if (!AddImage(database, validator, image.GetUnsafePtr(), format, width, height, physicalWidth, ref managedReferenceImage))
+                {
                     managedReferenceImage.Dispose();
-
-                UnityARKit_CFRelease(database);
+                }
             }
 
-#if UNITY_XR_ARKIT_LOADER_ENABLED
-            [DllImport("__Internal")]
-            static extern unsafe bool UnityARKit_ImageDatabase_AddImage(
-                IntPtr database, void* bytes, TextureFormat format,
+#if UNITY_XR_ARKIT_LOADER_ENABLED && !UNITY_EDITOR
+            [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_AddImage")]
+            static extern unsafe bool AddImage(
+                IntPtr database, IntPtr validator, void* bytes, TextureFormat format,
                 int width, int height, float physicalWidth,
                 ref ManagedReferenceImage managedReferenceImage);
 #else
-            static unsafe bool UnityARKit_ImageDatabase_AddImage(
-                IntPtr database, void* bytes, TextureFormat format,
+            static unsafe bool AddImage(
+                IntPtr database, IntPtr validator, void* bytes, TextureFormat format,
                 int width, int height, float physicalWidth,
                 ref ManagedReferenceImage managedReferenceImage)
             {
-                throw new System.NotImplementedException("ARKit Plugin Provider not enabled in project settings.");
+                throw new NotImplementedException("ARKit Plugin Provider not enabled in project settings.");
             }
 #endif
         }
 
-#if UNITY_XR_ARKIT_LOADER_ENABLED
+#if UNITY_XR_ARKIT_LOADER_ENABLED && !UNITY_EDITOR
         [DllImport("__Internal")]
         static extern void UnityARKit_CFRetain(IntPtr ptr);
 
@@ -224,10 +274,10 @@ namespace UnityEngine.XR.ARKit
         static extern void UnityARKit_CFRelease(IntPtr ptr);
 
         [DllImport("__Internal")]
-        static extern IntPtr UnityARKit_ImageDatabase_createEmpty();
+        static extern IntPtr UnityARKit_ImageDatabase_CreateEmpty();
 
         [DllImport("__Internal")]
-        static unsafe extern SetReferenceLibraryResult UnityARKit_ImageDatabase_tryCreateFromResourceGroup(
+        static extern unsafe SetReferenceLibraryResult UnityARKit_ImageDatabase_TryCreateFromResourceGroup(
             [MarshalAs(UnmanagedType.LPWStr)] string name, int nameLength, Guid guid,
             void* managedReferenceImages, int managedReferenceImageCount,
             out IntPtr ptr);
@@ -237,41 +287,38 @@ namespace UnityEngine.XR.ARKit
 
         [DllImport("__Internal")]
         static extern int UnityARKit_ImageDatabase_GetReferenceImageCount(IntPtr database);
+
+        [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_CreateValidator")]
+        static extern IntPtr CreateValidator(IntPtr database);
+
+        [DllImport("__Internal", EntryPoint = "UnityARKit_ReferenceImageValidator_get_status")]
+        static extern AddReferenceImageJobStatus GetValidatorStatus(IntPtr validator);
+
+        [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_DestroyValidator")]
+        static extern void DestroyValidator(IntPtr database, IntPtr validator);
 #else
         static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
-        static void UnityARKit_CFRetain(IntPtr ptr)
-        {
-            throw new System.NotImplementedException(k_ExceptionMsg);
-        }
+        static void UnityARKit_CFRetain(IntPtr ptr) => throw new NotImplementedException(k_ExceptionMsg);
 
-        static void UnityARKit_CFRelease(IntPtr ptr)
-        {
-            throw new System.NotImplementedException(k_ExceptionMsg);
-        }
+        static void UnityARKit_CFRelease(IntPtr ptr) => throw new NotImplementedException(k_ExceptionMsg);
 
-        static IntPtr UnityARKit_ImageDatabase_createEmpty()
-        {
-            throw new System.NotImplementedException(k_ExceptionMsg);
-        }
+        static IntPtr UnityARKit_ImageDatabase_CreateEmpty() => throw new NotImplementedException(k_ExceptionMsg);
 
-        static unsafe SetReferenceLibraryResult UnityARKit_ImageDatabase_tryCreateFromResourceGroup(
+        static unsafe SetReferenceLibraryResult UnityARKit_ImageDatabase_TryCreateFromResourceGroup(
             [MarshalAs(UnmanagedType.LPWStr)] string name, int nameLength, Guid guid,
             void* managedReferenceImages, int managedReferenceImageCount,
-            out IntPtr ptr)
-        {
-            throw new System.NotImplementedException(k_ExceptionMsg);
-        }
+            out IntPtr ptr) => throw new System.NotImplementedException(k_ExceptionMsg);
 
-        static ManagedReferenceImage UnityARKit_ImageDatabase_GetReferenceImage(IntPtr database, int index)
-        {
+        static ManagedReferenceImage UnityARKit_ImageDatabase_GetReferenceImage(IntPtr database, int index) =>
             throw new System.NotImplementedException(k_ExceptionMsg);
-        }
 
-        static int UnityARKit_ImageDatabase_GetReferenceImageCount(IntPtr database)
-        {
+        static int UnityARKit_ImageDatabase_GetReferenceImageCount(IntPtr database) =>
             throw new System.NotImplementedException(k_ExceptionMsg);
-        }
+
+        static IntPtr CreateValidator(IntPtr database) => default;
+        static AddReferenceImageJobStatus GetValidatorStatus(IntPtr validator) => default;
+        static void DestroyValidator(IntPtr database, IntPtr validator) { }
 #endif
     }
 }
