@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.12] - 2020-11-02
+### Changes
+- Removed a file called `NativeInterop.m` (it has been combined with an existing file to reduce name collisions). If you build for iOS by "appending" rather than "replacing" a previous Xcode project, you will need to manually remove this file reference. It is at `Libraries/com.unity.xr.arkit/Runtime/iOS/NativeInterop.m` in the Xcode project produced by Unity.
+
+### Fixes
+- Fix issue with z-depth calculations on iOS when AR Foundation camera is enabled. This issue would result in shader z-depth differences (e.g. during fog computation) between normal camera rendering compared to AR camera rendering.
+- Fix a (mostly harmless) warning message emitted by ARKit if the [worldAlignment](https://developer.apple.com/documentation/arkit/arworldalignment?language=objc) is set when it is not allowed to be changed and is already at the requested value.
+
 ## [4.1.0-preview.11] - 2020-10-22
 ### New
 - Added a mechanism to receive callbacks for some ARKit-specific session events. See [ARKitSessionDelegate](xref:UnityEngine.XR.ARKit.ARKitSessionDelegate). This allows you to be notified when:
@@ -11,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - The [ARConfiguration](https://developer.apple.com/documentation/arkit/arconfiguration?language=objc) changes.
   - The [coaching overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview?language=objc) [activates](https://developer.apple.com/documentation/arkit/arcoachingoverlayviewdelegate/3152985-coachingoverlayviewwillactivate?language=objc).
   - The [coaching overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview?language=objc) [deactivates](https://developer.apple.com/documentation/arkit/arcoachingoverlayviewdelegate/3152983-coachingoverlayviewdiddeactivate?language=objc).
+- Added a new [property](xref:UnityEngine.XR.ARKit.ARKitSessionSubsystem.requestedWorldAlignment) to set the session's [ARWorldAlignment](xref:UnityEngine.XR.ARKit.ARWorldAlignment).
 - Added support for the new method [ScheduleAddImageWithValidationJob](xref:UnityEngine.XR.ARSubsystems.MutableRuntimeReferenceImageLibrary.ScheduleAddImageWithValidationJob(Unity.Collections.NativeSlice{System.Byte},UnityEngine.Vector2Int,UnityEngine.TextureFormat,UnityEngine.XR.ARSubsystems.XRReferenceImage,Unity.Jobs.JobHandle)) on the [MutableRuntimeReferenceImageLibrary](xref:UnityEngine.XR.ARSubsystems.MutableRuntimeReferenceImageLibrary).
 
 ### Changes
