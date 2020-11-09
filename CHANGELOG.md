@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.13] - 2020-11-09
+### Fixes
+- Fix crash when performing a synchronous [XRCpuImage conversion](xref:UnityEngine.XR.ARSubsystems.XRCpuImage.Convert(UnityEngine.XR.ARSubsystems.XRCpuImage.ConversionParams,System.IntPtr,System.Int32)) while an [asynchronous conversion](xref:UnityEngine.XR.ARSubsystems.XRCpuImage.ConvertAsync(UnityEngine.XR.ARSubsystems.XRCpuImage.ConversionParams)) is already running.
+
 ## [4.1.0-preview.12] - 2020-11-02
 ### Changes
 - Removed a file called `NativeInterop.m` (it has been combined with an existing file to reduce name collisions). If you build for iOS by "appending" rather than "replacing" a previous Xcode project, you will need to manually remove this file reference. It is at `Libraries/com.unity.xr.arkit/Runtime/iOS/NativeInterop.m` in the Xcode project produced by Unity.

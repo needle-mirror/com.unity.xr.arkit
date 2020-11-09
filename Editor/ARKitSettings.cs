@@ -179,7 +179,7 @@ namespace UnityEditor.XR.ARKit
         static ListRequest s_ListRequest;
         static bool s_PreviousFaceTrackingToggleState;
         const string k_FaceTrackingPackageName = "com.unity.xr.arkit-face-tracking";
-        const string k_FaceTrackingPackageVersion = "@4.1.0-preview.12";
+        const string k_FaceTrackingPackageVersion = "@4.1.0-preview.13";
         const string k_SettingsKey = "UnityEditor.XR.ARKit.ARKitSettings";
         const string k_OldConfigObjectName = "com.unity.xr.arkit.PlayerSettings";
 
