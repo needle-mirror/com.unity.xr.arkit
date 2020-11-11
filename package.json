@@ -1,9 +1,9 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "ARKit XR Plugin",
-  "version": "4.1.0-preview.13",
+  "version": "4.1.1",
   "unity": "2019.4",
-  "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\n=Supported Features=\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion",
+  "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion",
   "keywords": [
     "arkit",
     "ar",
@@ -13,15 +13,15 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arsubsystems": "4.1.0-preview.13",
+    "com.unity.xr.arsubsystems": "4.1.1",
     "com.unity.xr.management": "3.2.16"
   },
   "upmCi": {
-    "footprint": "2b37bed17747f2fa560f5fe91423b59040e8e662"
+    "footprint": "1f542ca32b97bba6317d4eff47b9e32c5105a152"
   },
   "repository": {
     "url": "https://github.com/Unity-Technologies/upm-xr-arkit.git",
     "type": "git",
-    "revision": "c790da59f44607ee3b55f8d18ae93c988d7458af"
+    "revision": "959e61bb3296f82b77c928f809c3c221d5689150"
   }
 }
