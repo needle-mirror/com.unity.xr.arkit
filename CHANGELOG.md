@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.10] - 2021-01-05
+
+### Changes
+
+- Static libraries were built with Xcode 11.7 (11E801a) and Xcode 10.3 (10G8)
+
+### Fixes
+
+- Fix issue with z-depth calculations on iOS when AR Foundation camera is enabled. This issue would result in shader z-depth differences (e.g. during fog computation) between normal camera rendering compared to AR camera rendering.
+- Fixed an issue which would cause the ARSession to [fail](https://developer.apple.com/documentation/arkit/arsessionobserver/2887453-session?language=objc) when [adding](xref:UnityEngine.XR.ARSubsystems.MutableRuntimeReferenceImageLibrary.ScheduleAddImageJob(Unity.Collections.NativeSlice{System.Byte},UnityEngine.Vector2Int,UnityEngine.TextureFormat,UnityEngine.XR.ARSubsystems.XRReferenceImage,Unity.Jobs.JobHandle)) an invalid reference image. If the new reference image fails [validation](https://developer.apple.com/documentation/arkit/arreferenceimage/3194594-validatewithcompletionhandler?language=objc), it is not added to the reference image library, and an error is logged. The validation requires iOS 13 or later; pre iOS 13, invalid reference images will still cause the ARSession to fail.
+
 ## [3.1.8] - 2020-10-07
 ### Changes
 - Update dependecy on AR Subsystems to 3.1.6.
