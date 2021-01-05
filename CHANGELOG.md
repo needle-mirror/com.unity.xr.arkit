@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.14] - 2021-01-05
+
+### Fixes
+
+- Fix issue with z-depth calculations on iOS when AR Foundation camera is enabled. This issue would result in shader z-depth differences (e.g. during fog computation) between normal camera rendering compared to AR camera rendering.
+
 ## [2.1.10] - 2020-10-07
 ### Changes
 - Static library was built with Xcode 10.3 (10G8).
