@@ -43,7 +43,12 @@ To avoid blocking the main thread, the tasks of converting the ARKit mesh into a
 
 ### Other `ARMeshManager` settings
 
-For the ARKit implementation, only these 3 settings affect the performance and output of ARKit meshing.
+For the ARKit implementation, only the above mentioned settings affect the performance and output of ARKit meshing. ARKit does not implement the following features of the `ARMeshManager`:
+
+- Density
+- Tangents
+- Texture Coordinates
+- Colors
 
 ## Sample Scenes
 

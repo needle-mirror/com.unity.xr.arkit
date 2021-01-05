@@ -55,9 +55,13 @@ ARKit requires iOS 11.0. Some specific features require later versions (see belo
 
 ## Build settings
 
-To access ARKit build settings, from Unity's main menu, go to **Edit &gt; Project Settings**, then select **XR &gt; ARKit**:
+To access ARKit build settings, from Unity's main menu, go to **Edit &gt; Project Settings**, then navigate to the **XR Plug-in Management** menu and check the **ARKit** provider, as shown in the screenshot below:
 
-![ARKit Settings window](images/arkitsettings-dialog.png "ARKit Settings window")
+![XR Plug-in Management](images/arkit-xrmanagement.png "ARKit in XR Management")
+
+This will create an `ARKitSettings` Asset that can be accessed under **XR Plug-in Management &gt; ARKit**, as shown in the screenshot below:
+
+![ARKit Settings](images/arkitsettings-dialog.png "ARKit Settings")
 
 ### Requiring AR
 
