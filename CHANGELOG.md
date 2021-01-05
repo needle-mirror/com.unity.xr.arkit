@@ -4,6 +4,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.10] - 2021-01-05
+
+### Changes
+
+- Static library was built with Xcode 11.7 (11E801a).
+
+### Fixes
+
+- Fix issue with z-depth calculations on iOS when AR Foundation camera is enabled. This issue would result in shader z-depth differences (e.g. during fog computation) between normal camera rendering compared to AR camera rendering.
+- Fixed an issue which would cause the ARSession to [fail](https://developer.apple.com/documentation/arkit/arsessionobserver/2887453-session?language=objc) when [adding](xref:UnityEngine.XR.ARSubsystems.MutableRuntimeReferenceImageLibrary.ScheduleAddImageJob(Unity.Collections.NativeSlice{System.Byte},UnityEngine.Vector2Int,UnityEngine.TextureFormat,UnityEngine.XR.ARSubsystems.XRReferenceImage,Unity.Jobs.JobHandle)) an invalid reference image. If the new reference image fails [validation](https://developer.apple.com/documentation/arkit/arreferenceimage/3194594-validatewithcompletionhandler?language=objc), it is not added to the reference image library, and an error is logged. The validation requires iOS 13 or later; pre iOS 13, invalid reference images will still cause the ARSession to fail.
+- Clarify limitations of the `ARMeshManager` in the [meshing documentation](xref:arkit-meshing).
+
 ## [4.0.9] - 2020-10-06
 ### Changes
 - The session configuration's [ARWorldMap](xref:UnityEngine.XR.ARKit.ARWorldMap) can be cleared by calling [ApplyWorldMap](xref:UnityEngine.XR.ARKit.ARKitSessionSubsystem.ApplyWorldMap(UnityEngine.XR.ARKit.ARWorldMap)) with a default-constructed `ARWorldMap`. Previously, this method would throw if the `ARWorldMap` was not valid.

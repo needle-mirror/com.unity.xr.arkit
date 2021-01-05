@@ -135,7 +135,7 @@ Shader "Unlit/ARKitBackground"
                 d = _UnityCameraForwardScale > 0.0 ? _UnityCameraForwardScale * d : d;
 
                 // Clip any distances smaller than the near clip plane, and compute the depth value from the distance.
-                return (d < _ProjectionParams.y) ? 0.0f : ((0.5f / _ZBufferParams.z) * ((1.0f / d) - _ZBufferParams.w));
+                return (d < _ProjectionParams.y) ? 0.0f : ((1.0f / _ZBufferParams.z) * ((1.0f / d) - _ZBufferParams.w));
             }
 
 
