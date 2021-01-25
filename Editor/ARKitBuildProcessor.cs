@@ -333,7 +333,7 @@ namespace UnityEditor.XR.ARKit
             if (generalSettings != null)
             {
                 ARKitBuildProcessor.s_LoaderEnabled = false;
-                foreach (var loader in generalSettings.Manager.loaders)
+                foreach (var loader in generalSettings.Manager.activeLoaders)
                 {
                     if (loader is ARKitLoader)
                     {
