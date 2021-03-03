@@ -45,7 +45,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="offset">The offset into the <paramref name="bytes"/> array from which to start constructing <see cref="ARCollaborationData"/>.</param>
         /// <param name="length">The number of bytes in <paramref name="bytes"/> to convert to <see cref="ARCollaborationData"/>.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="bytes"/> is null.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> is outside the range [0..bytes.Length).</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> is outside the range [0..bytes.Length].</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="length"/> is outside the range [0..(bytes.Length - offset)].</exception>
         /// <seealso cref="ToSerialized"/>
         public unsafe ARCollaborationData(byte[] bytes, int offset, int length)
@@ -85,15 +85,15 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// True if the data is valid. The data may be invalid if this object was constructed
+        /// True if the data is valid. The data might be invalid if this object was constructed
         /// with an invalid byte array, or if it has been disposed.
         /// </summary>
         public bool valid => m_NativePtr != IntPtr.Zero;
 
         /// <summary>
         /// Gets the priority of the collaboration data. Use this to determine how
-        /// you should send the information to peers in a collaborative session,
-        /// e.g., reliably vs unreliably.
+        /// you should send the information to peers in a collaborative session
+        /// (for example, reliably vs. unreliably.)
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if <see cref="valid"/> is false.</exception>
         public ARCollaborationDataPriority priority
@@ -109,18 +109,14 @@ namespace UnityEngine.XR.ARKit
         /// Dispose the native ARCollaborationData. <see cref="valid"/> will be false after disposal.
         /// It is safe to dispose an invalid or already disposed ARCollaborationData.
         /// </summary>
-        public void Dispose()
-        {
-            UnityARKit_CFRelease(m_NativePtr);
-            m_NativePtr = IntPtr.Zero;
-        }
+        public void Dispose() => NSObject.Dispose(ref m_NativePtr);
 
         /// <summary>
-        /// Copies the bytes representing the serialized <see cref="ARCollaborationData"/> to a
+        /// Copies the bytes that represent the serialized <see cref="ARCollaborationData"/> to a
         /// <see cref="SerializedARCollaborationData"/>.
         /// A common use case would be to send these bytes to another device over a network.
         /// </summary>
-        /// <returns>A container representing the serialized bytes of this <see cref="ARCollaborationData"/>.</returns>
+        /// <returns>A container that represents the serialized bytes of this <see cref="ARCollaborationData"/>.</returns>
         /// <exception cref="System.InvalidOperationException">Thrown if <see cref="valid"/> is false.</exception>
         public unsafe SerializedARCollaborationData ToSerialized()
         {
@@ -177,7 +173,7 @@ namespace UnityEngine.XR.ARKit
                 throw new InvalidOperationException("ARCollaborationData has already been disposed.");
         }
 
-        unsafe static IntPtr ConstructUnchecked(void* bytes, int length)
+        static unsafe IntPtr ConstructUnchecked(void* bytes, int length)
         {
             using (var nsData = NSData.CreateWithBytesNoCopy(bytes, length))
             {
@@ -185,7 +181,7 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-        unsafe static IntPtr ConstructUnchecked(byte[] bytes, int offset, int length)
+        static unsafe IntPtr ConstructUnchecked(byte[] bytes, int offset, int length)
         {
             fixed(void* ptr = &bytes[offset])
             {
@@ -194,9 +190,6 @@ namespace UnityEngine.XR.ARKit
         }
 
 #if UNITY_XR_ARKIT_LOADER_ENABLED
-        [DllImport("__Internal")]
-        static extern void UnityARKit_CFRelease(IntPtr ptr);
-
         [DllImport("__Internal")]
         static extern IntPtr UnityARKit_CollaborationData_DeserializeFromNSData(IntPtr nsData);
 
@@ -208,26 +201,14 @@ namespace UnityEngine.XR.ARKit
 #else
         static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
-        static void UnityARKit_CFRelease(IntPtr ptr)
-        {
+        static IntPtr UnityARKit_CollaborationData_DeserializeFromNSData(IntPtr nsData) =>
             throw new System.NotImplementedException(k_ExceptionMsg);
-        }
 
-        static IntPtr UnityARKit_CollaborationData_DeserializeFromNSData(IntPtr nsData)
-        {
+        static IntPtr UnityARKit_CollaborationData_SerializeToNSData(IntPtr collaborationData) =>
             throw new System.NotImplementedException(k_ExceptionMsg);
-        }
 
-        static IntPtr UnityARKit_CollaborationData_SerializeToNSData(IntPtr collaborationData)
-        {
+        static ARCollaborationDataPriority UnityARKit_CollaborationData_GetPriority(IntPtr collaborationData) =>
             throw new System.NotImplementedException(k_ExceptionMsg);
-        }
-
-        static ARCollaborationDataPriority UnityARKit_CollaborationData_GetPriority(IntPtr collaborationData)
-        {
-            throw new System.NotImplementedException(k_ExceptionMsg);
-        }
-
 #endif
         internal IntPtr m_NativePtr;
     }

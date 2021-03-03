@@ -1,14 +1,21 @@
 # Changelog
+
 All notable changes to this package will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.1.5] - 2021-01-25
+## [4.2.0-pre.2] - 2021-03-03
+
+### New
+
+- [ARKit reference objects](xref:UnityEngine.XR.ARKit.ARKitReferenceObjectEntry) now store their data in the entry asset, which allows them to be used in [AssetBundles](xref:UnityEngine.AssetBundle).
 
 ### Changes
 
 - Update [XR Plug-in Management](https://docs.unity3d.com/Packages/com.unity.xr.management@4.0) dependency to 4.0.
+- Deprecated [NSError.isNull](xref:UnityEngine.XR.ARKit.NSError.isNull). To determine whether an `NSError` is null, simply compare it to `null` using the `==` operator.
+- Static library was built with Xcode 12.4 (12D4e).
 
 ## [4.1.3] - 2021-01-05
 

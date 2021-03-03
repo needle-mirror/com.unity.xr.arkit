@@ -4,7 +4,7 @@ namespace UnityEngine.XR.ARKit
 {
     /// <summary>
     /// Represents an asynchronous world map request.
-    /// Use this to determine the status of the request,
+    /// Use this to determine the status of the request
     /// and get the <see cref="ARWorldMap"/> once the request is complete.
     /// </summary>
     public struct ARWorldMapRequest : IDisposable, IEquatable<ARWorldMapRequest>

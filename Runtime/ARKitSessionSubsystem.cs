@@ -61,7 +61,7 @@ namespace UnityEngine.XR.ARKit
 
         /// <summary>
         /// The current [Coaching Goal](https://developer.apple.com/documentation/arkit/arcoachingoverlayview/3192180-goal).
-        /// This may be different than the <see cref="requestedCoachingGoal"/>.
+        /// This can be different than the <see cref="requestedCoachingGoal"/>.
         /// </summary>
         /// <returns>The type of goal the coaching overlay will guide the user through.</returns>
         public ARCoachingGoal currentCoachingGoal => NativeApi.UnityARKit_Session_GetCurrentCoachingGoal(self);
@@ -72,9 +72,9 @@ namespace UnityEngine.XR.ARKit
         public bool coachingActive => NativeApi.UnityARKit_Session_IsCoachingOverlayActive(self);
 
         /// <summary>
-        /// Activates or deactivates the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview)
+        /// Activates or deactivates the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview).
         /// </summary>
-        /// <param name="active">Whether the coaching overlay should be active or not.</param>
+        /// <param name="active">Whether the coaching overlay should be active.</param>
         /// <param name="transition">The type of transition to use when showing or hiding the coaching overlay.</param>
         public void SetCoachingActive(bool active, ARCoachingOverlayTransition transition)
         {
@@ -114,8 +114,8 @@ namespace UnityEngine.XR.ARKit
         /// the <see cref="ARWorldMap"/> is not valid, and need not be disposed.
         /// </para>
         /// </summary>
-        /// <param name="onComplete">A method to invoke when the world map has either been created, or determined
-        /// that it could not be created. Check the value of the <see cref="ARWorldMapRequestStatus"/> parameter
+        /// <param name="onComplete">A method to invoke when the world map has either been created, or if the
+        /// world map could not be created. Check the value of the <see cref="ARWorldMapRequestStatus"/> parameter
         /// to determine whether the world map was successfully created.</param>
         /// <seealso cref="ApplyWorldMap(ARWorldMap)"/>
         /// <seealso cref="worldMapSupported"/>
@@ -146,8 +146,8 @@ namespace UnityEngine.XR.ARKit
         /// Applies an <see cref="ARWorldMap"/> to the session.
         /// </summary>
         /// <remarks>
-        /// This will attempt to relocalize the current session to the given <paramref name="worldMap"/>. If
-        /// relocalization is successful, the stored planes and anchors from the <paramref name="worldMap"/> will be
+        /// This attempts to relocalize the current session to the given <paramref name="worldMap"/>. If
+        /// relocalization is successful, the stored planes and anchors from the <paramref name="worldMap"/> are
         /// added to the current session. This is equivalent to setting the
         /// [initialWorldMap](https://developer.apple.com/documentation/arkit/arworldtrackingconfiguration/2968180-initialworldmap)
         /// property on the session's
@@ -170,7 +170,7 @@ namespace UnityEngine.XR.ARKit
         /// is accumulated by the subsystem until you read it out with <see cref="DequeueCollaborationData"/>.
         /// </summary>
         /// <remarks>
-        /// Note: If you change this value, the new value may not be reflected until the next frame.
+        /// Note: If you change this value, the new value might not be reflected until the next frame.
         /// </remarks>
         /// <seealso cref="ARCollaborationData"/>
         /// <seealso cref="DequeueCollaborationData"/>
@@ -204,9 +204,10 @@ namespace UnityEngine.XR.ARKit
         /// The requested <see cref="ARWorldAlignment"/> for the session.
         /// </summary>
         /// <remarks>
-        /// **Note:** <see cref="ARWorldAlignment.GravityAndHeading"/> requires location services to be enabled and the
-        /// user must grant your app permission to use location services. You must therefore provide a
-        /// [Location Usage Description](xref:PlayerSettingsiOS-Other) entry in the Player Settings.
+        /// > [!NOTE]
+        /// > <see cref="ARWorldAlignment.GravityAndHeading"/> requires location services to be enabled and the
+        /// > user must grant your app permission to use location services. You must therefore provide a
+        /// > [Location Usage Description](xref:PlayerSettingsiOS-Other) entry in the Player Settings.
         /// </remarks>
         public ARWorldAlignment requestedWorldAlignment
         {
@@ -255,23 +256,13 @@ namespace UnityEngine.XR.ARKit
             NativeApi.UnityARKit_Session_UpdateWithCollaborationData(self, collaborationData.m_NativePtr);
         }
 
-#if UNITY_2020_2_OR_NEWER
+        /// <summary>
+        /// Invoked when the subsystem is created.
+        /// </summary>
         protected override void OnCreate()
         {
             SetupProvider((ARKitProvider)provider);
         }
-#else
-        /// <summary>
-        /// Creates the provider interface.
-        /// </summary>
-        /// <returns>The provider interface for ARKit</returns>
-        protected override Provider CreateProvider()
-        {
-            var provider = new ARKitProvider();
-            SetupProvider(provider);
-            return provider;
-        }
-#endif
 
         void SetupProvider(ARKitProvider provider)
         {
@@ -329,15 +320,9 @@ namespace UnityEngine.XR.ARKit
 
             bool AtLeastOneConfigurationExists() => NativeApi.UnityARKit_Session_GetConfigurationDescriptors(m_Self, IntPtr.Zero, 0, 0) > 0;
 
-#if UNITY_2020_2_OR_NEWER
             public override void Start() => NativeApi.UnityARKit_Session_Resume(m_Self);
 
             public override void Stop() => NativeApi.UnityARKit_Session_Pause(m_Self);
-#else
-            public override void Resume() => NativeApi.UnityARKit_Session_Resume(m_Self);
-
-            public override void Pause() => NativeApi.UnityARKit_Session_Pause(m_Self);
-#endif
 
             public override void Update(XRSessionUpdateParams updateParams)
                 => throw new NotSupportedException("Update requires a configuration.");
@@ -363,7 +348,7 @@ namespace UnityEngine.XR.ARKit
                 Assert.AreNotEqual(IntPtr.Zero, m_Self, $"Tried to destroy an already destroyed {nameof(ARKitSessionSubsystem)}.");
                 m_SubsystemHandle.Free();
                 m_SubsystemHandle = default;
-                Api.CFRelease(ref m_Self);
+                NSObject.Dispose(ref m_Self);
             }
 
             public override void Reset() => NativeApi.UnityARKit_Session_Reset(m_Self);
@@ -397,7 +382,7 @@ namespace UnityEngine.XR.ARKit
             public override Guid sessionId => NativeApi.UnityARKit_Session_GetSessionIdentifier(m_Self);
 
             /// <summary>
-            /// Enabled is the same as requested because this is a property of Unity's implementation, not a setting within ARKit.
+            /// `Enabled` is the same as `requested` because this is a property of Unity's implementation, not a setting within ARKit.
             /// </summary>
             public override bool matchFrameRateEnabled => matchFrameRateRequested;
 
@@ -421,12 +406,8 @@ namespace UnityEngine.XR.ARKit
             XRSessionSubsystemDescriptor.RegisterDescriptor(new XRSessionSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Session",
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(ARKitSessionSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitSessionSubsystem),
-#else
-                subsystemImplementationType = typeof(ARKitSessionSubsystem),
-#endif
                 supportsInstall = false,
                 supportsMatchFrameRate = true,
             });

@@ -87,7 +87,7 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Returns the current classification enabled state.
+        /// Whether mesh classification is enabled.
         /// </summary>
         /// <param name="subsystem">The meshing subsystem.</param>
         /// <returns>
@@ -99,7 +99,7 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Sets the current classification enabled state.
+        /// Sets whether mesh classification should be enabled.
         /// </summary>
         /// <param name="subsystem">The meshing subsystem.</param>
         /// <param name="enabled">Whether the mesh classification should be enabled.</param>

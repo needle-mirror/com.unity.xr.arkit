@@ -10,61 +10,49 @@ namespace UnityEngine.XR.ARKit
 {
     sealed class ARKitImageDatabase : MutableRuntimeReferenceImageLibrary
     {
-        internal IntPtr nativePtr { get; }
+        internal IntPtr self { get; }
+
+        internal const string resourceGroupName = "ARReferenceImages";
 
         ~ARKitImageDatabase()
         {
-            Assert.AreNotEqual(nativePtr, IntPtr.Zero);
+            Assert.AreNotEqual(self, IntPtr.Zero);
 
             // Release references
-            int n = count;
-            for (int i = 0; i < n; ++i)
+            var n = count;
+            for (var i = 0; i < n; ++i)
             {
-                UnityARKit_ImageDatabase_GetReferenceImage(nativePtr, i).Dispose();
+                GetReferenceImage(self, i).Dispose();
             }
 
-            UnityARKit_CFRelease(nativePtr);
+            NSObject.Release(self);
         }
 
-        public unsafe ARKitImageDatabase(XRReferenceImageLibrary serializedLibrary)
+        IntPtr CreateImageDatabase(XRReferenceImageLibrary library)
         {
-            if (serializedLibrary == null)
+            if (!Api.AtLeast11_3())
+                throw new NotSupportedException($"Image libraries require iOS 11.3 or newer.");
+
+            if (library == null)
             {
-                nativePtr = UnityARKit_ImageDatabase_CreateEmpty();
+                return Init();
             }
-            else
-            {
-                var managedReferenceImages = new NativeArray<ManagedReferenceImage>(serializedLibrary.count, Allocator.Temp);
-                for (int i = 0; i < serializedLibrary.count; ++i)
-                {
-                    managedReferenceImages[i] = new ManagedReferenceImage(serializedLibrary[i]);
-                }
 
-                using (managedReferenceImages)
-                {
-                    var nativeReturnCode = UnityARKit_ImageDatabase_TryCreateFromResourceGroup(
-                        serializedLibrary.name, serializedLibrary.name.Length, serializedLibrary.guid,
-                        managedReferenceImages.GetUnsafePtr(), managedReferenceImages.Length,
-                        out IntPtr ptr);
+            using var managedReferenceImages = library.ToNativeArray(Allocator.Temp);
+            using var bundle = library.GetNSBundle();
+            if (bundle == null)
+                throw new InvalidOperationException($"Could not create reference image library '{library.name}'. Unable to create resource bundle.");
 
-                    switch (nativeReturnCode)
-                    {
-                        case SetReferenceLibraryResult.Success:
-                            nativePtr = ptr;
-                            break;
+            using var groupName = library.GetARResourceGroupName();
+            using var referenceImages = ARReferenceImage.GetReferenceImagesInGroupNamed(groupName, bundle);
+            if (referenceImages.Count != managedReferenceImages.Length)
+                throw new InvalidOperationException($"The number of images in the {nameof(XRReferenceImageLibrary)} named '{library.name}' ({library.count}) does nat match the number of images in the native reference image data ({referenceImages.Count}). The {nameof(XRReferenceImageLibrary)} may need to be re-exported for iOS.");
 
-                        case SetReferenceLibraryResult.FeatureUnavailable:
-                            throw new InvalidOperationException($"Failed to resolve image library '{serializedLibrary.name}'. This feature only works on versions of ARKit 11.3 and newer.");
-
-                        case SetReferenceLibraryResult.ResourceDoesNotExist:
-                            throw new InvalidOperationException($"Failed to resolve image library '{serializedLibrary.name}'. There is no matching resource group, or the resource group does not contain any reference images.");
-
-                        default:
-                            throw new InvalidOperationException($"Unexpected return code {nativeReturnCode} encountered while trying to create a reference image library with name {serializedLibrary.name}.");
-                    }
-                }
-            }
+            return InitWithImages(referenceImages.AsIntPtr(), managedReferenceImages.AsNativeView());
         }
+
+        public ARKitImageDatabase(XRReferenceImageLibrary serializedLibrary) =>
+            self = CreateImageDatabase(serializedLibrary);
 
         /// <summary>
         /// (Read Only) Whether image validation is supported. `True` on iOS 13 and later.
@@ -86,18 +74,18 @@ namespace UnityEngine.XR.ARKit
             var validator = IntPtr.Zero;
             try
             {
-                UnityARKit_CFRetain(nativePtr);
+                NSObject.Retain(self);
 
                 // Schedules a job to convert the image bytes if necessary
                 convertedImage = GetImageBytesToConvert(imageBytes, sizeInPixels, ref format, ref inputDeps);
 
                 // Create a native object to contain the validation status
-                validator = CreateValidator(nativePtr);
+                validator = CreateValidator(self);
 
                 inputDeps = new AddImageJob
                 {
                     image = convertedImage.IsCreated ? new NativeSlice<byte>(convertedImage) : imageBytes,
-                    database = nativePtr,
+                    database = self,
                     validator = validator,
                     width = sizeInPixels.x,
                     height = sizeInPixels.y,
@@ -108,18 +96,18 @@ namespace UnityEngine.XR.ARKit
             }
             catch
             {
-                DestroyValidator(nativePtr, validator);
+                DestroyValidator(self, validator);
                 throw;
             }
             finally
             {
                 // Release our native counterpart that we previously retained
-                inputDeps = ScheduleReleaseJob(inputDeps);
+                inputDeps = Release(inputDeps);
 
                 // If we had to perform a conversion, then release that memory
                 if (convertedImage.IsCreated)
                 {
-                    inputDeps = new DeallocateNativeArrayJob<byte> { array = convertedImage }.Schedule(inputDeps);
+                    inputDeps = convertedImage.Dispose(inputDeps);
                 }
             }
 
@@ -185,37 +173,13 @@ namespace UnityEngine.XR.ARKit
 
         protected override XRReferenceImage GetReferenceImageAt(int index)
         {
-            Assert.AreNotEqual(nativePtr, IntPtr.Zero);
-            return UnityARKit_ImageDatabase_GetReferenceImage(nativePtr, index).ToReferenceImage();
+            Assert.AreNotEqual(self, IntPtr.Zero);
+            return GetReferenceImage(self, index).ToReferenceImage();
         }
 
-        public override int count
-        {
-            get
-            {
-                Assert.AreNotEqual(nativePtr, IntPtr.Zero);
-                return UnityARKit_ImageDatabase_GetReferenceImageCount(nativePtr);
-            }
-        }
+        public override int count => GetReferenceImageCount(self);
 
-        JobHandle ScheduleReleaseJob(JobHandle inputDeps) => new ReleaseDatabaseJob
-        {
-            database = nativePtr
-        }.Schedule(inputDeps);
-
-        struct ReleaseDatabaseJob : IJob
-        {
-            public IntPtr database;
-            public void Execute() => UnityARKit_CFRelease(database);
-        }
-
-        struct DeallocateNativeArrayJob<T> : IJob where T : struct
-        {
-            [DeallocateOnJobCompletion]
-            public NativeArray<T> array;
-
-            public void Execute() {}
-        }
+        JobHandle Release(JobHandle inputDeps) => NSObject.Dispose(self, inputDeps);
 
         struct ConvertRGBA32ToARGB32Job : IJobParallelFor
         {
@@ -267,26 +231,17 @@ namespace UnityEngine.XR.ARKit
         }
 
 #if UNITY_XR_ARKIT_LOADER_ENABLED && !UNITY_EDITOR
-        [DllImport("__Internal")]
-        static extern void UnityARKit_CFRetain(IntPtr ptr);
+        [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_init")]
+        static extern IntPtr Init();
 
-        [DllImport("__Internal")]
-        static extern void UnityARKit_CFRelease(IntPtr ptr);
+        [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_initWithImages")]
+        static extern IntPtr InitWithImages(IntPtr referenceImages, NativeView managedReferenceImages);
 
-        [DllImport("__Internal")]
-        static extern IntPtr UnityARKit_ImageDatabase_CreateEmpty();
+        [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_GetReferenceImage")]
+        static extern ManagedReferenceImage GetReferenceImage(IntPtr self, int index);
 
-        [DllImport("__Internal")]
-        static extern unsafe SetReferenceLibraryResult UnityARKit_ImageDatabase_TryCreateFromResourceGroup(
-            [MarshalAs(UnmanagedType.LPWStr)] string name, int nameLength, Guid guid,
-            void* managedReferenceImages, int managedReferenceImageCount,
-            out IntPtr ptr);
-
-        [DllImport("__Internal")]
-        static extern ManagedReferenceImage UnityARKit_ImageDatabase_GetReferenceImage(IntPtr database, int index);
-
-        [DllImport("__Internal")]
-        static extern int UnityARKit_ImageDatabase_GetReferenceImageCount(IntPtr database);
+        [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_GetReferenceImageCount")]
+        static extern int GetReferenceImageCount(IntPtr database);
 
         [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_CreateValidator")]
         static extern IntPtr CreateValidator(IntPtr database);
@@ -297,27 +252,23 @@ namespace UnityEngine.XR.ARKit
         [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_DestroyValidator")]
         static extern void DestroyValidator(IntPtr database, IntPtr validator);
 #else
-        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+        const string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
-        static void UnityARKit_CFRetain(IntPtr ptr) => throw new NotImplementedException(k_ExceptionMsg);
+        static IntPtr Init() => default;
 
-        static void UnityARKit_CFRelease(IntPtr ptr) => throw new NotImplementedException(k_ExceptionMsg);
+        static IntPtr InitWithImages(IntPtr referenceImages, NativeView managedReferenceImages) =>
+            throw new NotImplementedException(k_ExceptionMsg);
 
-        static IntPtr UnityARKit_ImageDatabase_CreateEmpty() => throw new NotImplementedException(k_ExceptionMsg);
-
-        static unsafe SetReferenceLibraryResult UnityARKit_ImageDatabase_TryCreateFromResourceGroup(
-            [MarshalAs(UnmanagedType.LPWStr)] string name, int nameLength, Guid guid,
-            void* managedReferenceImages, int managedReferenceImageCount,
-            out IntPtr ptr) => throw new System.NotImplementedException(k_ExceptionMsg);
-
-        static ManagedReferenceImage UnityARKit_ImageDatabase_GetReferenceImage(IntPtr database, int index) =>
+        static ManagedReferenceImage GetReferenceImage(IntPtr self, int index) =>
             throw new System.NotImplementedException(k_ExceptionMsg);
 
-        static int UnityARKit_ImageDatabase_GetReferenceImageCount(IntPtr database) =>
+        static int GetReferenceImageCount(IntPtr database) =>
             throw new System.NotImplementedException(k_ExceptionMsg);
 
         static IntPtr CreateValidator(IntPtr database) => default;
+
         static AddReferenceImageJobStatus GetValidatorStatus(IntPtr validator) => default;
+
         static void DestroyValidator(IntPtr database, IntPtr validator) { }
 #endif
     }

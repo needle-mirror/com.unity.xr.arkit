@@ -9,7 +9,7 @@ namespace UnityEditor.XR.ARKit
     /// Represents an AR Reference Image in an Xcode asset catalog. This is the
     /// Xcode representation of a UnityEngine.XR.ARSubsystems.XRReferenceImage.
     /// </summary>
-    internal class ARReferenceImage : ARResource
+    class ARReferenceImage : ARResource
     {
         public class InvalidWidthException : Exception {}
 

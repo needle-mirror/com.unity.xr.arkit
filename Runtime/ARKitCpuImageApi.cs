@@ -49,7 +49,7 @@ namespace UnityEngine.XR.ARKit
 
         /// <summary>
         /// Determine whether a native image handle returned by
-        /// <see cref="ARKitCameraSubsystem.Provider.TryAcquireLatestCpuImage"/> is currently valid. An image may
+        /// <see cref="ARKitCameraSubsystem.Provider.TryAcquireLatestCpuImage"/> is currently valid. An image can
         /// become invalid if it has been disposed.
         /// </summary>
         /// <remarks>
@@ -65,9 +65,9 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <param name="imageType">The type of image to acquire.</param>
         /// <param name="cinfo">On success, populated with construction information information for a
-        ///     <see cref="XRCpuImage"/>.</param>
+        /// <see cref="XRCpuImage"/>.</param>
         /// <returns>Returns `true` if the latest image of type <paramref name="imageType"/> was successfully acquired.
-        ///     Returns `false` otherwise.</returns>
+        /// Returns `false` otherwise.</returns>
         public static bool TryAcquireLatestImage(ImageType imageType, out XRCpuImage.Cinfo cinfo)
             => Native.TryAcquireLatestImage(imageType, out cinfo);
 
@@ -89,7 +89,7 @@ namespace UnityEngine.XR.ARKit
 
         /// <summary>
         /// Get the number of bytes required to store an image with the given dimensions and
-        /// [`TextureFormat`](https://docs.unity3d.com/ScriptReference/TextureFormat.html).
+        /// [TextureFormat](https://docs.unity3d.com/ScriptReference/TextureFormat.html).
         /// </summary>
         /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
         /// <param name="dimensions">The dimensions of the output image.</param>
@@ -154,7 +154,7 @@ namespace UnityEngine.XR.ARKit
         /// <remarks>
         /// If the first parameter to <paramref name="callback"/> is
         /// <see cref="XRCpuImage.AsyncConversionStatus.Ready"/> then the <c>dataPtr</c> parameter must be valid
-        /// for the duration of the invocation. The data may be destroyed immediately upon return. The
+        /// for the duration of the invocation. The data can be destroyed immediately upon return. The
         /// <paramref name="context"/> parameter must be passed back to the <paramref name="callback"/>.
         /// </remarks>
         /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
@@ -185,14 +185,14 @@ namespace UnityEngine.XR.ARKit
 
         /// <summary>
         /// Determines whether a given
-        /// [`TextureFormat`](https://docs.unity3d.com/ScriptReference/TextureFormat.html) is supported for image
+        /// [TextureFormat](https://docs.unity3d.com/ScriptReference/TextureFormat.html) is supported for image
         /// conversion.
         /// </summary>
         /// <param name="image">The <see cref="XRCpuImage"/> to convert.</param>
-        /// <param name="format">The [`TextureFormat`](https://docs.unity3d.com/ScriptReference/TextureFormat.html)
-        ///     to test.</param>
+        /// <param name="format">The [TextureFormat](https://docs.unity3d.com/ScriptReference/TextureFormat.html)
+        ///  to test.</param>
         /// <returns>Returns `true` if <paramref name="image"/> can be converted to <paramref name="format"/>.
-        ///     Returns `false` otherwise.</returns>
+        ///  Returns `false` otherwise.</returns>
         public override bool FormatSupported(XRCpuImage image, TextureFormat format)
         {
             switch (image.format)

@@ -7,7 +7,7 @@ namespace UnityEngine.XR.ARKit
     /// <summary>
     /// The space-mapping state and set of planes and anchors from
     /// an AR session. This is a wrapper for
-    /// <a href="https://developer.apple.com/documentation/arkit/arworldmap">ARKit's ARWorldMap</a>
+    /// <a href="https://developer.apple.com/documentation/arkit/arworldmap">ARKit's ARWorldMap</a>.
     /// Note: The <c>ARWorldMap</c> must be explicitly disposed to avoid leaking native resources.
     /// </summary>
     public struct ARWorldMap : IDisposable, IEquatable<ARWorldMap>
@@ -32,7 +32,7 @@ namespace UnityEngine.XR.ARKit
         public bool valid => (nativeHandle != k_InvalidHandle) && Api.UnityARKit_isWorldMapValid(nativeHandle);
 
         /// <summary>
-        /// Serialize the <c>ARWorldMap</c> to an array of bytes. This array may be saved to disk
+        /// Serialize the <c>ARWorldMap</c> to an array of bytes. This array can be saved to disk
         /// and loaded at another time to persist the session, or sent over a network
         /// to another ARKit-enabled app to share the session.
         /// It is an error to call this method after the <c>ARWorldMap</c> has been disposed.
@@ -75,7 +75,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="serializedWorldMap">An array of bytes representing a serialized <c>ARWorldMap</c>,
         /// produced by <see cref="Serialize"/>.</param>
         /// <param name="worldMap">On success, holds the deserialized <see cref="ARWorldMap"/>.</param>
-        /// <returns>'True' if <paramref name="serializedWorldMap"/> was successfully deserialized, otherwise false.</returns>
+        /// <returns>`True` if <paramref name="serializedWorldMap"/> was successfully deserialized, otherwise `false`.</returns>
         public static unsafe bool TryDeserialize(NativeArray<byte> serializedWorldMap, out ARWorldMap worldMap)
         {
             var nativeHandle = Api.UnityARKit_deserializeWorldMap(

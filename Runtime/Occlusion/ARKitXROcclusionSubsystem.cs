@@ -13,16 +13,6 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     class ARKitOcclusionSubsystem : XROcclusionSubsystem
     {
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Create the implementation provider.
-        /// </summary>
-        /// <returns>
-        /// The implementation provider.
-        /// </returns>
-        protected override Provider CreateProvider() => new ARKitProvider();
-#endif
-
         /// <summary>
         /// Register the ARKit occlusion subsystem if iOS and not the editor.
         /// </summary>
@@ -34,22 +24,15 @@ namespace UnityEngine.XR.ARKit
 
             const string k_SubsystemId = "ARKit-Occlusion";
 
-            bool supportsHumanSegmentationStencilImage = NativeApi.UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil();
-            bool supportsHumanSegmentationDepthImage = NativeApi.UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth();
-
             XROcclusionSubsystemCinfo occlusionSubsystemCinfo = new XROcclusionSubsystemCinfo()
             {
                 id = k_SubsystemId,
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(ARKitOcclusionSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitOcclusionSubsystem),
-#else
-                implementationType = typeof(ARKitOcclusionSubsystem),
-#endif
-                supportsHumanSegmentationStencilImage = supportsHumanSegmentationStencilImage,
-                supportsHumanSegmentationDepthImage = supportsHumanSegmentationDepthImage,
-                queryForSupportsEnvironmentDepthImage = NativeApi.UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth,
-                queryForSupportsEnvironmentDepthConfidenceImage =  NativeApi.UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth,
+                humanSegmentationStencilImageSupportedDelegate = NativeApi.UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil,
+                humanSegmentationDepthImageSupportedDelegate = NativeApi.UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth,
+                environmentDepthImageSupportedDelegate = NativeApi.UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth,
+                environmentDepthConfidenceImageSupportedDelegate =  NativeApi.UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth,
             };
 
             XROcclusionSubsystem.Register(occlusionSubsystemCinfo);
@@ -193,7 +176,7 @@ namespace UnityEngine.XR.ARKit
             public override void Destroy() => NativeApi.UnityARKit_OcclusionProvider_Destruct();
 
             /// <summary>
-            /// Property to get/set the requested human segmentation stencil mode.
+            /// Property to get or set the requested human segmentation stencil mode.
             /// </summary>
             /// <value>
             /// The requested human segmentation stencil mode.
@@ -215,13 +198,13 @@ namespace UnityEngine.XR.ARKit
                 => NativeApi.UnityARKit_OcclusionProvider_GetCurrentSegmentationStencilMode();
 
             /// <summary>
-            /// Property to get/set the requested human segmentation depth mode.
+            /// Property to get or set the requested human segmentation depth mode.
             /// </summary>
             /// <value>
             /// The requested human segmentation depth mode.
             /// </value>
             /// <exception cref="System.NotSupportedException">Thrown when setting the human segmentation depth mode
-            /// to enabled if the implementation does not support human segmentation.</exception>
+            /// to `enabled` if the implementation does not support human segmentation.</exception>
             public override HumanSegmentationDepthMode requestedHumanDepthMode
             {
                 get => NativeApi.UnityARKit_OcclusionProvider_GetRequestedSegmentationDepthMode();
@@ -239,7 +222,7 @@ namespace UnityEngine.XR.ARKit
                 => NativeApi.UnityARKit_OcclusionProvider_GetCurrentSegmentationDepthMode();
 
             /// <summary>
-            /// Property to get/set the requested environment depth mode.
+            /// Property to get or set the requested environment depth mode.
             /// </summary>
             /// <value>
             /// The requested environment depth mode.
@@ -492,16 +475,16 @@ namespace UnityEngine.XR.ARKit
             public static extern EnvironmentDepthMode UnityARKit_OcclusionProvider_GetCurrentEnvironmentDepthMode();
 
             [DllImport("__Internal")]
-            public static extern unsafe bool UnityARKit_OcclusionProvider_TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor);
+            public static extern bool UnityARKit_OcclusionProvider_TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor);
 
             [DllImport("__Internal")]
-            public static extern unsafe bool UnityARKit_OcclusionProvider_TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor);
+            public static extern bool UnityARKit_OcclusionProvider_TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor);
 
             [DllImport("__Internal")]
-            public static unsafe extern bool UnityARKit_OcclusionProvider_TryGetEnvironmentDepth(out XRTextureDescriptor envDepthDescriptor);
+            public static extern bool UnityARKit_OcclusionProvider_TryGetEnvironmentDepth(out XRTextureDescriptor envDepthDescriptor);
 
             [DllImport("__Internal")]
-            public static unsafe extern bool UnityARKit_OcclusionProvider_TryGetEnvironmentDepthConfidence(out XRTextureDescriptor envDepthConfidenceDescriptor);
+            public static extern bool UnityARKit_OcclusionProvider_TryGetEnvironmentDepthConfidence(out XRTextureDescriptor envDepthConfidenceDescriptor);
 
             [DllImport("__Internal")]
             public static extern unsafe void* UnityARKit_OcclusionProvider_AcquireTextureDescriptors(out int length, out int elementSize);
@@ -516,13 +499,13 @@ namespace UnityEngine.XR.ARKit
             public static extern bool UnityARKit_OcclusionProvider_IsEnvironmentEnabled();
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil();
+            public static extern Supported UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil();
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth();
+            public static extern Supported UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth();
 
-			[DllImport("__Internal")]
-			public static extern bool UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth();
+            [DllImport("__Internal")]
+            public static extern Supported UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth();
 #else
             static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
@@ -626,13 +609,13 @@ namespace UnityEngine.XR.ARKit
 
             public static bool UnityARKit_OcclusionProvider_IsHumanEnabled() => false;
 
-			public static bool UnityARKit_OcclusionProvider_IsEnvironmentEnabled() => false;
+            public static bool UnityARKit_OcclusionProvider_IsEnvironmentEnabled() => false;
 
-            public static bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil() => false;
+            public static Supported UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil() => Supported.Unsupported;
 
-            public static bool UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth() => false;
+            public static Supported UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth() => Supported.Unsupported;
 
-			public static bool UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth() => false;
+            public static Supported UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth() => Supported.Unsupported;
 #endif
         }
     }

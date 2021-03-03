@@ -11,12 +11,12 @@ namespace UnityEngine.XR.ARKit
         None,
 
         /// <summary>
-        /// The data is important to the collaborative session and should be sent reliably, e.g., using TCP.
+        /// The data is important to the collaborative session and should be sent reliably (for example, using TCP).
         /// </summary>
         Critical,
 
         /// <summary>
-        /// The data is not important to collaborative session quality and may be sent unreliably, e.g., using UDP.
+        /// The data is not important to collaborative session quality and may be sent unreliably (for example, using UDP).
         /// </summary>
         Optional
     }

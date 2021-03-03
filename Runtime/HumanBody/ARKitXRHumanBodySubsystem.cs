@@ -26,12 +26,8 @@ namespace UnityEngine.XR.ARKit
             XRHumanBodySubsystemCinfo humanBodySubsystemCinfo = new XRHumanBodySubsystemCinfo()
             {
                 id = k_SubsystemId,
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(ARKitHumanBodySubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitHumanBodySubsystem),
-#else
-                implementationType = typeof(ARKitHumanBodySubsystem),
-#endif
                 supportsHumanBody2D = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose2DEstimation(),
                 supportsHumanBody3D = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation(),
                 supportsHumanBody3DScaleEstimation = NativeApi.UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation(),
@@ -39,16 +35,6 @@ namespace UnityEngine.XR.ARKit
 
             XRHumanBodySubsystem.Register(humanBodySubsystemCinfo);
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Create the implementation provider.
-        /// </summary>
-        /// <returns>
-        /// The implementation provider.
-        /// </returns>
-        protected override Provider CreateProvider() => new ARKitProvider();
-#endif
 
         /// <summary>
         /// The implementation provider class.
@@ -178,7 +164,7 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             /// <param name="trackableId">The human body trackable identifier for which to query.</param>
             /// <param name="allocator">The memory allocator to use for the returned arrays.</param>
-            /// <param name="skeleton">The array of skeleton joints to update and returns.</param>
+            /// <param name="skeleton">The array of skeleton joints to update and return.</param>
             public override unsafe void GetSkeleton(TrackableId trackableId, Allocator allocator, ref NativeArray<XRHumanBodyJoint> skeleton)
             {
                 int numJoints;
@@ -218,14 +204,14 @@ namespace UnityEngine.XR.ARKit
             /// <param name="defaultHumanBodyPose2DJoint">The default value for the body pose 2D joint.</param>
             /// <param name="screenWidth">The width of the screen, in pixels.</param>
             /// <param name="screenHeight">The height of the screen, in pixels.</param>
-            /// <param name="screenOrientation">The orientation of the device so that the joint positions may be
+            /// <param name="screenOrientation">The orientation of the device so that the joint positions can be
             /// adjusted as required.</param>
             /// <param name="allocator">The allocator to use for the returned array memory.</param>
             /// <returns>
             /// The array of body pose 2D joints.
             /// </returns>
             /// <remarks>
-            /// The returned array may be empty if the system does not detect a human in the camera image.
+            /// The returned array can be empty if the system does not detect a human in the camera image.
             /// </remarks>
             public override unsafe NativeArray<XRHumanBodyPose2DJoint> GetHumanBodyPose2DJoints(XRHumanBodyPose2DJoint defaultHumanBodyPose2DJoint,
                                                                                                 int screenWidth,

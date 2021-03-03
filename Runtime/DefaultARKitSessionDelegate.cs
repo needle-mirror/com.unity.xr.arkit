@@ -14,7 +14,7 @@ namespace UnityEngine.XR.ARKit
         public int retriesRemaining { get; protected set; }
 
         /// <summary>
-        /// (Read Only) The maximum number of attempts to reset to the session if the session fails.
+        /// (Read Only) The maximum number of attempts to reset the session if the session fails.
         /// </summary>
         /// <seealso cref="OnSessionDidFailWithError"/>
         public virtual int maxRetryCount { get; set; } = 5;
@@ -25,7 +25,7 @@ namespace UnityEngine.XR.ARKit
         /// <see cref="maxRetryCount"/> times.
         /// </summary>
         /// <param name="sessionSubsystem">The <see cref="ARKitSessionSubsystem"/> which provides an interface to the
-        ///     ARKit session.</param>
+        /// ARKit session.</param>
         /// <param name="error">The <see cref="NSError"/> object describing the failure.</param>
         protected override void OnSessionDidFailWithError(ARKitSessionSubsystem sessionSubsystem, NSError error)
         {
@@ -45,7 +45,7 @@ namespace UnityEngine.XR.ARKit
         /// Resets the <see cref="retriesRemaining"/> to <see cref="maxRetryCount"/>.
         /// </summary>
         /// <param name="sessionSubsystem">The <see cref="ARKitSessionSubsystem"/> which provides an interface to the
-        ///     ARKit session.</param>
+        /// ARKit session.</param>
         protected override void OnConfigurationChanged(ARKitSessionSubsystem sessionSubsystem)
         {
             retriesRemaining = maxRetryCount;

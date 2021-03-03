@@ -2,10 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.iOS.Xcode;
+using UnityEditor.XR.ARSubsystems;
 using UnityEngine;
+using UnityEngine.XR.ARKit;
 using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEditor.XR.ARKit
@@ -17,10 +20,10 @@ namespace UnityEditor.XR.ARKit
     /// </summary>
     static class ARKitReferenceImageLibraryBuildProcessor
     {
-        static IEnumerable<ARResourceGroup> ResourceGroups()
+        static IEnumerable<ValueTuple<ARResourceGroup, XRReferenceImageLibrary>> ResourceGroups()
         {
             // Create a resource group for each reference image library
-            foreach (var library in ARKitBuildProcessor.AssetsOfType<XRReferenceImageLibrary>())
+            foreach (var library in ARKitBuildHelper.AssetsOfType<XRReferenceImageLibrary>())
             {
                 var resourceGroup = new ARResourceGroup(library.name + "_" + library.guid.ToUUIDString());
 
@@ -69,14 +72,14 @@ namespace UnityEditor.XR.ARKit
                     }
                 }
 
-                yield return resourceGroup;
+                yield return (resourceGroup, library);
             }
         }
 
         // Fail the build if any of the reference images are invalid
         class Preprocessor : IPreprocessBuildWithReport
         {
-            public int callbackOrder { get { return 0; } }
+            public int callbackOrder => 0;
 
             public void OnPreprocessBuild(BuildReport report)
             {
@@ -84,18 +87,39 @@ namespace UnityEditor.XR.ARKit
                 if (report.summary.platform != BuildTarget.iOS)
                     return;
 
-                foreach (var resourceGroup in ResourceGroups())
+#if UNITY_EDITOR_OSX
+                var assets = AssetDatabase.FindAssets($"t:{nameof(XRReferenceImageLibrary)}");
+                var index = 0;
+                var minimumDeploymentTarget = new Version(11, 3);
+
+                foreach (var (resourceGroup, library) in ResourceGroups())
                 {
-                    // Generating a resource group will throw exceptions
-                    // if any of the reference images are invalid.
+                    index++;
+                    EditorUtility.DisplayProgressBar(
+                        $"Compiling {nameof(XRReferenceImageLibrary)} ({index} of {assets.Length})",
+                        $"{AssetDatabase.GetAssetPath(library)} ({library.count} image{(library.count == 1 ? "" : "s")})",
+                        (float)index / assets.Length);
+
+                    // Do not change this name. It must match the native call to referenceImagesInGroupNamed.
+                    resourceGroup.name = "ARReferenceImages";
+
+                    // Convert the resource group to a 'car' (compiled asset catalog) file
+                    library.SetDataForKey(ARKitPackageInfo.identifier, resourceGroup.ToCar(minimumDeploymentTarget));
                 }
-#endif
+#else // UNITY_EDITOR_OSX
+                foreach (var (resourceGroup, library) in ResourceGroups())
+                {
+                    // Keep this for loop on all platforms as it will fail
+                    // the build early if any reference images are invalid.
+                }
+#endif // UNITY_EDITOR_OSX
+#endif // UNITY_XR_ARKIT_LOADER_ENABLED
             }
         }
 
         class Postprocessor : IPostprocessBuildWithReport
         {
-            public int callbackOrder { get { return 0; } }
+            public int callbackOrder => 0;
 
             public void OnPostprocessBuild(BuildReport report)
             {
@@ -114,10 +138,18 @@ namespace UnityEditor.XR.ARKit
                 var assetCatalog = new XcodeAssetCatalog("ARReferenceImages");
 
                 // Generate resource groups and add each one to the asset catalog
-                foreach (var resourceGroup in ResourceGroups())
+                foreach (var (resourceGroup, library) in ResourceGroups())
                 {
-                    assetCatalog.AddResourceGroup(resourceGroup);
+                    // Only add libraries where we don't already have the data
+                    if (!library.dataStore.ContainsKey(ARKitPackageInfo.identifier))
+                    {
+                        assetCatalog.AddResourceGroup(resourceGroup);
+                    }
                 }
+
+                // Don't create empty asset catalogs
+                if (assetCatalog.count == 0)
+                    return;
 
                 // Create the asset catalog on disk
                 assetCatalog.WriteAndAddToPBXProject(project, buildOutputPath);

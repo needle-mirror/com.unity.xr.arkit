@@ -3,7 +3,7 @@ using System;
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
-    /// Represents a version number consisting of major, minor, and point compnents.
+    /// Represents a version number consisting of major, minor, and point components.
     /// Version numbers are often written as <c>Major.Minor.Point</c>.
     /// </summary>
     public struct OSVersion : IEquatable<OSVersion>, IComparable<OSVersion>
@@ -26,9 +26,9 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Constructs a new version number.
         /// </summary>
-        /// <param name="major">The major version component</param>
-        /// <param name="minor">The minor version component</param>
-        /// <param name="point">The point version component</param>
+        /// <param name="major">The major version component.</param>
+        /// <param name="minor">The minor version component.</param>
+        /// <param name="point">The point version component.</param>
         public OSVersion(int major, int minor = 0, int point = 0)
         {
             if (major < 0)
@@ -48,7 +48,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Parses a string which contains a version number of the form X.Y.Z somewhere in the string.
         /// If multiple such substrings exists, the first is used. The parser stops when either
-        /// 3 components have been identified, or when less than 3 components have been identified
+        /// 3 components have been identified, or when fewer than 3 components have been identified
         /// and the next character is not a period (".") or a digit (0-9). If <paramref name="version"/>
         /// is <c>null</c> or the empty string, this method returns the version 0.0.0
         /// </summary>
@@ -115,7 +115,7 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Generates a hash code suitable for use in a HashSet or Dictionary.
+        /// Generates a hash code suitable for use in a `HashSet` or `Dictionary`.
         /// </summary>
         /// <returns>A hash code. The same <c>OSVersion</c> will produce the same hash code.</returns>
         public override int GetHashCode()
@@ -133,7 +133,7 @@ namespace UnityEngine.XR.ARKit
         /// IComparable interface. This is useful for sorting routines.
         /// </summary>
         /// <param name="version">The other version to compare to.</param>
-        /// <returns>-1 if this OSVersion is less than <paramref name="version"/>, 0 if they are equal, or 1 if this is greater.</returns>
+        /// <returns>-1 if this <c>OSVersion</c> is less than <paramref name="version"/>, 0 if they are equal, or 1 if this is greater.</returns>
         public int CompareTo(OSVersion version)
         {
             if (this < version)
@@ -154,7 +154,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Compares for equality. The three version components are compared against <paramref name="other"/>'s.
         /// </summary>
-        /// <param name="other">The OSVersion to compare for equality.</param>
+        /// <param name="other">The <c>OSVersion</c> to compare for equality.</param>
         /// <returns>True if <paramref name="other"/> has the same <see cref="major"/>, <see cref="minor"/>, and <see cref="point"/> values.</returns>
         public bool Equals(OSVersion other)
         {

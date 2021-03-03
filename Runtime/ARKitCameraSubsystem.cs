@@ -29,10 +29,10 @@ namespace UnityEngine.XR.ARKit
         const string k_SubsystemId = "ARKit-Camera";
 
         /// <summary>
-        /// The name for the shader for rendering the camera texture.
+        /// The name of the shader for rendering the camera texture.
         /// </summary>
         /// <value>
-        /// The name for the shader for rendering the camera texture.
+        /// The name of the shader for rendering the camera texture.
         /// </value>
         const string k_BackgroundShaderName = "Unlit/ARKitBackground";
 
@@ -122,12 +122,8 @@ namespace UnityEngine.XR.ARKit
             XRCameraSubsystemCinfo cameraSubsystemCinfo = new XRCameraSubsystemCinfo
             {
                 id = k_SubsystemId,
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(ARKitCameraSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitCameraSubsystem),
-#else
-                implementationType = typeof(ARKitCameraSubsystem),
-#endif
                 supportsAverageBrightness = false,
                 supportsAverageColorTemperature = true,
                 supportsColorCorrection = false,
@@ -147,19 +143,9 @@ namespace UnityEngine.XR.ARKit
 
             if (!XRCameraSubsystem.Register(cameraSubsystemCinfo))
             {
-                Debug.LogErrorFormat("Cannot register the {0} subsystem", k_SubsystemId);
+                Debug.LogError($"Cannot register the {k_SubsystemId} subsystem");
             }
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Create the ARKit camera functionality provider for the camera subsystem.
-        /// </summary>
-        /// <returns>
-        /// The ARKit camera functionality provider for the camera subsystem.
-        /// </returns>
-        protected override Provider CreateProvider() => new ARKitProvider();
-#endif
 
         /// <summary>
         /// Provides the camera functionality for the ARKit implementation.
@@ -288,7 +274,7 @@ namespace UnityEngine.XR.ARKit
             public override Feature currentCamera => NativeApi.UnityARKit_Camera_GetCurrentCamera();
 
             /// <summary>
-            /// Get the currently active camera or set the requested camera
+            /// Get the currently active camera or set the requested camera.
             /// </summary>
             public override Feature requestedCamera
             {
@@ -412,8 +398,8 @@ namespace UnityEngine.XR.ARKit
             /// <exception cref="System.InvalidOperationException">Thrown when setting the current configuration if the
             /// implementation is unable to set the current camera configuration for various reasons such as:
             /// <list type="bullet">
-            /// <item><description>Version of iOS does not support camera configurations</description></item>
-            /// <item><description>ARKit session is invalid</description></item>
+            /// <item><description>Version of iOS does not support camera configurations.</description></item>
+            /// <item><description>ARKit session is invalid.</description></item>
             /// </list>
             /// </exception>
             public override XRCameraConfiguration? currentConfiguration

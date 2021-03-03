@@ -5,7 +5,7 @@ using UnityEngine.XR.ARSubsystems;
 namespace UnityEngine.XR.ARKit
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct NativeChanges : IDisposable, IEquatable<NativeChanges>
+    struct NativeChanges : IDisposable, IEquatable<NativeChanges>
     {
         IntPtr m_Ptr;
 
@@ -15,7 +15,7 @@ namespace UnityEngine.XR.ARKit
         public int removedLength => GetRemovedLength(this);
         public MemoryLayout memoryLayout => GetMemoryLayout(this);
         public TrackingState trackingState => GetTrackingState(this);
-        public void Dispose() => Api.CFRelease(ref m_Ptr);
+        public void Dispose() => NSObject.Dispose(ref m_Ptr);
 
         public override bool Equals(object obj) => (obj is NativeChanges) && Equals((NativeChanges)obj);
         public override int GetHashCode() => m_Ptr.GetHashCode();

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace UnityEditor.XR.ARKit
 {
     /// <summary>
-    /// Represents an ARKit ARObject archive, often a file with a <c>.arobject</c> extension.
+    /// Represents an ARKit ARObject archive. This is the contents of a file with extension <c>.arobject</c>.
     /// See <a href="https://developer.apple.com/documentation/arkit/scanning_and_detecting_3d_objects">Scanning and Detecting 3D Objects</a>
     /// for instructions on how to generate these files.
     /// </summary>
@@ -25,11 +25,11 @@ namespace UnityEditor.XR.ARKit
         /// <summary>
         /// The <see cref="ARObjectInfo"/> associated with this <see cref="ARObject"/>.
         /// </summary>
-        public ARObjectInfo info { get; private set; }
+        public ARObjectInfo info { get; }
 
         /// <summary>
         /// A preview image associated with the <c>ARObject</c>.
         /// </summary>
-        public Texture2D preview { get; private set; }
+        public Texture2D preview { get; }
     }
 }

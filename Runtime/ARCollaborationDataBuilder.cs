@@ -8,10 +8,10 @@ namespace UnityEngine.XR.ARKit
     /// Use this to construct an <see cref="ARCollaborationData"/> incrementally from serialized bytes.
     /// </summary>
     /// <remarks>
-    /// This struct may be useful if you receive data through a stream. If you already have all
+    /// This struct can be useful if you receive data through a stream. If you already have all
     /// the bytes, use a <see cref="ARCollaborationData"/> constructor instead.
     /// This struct represents a native resource and must be explicitly disposed when no longer needed.
-    /// While this struct is not thread safe, you may construct, Dispose, and Append from any thread.
+    /// While this struct is not thread safe, you can construct, Dispose, and Append from any thread.
     /// </remarks>
     public struct ARCollaborationDataBuilder : IDisposable, IEquatable<ARCollaborationDataBuilder>
     {
@@ -48,7 +48,7 @@ namespace UnityEngine.XR.ARKit
             if (!hasData)
                 throw new InvalidOperationException("No data to convert to ARCollaborationData.");
 
-            return new ARCollaborationData(m_NSMutableData.ToNSData());
+            return new ARCollaborationData(m_NSMutableData);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace UnityEngine.XR.ARKit
         public void Dispose() => m_NSMutableData.Dispose();
 
         /// <summary>
-        /// Appends data to the underlying NSMutableData array.
+        /// Appends data to the underlying `NSMutableData` array.
         /// </summary>
         /// <param name="bytes">A pointer to an array of bytes to append to the existing data.</param>
         /// <param name="size">The number of bytes pointed to by <paramref name="bytes"/>.</param>
@@ -125,7 +125,7 @@ namespace UnityEngine.XR.ARKit
         {
             if (m_NSMutableData.created)
             {
-                m_NSMutableData.Append(bytes, size);
+                m_NSMutableData.AppendBytes(bytes, size);
             }
             else
             {

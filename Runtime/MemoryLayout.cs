@@ -7,17 +7,17 @@ namespace UnityEngine.XR.ARKit
     internal struct MemoryLayout : IEquatable<MemoryLayout>
     {
         /// <summary>
-        /// The number of bytes required to store a single session relative data object
+        /// The number of bytes required to store a single session-relative data object.
         /// </summary>
         public int size;
 
         /// <summary>
-        /// The number of bytes between consecutive elements in an array of session relative data objects
+        /// The number of bytes between consecutive elements in an array of session-relative data objects.
         /// </summary>
         public int stride;
 
         /// <summary>
-        /// The alignment required by a session relative data object
+        /// The alignment required by a session-relative data object.
         /// </summary>
         public int alignment;
 

@@ -13,14 +13,6 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitRaycastSubsystem : XRRaycastSubsystem
     {
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Creates the ARKit-specific implementation which will service the `XRRaycastSubsystem`.
-        /// </summary>
-        /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
-        protected override Provider CreateProvider() => new ARKitProvider();
-#endif
-
         class ARKitProvider : XRRaycastSubsystem.Provider
         {
             IntPtr m_Self;
@@ -43,13 +35,7 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            public override void Destroy()
-            {
-                if (m_Self != IntPtr.Zero)
-                {
-                    Api.CFRelease(ref m_Self);
-                }
-            }
+            public override void Destroy() => NSObject.Dispose(ref m_Self);
 
             public override unsafe TrackableChanges<XRRaycast> GetChanges(XRRaycast defaultRaycast, Allocator allocator)
             {
@@ -129,12 +115,8 @@ namespace UnityEngine.XR.ARKit
             XRRaycastSubsystemDescriptor.RegisterDescriptor(new XRRaycastSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Raycast",
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(ARKitRaycastSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitRaycastSubsystem),
-#else
-                subsystemImplementationType = typeof(ARKitRaycastSubsystem),
-#endif
                 supportsViewportBasedRaycast = true,
                 supportsWorldBasedRaycast = false,
                 supportedTrackableTypes =

@@ -18,7 +18,7 @@ namespace UnityEngine.XR.ARKit
         Pending,
 
         /// <summary>
-        /// The request succeeded successfully.
+        /// The request completed successfully.
         /// </summary>
         Success,
 
@@ -57,7 +57,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="status">The <see cref="ARWorldMapRequestStatus"/> being extended.</param>
         /// <returns><c>true</c> if <paramref name="status"/> indicates the request has completed.</returns>
         /// <returns>Returns `true` if <paramref name="status"/> indicates the request has completed.
-        ///     Returns `false` otherwise.</returns>
+        /// Returns `false` otherwise.</returns>
         public static bool IsDone(this ARWorldMapRequestStatus status)
         {
             return status != ARWorldMapRequestStatus.Pending;
@@ -69,7 +69,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="status">The <see cref="ARWorldMapRequestStatus"/> being extended.</param>
         /// <returns><c>true</c> if <paramref name="status"/> indicates an error status.</returns>
         /// <returns>Returns `true` if <paramref name="status"/> indicates an error status.
-        ///     Returns `false` otherwise.</returns>
+        /// Returns `false` otherwise.</returns>
         public static bool IsError(this ARWorldMapRequestStatus status)
         {
             switch (status)

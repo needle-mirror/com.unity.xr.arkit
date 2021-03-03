@@ -25,12 +25,8 @@ namespace UnityEngine.XR.ARKit
             XREnvironmentProbeSubsystemCinfo environmentProbeSubsystemInfo = new XREnvironmentProbeSubsystemCinfo()
             {
                 id = subsystemId,
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(ARKitEnvironmentProbeSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitEnvironmentProbeSubsystem),
-#else
-                implementationType = typeof(ARKitEnvironmentProbeSubsystem),
-#endif
                 supportsManualPlacement = true,
                 supportsRemovalOfManual = true,
                 supportsAutomaticPlacement = true,
@@ -41,10 +37,6 @@ namespace UnityEngine.XR.ARKit
 
             XREnvironmentProbeSubsystem.Register(environmentProbeSubsystemInfo);
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        protected override Provider CreateProvider() => new ARKitProvider();
-#endif
 
         class ARKitProvider : Provider
         {
@@ -92,7 +84,7 @@ namespace UnityEngine.XR.ARKit
             }
 
             /// <summary>
-            /// Query whether HDR texture generation is enabled.
+            /// Queries whether HDR texture generation is enabled.
             /// </summary>
             public override bool environmentTextureHDREnabled => EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_GetEnvironmentTextureHDREnabled();
 
@@ -102,7 +94,7 @@ namespace UnityEngine.XR.ARKit
             }
 
             /// <summary>
-            /// Remove the environment probe matching the trackable ID from the AR session..
+            /// Remove the environment probe matching the trackable ID from the AR session.
             /// </summary>
             /// <param name='trackableId'>The trackable ID for the environment probe to be removed.</param>
             /// <returns>
@@ -137,7 +129,7 @@ namespace UnityEngine.XR.ARKit
                 {
                     unsafe
                     {
-                        // Wrap the navite pointers into a native array and then copy them into a separate native array enabled
+                        // Wrap the native pointers into a native array and then copy them into a separate native array enabled
                         // with temporary allocations.
                         return new TrackableChanges<XREnvironmentProbe>(
                             (void*)addedEnvironmentProbesPointer, numAddedEnvironmentProbes,

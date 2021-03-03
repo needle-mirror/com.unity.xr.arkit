@@ -1,7 +1,7 @@
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
-    /// The type of transition used when showing or hiding the [ARCoachingOverlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview)
+    /// The type of transition used when showing or hiding the [ARCoachingOverlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview).
     /// </summary>
     /// <seealso cref="ARKitSessionSubsystem.SetCoachingActive(bool, ARCoachingOverlayTransition)"/>
     public enum ARCoachingOverlayTransition

@@ -9,7 +9,7 @@ namespace UnityEngine.XR.ARKit
     public enum ARWorldMappingStatus
     {
         /// <summary>
-        /// Mapping is not available
+        /// Mapping is not available.
         /// </summary>
         NotAvailable = 0,
 

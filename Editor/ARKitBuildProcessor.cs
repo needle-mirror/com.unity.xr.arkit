@@ -29,15 +29,6 @@ namespace UnityEditor.XR.ARKit
 {
     class ARKitBuildProcessor
     {
-        public static IEnumerable<T> AssetsOfType<T>() where T : UnityEngine.Object
-        {
-            foreach(var guid in AssetDatabase.FindAssets("t:" + typeof(T).Name))
-            {
-                var path = AssetDatabase.GUIDToAssetPath(guid);
-                yield return AssetDatabase.LoadAssetAtPath<T>(path);
-            }
-        }
-
         class PostProcessor : IPostprocessBuildWithReport
         {
             // NB: Needs to be > 0 to make sure we remove the shader since the
@@ -138,7 +129,7 @@ namespace UnityEditor.XR.ARKit
 
             void PreprocessBuild(BuildReport report)
             {
-                if (s_LoaderEnabled && report.summary.platform != BuildTarget.iOS)
+                if (loaderEnabled && report.summary.platform != BuildTarget.iOS)
                     return;
 
                 if (string.IsNullOrEmpty(PlayerSettings.iOS.cameraUsageDescription))
@@ -236,11 +227,11 @@ namespace UnityEditor.XR.ARKit
 
             bool ShouldIncludeRuntimePluginsInBuild(string path)
             {
-                if (!s_LoaderEnabled)
+                if (!loaderEnabled)
                     return false;
 
                 if (path.Contains("libUnityARKitFaceTracking.a"))
-                    return s_FaceTrackingEnabled;
+                    return faceTrackingEnabled;
 
                 return true;
             }
@@ -264,18 +255,18 @@ namespace UnityEditor.XR.ARKit
                 }
             }
 
-            public int callbackOrder { get { return 0; } }
+            public int callbackOrder => 0;
         }
 
-        public static bool s_LoaderEnabled;
-        public static bool s_FaceTrackingEnabled;
+        public static bool loaderEnabled;
+        public static bool faceTrackingEnabled;
     }
 
     static class AddDefineSymbols
     {
         public static void Add(string define)
         {
-            string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+            var definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
             var allDefines = new HashSet<string>(definesString.Split(';'));
 
             if (allDefines.Contains(define))
@@ -306,7 +297,7 @@ namespace UnityEditor.XR.ARKit
         static LoaderEnabledCheck()
         {
             s_ARKitSettings = ARKitSettings.GetOrCreateSettings();
-            ARKitBuildProcessor.s_LoaderEnabled = s_ARKitSettings.faceTracking;
+            ARKitBuildProcessor.loaderEnabled = s_ARKitSettings.faceTracking;
 
             UpdateARKitDefines();
             EditorCoroutineUtility.StartCoroutineOwnerless(UpdateARKitDefinesCoroutine());
@@ -327,40 +318,40 @@ namespace UnityEditor.XR.ARKit
 
         static void UpdateARKitDefines()
         {
-            bool previousLoaderEnabled = ARKitBuildProcessor.s_LoaderEnabled;
+            bool previousLoaderEnabled = ARKitBuildProcessor.loaderEnabled;
 
             var generalSettings = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
             if (generalSettings != null)
             {
-                ARKitBuildProcessor.s_LoaderEnabled = false;
+                ARKitBuildProcessor.loaderEnabled = false;
                 foreach (var loader in generalSettings.Manager.activeLoaders)
                 {
                     if (loader is ARKitLoader)
                     {
-                        ARKitBuildProcessor.s_LoaderEnabled = true;
+                        ARKitBuildProcessor.loaderEnabled = true;
                         break;
                     }
                 }
 
-                if (ARKitBuildProcessor.s_LoaderEnabled && !previousLoaderEnabled)
+                if (ARKitBuildProcessor.loaderEnabled && !previousLoaderEnabled)
                 {
                     AddDefineSymbols.Add("UNITY_XR_ARKIT_LOADER_ENABLED");
                 }
-                else if (!ARKitBuildProcessor.s_LoaderEnabled && previousLoaderEnabled)
+                else if (!ARKitBuildProcessor.loaderEnabled && previousLoaderEnabled)
                 {
                     AddDefineSymbols.Remove("UNITY_XR_ARKIT_LOADER_ENABLED");
                 }
 
-                if (s_ARKitSettings.faceTracking && !ARKitBuildProcessor.s_FaceTrackingEnabled)
+                if (s_ARKitSettings.faceTracking && !ARKitBuildProcessor.faceTrackingEnabled)
                 {
                     AddDefineSymbols.Add("UNITY_XR_ARKIT_FACE_TRACKING_ENABLED");
                 }
-                else if (!s_ARKitSettings.faceTracking && ARKitBuildProcessor.s_FaceTrackingEnabled)
+                else if (!s_ARKitSettings.faceTracking && ARKitBuildProcessor.faceTrackingEnabled)
                 {
                     AddDefineSymbols.Remove("UNITY_XR_ARKIT_FACE_TRACKING_ENABLED");
                 }
 
-                ARKitBuildProcessor.s_FaceTrackingEnabled = s_ARKitSettings.faceTracking;
+                ARKitBuildProcessor.faceTrackingEnabled = s_ARKitSettings.faceTracking;
             }
         }
     }

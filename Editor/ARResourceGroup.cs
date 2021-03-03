@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityEditor.XR.ARKit
 {
-    internal class ARResourceGroup
+    class ARResourceGroup
     {
         public string name { get; set; }
 
@@ -14,10 +14,19 @@ namespace UnityEditor.XR.ARKit
             this.name = name;
         }
 
+#if UNITY_IOS
+        public byte[] ToCar(Version minimumDeploymentTarget)
+        {
+            var catalog = new XcodeAssetCatalog(null);
+            catalog.AddResourceGroup(this);
+            return catalog.ToCar(minimumDeploymentTarget);
+        }
+#endif
+
         public void AddResource(ARResource resource)
         {
             if (resource == null)
-                throw new ArgumentNullException("resource");
+                throw new ArgumentNullException(nameof(resource));
 
             if (m_Resources.Contains(resource))
                 throw new InvalidOperationException(string.Format("Duplicate resource '{0}` in group '{1}'", resource.name, name));

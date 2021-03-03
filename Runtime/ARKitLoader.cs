@@ -26,77 +26,77 @@ namespace UnityEngine.XR.ARKit
         static List<XRMeshSubsystemDescriptor> s_MeshSubsystemDescriptors  = new List<XRMeshSubsystemDescriptor>();
 
         /// <summary>
-        /// The `XRSessionSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRSessionSubsystem](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRSessionSubsystem sessionSubsystem => GetLoadedSubsystem<XRSessionSubsystem>();
 
         /// <summary>
-        /// The `XRCameraSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRCameraSubsystem](xref:UnityEngine.XR.ARSubsystems.XRCameraSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRCameraSubsystem cameraSubsystem => GetLoadedSubsystem<XRCameraSubsystem>();
 
         /// <summary>
-        /// The `XRDepthSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRDepthSubsystem](xref:UnityEngine.XR.ARSubsystems.XRDepthSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRDepthSubsystem depthSubsystem => GetLoadedSubsystem<XRDepthSubsystem>();
 
         /// <summary>
-        /// The `XRPlaneSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRPlaneSubsystem](xref:UnityEngine.XR.ARSubsystems.XRPlaneSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRPlaneSubsystem planeSubsystem => GetLoadedSubsystem<XRPlaneSubsystem>();
 
         /// <summary>
-        /// The `XRAnchorSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRAnchorSubsystem](xref:UnityEngine.XR.ARSubsystems.XRAnchorSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRAnchorSubsystem anchorSubsystem => GetLoadedSubsystem<XRAnchorSubsystem>();
 
         /// <summary>
-        /// The `XRRaycastSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRRaycastSubsystem](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRRaycastSubsystem raycastSubsystem => GetLoadedSubsystem<XRRaycastSubsystem>();
 
         /// <summary>
-        /// The `XRHumanBodySubsystem` whose lifecycle is managed by this loader.
+        /// The [XRHumanBodySubsystem](xref:UnityEngine.XR.ARSubsystems.XRHumanBodySubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRHumanBodySubsystem humanBodySubsystem => GetLoadedSubsystem<XRHumanBodySubsystem>();
 
         /// <summary>
-        /// The `XREnvironmentProbeSubsystem` whose lifecycle is managed by this loader.
+        /// The [XREnvironmentProbeSubsystem](xref:UnityEngine.XR.ARSubsystems.XREnvironmentProbeSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XREnvironmentProbeSubsystem environmentProbeSubsystem => GetLoadedSubsystem<XREnvironmentProbeSubsystem>();
 
         /// <summary>
-        /// The `XRInputSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRInputSubsystem](xref:UnityEngine.XR.XRInputSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRInputSubsystem inputSubsystem => GetLoadedSubsystem<XRInputSubsystem>();
 
         /// <summary>
-        /// The `XRImageTrackingSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRImageTrackingSubsystem](xref:UnityEngine.XR.ARSubsystems.XRImageTrackingSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRImageTrackingSubsystem imageTrackingSubsystem => GetLoadedSubsystem<XRImageTrackingSubsystem>();
 
         /// <summary>
-        /// The `XRObjectTrackingSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRObjectTrackingSubsystem](xref:UnityEngine.XR.ARSubsystems.XRObjectTrackingSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRObjectTrackingSubsystem objectTrackingSubsystem => GetLoadedSubsystem<XRObjectTrackingSubsystem>();
 
         /// <summary>
-        /// The `XRFaceSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRFaceSubsystem](xref:UnityEngine.XR.ARSubsystems.XRFaceSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRFaceSubsystem faceSubsystem => GetLoadedSubsystem<XRFaceSubsystem>();
 
         /// <summary>
-        /// The `XROcclusionSubsystem` whose lifecycle is managed by this loader.
+        /// The [XROcclusionSubsystem](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XROcclusionSubsystem occlusionSubsystem => GetLoadedSubsystem<XROcclusionSubsystem>();
 
         /// <summary>
-        /// The `XRParticipantSubsystem` whose lifecycle is managed by this loader.
+        /// The [XRParticipantSubsystem](xref:UnityEngine.XR.ARSubsystems.XRParticipantSubsystem) whose lifecycle is managed by this loader.
         /// </summary>
         public XRParticipantSubsystem participantSubsystem => GetLoadedSubsystem<XRParticipantSubsystem>();
 
         /// <summary>
-        /// The [`XRMeshSubsystem`](https://docs.unity3d.com/ScriptReference/XR.XRMeshSubsystem.html) whose lifecycle is
+        /// The [XRMeshSubsystem](xref:UnityEngine.XR.XRMeshSubsystem) whose lifecycle is
         /// managed by this loader.
         /// </summary>
         public XRMeshSubsystem meshSubsystem => GetLoadedSubsystem<XRMeshSubsystem>();

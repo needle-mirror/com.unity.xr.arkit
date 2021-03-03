@@ -47,34 +47,26 @@ namespace UnityEditor.XR.ARKit
             }
         }
 
-        static int GetWithDefault(Dictionary<string, XmlNode> dict, string key, int defaultValue)
+        static int GetWithDefault(IReadOnlyDictionary<string, XmlNode> dict, string key, int defaultValue)
         {
-            XmlNode node;
-            if (!dict.TryGetValue(key, out node))
+            if (!dict.TryGetValue(key, out var node))
                 return defaultValue;
 
-            if (node.Name != "integer")
-                return defaultValue;
-
-            return int.Parse(node.InnerText);
+            return node.Name != "integer" ? defaultValue : int.Parse(node.InnerText);
         }
 
-        static string GetWithDefault(Dictionary<string, XmlNode> dict, string key, string defaultValue)
+        static string GetWithDefault(IReadOnlyDictionary<string, XmlNode> dict, string key, string defaultValue)
         {
-            XmlNode node;
-            if (!dict.TryGetValue(key, out node))
+            if (!dict.TryGetValue(key, out var node))
                 return defaultValue;
 
-            if (node.Name != "string")
-                return defaultValue;
-
-            return node.InnerText;
+            return node.Name != "string" ? defaultValue : node.InnerText;
         }
 
         static Dictionary<string, XmlNode> ParseDict(XmlNode node)
         {
             var dict = new Dictionary<string, XmlNode>();
-            XmlNodeList keys = node.SelectNodes("descendant::key");
+            var keys = node.SelectNodes("descendant::key");
             foreach (XmlNode key in keys)
             {
                 var value = key.NextSibling;
@@ -84,16 +76,15 @@ namespace UnityEditor.XR.ARKit
             return dict;
         }
 
-        static Vector3 GetWithDefault(Dictionary<string, XmlNode> dict, string key, Vector3 defaultValue)
+        static Vector3 GetWithDefault(IReadOnlyDictionary<string, XmlNode> dict, string key, Vector3 defaultValue)
         {
-            XmlNode node;
-            if (!dict.TryGetValue(key, out node))
+            if (!dict.TryGetValue(key, out var node))
                 return defaultValue;
 
             if (node.Name != "array")
                 return defaultValue;
 
-            XmlNodeList reals = node.SelectNodes("real");
+            var reals = node.SelectNodes("real");
             if (reals == null)
                 return defaultValue;
 
@@ -103,16 +94,15 @@ namespace UnityEditor.XR.ARKit
                 -float.Parse(reals[2].InnerText, CultureInfo.InvariantCulture));
         }
 
-        static Quaternion GetWithDefault(Dictionary<string, XmlNode> dict, string key, Quaternion defaultValue)
+        static Quaternion GetWithDefault(IReadOnlyDictionary<string, XmlNode> dict, string key, Quaternion defaultValue)
         {
-            XmlNode node;
-            if (!dict.TryGetValue(key, out node))
+            if (!dict.TryGetValue(key, out var node))
                 return defaultValue;
 
             if (node.Name != "array")
                 return defaultValue;
 
-            XmlNodeList reals = node.SelectNodes("real");
+            var reals = node.SelectNodes("real");
             if (reals == null)
                 return defaultValue;
 
@@ -126,22 +116,22 @@ namespace UnityEditor.XR.ARKit
         /// <summary>
         /// The filename of an image contained within the archive that can be used as a preview for the scanned object.
         /// </summary>
-        public string imageReference { get; private set; }
+        public string imageReference { get; }
 
         /// <summary>
         /// The reference origin for the scanned object.
         /// </summary>
-        public Pose referenceOrigin { get; private set; }
+        public Pose referenceOrigin { get; }
 
         /// <summary>
         /// The filename of the source data representing the scanned object.
         /// </summary>
-        public string trackingDataReference { get; private set; }
+        public string trackingDataReference { get; }
 
         /// <summary>
         /// The version of the metadata format.
         /// </summary>
-        public int version { get; private set; }
+        public int version { get; }
 
         /// <summary>
         /// <c>true</c> if the <see cref="ARObjectInfo"/> represents valid data, otherwise <c>false</c>.
@@ -168,13 +158,7 @@ namespace UnityEditor.XR.ARKit
         /// <param name="obj">The `object` to compare against.</param>
         /// <returns>`True` if <paramref name="obj"/> is of type <see cref="ARObjectInfo"/> and
         /// <see cref="Equals(ARObjectInfo)"/> also returns `true`; otherwise `false`.</returns>
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ARObjectInfo))
-                return false;
-
-            return Equals((ARObjectInfo)obj);
-        }
+        public override bool Equals(object obj) => obj is ARObjectInfo info && Equals(info);
 
         /// <summary>
         /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.

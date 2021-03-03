@@ -32,8 +32,8 @@ namespace UnityEditor.XR.ARKit
 
         static IXRPackageMetadata s_Metadata = new ARKitPackageMetadata()
         {
-            packageName = "ARKit XR Plugin",
-            packageId = "com.unity.xr.arkit",
+            packageName = ARKitPackageInfo.displayName,
+            packageId = ARKitPackageInfo.identifier,
             settingsType = typeof(ARKitSettings).FullName,
             loaderMetadata = new List<IXRLoaderMetadata>()
             {

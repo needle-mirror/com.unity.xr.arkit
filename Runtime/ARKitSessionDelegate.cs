@@ -17,7 +17,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <remarks>
         /// Use this to respond to session failures. For example, the <see cref="DefaultARKitSessionDelegate"/>
-        /// implementation simply tries to restart the session by calling
+        /// implementation tries to restart the session by calling
         /// [Reset](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem.Reset).
         ///
         /// See [session:didFailWithError:](https://developer.apple.com/documentation/arkit/arsessionobserver/2887453-session?language=objc)
@@ -25,7 +25,7 @@ namespace UnityEngine.XR.ARKit
         /// </remarks>
         /// <param name="sessionSubsystem">The <see cref="ARKitSessionSubsystem"/> which provides an interface to the ARKit session.</param>
         /// <param name="error">The <see cref="NSError"/> object describing the failure. This object is only valid
-        ///     during this callback. See also <see cref="ARKitErrorCode"/>.</param>
+        /// during this callback. See also <see cref="ARKitErrorCode"/>.</param>
         protected virtual void OnSessionDidFailWithError(ARKitSessionSubsystem sessionSubsystem, NSError error) { }
 
         /// <summary>

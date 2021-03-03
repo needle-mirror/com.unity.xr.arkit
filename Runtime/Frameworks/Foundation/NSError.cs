@@ -14,11 +14,12 @@ namespace UnityEngine.XR.ARKit
     public struct NSError : INSObject, IEquatable<NSError>
     {
         IntPtr m_Self;
-        NSError(IntPtr ptr) => m_Self = ptr;
 
         /// <summary>
-        /// (Read Only) Whether the underlying native pointer is `null`.
+        /// (Read Only) Whether the underlying native pointer is `null`. This property is deprecated. Compare
+        /// an <see cref="NSError"/> with `null` instead.
         /// </summary>
+        [Obsolete("Compare with null instead, e.g., error == null. (2021-02-03)")]
         public bool isNull => m_Self == IntPtr.Zero;
 
         /// <summary>
@@ -64,11 +65,11 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <remarks>
         /// This method tries to determine the error domain without generating any managed strings. If the error
-        /// domain is <see cref="NSErrorDomain.Unknown"/>, you may still be able to get additional information from its
+        /// domain is <see cref="NSErrorDomain.Unknown"/>, you might still be able to get additional information from its
         /// string representation (<see cref="domain"/>).
         /// </remarks>
         /// <returns>Returns the <see cref="NSErrorDomain"/> of this <see cref="NSError"/>, or
-        ///     <see cref="NSErrorDomain.Unknown"/> if the error domain could not be determined.</returns>
+        /// <see cref="NSErrorDomain.Unknown"/> if the error domain could not be determined.</returns>
         public NSErrorDomain ToErrorDomain()
         {
             using (var domain = GetDomain(this))
@@ -111,12 +112,12 @@ namespace UnityEngine.XR.ARKit
 
         /// <summary>
         /// Determines whether <paramref name="other"/> is equal to this one as determined by
-        /// [isEqual:](https://developer.apple.com/documentation/objectivec/1418956-nsobject/1418795-isequal)
+        /// [isEqual:](https://developer.apple.com/documentation/objectivec/1418956-nsobject/1418795-isequal).
         /// </summary>
         /// <param name="other">The other <see cref="NSError"/> to test for equality.</param>
         /// <returns>Returns `true` if <paramref name="other"/> is considered equal using
-        ///     [isEqual:](https://developer.apple.com/documentation/objectivec/1418956-nsobject/1418795-isequal).
-        ///     Returns `false` otherwise.</returns>
+        /// [isEqual:](https://developer.apple.com/documentation/objectivec/1418956-nsobject/1418795-isequal).
+        /// Returns `false` otherwise.</returns>
         public bool Equals(NSError other) => NSObject.IsEqual(this, other);
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <param name="obj">The <see cref="object"/> to test.</param>
         /// <returns>Returns `true` if <paramref name="obj"/> is an <see cref="NSError"/> and is considered equal using
-        ///     <see cref="Equals(UnityEngine.XR.ARKit.NSError)"/>. Returns `false` otherwise.</returns>
+        /// <see cref="Equals(UnityEngine.XR.ARKit.NSError)"/>. Returns `false` otherwise.</returns>
         public override bool Equals(object obj) => obj is NSError other && Equals(other);
 
         /// <summary>
@@ -148,7 +149,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="lhs">The <see cref="NSError"/> to compare with <paramref name="rhs"/>.</param>
         /// <param name="rhs">The <see cref="NSError"/> to compare with <paramref name="lhs"/>.</param>
         /// <returns>Returns `true` if the underlying pointers of <paramref name="lhs"/> and <paramref name="rhs"/>
-        ///     are the same. Returns `false` otherwise.</returns>
+        /// are the same. Returns `false` otherwise.</returns>
         public static bool operator ==(NSError lhs, NSError rhs) => lhs.m_Self == rhs.m_Self;
 
         /// <summary>
@@ -162,8 +163,55 @@ namespace UnityEngine.XR.ARKit
         /// <param name="lhs">The <see cref="NSError"/> to compare with <paramref name="rhs"/>.</param>
         /// <param name="rhs">The <see cref="NSError"/> to compare with <paramref name="lhs"/>.</param>
         /// <returns>Returns `true` if the underlying pointers of <paramref name="lhs"/> and <paramref name="rhs"/>
-        ///     are different. Returns `false` otherwise.</returns>
+        /// are different. Returns `false` otherwise.</returns>
         public static bool operator !=(NSError lhs, NSError rhs) => lhs.m_Self != rhs.m_Self;
+
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <remarks>
+        /// This equality operator allows you to compare `null` with an <see cref="NSError"/> to determine whether its
+        /// underlying pointer is null. This allows for a more natural comparison with the Objective-C object:
+        /// <example>
+        /// <code>
+        /// void TestForNull(NSError error)
+        /// {
+        ///     // True if the native NSError object is null.
+        ///     if (error == null)
+        ///     {
+        ///         // Do something with the error
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        /// </remarks>
+        /// <param name="lhs">The nullable <see cref="NSError"/> to compare with <paramref name="rhs"/>.</param>
+        /// <param name="rhs">The nullable <see cref="NSError"/> to compare with <paramref name="lhs"/>.</param>
+        /// <returns>Returns true if any of these conditions are met:
+        /// - <paramref name="lhs"/> and <paramref name="rhs"/> are both not null and their underlying pointers are equal.
+        /// - <paramref name="lhs"/> is null and <paramref name="rhs"/>'s underlying pointer is null.
+        /// - <paramref name="rhs"/> is null and <paramref name="lhs"/>'s underlying pointer is null.
+        /// - Both <paramref name="lhs"/> and <paramref name="rhs"/> are null.
+        ///
+        /// Returns false otherwise.
+        /// </returns>
+        public static bool operator ==(NSError? lhs, NSError? rhs) => NSObject.ArePointersEqual(lhs, rhs);
+
+        /// <summary>
+        /// Tests for inequality.
+        /// </summary>
+        /// <param name="lhs">The nullable <see cref="NSError"/> to compare with <paramref name="rhs"/>.</param>
+        /// <param name="rhs">The nullable <see cref="NSError"/> to compare with <paramref name="lhs"/>.</param>
+        /// <returns>Returns the opposite of <see cref="operator==(NSError?,NSError?)"/>.</returns>
+        public static bool operator !=(NSError? lhs, NSError? rhs) => !(lhs == rhs);
+
+        /// <inheritdoc cref="INSObject.SetUnderlyingNativePtr"/>
+        void INSObject.SetUnderlyingNativePtr(IntPtr ptr) => m_Self = ptr;
+
+        /// <inheritdoc cref="INSObject.staticClass"/>
+        Class INSObject.staticClass => GetClass();
+
+        internal void Dispose() => NSObject.Dispose(ref m_Self);
 
 #if UNITY_EDITOR || !UNITY_XR_ARKIT_LOADER_ENABLED
         static long GetCode(NSError self) => default;
@@ -179,6 +227,8 @@ namespace UnityEngine.XR.ARKit
         static NSString ARErrorDomain => default;
 
         static NSString CLErrorDomain => default;
+
+        static Class GetClass() => default;
 #else
         [DllImport("__Internal", EntryPoint = "NSError_get_code")]
         static extern long GetCode(NSError self);
@@ -206,6 +256,9 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal", EntryPoint = "UnityARKit_GetCLErrorDomain")]
             get;
         }
+
+        [DllImport("__Internal", EntryPoint = "NSError_class")]
+        static extern Class GetClass();
 #endif
     }
 }

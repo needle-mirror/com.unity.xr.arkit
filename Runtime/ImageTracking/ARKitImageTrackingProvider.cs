@@ -14,10 +14,8 @@ namespace UnityEngine.XR.ARKit
     {
         class ARKitProvider : Provider
         {
-#if UNITY_2020_2_OR_NEWER
             public override void Start() { }
             public override void Stop() { }
-#endif
 
             public override RuntimeReferenceImageLibrary CreateRuntimeLibrary(
                 XRReferenceImageLibrary serializedLibrary)
@@ -35,7 +33,7 @@ namespace UnityEngine.XR.ARKit
                     }
                     else if (value is ARKitImageDatabase database)
                     {
-                        UnityARKit_ImageTracking_SetDatabase(database.nativePtr);
+                        UnityARKit_ImageTracking_SetDatabase(database.self);
                     }
                     else
                     {
@@ -44,7 +42,7 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            public unsafe override TrackableChanges<XRTrackedImage> GetChanges(
+            public override unsafe TrackableChanges<XRTrackedImage> GetChanges(
                 XRTrackedImage defaultTrackedImage,
                 Allocator allocator)
             {
@@ -82,6 +80,7 @@ namespace UnityEngine.XR.ARKit
 
             public override int currentMaxNumberOfMovingImages => UnityARKit_ImageTracking_GetCurrentMaximumNumberOfTrackedImages();
         }
+
 #if UNITY_XR_ARKIT_LOADER_ENABLED
         [DllImport("__Internal")]
         static extern int UnityARKit_ImageTracking_GetRequestedMaximumNumberOfTrackedImages();
@@ -167,25 +166,13 @@ namespace UnityEngine.XR.ARKit
             XRImageTrackingSubsystemDescriptor.Create(new XRImageTrackingSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-ImageTracking",
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(ARKitImageTrackingSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitImageTrackingSubsystem),
-#else
-                subsystemImplementationType = typeof(ARKitImageTrackingSubsystem),
-#endif
                 supportsMovingImages = Api.AtLeast12_0(),
                 supportsMutableLibrary = true,
                 requiresPhysicalImageDimensions = true,
                 supportsImageValidation = Api.AtLeast13_0(),
             });
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Creates the ARKit-specific implementation which will service the `XRImageTrackingSubsystem`.
-        /// </summary>
-        /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
-        protected override Provider CreateProvider() => new ARKitProvider();
-#endif
     }
 }

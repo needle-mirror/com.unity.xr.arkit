@@ -36,7 +36,7 @@ namespace UnityEditor.XR.ARKit
         Requirement m_Requirement;
 
         /// <summary>
-        /// Determines whether ARKit is required for this app: will make app only downloadable by devices with ARKit support if set to <see cref="Requirement.Required"/>.
+        /// Determines whether ARKit is required for this app. If set to <see cref="Requirement.Required"/>, the app can only be downloaded on devices with ARKit support.
         /// </summary>
         public Requirement requirement
         {
@@ -45,7 +45,7 @@ namespace UnityEditor.XR.ARKit
         }
 
         /// <summary>
-        /// Installs ARKit Face Tracking package when set to true and ARKit Face Tracking is not already installed. False indicates that ARKit Face Tracking is not currently installed.
+        /// If <c>true</c>, installs ARKit Face Tracking package if it's not already installed. If <c>false</c>, indicates that ARKit Face Tracking is not currently installed.
         /// </summary>
         public bool faceTracking
         {
@@ -57,7 +57,7 @@ namespace UnityEditor.XR.ARKit
         bool m_FaceTracking;
 
         /// <summary>
-        /// Gets the currently selected settings, or create a default one if no <see cref="ARKitSettings"/> has been set in Player Settings.
+        /// Gets the currently selected settings, or creates default settings if no <see cref="ARKitSettings"/> have been set in Player Settings.
         /// </summary>
         /// <returns>The ARKit settings to use for the current Player build.</returns>
         public static ARKitSettings GetOrCreateSettings()
@@ -70,7 +70,7 @@ namespace UnityEditor.XR.ARKit
         }
 
         /// <summary>
-        /// Get or set the <see cref="ARKitSettings"/> that will be used for the player build.
+        /// Get or set the <see cref="ARKitSettings"/> to use for the Player build.
         /// </summary>
         public static ARKitSettings currentSettings
         {

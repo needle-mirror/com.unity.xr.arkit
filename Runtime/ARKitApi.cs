@@ -94,35 +94,12 @@ namespace UnityEngine.XR.ARKit
         [DllImport("__Internal")]
         internal static extern int UnityARKit_deserializeWorldMap(
             IntPtr buffer, int bufferLength);
-
-        public static void CFRelease(ref IntPtr ptr)
-        {
-            UnityARKit_CFRelease(ptr);
-            ptr = IntPtr.Zero;
-        }
-
-        [DllImport("__Internal")]
-        static extern void UnityARKit_CFRelease(IntPtr ptr);
-
-        public static void CFRetain(IntPtr ptr)
-        {
-            if (ptr == IntPtr.Zero)
-                throw new NullReferenceException("Cannot retain a null pointer.");
-            UnityARKit_CFRetain(ptr);
-        }
-
-        [DllImport("__Internal")]
-        public static extern void UnityARKit_CFRetain(IntPtr ptr);
 #else
         public static void SetFeatureRequested(Feature feature, bool enabled) {}
 
         public static Feature GetRequestedFeatures() => Feature.None;
 
         public static void EnsureRootViewIsSetup() {}
-
-        public static void CFRelease(ref IntPtr ptr) => ptr = IntPtr.Zero;
-
-        public static void UnityARKit_CFRetain(IntPtr ptr) {}
 
         internal static ARWorldMapRequestStatus UnityARKit_getWorldMapRequestStatus(int worldMapId)
         {

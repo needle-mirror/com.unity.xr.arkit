@@ -5,11 +5,11 @@ namespace UnityEngine.XR.ARKit
     /// <summary>
     /// Error codes related to the
     /// [ARKit Framework](https://developer.apple.com/documentation/arkit?language=objc),
-    /// like <see cref="ARKitSessionDelegate.OnSessionDidFailWithError"/>
+    /// like <see cref="ARKitSessionDelegate.OnSessionDidFailWithError"/>.
     /// </summary>
     /// <remarks>
     /// These values correspond to
-    /// [ARKit's ARErrorCodes](https://developer.apple.com/documentation/arkit/arerrorcode?language=objc)
+    /// [ARKit's ARErrorCodes](https://developer.apple.com/documentation/arkit/arerrorcode?language=objc).
     /// </remarks>
     /// <seealso cref="NSError.code"/>
     public enum ARKitErrorCode : long
@@ -30,17 +30,17 @@ namespace UnityEngine.XR.ARKit
         SensorFailed = 102,
 
         /// <summary>
-        /// App does not have permission to use the camera. The user may change this in settings.
+        /// App does not have permission to use the camera. The end-user can change this in the app's settings.
         /// </summary>
         CameraUnauthorized = 103,
 
         /// <summary>
-        /// App does not have permission to use the microphone. The user may change this in settings.
+        /// App does not have permission to use the microphone. The user can change this in the settings.
         /// </summary>
         MicrophoneUnauthorized = 104,
 
         /// <summary>
-        /// App does not have permission to use the location data of the device. The user may change this in settings.
+        /// App does not have permission to use the location data of the device. The user can change this in the settings.
         /// </summary>
         LocationUnauthorized = 105,
 
@@ -86,7 +86,7 @@ namespace UnityEngine.XR.ARKit
         CollaborationDataUnavailable = 304,
 
         /// <summary>
-        /// Invalid collaboration data
+        /// Invalid collaboration data.
         /// </summary>
         InvalidCollaborationData = 304,
 
@@ -123,7 +123,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="error">The <see cref="NSError"/> being extended.</param>
         /// <returns>Returns the <see cref="NSError"/> as an <see cref="ARKitErrorCode"/>.</returns>
         /// <exception cref="System.InvalidCastException">Thrown if <paramref name="error"/>'s
-        ///     <see cref="NSError.ToErrorDomain"/> is not <see cref="NSErrorDomain.ARKit"/>.</exception>
+        /// <see cref="NSError.ToErrorDomain"/> is not <see cref="NSErrorDomain.ARKit"/>.</exception>
         /// <seealso cref="ARKitSessionDelegate.OnSessionDidFailWithError"/>
         public static ARKitErrorCode AsARKitErrorCode(this NSError error)
         {

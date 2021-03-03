@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using Unity.Collections;
 using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEngine.XR.ARKit
@@ -59,5 +60,19 @@ namespace UnityEngine.XR.ARKit
         public Vector2 size;
         public IntPtr name;
         public IntPtr texture;
+    }
+
+    static class ManagedReferenceImageExtensions
+    {
+        public static NativeArray<ManagedReferenceImage> ToNativeArray(this XRReferenceImageLibrary library, Allocator allocator)
+        {
+            var managedReferenceImages = new NativeArray<ManagedReferenceImage>(library.count, allocator);
+            for (var i = 0; i < library.count; ++i)
+            {
+                managedReferenceImages[i] = new ManagedReferenceImage(library[i]);
+            }
+
+            return managedReferenceImages;
+        }
     }
 }

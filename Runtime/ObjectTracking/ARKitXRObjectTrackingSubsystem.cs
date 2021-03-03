@@ -12,17 +12,22 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitXRObjectTrackingSubsystem : XRObjectTrackingSubsystem
     {
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Creates the ARKit-specific implementation which will service the `XRObjectTrackingSubsystem`.
-        /// </summary>
-        /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
-        protected override Provider CreateProvider() => new ARKitProvider();
-#endif
+        internal void AddReferenceObject(XRReferenceObjectLibrary library, ARReferenceObject referenceObject)
+        {
+            if (library == null)
+                throw new ArgumentNullException(nameof(library));
+
+            if (referenceObject == null)
+                throw new ArgumentNullException(nameof(referenceObject));
+
+            if (this.library == library)
+            {
+                ARKitProvider.AddReferenceObject(referenceObject);
+            }
+        }
 
         class ARKitProvider : Provider
         {
-#if UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Invoked when <c>Start</c> is called on the subsystem. This method is only called if the subsystem was not previously running.
             /// </summary>
@@ -32,7 +37,6 @@ namespace UnityEngine.XR.ARKit
             /// Invoked when <c>Stop</c> is called on the subsystem. This method is only called if the subsystem was previously running.
             /// </summary>
             public override void Stop() { }
-#endif
 
 #if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
@@ -44,9 +48,8 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             static extern void UnityARKit_ObjectTracking_Stop();
 
-            [DllImport("__Internal")]
-            static extern SetReferenceLibraryResult UnityARKit_ObjectTracking_TrySetLibrary(
-                [MarshalAs(UnmanagedType.LPWStr)] string name, int nameLength, Guid guid);
+            [DllImport("__Internal", EntryPoint = "UnityARKit_ObjectTracking_SetLibrary")]
+            static extern void SetLibrary(IntPtr referenceObjects);
 
             [DllImport("__Internal")]
             static extern unsafe void* UnityARKit_ObjectTracking_AcquireChanges(
@@ -57,6 +60,9 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             static extern unsafe void UnityARKit_ObjectTracking_ReleaseChanges(void* changes);
+
+            [DllImport("__Internal", EntryPoint = "UnityARKit_ObjectTracking_AddReferenceObject")]
+            public static extern void AddReferenceObject(ARReferenceObject referenceObject);
 #else
             static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
@@ -75,8 +81,7 @@ namespace UnityEngine.XR.ARKit
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static SetReferenceLibraryResult UnityARKit_ObjectTracking_TrySetLibrary(
-                [MarshalAs(UnmanagedType.LPWStr)] string name, int nameLength, Guid guid)
+            static void SetLibrary(IntPtr referenceObjects)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
@@ -94,6 +99,11 @@ namespace UnityEngine.XR.ARKit
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
+
+            public static void AddReferenceObject(ARReferenceObject referenceObject)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
 #endif
             public override unsafe XRReferenceObjectLibrary library
             {
@@ -105,18 +115,27 @@ namespace UnityEngine.XR.ARKit
                     }
                     else
                     {
-                        switch (UnityARKit_ObjectTracking_TrySetLibrary(value.name, value.name.Length, value.guid))
+                        var referenceObjects = new NSMutableSet<ARReferenceObject>(NSObject.Initialization.Default);
+                        try
                         {
-                            case SetReferenceLibraryResult.Success:
-                                break;
-                            case SetReferenceLibraryResult.FeatureUnavailable:
-                                throw new InvalidOperationException(string.Format(
-                                    "Failed to set requested image library '{0}' on ARKit - this feature only works on versions of ARKit 12.0 and newer.",
-                                    value.name));
-                            case SetReferenceLibraryResult.ResourceDoesNotExist:
-                                throw new InvalidOperationException(string.Format(
-                                    "Failed to find requested image library '{0}' on ARKit - there is no matching resource group, or the resource group does not contain any reference objects.",
-                                    value.name));
+                            foreach (var obj in value)
+                            {
+                                var entry = obj.FindEntry<ARKitReferenceObjectEntry>();
+                                if (entry)
+                                {
+                                    var referenceObject = entry.GetARKitReferenceObject(obj);
+                                    if (referenceObject != null)
+                                    {
+                                        referenceObjects.Add(referenceObject);
+                                    }
+                                }
+                            }
+
+                            SetLibrary(referenceObjects.AsIntPtr());
+                        }
+                        finally
+                        {
+                            referenceObjects.Dispose();
                         }
                     }
                 }
@@ -156,7 +175,7 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// This method is run on startup of the app to register this provider with XR Subsystem Manager
+        /// This method runs when the app starts to register this provider with XR Subsystem Manager.
         /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
@@ -169,11 +188,7 @@ namespace UnityEngine.XR.ARKit
             {
             };
 
-#if UNITY_2020_2_OR_NEWER
             Register<ARKitXRObjectTrackingSubsystem.ARKitProvider, ARKitXRObjectTrackingSubsystem>("ARKit-ObjectTracking", capabilities);
-#else
-            Register<ARKitXRObjectTrackingSubsystem>("ARKit-ObjectTracking", capabilities);
-#endif
         }
     }
 }

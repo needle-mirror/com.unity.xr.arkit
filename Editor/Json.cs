@@ -49,27 +49,27 @@ namespace UnityEditor.XR.ARKit
         public struct ObjectProperties
         {
             /// <summary>
-            /// Preview filename, e.g., 'preview.jpg'
+            /// Preview filename (for example, `preview.jpg`).
             /// </summary>
             public string preview;
 
             /// <summary>
-            /// An array of 4 floats representing the quaternion (x, y, z, w)
+            /// An array of 4 floats representing the quaternion (x, y, z, w).
             /// </summary>
             public float[] rotation;
 
             /// <summary>
-            /// cv3dmap filename, e.g., "trackingData.cv3dmap"
+            /// cv3dmap filename (for example, `trackingData.cv3dmap`).
             /// </summary>
             public string content;
 
             /// <summary>
-            /// An array of 3 floats representing the translation (x, y, z)
+            /// An array of 3 floats representing the translation (x, y, z).
             /// </summary>
             public float[] translation;
 
             /// <summary>
-            /// The version of the properties, e.g., 1
+            /// The version of the properties (for example, 1).
             /// </summary>
             public int version;
         }

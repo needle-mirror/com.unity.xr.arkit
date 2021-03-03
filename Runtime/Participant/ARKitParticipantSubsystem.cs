@@ -15,14 +15,6 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitParticipantSubsystem : XRParticipantSubsystem
     {
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Creates the ARKit-specific implementation which will service the `XRParticipantSubsystem`.
-        /// </summary>
-        /// <returns>A new instance of the `Provider` specific to ARKit.</returns>
-        protected override Provider CreateProvider() => new ARKitProvider();
-#endif
-
         class ARKitProvider : Provider
         {
             IntPtr m_Ptr;
@@ -47,9 +39,9 @@ namespace UnityEngine.XR.ARKit
                 Api.UnityARKit_TrackableProvider_stop(m_Ptr);
             }
 
-            public override void Destroy() => Api.CFRelease(ref m_Ptr);
+            public override void Destroy() => NSObject.Dispose(ref m_Ptr);
 
-            public unsafe override TrackableChanges<XRParticipant> GetChanges(
+            public override unsafe TrackableChanges<XRParticipant> GetChanges(
                 XRParticipant defaultParticipant,
                 Allocator allocator)
             {
@@ -91,12 +83,7 @@ namespace UnityEngine.XR.ARKit
             if (!Api.AtLeast13_0())
                 return;
 
-            XRParticipantSubsystemDescriptor.Register<
-#if UNITY_2020_2_OR_NEWER
-                ARKitParticipantSubsystem.ARKitProvider,
-#endif
-                ARKitParticipantSubsystem
-                >(
+            XRParticipantSubsystemDescriptor.Register<ARKitParticipantSubsystem.ARKitProvider, ARKitParticipantSubsystem>(
                 "ARKit-Participant",
                 XRParticipantSubsystemDescriptor.Capabilities.None);
         }
