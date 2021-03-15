@@ -1,3 +1,6 @@
+* [Introduction](index.md)
+  * [What's new](whats-new.md)
+  * [Upgrade guide](upgrade-guide.md)
 * Subsystems
   * [Session](index.md#session)
   * [Depth](index.md#depth-subsystem)

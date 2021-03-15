@@ -38,7 +38,7 @@ This version of ARKit XR Plug-in supports the following features:
 * Occlusion
 
 > [!IMPORTANT]
-> Apple's App Store will reject any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, [face tracking](xref:arsubsystems-face-subsystem) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.2).
+> Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, [face tracking](xref:arsubsystems-face-subsystem) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.2).
 
 # Installing ARKit XR Plug-in
 
@@ -66,7 +66,7 @@ This creates an `ARKitSettings` asset that you can access under **XR Plug-in Man
 
 ### Requiring AR
 
-You can flag ARKit as either required or optional. By default, ARKit is required, which means your app can ony be installed on AR-supported devices and operating systems (iOS 11.0 and above). If you specify that AR is optional, your app can be installed on all iOS devices.
+You can flag ARKit as either required or optional. By default, ARKit is required, which means your app can only be installed on AR-supported devices and operating systems (iOS 11.0 and above). If you specify that AR is optional, your app can be installed on all iOS devices.
 
 #### Targeting 32-bit devices
 
@@ -84,7 +84,7 @@ Raycasts always return a `Pose` for the item the raycast hit. When raycasting ag
 
 The depth subsystem doesn't require additional resources, so enabling it doesn't affect performance
 
-ARKit's depth subsystem will only ever produce a single [XRPointCloud](xref:UnityEngine.XR.ARSubsystems.XRPointCloud).
+ARKit's depth subsystem only ever produces a single [XRPointCloud](xref:UnityEngine.XR.ARSubsystems.XRPointCloud).
 
 For more information, see the [ARSubsystems depth subsystem documentation](xref:arsubsystems-depth-subsystem).
 
@@ -123,6 +123,8 @@ ARKit light estimation can only be `enabled` or `disabled`. The availability of 
 
 This version of ARKit XR Plug-in is compatible with the following versions of the Unity Editor:
 
+* 2020.3
+* 2021.1
 * 2021.2
 
 ## Known limitations

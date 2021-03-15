@@ -9,7 +9,7 @@ There are three types of depth images that ARKit exposes through the provider's 
 
 - **Environment depth**: distance from the device to any part of the environment in the camera field of view.
 - **Human depth**: distance from the device to any part of a human recognized within the camera field of view.
-- **Human stencil**: value that designates, for each pixel, whether that pixel contains a recognized human.
+- **Human stencil**: value that designates, for each pixel, whether that pixel is part of a recognized human.
 
 ## Requirements
 

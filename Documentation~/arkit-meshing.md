@@ -11,7 +11,7 @@ ARKit scene reconstruction provides a meshing feature that generates a mesh base
 
 This new mesh functionality requires Xcode 11.4 or later, and it only works on iOS devices with the LiDAR scanner, such as the new iPad Pro.
 
-This ARKit package requires Unity 2019.4 or later.
+This ARKit package requires Unity 2020.3 or later.
 
 ## Using meshing in a scene
 
@@ -27,7 +27,7 @@ You need to set the [meshPrefab](https://docs.unity3d.com/Packages/com.unity.xr.
 
 If you want to render the scanned meshes, you need to add a [MeshRenderer](xref:UnityEngine.MeshRenderer) component and a [Material](xref:UnityEngine.Material) component to the [meshPrefab](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.2/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab)'s GameObject.
 
-If you want to have virtual content that interacts physically with the real-world scanned meshes, you will need to add [MeshCollider](xref:UnityEngine.MeshCollider) component to the [meshPrefab](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.2/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab)'s GameObject.
+If you want to have virtual content that interacts physically with the real-world scanned meshes, you need to add [MeshCollider](xref:UnityEngine.MeshCollider) component to the [meshPrefab](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.2/api/UnityEngine.XR.ARFoundation.ARMeshManager.html#UnityEngine_XR_ARFoundation_ARMeshManager_meshPrefab)'s GameObject.
 
 This image demonstrates a mesh Prefab configured with the required [MeshFilter](xref:UnityEngine.MeshFilter) component, an optional [MeshCollider](xref:UnityEngine.MeshCollider) component to allow for physics interactions, and optional [MeshRenderer](xref:UnityEngine.MeshRenderer) and [Material](xref:UnityEngine.Material) components to render the mesh.
 
