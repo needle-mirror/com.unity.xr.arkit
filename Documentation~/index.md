@@ -117,14 +117,15 @@ ARKit light estimation can only be `enabled` or `disabled`. The availability of 
 [XRCameraConfiguration](xref:UnityEngine.XR.ARSubsystems.XRCameraConfiguration) contains an `IntPtr` field `nativeConfigurationHandle` which is a platform-specific handle. For ARKit, this handle is a pointer to the native [ARVideoFormat](https://developer.apple.com/documentation/arkit/arvideoformat?language=objc) Objective-C object.
 
 # Technical details
+
 ## Requirements
 
 This version of ARKit XR Plugin is compatible with the following versions of the Unity Editor:
 
-* 2019.4
-* 2020.1
-* 2020.2
+* 2019.4.15f1
+* 2020.3
 * 2021.1
+* 2021.2
 
 ## Known limitations
 
