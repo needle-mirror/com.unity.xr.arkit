@@ -1,7 +1,8 @@
 using System;
-using System.IO;
+using System.Linq;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEditor.XR.ARSubsystems;
 using UnityEngine;
 using UnityEngine.XR.ARKit;
 using UnityEngine.XR.ARSubsystems;
@@ -23,7 +24,7 @@ namespace UnityEditor.XR.ARKit
                 MissingName
         }
 
-        static void SetupReferenceObjects(Warnings warnings)
+        static void ValidateReferenceObjects(Warnings warnings)
         {
             foreach (var library in ARKitBuildHelper.AssetsOfType<XRReferenceObjectLibrary>())
             {
@@ -57,7 +58,6 @@ namespace UnityEditor.XR.ARKit
                         if (string.IsNullOrEmpty(info.Value.trackingDataReference))
                             throw new BuildFailedException($"The ARKit variant for reference object {library.IndexOf(referenceObject)} named '{referenceObject.name}' in reference object library {AssetDatabase.GetAssetPath(library)} is missing tracking data (the 3D object scan data). The arobject file may be corrupt.");
 
-                        arkitEntry.SetReferenceObjectBytes(File.ReadAllBytes(assetPath));
                         resourceCount++;
                     }
                 }
@@ -69,7 +69,7 @@ namespace UnityEditor.XR.ARKit
             }
         }
 
-        class Preprocessor : IPreprocessBuildWithReport
+        class Preprocessor : IPreprocessBuildWithReport, ARBuildProcessor.IPreprocessBuild
         {
             public int callbackOrder => 1;
 
@@ -82,28 +82,20 @@ namespace UnityEditor.XR.ARKit
 #endif
             }
 
-            // Validates the ARKit reference objects
-            public void OnPreprocessBuild(BuildReport report)
+            static void UpdateAssets(bool arkitEnabled)
             {
-                if (ARKitEnabled(report))
+                ARKitReferenceObjectEntry.SetObjectBytesEnabled(arkitEnabled);
+
+                if (arkitEnabled)
                 {
-                    SetupReferenceObjects(Warnings.All);
-                }
-                else
-                {
-                    foreach (var library in ARKitBuildHelper.AssetsOfType<XRReferenceObjectLibrary>())
-                    {
-                        foreach (var referenceObject in library)
-                        {
-                            var arkitEntry = referenceObject.FindEntry<ARKitReferenceObjectEntry>();
-                            if (arkitEntry)
-                            {
-                                arkitEntry.SetReferenceObjectBytes(null);
-                            }
-                        }
-                    }
+                    ValidateReferenceObjects(Warnings.All);
                 }
             }
+
+            void ARBuildProcessor.IPreprocessBuild.OnPreprocessBuild(PreprocessBuildEventArgs buildEventArgs) =>
+                UpdateAssets(buildEventArgs.activeLoadersForBuildTarget.OfType<ARKitLoader>().Any());
+
+            void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report) => UpdateAssets(ARKitEnabled(report));
         }
     }
 }

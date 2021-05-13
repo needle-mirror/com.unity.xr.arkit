@@ -14,14 +14,12 @@ namespace UnityEditor.XR.ARKit
             this.name = name;
         }
 
-#if UNITY_IOS
         public byte[] ToCar(Version minimumDeploymentTarget)
         {
             var catalog = new XcodeAssetCatalog(null);
             catalog.AddResourceGroup(this);
             return catalog.ToCar(minimumDeploymentTarget);
         }
-#endif
 
         public void AddResource(ARResource resource)
         {
@@ -29,14 +27,14 @@ namespace UnityEditor.XR.ARKit
                 throw new ArgumentNullException(nameof(resource));
 
             if (m_Resources.Contains(resource))
-                throw new InvalidOperationException(string.Format("Duplicate resource '{0}` in group '{1}'", resource.name, name));
+                throw new InvalidOperationException($"Duplicate resource '{resource.name}` in group '{name}'");
 
             m_Resources.Add(resource);
         }
 
         internal void Write(string pathToAssetCatalog)
         {
-            string path = Path.Combine(pathToAssetCatalog, name + ".arresourcegroup");
+            var path = Path.Combine(pathToAssetCatalog, name + ".arresourcegroup");
             Directory.CreateDirectory(path);
 
             // Build the contents json and write each resource to disk

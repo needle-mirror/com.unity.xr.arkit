@@ -1,15 +1,17 @@
-#if UNITY_IOS
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEditor.iOS.Xcode;
 using UnityEditor.XR.ARSubsystems;
 using UnityEngine;
 using UnityEngine.XR.ARKit;
 using UnityEngine.XR.ARSubsystems;
+
+#if UNITY_IOS
+using System.IO;
+using UnityEditor.iOS.Xcode;
+#endif
 
 namespace UnityEditor.XR.ARKit
 {
@@ -77,17 +79,12 @@ namespace UnityEditor.XR.ARKit
         }
 
         // Fail the build if any of the reference images are invalid
-        class Preprocessor : IPreprocessBuildWithReport
+        class Preprocessor : IPreprocessBuildWithReport, ARBuildProcessor.IPreprocessBuild
         {
             public int callbackOrder => 0;
 
-            public void OnPreprocessBuild(BuildReport report)
+            static void BuildAssets()
             {
-#if UNITY_XR_ARKIT_LOADER_ENABLED
-                if (report.summary.platform != BuildTarget.iOS)
-                    return;
-
-#if UNITY_EDITOR_OSX
                 var assets = AssetDatabase.FindAssets($"t:{nameof(XRReferenceImageLibrary)}");
                 var index = 0;
                 var minimumDeploymentTarget = new Version(11, 3);
@@ -106,13 +103,23 @@ namespace UnityEditor.XR.ARKit
                     // Convert the resource group to a 'car' (compiled asset catalog) file
                     library.SetDataForKey(ARKitPackageInfo.identifier, resourceGroup.ToCar(minimumDeploymentTarget));
                 }
-#else // UNITY_EDITOR_OSX
-                foreach (var (resourceGroup, library) in ResourceGroups())
-                {
-                    // Keep this for loop on all platforms as it will fail
-                    // the build early if any reference images are invalid.
-                }
-#endif // UNITY_EDITOR_OSX
+            }
+
+            void ARBuildProcessor.IPreprocessBuild.OnPreprocessBuild(PreprocessBuildEventArgs eventArgs)
+            {
+                if (eventArgs.activeLoadersForBuildTarget?.OfType<ARKitLoader>().Any() == false)
+                    return;
+
+                BuildAssets();
+            }
+
+            void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
+            {
+#if UNITY_XR_ARKIT_LOADER_ENABLED
+                if (report.summary.platform != BuildTarget.iOS)
+                    return;
+
+                BuildAssets();
 #endif // UNITY_XR_ARKIT_LOADER_ENABLED
             }
         }
@@ -161,4 +168,3 @@ namespace UnityEditor.XR.ARKit
         }
     }
 }
-#endif

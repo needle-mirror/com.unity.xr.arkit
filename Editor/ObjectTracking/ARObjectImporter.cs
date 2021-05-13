@@ -30,6 +30,7 @@ namespace UnityEditor.XR.ARKit
             if (arobject.HasValue)
             {
                 entry.m_ReferenceOrigin = arobject.Value.info.referenceOrigin;
+                entry.SetSourceAsset(ctx.assetPath);
             }
 
             ctx.AddObjectToAsset("arobject", entry, arobject.HasValue ? arobject.Value.preview : null);

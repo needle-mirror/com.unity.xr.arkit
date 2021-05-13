@@ -1,14 +1,12 @@
-#if UNITY_IOS
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.IO.Compression;
-using System.Text;
-using NUnit.Framework.Constraints;
 using UnityEngine;
-using UnityEditor.iOS.Xcode;
 using UnityEngine.XR.ARSubsystems;
+
+#if UNITY_IOS
+using UnityEditor.iOS.Xcode;
+#endif
 
 namespace UnityEditor.XR.ARKit
 {
@@ -36,9 +34,10 @@ namespace UnityEditor.XR.ARKit
             m_ResourceGroups.Add(group);
         }
 
+#if UNITY_IOS
         public void WriteAndAddToPBXProject(PBXProject project, string pathToBuiltProject)
         {
-            var unityTargetName = "Unity-iPhone";
+            const string unityTargetName = "Unity-iPhone";
             var relativePathToAssetCatalog = Path.Combine(unityTargetName, name + ".xcassets");
             var fullPathToAssetCatalog = Path.Combine(pathToBuiltProject, relativePathToAssetCatalog);
 
@@ -57,6 +56,7 @@ namespace UnityEditor.XR.ARKit
                 resourceGroup.Write(fullPathToAssetCatalog);
             }
         }
+#endif
 
         public void Write(string path)
         {
@@ -75,7 +75,6 @@ namespace UnityEditor.XR.ARKit
 
         public byte[] ToCar(Version minimumDeploymentTarget)
         {
-#if UNITY_IOS && UNITY_EDITOR_OSX
             var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
 
             // Doesn't matter what we call this filename
@@ -103,12 +102,8 @@ namespace UnityEditor.XR.ARKit
                     Directory.Delete(tempDir, true);
                 }
             }
-#else
-            return null;
-#endif
         }
 
         List<ARResourceGroup> m_ResourceGroups = new List<ARResourceGroup>();
     }
 }
-#endif

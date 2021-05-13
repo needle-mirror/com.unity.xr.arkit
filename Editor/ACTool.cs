@@ -1,10 +1,5 @@
 using System;
 using System.ComponentModel;
-#if UNITY_IOS
-using UnityEditor.iOS.Xcode;
-using UnityEngine;
-
-#endif
 
 namespace UnityEditor.XR.ARKit
 {
@@ -55,7 +50,6 @@ namespace UnityEditor.XR.ARKit
 
         public static string Compile(string assetCatalogPath, string outputDirectory, Version minimumDeploymentTarget)
         {
-#if UNITY_IOS && UNITY_EDITOR_OSX
             try
             {
                 var (stdout, stderr, exitCode) = Cli.Execute($"xcrun", new[]
@@ -72,27 +66,18 @@ namespace UnityEditor.XR.ARKit
                 if (exitCode != 0)
                     throw new ExecutionFailedException(exitCode, stderr);
 
-                const string resultsKey = "com.apple.actool.compilation-results";
-                var plist = new PlistDocument();
-                plist.ReadFromString(stdout);
-                var root = plist.root;
-                var results = root[resultsKey];
-                if (results == null)
+                // Parse the plist
+                var plist = Plist.ReadFromString(stdout);
+                var outputFiles = plist.root?["com.apple.actool.compilation-results"]?["output-files"]?.AsArray();
+                if (outputFiles?.Length < 1)
                     throw new CompilationFailedException();
 
-                var outputFiles = results["output-files"];
-                if (outputFiles == null)
-                    throw new CompilationFailedException();
-
-                return outputFiles.AsArray().values[0].AsString();
+                return outputFiles[0].AsString();
             }
             catch (Win32Exception e)
             {
                 throw new XCRunNotFoundException(e);
             }
-#else
-            throw new NotSupportedException("Compilation of Xcode Catalogs requires macOS with iOS support.");
-#endif
         }
     }
 }

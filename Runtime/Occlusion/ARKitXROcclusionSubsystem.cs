@@ -24,7 +24,7 @@ namespace UnityEngine.XR.ARKit
 
             const string k_SubsystemId = "ARKit-Occlusion";
 
-            XROcclusionSubsystemCinfo occlusionSubsystemCinfo = new XROcclusionSubsystemCinfo()
+            var occlusionSubsystemCinfo = new XROcclusionSubsystemCinfo()
             {
                 id = k_SubsystemId,
                 providerType = typeof(ARKitOcclusionSubsystem.ARKitProvider),
@@ -32,7 +32,8 @@ namespace UnityEngine.XR.ARKit
                 humanSegmentationStencilImageSupportedDelegate = NativeApi.UnityARKit_OcclusionProvider_DoesSupportBodySegmentationStencil,
                 humanSegmentationDepthImageSupportedDelegate = NativeApi.UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth,
                 environmentDepthImageSupportedDelegate = NativeApi.UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth,
-                environmentDepthConfidenceImageSupportedDelegate =  NativeApi.UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth,
+                environmentDepthConfidenceImageSupportedDelegate = NativeApi.UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth,
+                environmentDepthTemporalSmoothingSupportedDelegate = NativeApi.UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepthTemporalSmoothing
             };
 
             XROcclusionSubsystem.Register(occlusionSubsystemCinfo);
@@ -242,6 +243,15 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             public override EnvironmentDepthMode currentEnvironmentDepthMode
                 => NativeApi.UnityARKit_OcclusionProvider_GetCurrentEnvironmentDepthMode();
+
+            public override bool environmentDepthTemporalSmoothingEnabled =>
+                NativeApi.UnityARKit_OcclusionProvider_GetEnvironmentDepthTemporalSmoothingEnabled();
+
+            public override bool environmentDepthTemporalSmoothingRequested
+            {
+                get => Api.GetRequestedFeatures().Any(Feature.EnvironmentDepthTemporalSmoothing);
+                set => Api.SetFeatureRequested(Feature.EnvironmentDepthTemporalSmoothing, value);
+            }
 
             /// <summary>
             /// Specifies the requested occlusion preference mode.
@@ -475,6 +485,9 @@ namespace UnityEngine.XR.ARKit
             public static extern EnvironmentDepthMode UnityARKit_OcclusionProvider_GetCurrentEnvironmentDepthMode();
 
             [DllImport("__Internal")]
+            public static extern bool UnityARKit_OcclusionProvider_GetEnvironmentDepthTemporalSmoothingEnabled();
+
+            [DllImport("__Internal")]
             public static extern bool UnityARKit_OcclusionProvider_TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor);
 
             [DllImport("__Internal")]
@@ -506,6 +519,9 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern Supported UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth();
+
+            [DllImport("__Internal")]
+            public static extern Supported UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepthTemporalSmoothing();
 #else
             static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
 
@@ -616,6 +632,10 @@ namespace UnityEngine.XR.ARKit
             public static Supported UnityARKit_OcclusionProvider_DoesSupportBodySegmentationDepth() => Supported.Unsupported;
 
             public static Supported UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepth() => Supported.Unsupported;
+
+            public static Supported UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepthTemporalSmoothing() => Supported.Unsupported;
+
+            public static bool UnityARKit_OcclusionProvider_GetEnvironmentDepthTemporalSmoothingEnabled() => false;
 #endif
         }
     }

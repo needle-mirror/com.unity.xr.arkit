@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Xml;
 using UnityEngine;
 
@@ -23,22 +21,18 @@ namespace UnityEditor.XR.ARKit
         public ARObjectInfo(XmlDocument plist)
         {
             if (plist == null)
-                throw new ArgumentNullException("plist");
+                throw new ArgumentNullException(nameof(plist));
 
             // Parse the plist
-            var root = plist.DocumentElement;
-            var namespaceManager = new XmlNamespaceManager(plist.NameTable);
-            var node = root.SelectSingleNode("descendant::dict");
-            var dict = ParseDict(node);
-
-            version = GetWithDefault(dict, "Version", 0);
-            trackingDataReference = GetWithDefault(dict, "TrackingDataReference", string.Empty);
-            imageReference = GetWithDefault(dict, "ImageReference", string.Empty);
-            if (dict.ContainsKey("ReferenceOrigin"))
+            var root = new Plist(plist).root;
+            version = root["Version"].AsInt32() ?? 0;
+            trackingDataReference = root["TrackingDataReference"].AsString() ?? "";
+            imageReference = root["ImageReference"].AsString() ?? "";
+            var dict = root["ReferenceOrigin"];
+            if (dict != null)
             {
-                var originDict = ParseDict(dict["ReferenceOrigin"]);
-                var rotation = GetWithDefault(originDict, "rotation", Quaternion.identity);
-                var translation = GetWithDefault(originDict, "translation", Vector3.zero);
+                var rotation = FlipHandedness(dict["rotation"].AsQuaternion() ?? Quaternion.identity);
+                var translation = FlipHandedness(dict["translation"].AsVector3() ?? Vector3.zero);
                 referenceOrigin = new Pose(translation, rotation);
             }
             else
@@ -47,71 +41,9 @@ namespace UnityEditor.XR.ARKit
             }
         }
 
-        static int GetWithDefault(IReadOnlyDictionary<string, XmlNode> dict, string key, int defaultValue)
-        {
-            if (!dict.TryGetValue(key, out var node))
-                return defaultValue;
+        static Vector3 FlipHandedness(Vector3 value) => new Vector3(value.x, value.y, -value.z);
 
-            return node.Name != "integer" ? defaultValue : int.Parse(node.InnerText);
-        }
-
-        static string GetWithDefault(IReadOnlyDictionary<string, XmlNode> dict, string key, string defaultValue)
-        {
-            if (!dict.TryGetValue(key, out var node))
-                return defaultValue;
-
-            return node.Name != "string" ? defaultValue : node.InnerText;
-        }
-
-        static Dictionary<string, XmlNode> ParseDict(XmlNode node)
-        {
-            var dict = new Dictionary<string, XmlNode>();
-            var keys = node.SelectNodes("descendant::key");
-            foreach (XmlNode key in keys)
-            {
-                var value = key.NextSibling;
-                dict[key.InnerText] = value;
-            }
-
-            return dict;
-        }
-
-        static Vector3 GetWithDefault(IReadOnlyDictionary<string, XmlNode> dict, string key, Vector3 defaultValue)
-        {
-            if (!dict.TryGetValue(key, out var node))
-                return defaultValue;
-
-            if (node.Name != "array")
-                return defaultValue;
-
-            var reals = node.SelectNodes("real");
-            if (reals == null)
-                return defaultValue;
-
-            return new Vector3(
-                 float.Parse(reals[0].InnerText, CultureInfo.InvariantCulture),
-                 float.Parse(reals[1].InnerText, CultureInfo.InvariantCulture),
-                -float.Parse(reals[2].InnerText, CultureInfo.InvariantCulture));
-        }
-
-        static Quaternion GetWithDefault(IReadOnlyDictionary<string, XmlNode> dict, string key, Quaternion defaultValue)
-        {
-            if (!dict.TryGetValue(key, out var node))
-                return defaultValue;
-
-            if (node.Name != "array")
-                return defaultValue;
-
-            var reals = node.SelectNodes("real");
-            if (reals == null)
-                return defaultValue;
-
-            return new Quaternion(
-                 float.Parse(reals[0].InnerText, CultureInfo.InvariantCulture),
-                 float.Parse(reals[1].InnerText, CultureInfo.InvariantCulture),
-                -float.Parse(reals[2].InnerText, CultureInfo.InvariantCulture),
-                -float.Parse(reals[3].InnerText, CultureInfo.InvariantCulture));
-        }
+        static Quaternion FlipHandedness(Quaternion value) => new Quaternion(value.x, value.y, -value.z, -value.w);
 
         /// <summary>
         /// The filename of an image contained within the archive that can be used as a preview for the scanned object.

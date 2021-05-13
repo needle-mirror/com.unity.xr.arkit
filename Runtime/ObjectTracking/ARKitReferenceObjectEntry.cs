@@ -3,6 +3,12 @@ using Unity.Collections;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.Management;
 
+#if UNITY_EDITOR
+using System.IO;
+using System.Linq;
+using UnityEditor;
+#endif
+
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
@@ -95,19 +101,50 @@ namespace UnityEngine.XR.ARKit
             m_ARKitReferenceObject = new ARReferenceObject(m_ReferenceObjectBytes);
 
 #if UNITY_EDITOR
-        internal void SetReferenceObjectBytes(byte[] data)
+        static bool s_ObjectBytesShouldBeSet;
+
+        // Called by ARKitReferenceObjectLibraryBuildProcessor
+        internal static void SetObjectBytesEnabled(bool value)
         {
-            m_ReferenceObjectBytes = data;
+            // Set the desired result
+            s_ObjectBytesShouldBeSet = value;
+
+            // Iterate over all reference object libraries, reimporting if necessary
+            var entries = AssetDatabase.FindAssets($"t:{nameof(XRReferenceObjectLibrary)}")
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Select(AssetDatabase.LoadAssetAtPath<XRReferenceObjectLibrary>)
+                .SelectMany(library => library)
+                .Select(referenceObject => referenceObject.FindEntry<ARKitReferenceObjectEntry>())
+                .Where(entry => entry != null);
+
+            foreach (var entry in entries)
+            {
+                entry.ReimportIfNecessary();
+            }
+        }
+
+        // Called by ARObjectImporter
+        internal void SetSourceAsset(string path) => m_ReferenceObjectBytes = s_ObjectBytesShouldBeSet
+            ? File.ReadAllBytes(path)
+            : new byte[0];
+
+        void ReimportIfNecessary()
+        {
+            if (s_ObjectBytesShouldBeSet && m_ReferenceObjectBytes?.Length == 0 ||
+                !s_ObjectBytesShouldBeSet && m_ReferenceObjectBytes?.Length > 0)
+            {
+                AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(this));
+            }
         }
 #endif
 
 #pragma warning disable CS0649
         [SerializeField]
         internal Pose m_ReferenceOrigin;
-#pragma warning restore CS0649
 
         [SerializeField]
-        byte[] m_ReferenceObjectBytes;
+        internal byte[] m_ReferenceObjectBytes;
+#pragma warning restore CS0649
 
         ARReferenceObject m_ARKitReferenceObject;
     }

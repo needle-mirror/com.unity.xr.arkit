@@ -127,6 +127,8 @@ This version of ARKit XR Plug-in is compatible with the following versions of th
 * 2021.1
 * 2021.2
 
+You must use Xcode 12 or later when compiling an iOS Player that includes this package.
+
 ## Known limitations
 
 * Color correction is not available as an RGB Value (only as color temperature).
