@@ -8,6 +8,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.0-pre.10] - 2021-06-28
+
+No changes
+
 ## [4.2.0-pre.9] - 2021-05-27
 
 ### Fixed
@@ -16,7 +20,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [4.2.0-pre.8] - 2021-05-20
 
-No changes
+### Fixed
+
+- Fixed an issue which could cause [CPU image](xref:UnityEngine.XR.ARSubsystems.XRCpuImage) conversion to produce incorrect results when operating on a [depth image](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.TryAcquireEnvironmentDepthCpuImage(UnityEngine.XR.ARSubsystems.XRCpuImage@)) when the [transformation](xref:UnityEngine.XR.ARSubsystems.XRCpuImage.Transformation) was something other than `MirrorY`.
 
 ## [4.2.0-pre.7] - 2021-05-13
 
