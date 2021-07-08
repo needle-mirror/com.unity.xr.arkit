@@ -349,6 +349,12 @@ namespace UnityEngine.XR.ARKit
             public override bool TryAcquireEnvironmentDepthCpuImage(out XRCpuImage.Cinfo cinfo)
                 => ARKitCpuImageApi.TryAcquireLatestImage(ARKitCpuImageApi.ImageType.EnvironmentDepth, out cinfo);
 
+            public override bool TryAcquireRawEnvironmentDepthCpuImage(out XRCpuImage.Cinfo cinfo) =>
+                ARKitCpuImageApi.TryAcquireLatestImage(ARKitCpuImageApi.ImageType.RawEnvironmentDepth, out cinfo);
+
+            public override bool TryAcquireSmoothedEnvironmentDepthCpuImage(out XRCpuImage.Cinfo cinfo) =>
+                ARKitCpuImageApi.TryAcquireLatestImage(ARKitCpuImageApi.ImageType.TemporallySmoothedEnvironmentDepth, out cinfo);
+
             /// <summary>
             /// The CPU image API for interacting with the environment depth image.
             /// </summary>

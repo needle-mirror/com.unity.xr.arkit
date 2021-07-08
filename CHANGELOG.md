@@ -8,6 +8,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.0-pre.12] - 2021-07-08
+
+### Added
+
+- Added methods to get the [raw](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.TryAcquireRawEnvironmentDepthCpuImage(UnityEngine.XR.ARSubsystems.XRCpuImage@)) and [smoothed](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.TryAcquireSmoothedEnvironmentDepthCpuImage(UnityEngine.XR.ARSubsystems.XRCpuImage@)) depth images independently.
+
+### Fixed
+
+- Fixed [issue 1334331](https://issuetracker.unity3d.com/issues/ios-armeshmanager-meshes-flicker-when-arworldalignment-is-set-to-gravityandheading) which could cause meshes to occasionally become briefly invalid, resulting in a flickering effect when visualized.
+
 ## [4.2.0-pre.10] - 2021-06-28
 
 No changes

@@ -17,6 +17,8 @@ namespace UnityEngine.XR.ARKit
             HumanStencil,
             EnvironmentDepth,
             EnvironmentDepthConfidence,
+            RawEnvironmentDepth,
+            TemporallySmoothedEnvironmentDepth,
         }
 
         /// <summary>
