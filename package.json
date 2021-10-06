@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "ARKit XR Plugin",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "unity": "2020.3",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion",
   "keywords": [
@@ -13,15 +13,15 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arsubsystems": "4.2.0",
+    "com.unity.xr.arsubsystems": "4.2.1",
     "com.unity.xr.management": "4.0.1"
   },
   "upmCi": {
-    "footprint": "bc1b408b26685de16009a300ae283b61bd5bcff8"
+    "footprint": "3a6fce3df8aa982e55f22117e723f66333b6277b"
   },
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "214a8d84fe8deb14a45c8b5d6949c40b03c3495a"
+    "revision": "c2ff116257e1911422543239c929c29955c27510"
   }
 }
