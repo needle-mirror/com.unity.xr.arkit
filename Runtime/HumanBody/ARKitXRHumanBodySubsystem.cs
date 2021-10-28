@@ -301,7 +301,7 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation();
 #else
-            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+            static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             public static void UnityARKit_HumanBodyProvider_Construct()
             {

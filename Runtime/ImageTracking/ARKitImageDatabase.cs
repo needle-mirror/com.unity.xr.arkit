@@ -225,7 +225,7 @@ namespace UnityEngine.XR.ARKit
                 int width, int height, float physicalWidth,
                 ref ManagedReferenceImage managedReferenceImage)
             {
-                throw new NotImplementedException("ARKit Plugin Provider not enabled in project settings.");
+                throw new NotImplementedException("Apple ARKit XR Plug-in Provider not enabled in project settings.");
             }
 #endif
         }
@@ -252,7 +252,7 @@ namespace UnityEngine.XR.ARKit
         [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_DestroyValidator")]
         static extern void DestroyValidator(IntPtr database, IntPtr validator);
 #else
-        const string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+        const string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
         static IntPtr Init() => default;
 

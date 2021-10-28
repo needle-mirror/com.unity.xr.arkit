@@ -1,21 +1,19 @@
 ---
 uid: arkit-whats-new
 ---
-# What's new in version 4.2
+# What's new in version 5.0
 
-Summary of changes in ARCore XR Plug-in package version 4.2.
+Summary of changes in ARCore XR Plug-in package version 5.0.
 
 The main updates in this release include:
 
-**Added**
+**Changed**
 
-- Added support for temporal smoothing of the environment depth image. When enabled and supported, this plugin now provides the environment depth image using [ARFrame.smoothedSceneDepth](https://developer.apple.com/documentation/arkit/arframe/3674209-smoothedscenedepth?language=objc) instead of [ARFrame.sceneDepth](https://developer.apple.com/documentation/arkit/arframe/3566299-scenedepth?language=objc).
-- [ARKit reference objects](xref:UnityEngine.XR.ARKit.ARKitReferenceObjectEntry) now store their data in the entry asset, which allows them to be used in [AssetBundles](xref:UnityEngine.AssetBundle).
+- `com.unity.xr.arkit-face-tracking` is no longer a separate package and has merged into `com.unity.xr.arkit`. The features that are now available with this package include (See the [old face tracking changelog](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.2/changelog/CHANGELOG.html) for more details):
+  - Provides runtime support for Face Tracking on ARKit.
+  - Support for ARKit 3 functionality: multiple face tracking and tracking a face (with front camera) while in world tracking (with rear camera).
+- The minimum Unity version for this package is now 2021.2.
 
-**Updated**
+For a full list of changes and updates in this version, see the [Apple ARKit XR Plug-in package changelog](xref:arkit-changelog).
 
-- Update [XR Plug-in Management](https://docs.unity3d.com/Packages/com.unity.xr.management@4.0) dependency to 4.0.
-- Deprecated [NSError.isNull](xref:UnityEngine.XR.ARKit.NSError.isNull). To determine whether an `NSError` is null, compare it to `null` using the `==` operator.
-- Static library was built with Xcode 12.4 (12D4e).
-
-For a full list of changes and updates in this version, see the [ARKit XR Plug-in package changelog](xref:arkit-changelog).
+[!include[](snippets/apple-arkit-trademark.md)]

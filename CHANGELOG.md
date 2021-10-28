@@ -8,9 +8,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.2.1] - 2021-10-06
+## [5.0.0-pre.5] - 2021-10-28
 
-No changes
+### Changed
+
+- `com.unity.xr.arkit-face-tracking` is no longer a separate package and has merged into `com.unity.xr.arkit`. The features that are now available with this package include (See the [old face tracking changelog](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.2/changelog/CHANGELOG.html) for more details):
+  - Provides runtime support for Face Tracking on ARKit.
+  - Support for ARKit 3 functionality: multiple face tracking and tracking a face (with front camera) while in world tracking (with rear camera).
+- The minimum Unity version for this package is now 2021.2.
+
+### Removed
+
+- Removed conditional dependency on the deprecated Lightweight Renderpipeline (LWRP) package.
 
 ## [4.2.0] - 2021-08-11
 
@@ -23,6 +32,7 @@ No changes
 ### Added
 
 - Added methods to get the [raw](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.TryAcquireRawEnvironmentDepthCpuImage(UnityEngine.XR.ARSubsystems.XRCpuImage@)) and [smoothed](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.TryAcquireSmoothedEnvironmentDepthCpuImage(UnityEngine.XR.ARSubsystems.XRCpuImage@)) depth images independently.
+- Added support for the [depthSensorSupported](xref:UnityEngine.XR.ARSubsystems.XRCameraConfiguration.depthSensorSupported) flag on the `XRCameraConfiguration` to indicate whether or not a camera configuration supports using a depth sensor.
 
 ### Fixed
 
@@ -40,9 +50,7 @@ No changes
 
 ## [4.2.0-pre.8] - 2021-05-20
 
-### Fixed
-
-- Fixed an issue which could cause [CPU image](xref:UnityEngine.XR.ARSubsystems.XRCpuImage) conversion to produce incorrect results when operating on a [depth image](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.TryAcquireEnvironmentDepthCpuImage(UnityEngine.XR.ARSubsystems.XRCpuImage@)) when the [transformation](xref:UnityEngine.XR.ARSubsystems.XRCpuImage.Transformation) was something other than `MirrorY`.
+No changes
 
 ## [4.2.0-pre.7] - 2021-05-13
 
@@ -241,7 +249,7 @@ Shader error in 'Unlit/ARKitBackground': failed to open source file: 'Packages/c
 - Removed support for Xcode versions below version 11.0 as per apple app store submission guidelines.  [See App Store submission guidelines for more information](https://developer.apple.com/app-store/submissions)
 - Previously, the trackable id associated with a point cloud was tied to the `XRDepthSubsystem`, and would only change if the subsystem was recreated. Now, the trackable id is tied to the session and will change if the session is recreated or reset. As before, there is only ever one point cloud.
 - ARKitLoader now manages the initialization and destruction of its `XRMeshSubsystem`. This means that using ARKit with [XR Management](https://docs.unity3d.com/Packages/com.unity.xr.management@3.1/manual/index.html) with try to initialize (but not start) the meshing subsystem.
-- The ARKit Settings has been moved from Project Settings > XR to Project Settings > XR Plug-in Management for consistency with other XR platforms. See [ARKitSettings](https://docs.unity3d.com/Packages/com.unity.xr.arkit@4.0/api/UnityEditor.XR.ARKit.ARKitSettings.html?q=ARKitSettings) for more information. [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.0/manual/index.html) package is now installable through this menu. ARKit build settings will no longer have to be created manually, installing the package will automatically create ARKit settings.
+- The ARKit Settings has been moved from Project Settings > XR to Project Settings > XR Plug-in Management for consistency with other XR platforms. See [ARKitSettings](https://docs.unity3d.com/Packages/com.unity.xr.arkit@4.0/api/UnityEditor.XR.ARKit.ARKitSettings.html?q=ARKitSettings) for more information. [Apple ARKit Face Tracking XR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.0/manual/index.html) package is now installable through this menu. ARKit build settings will no longer have to be created manually, installing the package will automatically create ARKit settings.
 
 ### Fixed
 
@@ -503,7 +511,7 @@ No changes
 - Add support for setting the camera focus mode.
 - Add a build check to ensure only ARM64 is selected as the only target architecture.
 - Implement `CameraConfiguration` support, allowing you to enumerate and set the resolution used by the hardware camera.
-- Added ARKit Face Tracking support via `com.unity.xr.facesubsystem`.
+- Added Apple ARKit Face Tracking support via `com.unity.xr.facesubsystem`.
 - Plane detection modes: Add ability to selectively enable detection for horizontal, vertical, or both types of planes.
 
 ## [1.0.0-preview.17] - 2018-10-06
@@ -574,9 +582,9 @@ No changes
 -Created a Legacy XRInput interface to automate the switch between 2018.1 and 2018.2 XRInput versions.
 - Availability check to determine runtime support for ARKit.
 - Normalize average brightness reading from 0..1
-This is the first release of the ARKit package for multi-platform AR.
+This is the first release of the Apple ARKit package for multi-platform AR.
 
-In this release we are shipping a working iteration of the ARKit package for
+In this release we are shipping a working iteration of the Apple ARKit package for
 Unity's native multi-platform AR support.
 Included in the package are static libraries, configuration files, binaries
 and project files needed to adapt ARKit to the Unity multi-platform AR API.
@@ -589,4 +597,8 @@ and project files needed to adapt ARKit to the Unity multi-platform AR API.
 ### Removed
 
 - Remove extraneous debug log
+
+
+<hr>
+\* *Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.*
 

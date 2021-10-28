@@ -57,7 +57,7 @@ namespace UnityEngine.XR.ARKit
         [DllImport("__Internal", EntryPoint = "NSMutableData_class")]
         static extern Class GetClass();
 #else
-        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+        static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
         static unsafe void AppendBytes(NSMutableData self, void* bytes, int length) =>
             throw new System.NotImplementedException(k_ExceptionMsg);

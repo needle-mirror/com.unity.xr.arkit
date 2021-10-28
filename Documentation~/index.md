@@ -1,9 +1,9 @@
 ---
 uid: arkit-manual
 ---
-# About ARKit XR Plug-in
+# About Apple ARKit XR Plug-in
 
-Use the ARKit XR Plug-in package to enable ARKit support via Unity's multi-platform XR API. This package implements the following XR Subsystems:
+Use the Apple ARKit XR Plug-in package to enable ARKit support via Unity's multi-platform XR API. This package implements the following XR Subsystems:
 
 * [Session](xref:arsubsystems-session-subsystem)
 * [Camera](xref:arsubsystems-camera-subsystem)
@@ -18,8 +18,9 @@ Use the ARKit XR Plug-in package to enable ARKit support via Unity's multi-platf
 * [Occlusion](xref:arsubsystems-occlusion-subsystem)
 * [Participant](xref:arsubsystems-participant-subsystem)
 * [Meshes](xref:arsubsystems-mesh-subsystem)
+* [Face tracking](xref:arsubsystems-face-subsystem)
 
-This version of ARKit XR Plug-in supports the following features:
+This version of Apple ARKit XR Plug-in supports the following features:
 
 * Device localization
 * Horizontal plane detection
@@ -38,19 +39,19 @@ This version of ARKit XR Plug-in supports the following features:
 * Occlusion
 
 > [!IMPORTANT]
-> Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, [face tracking](xref:arsubsystems-face-subsystem) support is available in a separate package, [ARKit Face Tracking](https://docs.unity3d.com/Packages/com.unity.xr.arkit-face-tracking@4.2).
+> Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, [face tracking](xref:arsubsystems-face-subsystem) support is available only when face tracking is enabled. Go to **Edit** &gt; **Project Settings** &gt; **XR Plug-in Management** &gt; **ARKit** to enable or disable face tracking.
 
-# Installing ARKit XR Plug-in
+# Installing Apple ARKit XR Plug-in
 
 To install this package, follow the instructions in the [Package Manager documentation](https://docs.unity3d.com/Packages/com.unity.package-manager-ui@latest/index.html).
 
-In addition, install the AR Foundation package, which uses ARKit XR Plug-in and provides many useful scripts and Prefabs. For more information about this package, see the [AR Foundation documentation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@latest).
+In addition, install the AR Foundation package, which uses Apple ARKit XR Plug-in and provides many useful scripts and Prefabs. For more information about this package, see the [AR Foundation documentation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@latest).
 
-# Using ARKit XR Plug-in
+# Using Apple ARKit XR Plug-in
 
-The ARKit XR Plug-in implements the native iOS endpoints required for building Handheld AR apps using Unity's multi-platform XR API. However, this package doesn't expose any public scripting interface of its own. In most cases, you should use the scripts, Prefabs, and assets provided by AR Foundation as the basis for your Handheld AR apps.
+The Apple ARKit XR Plug-in implements the native iOS endpoints required for building Handheld AR apps using Unity's multi-platform XR API. However, this package doesn't expose any public scripting interface of its own. In most cases, you should use the scripts, Prefabs, and assets provided by AR Foundation as the basis for your Handheld AR apps.
 
-Including the ARKit XR Plug-in also includes source files, static libraries, shader files, and plug-in metadata.
+Including the Apple ARKit XR Plug-in also includes source files, static libraries, shader files, and plug-in metadata.
 
 ARKit requires iOS 11.0. Some specific features require later versions (see below).
 
@@ -121,11 +122,10 @@ ARKit light estimation can only be `enabled` or `disabled`. The availability of 
 
 ## Requirements
 
-This version of ARKit XR Plug-in is compatible with the following versions of the Unity Editor:
+This version of Apple ARKit XR Plug-in is compatible with the following versions of the Unity Editor:
 
-* 2020.3
-* 2021.1
 * 2021.2
+* 2022.1
 
 You must use Xcode 12 or later when compiling an iOS Player that includes this package.
 
@@ -135,9 +135,11 @@ You must use Xcode 12 or later when compiling an iOS Player that includes this p
 
 ## Package contents
 
-This version of ARKit XR Plug-in includes:
+This version of Apple ARKit XR Plug-in includes:
 
 * A static library which provides implementation of the XR Subsystems listed above
 * An Objective-C source file
 * A shader used for rendering the camera image
 * A plug-in metadata file
+
+[!include[](snippets/apple-arkit-trademark.md)]

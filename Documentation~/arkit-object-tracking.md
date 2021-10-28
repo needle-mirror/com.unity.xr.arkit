@@ -16,3 +16,5 @@ You should see some metadata and a preview image of the scan.
 You can now add the `.arobject` to a reference object in your Reference Object Library:
 
 ![Example Reference Object Library](images/reference-object-library-inspector.png "Example Reference Object Library")
+
+[!include[](snippets/apple-arkit-trademark.md)]

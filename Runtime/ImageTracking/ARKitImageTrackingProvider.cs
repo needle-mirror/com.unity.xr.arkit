@@ -110,7 +110,7 @@ namespace UnityEngine.XR.ARKit
         [DllImport("__Internal")]
         static extern unsafe void UnityARKit_ImageTracking_ReleaseChanges(void* changes);
 #else
-        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+        static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
         static int UnityARKit_ImageTracking_GetRequestedMaximumNumberOfTrackedImages()
         {

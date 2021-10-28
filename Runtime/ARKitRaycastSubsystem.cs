@@ -168,7 +168,7 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal", EntryPoint = "UnityARKit_Raycast_RemoveRaycast")]
             public static extern void RemoveRaycast(IntPtr self, TrackableId trackableId);
 #else
-            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+            static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             public static unsafe void UnityARKit_Raycast_AcquireHitResults(
                 Vector2 screenPoint,

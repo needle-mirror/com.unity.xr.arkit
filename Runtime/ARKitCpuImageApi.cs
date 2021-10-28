@@ -257,7 +257,7 @@ namespace UnityEngine.XR.ARKit
                 int nativeHandle, XRCpuImage.ConversionParams conversionParams,
                 OnImageRequestCompleteDelegate callback, IntPtr context);
 #else
-            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+            static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             public static bool TryAcquireLatestImage(ImageType imageType, out XRCpuImage.Cinfo cinfo)
             {

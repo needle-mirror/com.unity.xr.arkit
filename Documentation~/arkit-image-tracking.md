@@ -26,3 +26,5 @@ If you plan to use the texture at runtime (and not just as a source asset for th
 ## Reference image dimensions
 
 ARKit requires image dimensions. When you specify the dimensions for a reference image, only the image's width is provided to ARKit. Xcode computes the height from the image's aspect ratio.
+
+[!include[](snippets/apple-arkit-trademark.md)]

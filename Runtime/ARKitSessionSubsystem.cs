@@ -207,7 +207,7 @@ namespace UnityEngine.XR.ARKit
         /// > [!NOTE]
         /// > <see cref="ARWorldAlignment.GravityAndHeading"/> requires location services to be enabled and the
         /// > user must grant your app permission to use location services. You must therefore provide a
-        /// > [Location Usage Description](xref:PlayerSettingsiOS-Other) entry in the Player Settings.
+        /// > [Location Usage Description](xref:class-PlayerSettingsiOS#Other) entry in the Player Settings.
         /// </remarks>
         public ARWorldAlignment requestedWorldAlignment
         {
@@ -557,7 +557,7 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal", EntryPoint = "UnityARKit_Session_SetConfigurationChangedCallback")]
             public static extern void SetConfigurationChangedCallback(IntPtr self, Action<IntPtr> callback);
 #else
-            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+            static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             public static int UnityARKit_createWorldMapRequest()
             {

@@ -529,7 +529,7 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             public static extern Supported UnityARKit_OcclusionProvider_DoesSupportEnvironmentDepthTemporalSmoothing();
 #else
-            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+            static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             public static void UnityARKit_OcclusionProvider_Construct(int textureHumanStencilPropertyId,
                                                                       int textureHumanDepthPropertyId,

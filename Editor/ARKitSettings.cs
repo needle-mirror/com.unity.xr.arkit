@@ -10,7 +10,7 @@ using System.Linq;
 namespace UnityEditor.XR.ARKit
 {
     /// <summary>
-    /// Holds settings that are used to configure the ARKit XR Plugin.
+    /// Holds settings that are used to configure the Apple ARKit XR Plug-in.
     /// </summary>
     [Serializable]
     [XRConfigurationData("ARKit", "UnityEditor.XR.ARKit.ARKitSettings")]
@@ -45,7 +45,7 @@ namespace UnityEditor.XR.ARKit
         }
 
         /// <summary>
-        /// If <c>true</c>, installs ARKit Face Tracking package if it's not already installed. If <c>false</c>, indicates that ARKit Face Tracking is not currently installed.
+        /// If <c>true</c>, includes ARKit Face Tracking functionality. If <c>false</c>, doesn't include ARKit Face Tracking functionality.
         /// </summary>
         public bool faceTracking
         {
@@ -53,7 +53,7 @@ namespace UnityEditor.XR.ARKit
             set => m_FaceTracking = value;
         }
 
-        [SerializeField, Tooltip("Installs ARKit Face Tracking package when toggled on and ARKit Face Tracking is not installed. Does not uninstall the package when unchecked")]
+        [SerializeField, Tooltip("Includes ARKit Face Tracking functionality when toggled on.")]
         bool m_FaceTracking;
 
         /// <summary>
@@ -99,28 +99,6 @@ namespace UnityEditor.XR.ARKit
             return true;
         }
 
-       static void HandleInstallFaceTracking()
-        {
-            EditorApplication.update -= HandleInstallFaceTracking;
-            if(currentSettings != null && s_PreviousFaceTrackingToggleState != currentSettings.m_FaceTracking)
-            {
-                if(currentSettings.m_FaceTracking == true)
-                {
-                    s_PreviousFaceTrackingToggleState = true;
-                    EditorApplication.update += CheckInstalledFaceTrackingInstalled;
-                }
-                else
-                {
-                    s_PreviousFaceTrackingToggleState = false;
-                    EditorApplication.update += HandleInstallFaceTracking;
-                }
-            }
-            else
-            {
-                EditorApplication.update += HandleInstallFaceTracking;
-            }
-        }
-
         internal static SerializedObject GetSerializedSettings() => new SerializedObject(GetOrCreateSettings());
 
         void Awake()
@@ -129,56 +107,9 @@ namespace UnityEditor.XR.ARKit
             {
                 EditorBuildSettings.RemoveConfigObject(k_OldConfigObjectName);
             }
-            s_ListRequest = Client.List();
-            EditorApplication.update += HandleInstallFaceTracking;
         }
 
-        static void CheckInstalledFaceTrackingInstalled()
-        {
-            EditorApplication.update -= CheckInstalledFaceTrackingInstalled;
-            if(s_ListRequest.IsCompleted)
-            {
-                if (s_ListRequest.Status == StatusCode.Success)
-                {
-                    if (s_ListRequest.Result.All(package => package.name != k_FaceTrackingPackageName))
-                    {
-                        var thisPackage = PackageManager.PackageInfo.FindForAssetPath("Packages/com.unity.xr.arkit/");
-                        Client.Add($"{k_FaceTrackingPackageName}@{thisPackage.version}");
-                    }
-                    EditorApplication.update += HandleInstallFaceTracking;
-                }
-                else if (s_ListRequest.Status >= StatusCode.Failure)
-                {
-                   Debug.LogError($"Error installing ARKit face tracking package: {s_ListRequest.Error.message}");
-                }
-            }
-            else
-            {
-               EditorApplication.update += CheckInstalledFaceTrackingInstalled;
-            }
-        }
-
-        void OnEnable()
-        {
-            AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
-        }
-
-        void OnDisable()
-        {
-            AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
-        }
-
-        void OnAfterAssemblyReload()
-        {
-            s_ListRequest = Client.List();
-            EditorApplication.update += HandleInstallFaceTracking;
-        }
-
-        static ListRequest s_ListRequest;
-        static bool s_PreviousFaceTrackingToggleState;
-        const string k_FaceTrackingPackageName = "com.unity.xr.arkit-face-tracking";
         const string k_SettingsKey = "UnityEditor.XR.ARKit.ARKitSettings";
         const string k_OldConfigObjectName = "com.unity.xr.arkit.PlayerSettings";
-
     }
 }

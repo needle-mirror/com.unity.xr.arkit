@@ -47,7 +47,7 @@ namespace UnityEngine.XR.ARKit
             static extern unsafe void UnityARKit_depth_releasePointCloud(
                 void* pointCloud);
 #else
-            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+            static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             static void UnityARKit_depth_start()
             {

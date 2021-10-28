@@ -6,9 +6,6 @@ using UnityEngine.Rendering;
 #if MODULE_URP_ENABLED
 using UnityEngine.Rendering.Universal;
 #endif // MODULE_URP_ENABLED
-#if MODULE_LWRP_ENABLED
-using UnityEngine.Rendering.LWRP;
-#endif // MODULE_LWRP_ENABLED
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -37,14 +34,6 @@ namespace UnityEngine.XR.ARKit
         const string k_BackgroundShaderName = "Unlit/ARKitBackground";
 
         /// <summary>
-        /// The shader keyword for enabling LWRP rendering.
-        /// </summary>
-        /// <value>
-        /// The shader keyword for enabling LWRP rendering.
-        /// </value>
-        const string k_BackgroundShaderKeywordLWRP = "ARKIT_BACKGROUND_LWRP";
-
-        /// <summary>
         /// The shader keyword for enabling URP rendering.
         /// </summary>
         /// <value>
@@ -62,9 +51,6 @@ namespace UnityEngine.XR.ARKit
 #if !MODULE_URP_ENABLED
             k_BackgroundShaderKeywordURP,
 #endif // !MODULE_URP_ENABLED
-#if !MODULE_LWRP_ENABLED
-            k_BackgroundShaderKeywordLWRP,
-#endif // !MODULE_LWRP_ENABLED
         };
 
         /// <summary>
@@ -198,7 +184,7 @@ namespace UnityEngine.XR.ARKit
             /// <value>
             /// The shader keywords to disable when the Legacy RP is enabled.
             /// </value>
-            static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordLWRP, k_BackgroundShaderKeywordURP};
+            static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordURP};
 
 #if MODULE_URP_ENABLED
             /// <summary>
@@ -215,26 +201,8 @@ namespace UnityEngine.XR.ARKit
             /// <value>
             /// The shader keywords to disable when URP is enabled.
             /// </value>
-            static readonly List<string> k_URPDisabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordLWRP};
+            static readonly List<string> k_URPDisabledMaterialKeywords = null;
 #endif // MODULE_URP_ENABLED
-
-#if MODULE_LWRP_ENABLED
-            /// <summary>
-            /// The shader keywords to enable when LWRP is enabled.
-            /// </summary>
-            /// <value>
-            /// The shader keywords to enable when LWRP is enabled.
-            /// </value>
-            static readonly List<string> k_LWRPEnabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordLWRP};
-
-            /// <summary>
-            /// The shader keywords to disable when LWRP is enabled.
-            /// </summary>
-            /// <value>
-            /// The shader keywords to disable when LWRP is enabled.
-            /// </value>
-            static readonly List<string> k_LWRPDisabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordURP};
-#endif // MODULE_LWRP_ENABLED
 
             /// <summary>
             /// Get the material used by <c>XRCameraSubsystem</c> to render the camera texture.
@@ -482,13 +450,6 @@ namespace UnityEngine.XR.ARKit
                     disabledKeywords = k_URPDisabledMaterialKeywords;
                 }
 #endif // MODULE_URP_ENABLED
-#if MODULE_LWRP_ENABLED
-                else if (GraphicsSettings.currentRenderPipeline is LightweightRenderPipelineAsset)
-                {
-                    enabledMaterialKeywords = k_LWRPEnabledMaterialKeywords;
-                    disabledKeywords = k_LWRPDisabledMaterialKeywords;
-                }
-#endif // MODULE_LWRP_ENABLED
                 else
                 {
                     enabledKeywords = null;
@@ -571,7 +532,7 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             public static extern bool UnityARKit_Camera_GetAutoFocusEnabled();
 #else
-            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+            static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             public static Feature GetCurrentLightEstimation() => Feature.None;
 

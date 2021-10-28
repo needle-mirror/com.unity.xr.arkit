@@ -21,7 +21,7 @@ namespace UnityEngine.XR.ARKit
             IntPtr self, NativeChanges changes, int stride,
             void* added, void* updated, void* removed);
 #else
-        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+        static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
         public static IntPtr UnityARKit_TrackableProvider_start(IntPtr self)
         {

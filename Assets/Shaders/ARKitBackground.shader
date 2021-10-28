@@ -35,24 +35,13 @@ Shader "Unlit/ARKitBackground"
             #pragma vertex vert
             #pragma fragment frag
 
-            #pragma multi_compile_local __ ARKIT_BACKGROUND_URP ARKIT_BACKGROUND_LWRP
+            #pragma multi_compile_local __ ARKIT_BACKGROUND_URP
             #pragma multi_compile_local __ ARKIT_HUMAN_SEGMENTATION_ENABLED ARKIT_ENVIRONMENT_DEPTH_ENABLED
 
 
 #if ARKIT_BACKGROUND_URP
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-
-            #define ARKIT_TEXTURE2D_HALF(texture) TEXTURE2D(texture)
-            #define ARKIT_SAMPLER_HALF(sampler) SAMPLER(sampler)
-            #define ARKIT_TEXTURE2D_FLOAT(texture) TEXTURE2D(texture)
-            #define ARKIT_SAMPLER_FLOAT(sampler) SAMPLER(sampler)
-            #define ARKIT_SAMPLE_TEXTURE2D(texture,sampler,texcoord) SAMPLE_TEXTURE2D(texture,sampler,texcoord)
-
-#elif ARKIT_BACKGROUND_LWRP
-
-            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
             #define ARKIT_TEXTURE2D_HALF(texture) TEXTURE2D(texture)

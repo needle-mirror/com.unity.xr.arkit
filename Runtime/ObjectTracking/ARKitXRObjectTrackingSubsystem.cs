@@ -64,7 +64,7 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal", EntryPoint = "UnityARKit_ObjectTracking_AddReferenceObject")]
             public static extern void AddReferenceObject(ARReferenceObject referenceObject);
 #else
-            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+            static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             static void UnityARKit_ObjectTracking_Initialize()
             {

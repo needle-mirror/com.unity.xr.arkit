@@ -26,3 +26,5 @@ The occlusion subsystem provides access to two types of environment depth: [raw]
 Environment depth requires Xcode 12 or later, and it only works on iOS 14 devices with the LiDAR scanner, such as the new iPad Pro.
 
 Human depth and human scencils requires Xcode 11 or later, and it only works on iOS 13+ devices with the A12 Bionic or higher.
+
+[!include[](snippets/apple-arkit-trademark.md)]

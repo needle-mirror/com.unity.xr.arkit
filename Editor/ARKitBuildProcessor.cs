@@ -166,7 +166,7 @@ namespace UnityEditor.XR.ARKit
                 var userSetTargetVersion = OSVersion.Parse(PlayerSettings.iOS.targetOSVersionString);
                 if (userSetTargetVersion < new OSVersion(11))
                 {
-                    throw new BuildFailedException($"You have selected a minimum target iOS version of {userSetTargetVersion} and have the ARKit package installed."
+                    throw new BuildFailedException($"You have selected a minimum target iOS version of {userSetTargetVersion} and have the Apple ARKit package installed."
                         + "ARKit requires at least iOS version 11.0 (See Player Settings > Other Settings > Target minimum iOS Version).");
                 }
             }
@@ -183,7 +183,7 @@ namespace UnityEditor.XR.ARKit
                     k_TargetMinimumMajorXcodeVersion,
                     k_TargetMinimumMinorXcodeVersion,
                     k_TargetMinimumPatchXcodeVersion))
-                    throw new BuildFailedException($"The selected Xcode version: {xcodeVersion} is below the minimum Xcode required Xcode version for the Unity ARKit Plugin.  Please target at least Xcode version {k_TargetMinimumMajorXcodeVersion}.{k_TargetMinimumMinorXcodeVersion}.{k_TargetMinimumPatchXcodeVersion}.");
+                    throw new BuildFailedException($"The selected Xcode version: {xcodeVersion} is below the minimum Xcode required Xcode version for the Apple ARKit XR Plug-in.  Please target at least Xcode version {k_TargetMinimumMajorXcodeVersion}.{k_TargetMinimumMinorXcodeVersion}.{k_TargetMinimumPatchXcodeVersion}.");
 #endif
             }
 
@@ -191,7 +191,7 @@ namespace UnityEditor.XR.ARKit
             {
 
                 if (PlayerSettings.GetArchitecture(buildTargetGroup) != k_TargetArchitectureArm64)
-                    throw new BuildFailedException("ARKit XR Plugin only supports the ARM64 architecture. See Player Settings > Other Settings > Architecture.");
+                    throw new BuildFailedException("Apple ARKit XR Plug-in only supports the ARM64 architecture. See Player Settings > Other Settings > Architecture.");
 
             }
 

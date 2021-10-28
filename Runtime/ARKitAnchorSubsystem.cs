@@ -99,7 +99,7 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             static extern bool UnityARKit_refPoints_tryRemove(TrackableId anchorId);
 #else
-            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+            static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             static void UnityARKit_refPoints_onStart()
             {

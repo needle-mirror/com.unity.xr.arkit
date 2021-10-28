@@ -39,7 +39,7 @@ namespace UnityEngine.XR.ARKit
         [DllImport("__Internal", EntryPoint="UnityARKit_TrackableChanges_trackingState")]
         static extern TrackingState GetTrackingState(NativeChanges self);
 #else
-        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+        static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
         static int GetAddedLength(NativeChanges self)
         {

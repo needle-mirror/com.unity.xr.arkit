@@ -10,5 +10,6 @@
   * [Participants](index.md#participant-tracking)
   * [Occlusion](arkit-occlusion.md)
   * [Meshing](arkit-meshing.md)
+  * [Face Tracking](arkit-face-tracking.md)
 * [Light estimation](index.md#light-estimation)
 * [Camera configuration](index.md#camera-configuration)

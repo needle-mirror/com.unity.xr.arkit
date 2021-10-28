@@ -199,7 +199,7 @@ namespace UnityEngine.XR.ARKit
         [DllImport("__Internal")]
         static extern ARCollaborationDataPriority UnityARKit_CollaborationData_GetPriority(IntPtr collaborationData);
 #else
-        static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+        static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
         static IntPtr UnityARKit_CollaborationData_DeserializeFromNSData(IntPtr nsData) =>
             throw new System.NotImplementedException(k_ExceptionMsg);

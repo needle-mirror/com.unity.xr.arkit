@@ -181,7 +181,7 @@ namespace UnityEngine.XR.ARKit
             static internal extern unsafe void UnityARKit_Planes_ReleaseBoundary(
                 void* boundary);
 #else
-            static readonly string k_ExceptionMsg = "ARKit Plugin Provider not enabled in project settings.";
+            static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             static internal unsafe bool UnityARKit_Planes_SupportsClassification() => false;
 
