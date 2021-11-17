@@ -297,7 +297,7 @@ namespace UnityEditor.XR.ARKit
         static LoaderEnabledCheck()
         {
             s_ARKitSettings = ARKitSettings.GetOrCreateSettings();
-            ARKitBuildProcessor.loaderEnabled = s_ARKitSettings.faceTracking;
+            ARKitBuildProcessor.loaderEnabled = false;
 
             UpdateARKitDefines();
             EditorCoroutineUtility.StartCoroutineOwnerless(UpdateARKitDefinesCoroutine());
