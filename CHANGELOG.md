@@ -8,6 +8,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.2] - 2021-12-09
+
+### Fixed
+
+- Fixed build issue [issue 1357108](https://issuetracker.unity3d.com/issues/unity-xr-arkit-loader-enabled-define-is-not-added-if-arkit-face-tracking-is-enabled-and-unity-editor-build-target-is-not-set-t) with the scripting define UNITY_XR_ARKIT_LOADER_ENABLED not being set correctly in some use cases.
+
 ## [4.2.1] - 2021-10-06
 
 No changes
@@ -589,4 +595,3 @@ and project files needed to adapt ARKit to the Unity multi-platform AR API.
 ### Removed
 
 - Remove extraneous debug log
-
