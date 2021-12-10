@@ -23,7 +23,7 @@
         /// > [!NOTE]
         /// > This option requires location services to be enabled and the user must grant your app permission
         /// > to use location services. You must therefore provide a
-        /// > [Location Usage Description](xref:class-PlayerSettingsiOS#Other) entry in the Player Settings in order to set
+        /// > [Location Usage Description](xref:class-PlayerSettingsiOS#Config-Apple) entry in the Player Settings in order to set
         /// > <see cref="ARKitSessionSubsystem.requestedWorldAlignment"/> to this value.
         /// </remarks>
         GravityAndHeading,

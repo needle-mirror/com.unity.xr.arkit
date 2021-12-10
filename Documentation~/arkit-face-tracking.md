@@ -1,11 +1,7 @@
 ---
 uid: arkitfacetracking-manual
 ---
-# About Apple ARKit Face Tracking XR Plug-in
-
-Face tracking support is available as part of the [Apple ARKit XR Plug-in](xref:arkit-manual).
-
-## Using Apple ARKit Face Tracking XR Plug-in
+# Face Tracking
 
 This package implements the [face tracking subsystem](xref:arsubsystems-face-subsystem) defined in the [AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@latest/index.html) package specific to ARKit.
 
@@ -38,6 +34,6 @@ To use face tracking, you must have:
 
 ### Contents
 
-**Apple ARKit Face Tracking XR Plug-in** includes a static library that provides an implementation of the [XRFaceSubsystem](xref:arsubsystems-face-subsystem).
+**Apple ARKit XR Plug-in** includes a static library that provides an implementation of the [XRFaceSubsystem](xref:arsubsystems-face-subsystem).
 
 [!include[](snippets/apple-arkit-trademark.md)]

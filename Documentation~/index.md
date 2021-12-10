@@ -75,49 +75,6 @@ To target 32-bit devices, OpenGLES2 must be included in the list of Graphics API
 
 ![alt text](images/build-to-32bit-reference.png "ARKitSettings dialog")
 
-## Session
-
-ARKit implements [XRSessionSubsystem.GetAvailabilityAsync](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem.GetAvailabilityAsync), which consists of the device checking that it's running on iOS 11.0 or above. For more information, see the [ARSubsystems session documentation](xref:arsubsystems-session-subsystem).
-
-## Depth subsystem
-
-Raycasts always return a `Pose` for the item the raycast hit. When raycasting against feature points, the pose is oriented to provide an estimate for the surface the feature point might represent.
-
-The depth subsystem doesn't require additional resources, so enabling it doesn't affect performance
-
-ARKit's depth subsystem only ever produces a single [XRPointCloud](xref:UnityEngine.XR.ARSubsystems.XRPointCloud).
-
-For more information, see the [ARSubsystems depth subsystem documentation](xref:arsubsystems-depth-subsystem).
-
-## Plane tracking
-
-ARKit doesn't support plane subsumption (that is, one plane can't be included in another plane); there is no merge event. If two planes are determined to be separate parts of the same surface, one plane might be removed while the other expands to the explored surface.
-
-ARKit provides boundary points for all its planes on iOS 11.3 and later.
-
-The ARKit plane subsystem requires additional CPU resources and can be energy-intensive. Enabling both horizontal and vertical plane detection (available in iOS 11.3+) requires additional resources. Consider disabling plane detection when your app doesn't need it to save energy.
-
-Setting the plane detection mode to [PlaneDetectionMode.None](xref:UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None) is equivalent to calling `Stop()` on the subsystem.
-
-For more information, see the [ARSubsystems plane subsystem documentation](xref:arsubsystems-plane-subsystem).
-
-## Participant tracking
-
-A participant represents another device in a multi-user collaborative session. Although you can start and stop the participant subsystem at any time, the session must receive `ARCollaborationData` from other peers in the multi-user session in order for participants to be detected. For an example implementation, see the [ARCollaborationData sample on GitHub](https://github.com/Unity-Technologies/arfoundation-samples/tree/master/Assets/Scenes/ARCollaborationData).
-
-## Light estimation
-
-ARKit light estimation can only be `enabled` or `disabled`. The availability of either  `Ambient Intensity` or `Environmental HDR` data is governed by the active tracking mode. See the following table for more details.
-
-| Tracking configuration | Ambient intensity (lumens) | Color temperature | Main light direction | Main light intensity (lumens) | Ambient spherical harmonics |
-|------------------------|----------------------------|-------------------|----------------------|-------------------------------|-----------------------------|
-| World Tracking         | Yes                        | Yes               | No                   | No                            | No                          |
-| Face Tracking          | Yes                        | Yes               | Yes                  | Yes                           | Yes                         |
-
-## Camera configuration
-
-[XRCameraConfiguration](xref:UnityEngine.XR.ARSubsystems.XRCameraConfiguration) contains an `IntPtr` field `nativeConfigurationHandle` which is a platform-specific handle. For ARKit, this handle is a pointer to the native [ARVideoFormat](https://developer.apple.com/documentation/arkit/arvideoformat?language=objc) Objective-C object.
-
 # Technical details
 
 ## Requirements
@@ -141,5 +98,7 @@ This version of Apple ARKit XR Plug-in includes:
 * An Objective-C source file
 * A shader used for rendering the camera image
 * A plug-in metadata file
+
+For more code examples, see the [AR Foundation Samples repo](https://github.com/Unity-Technologies/arfoundation-samples).
 
 [!include[](snippets/apple-arkit-trademark.md)]

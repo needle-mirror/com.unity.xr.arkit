@@ -207,7 +207,7 @@ namespace UnityEngine.XR.ARKit
         /// > [!NOTE]
         /// > <see cref="ARWorldAlignment.GravityAndHeading"/> requires location services to be enabled and the
         /// > user must grant your app permission to use location services. You must therefore provide a
-        /// > [Location Usage Description](xref:class-PlayerSettingsiOS#Other) entry in the Player Settings.
+        /// > [Location Usage Description](xref:class-PlayerSettingsiOS#Config-Apple) entry in the Player Settings.
         /// </remarks>
         public ARWorldAlignment requestedWorldAlignment
         {

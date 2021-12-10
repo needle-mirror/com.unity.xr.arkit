@@ -8,6 +8,13 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.0.0-pre.7] - 2021-12-10
+
+### Fixed
+
+- Fixed bug where setting a texture's [wrapMode](xref:UnityEngine.Texture.wrapMode) to clamp on the [facePrefab](xref:UnityEngine.XR.ARFoundation.ARFaceManager.facePrefab) would cause the texture to shift incorrectly. The issue tracker can be found [here](https://issuetracker.unity3d.com/issues/ios-arkit-face-mesh-displays-its-materials-texture-incorrectly-when-texturewrapmode-is-set-to-clamp).
+- Fixed an issue where the target platform for `libUnityARKitFaceTracking.a` was not set correctly causing the plugin library to be included in builds for both Android and iOS platforms.
+
 ## [5.0.0-pre.6] - 2021-11-17
 
 ### Fixed

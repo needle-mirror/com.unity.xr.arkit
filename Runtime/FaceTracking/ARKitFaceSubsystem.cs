@@ -301,7 +301,7 @@ namespace UnityEngine.XR.ARKit
                 {
                     uvsOut[i] = new Vector2(
                          uvsIn[i].x,
-                        -uvsIn[i].y);
+                         1.0f - uvsIn[i].y);
                 }
             }
 
