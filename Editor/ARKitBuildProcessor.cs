@@ -275,7 +275,7 @@ namespace UnityEditor.XR.ARKit
     {
         public static void Add(string define)
         {
-            string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+            var definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
             var allDefines = new HashSet<string>(definesString.Split(';'));
 
             if (allDefines.Contains(define))
@@ -285,17 +285,17 @@ namespace UnityEditor.XR.ARKit
 
             allDefines.Add(define);
             PlayerSettings.SetScriptingDefineSymbolsForGroup(
-                EditorUserBuildSettings.selectedBuildTargetGroup,
+                BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget),
                 string.Join(";", allDefines));
         }
 
         public static void Remove(string define)
         {
-            string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+            string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
             var allDefines = new HashSet<string>(definesString.Split(';'));
             allDefines.Remove(define);
             PlayerSettings.SetScriptingDefineSymbolsForGroup(
-                EditorUserBuildSettings.selectedBuildTargetGroup,
+                BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget),
                 string.Join(";", allDefines));
         }
     }
@@ -306,7 +306,7 @@ namespace UnityEditor.XR.ARKit
         static LoaderEnabledCheck()
         {
             s_ARKitSettings = ARKitSettings.GetOrCreateSettings();
-            ARKitBuildProcessor.s_LoaderEnabled = s_ARKitSettings.faceTracking;
+            ARKitBuildProcessor.s_LoaderEnabled = false;
 
             UpdateARKitDefines();
             EditorCoroutineUtility.StartCoroutineOwnerless(UpdateARKitDefinesCoroutine());

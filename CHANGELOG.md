@@ -5,6 +5,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.9] - 2022-01-06
+
+### Fixes
+
+- Fixed [issue 1334331](https://issuetracker.unity3d.com/issues/ios-armeshmanager-meshes-flicker-when-arworldalignment-is-set-to-gravityandheading) which could cause meshes to occasionally become briefly invalid, resulting in a flickering effect when visualized.
+- Fixed build issue [issue 1357108](https://issuetracker.unity3d.com/issues/unity-xr-arkit-loader-enabled-define-is-not-added-if-arkit-face-tracking-is-enabled-and-unity-editor-build-target-is-not-set-t) with the scripting define UNITY_XR_ARKIT_LOADER_ENABLED not being set correctly in some use cases.
+- Fixed issue where selected build group was not the active build group.
+- Fixed an issue which could cause [CPU image](xref:UnityEngine.XR.ARSubsystems.XRCpuImage) conversion to produce incorrect results when operating on a [depth image](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.TryAcquireEnvironmentDepthCpuImage(UnityEngine.XR.ARSubsystems.XRCpuImage@)) when the [transformation](xref:UnityEngine.XR.ARSubsystems.XRCpuImage.Transformation) was something other than `MirrorY`.
+- Fixed an issue which could cause some requested features to persist across session destruction and reinitialization.
+
 ## [4.1.7] - 2021-03-31
 
 ## [4.1.5] - 2021-01-25
