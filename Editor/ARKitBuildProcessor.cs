@@ -94,7 +94,7 @@ namespace UnityEditor.XR.ARKit
             const int k_TargetArchitectureArm64 = 1;
             const int k_TargetArchitectureUniversal = 2;
 
-            // The minimum target Xcode version for the plugin
+            // The minimum target Xcode version for the plug-in
             const int k_TargetMinimumMajorXcodeVersion = 11;
             const int k_TargetMinimumMinorXcodeVersion = 0;
             const int k_TargetMinimumPatchXcodeVersion = 0;

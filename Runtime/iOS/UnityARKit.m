@@ -20,10 +20,10 @@ void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API UnityARKit_EnsureRootViewIsSetup
 
 + (void)loadPlugin
 {
-    // This registers our plugin with Unity
+    // This registers our plug-in with Unity
     UnityRegisterRenderingPluginV5(UnityARKitXRPlugin_PluginLoad, NULL);
 
-    // This sets up some data our plugin will need later
+    // This sets up some data our plug-in will need later
     UnityARKit_EnsureRootViewIsSetup();
 }
 
