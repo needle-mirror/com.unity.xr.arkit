@@ -8,6 +8,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.3] - 2022-03-01
+
+### Changed
+
+- Static library was built with Xcode 13.2.1 (13C100)
+
 ## [4.2.2] - 2021-12-09
 
 ### Fixed
@@ -595,3 +601,4 @@ and project files needed to adapt ARKit to the Unity multi-platform AR API.
 ### Removed
 
 - Remove extraneous debug log
+
