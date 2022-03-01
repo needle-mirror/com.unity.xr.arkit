@@ -149,7 +149,7 @@ namespace UnityEngine.XR.ARKit
             static readonly List<string> m_AllDisabledMaterialKeywords = new List<string>() {k_HumanEnabledMaterialKeyword, k_EnvironmentDepthEnabledMaterialKeyword};
 
             /// <summary>
-            /// The shader keywords for enabling environment depth rendering.
+            /// The occlusion preference mode for when rendering the background.
             /// </summary>
             OcclusionPreferenceMode m_OcclusionPreferenceMode;
 
@@ -422,22 +422,24 @@ namespace UnityEngine.XR.ARKit
                 bool isEnvDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsEnvironmentEnabled();
                 bool isHumanDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsHumanEnabled();
 
-                if (isEnvDepthEnabled
-                    && (!isHumanDepthEnabled
-                        || (m_OcclusionPreferenceMode == OcclusionPreferenceMode.PreferEnvironmentOcclusion)))
+                // If no occlusion is preferred or if neither depth is enabled, then all disable occlusion.
+                if ((m_OcclusionPreferenceMode == OcclusionPreferenceMode.NoOcclusion) || (!isEnvDepthEnabled && !isHumanDepthEnabled))
+                {
+                    enabledKeywords = null;
+                    disabledKeywords = m_AllDisabledMaterialKeywords;
+                }
+                // Else if environment depth is enabled and human depth is not enabled/prefered, then use environment depth.
+                else if (isEnvDepthEnabled && (!isHumanDepthEnabled || (m_OcclusionPreferenceMode == OcclusionPreferenceMode.PreferEnvironmentOcclusion)))
+
                 {
                     enabledKeywords = m_EnvironmentDepthEnabledMaterialKeywords;
                     disabledKeywords = m_HumanEnabledMaterialKeywords;
                 }
-                else if (isHumanDepthEnabled)
+                // Otherwise, human depth is enabled and/or preferred, so use human depth.
+                else
                 {
                     enabledKeywords = m_HumanEnabledMaterialKeywords;
                     disabledKeywords = m_EnvironmentDepthEnabledMaterialKeywords;
-                }
-                else
-                {
-                    enabledKeywords = null;
-                    disabledKeywords = m_AllDisabledMaterialKeywords;
                 }
             }
         }
