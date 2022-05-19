@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using UnityEngine.Rendering;
@@ -26,12 +27,20 @@ namespace UnityEngine.XR.ARKit
         const string k_SubsystemId = "ARKit-Camera";
 
         /// <summary>
-        /// The name of the shader for rendering the camera texture.
+        /// The name of the shader for rendering the camera texture before opaques render.
         /// </summary>
         /// <value>
         /// The name of the shader for rendering the camera texture.
         /// </value>
-        const string k_BackgroundShaderName = "Unlit/ARKitBackground";
+        const string k_BeforeOpaquesBackgroundShaderName = "Unlit/ARKitBackground";
+
+        /// <summary>
+        /// The name of the shader for rendering the camera texture after opaques have rendered.
+        /// </summary>
+        /// <value>
+        /// The name of the shader for rendering the camera texture.
+        /// </value>
+        const string k_AfterOpaquesBackgroundShaderName = "Unlit/ARKitBackground/AfterOpaques";
 
         /// <summary>
         /// The shader keyword for enabling URP rendering.
@@ -85,7 +94,28 @@ namespace UnityEngine.XR.ARKit
         /// <value>
         /// The name for the background shader.
         /// </value>
-        public static string backgroundShaderName => k_BackgroundShaderName;
+        [Obsolete("'backgroundShaderName' is obsolete, use backgroundShaderNames instead. (2022/04/04)")]
+        public static string backgroundShaderName => k_BeforeOpaquesBackgroundShaderName;
+
+        /// <summary>
+        /// The names for the background shaders based on the current render pipeline.
+        /// </summary>
+        /// <value>
+        /// The names for the background shaders based on the current render pipeline.
+        /// </value>
+        /// <remarks>
+        /// There are two shaders in the Apple ARKit Provider Package. One is used for rendering
+        /// before opaques and one is used for rendering after opaques.
+        ///
+        /// In order:
+        /// 1. Before Opaque Shader Name
+        /// 2. After Opaque Shader Name
+        /// </remarks>
+        public static readonly string[] backgroundShaderNames = new[]
+        {
+            k_BeforeOpaquesBackgroundShaderName,
+            k_AfterOpaquesBackgroundShaderName
+        };
 
         /// <summary>
         /// The list of shader keywords to avoid during compilation.
@@ -184,7 +214,7 @@ namespace UnityEngine.XR.ARKit
             /// <value>
             /// The shader keywords to disable when the Legacy RP is enabled.
             /// </value>
-            static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordURP};
+            static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new List<string>() { k_BackgroundShaderKeywordURP };
 
 #if MODULE_URP_ENABLED
             /// <summary>
@@ -210,8 +240,31 @@ namespace UnityEngine.XR.ARKit
             /// <returns>
             /// The material to render the camera texture.
             /// </returns>
-            public override Material cameraMaterial => m_CameraMaterial;
-            Material m_CameraMaterial;
+            /// <remarks>
+            /// This subsystem will lazily create the camera materials depending on the <see cref="currentBackgroundRenderingMode"/>.
+            /// Once created, the materials exist for the lifespan of the subsystem.
+            /// </remarks>
+            public override Material cameraMaterial
+            {
+                get
+                {
+                    switch (currentBackgroundRenderingMode)
+                    {
+                        case XRCameraBackgroundRenderingMode.BeforeOpaques:
+                            return m_BeforeOpaqueCameraMaterial ??= CreateCameraMaterial(k_BeforeOpaquesBackgroundShaderName);
+
+                        case XRCameraBackgroundRenderingMode.AfterOpaques:
+                            return m_AfterOpaqueCameraMaterial ??= CreateCameraMaterial(k_AfterOpaquesBackgroundShaderName);
+
+                        default:
+                            Debug.LogError($"Unable to create material for unknown background rendering mode {currentBackgroundRenderingMode}.");
+                            return null;
+                    }
+                }
+            }
+
+            Material m_BeforeOpaqueCameraMaterial;
+            Material m_AfterOpaqueCameraMaterial;
 
             /// <summary>
             /// Whether camera permission has been granted.
@@ -227,16 +280,6 @@ namespace UnityEngine.XR.ARKit
             public ARKitProvider()
             {
                 NativeApi.UnityARKit_Camera_Construct(k_TextureYPropertyNameId, k_TextureCbCrPropertyNameId);
-
-                string shaderName = ARKitCameraSubsystem.backgroundShaderName;
-                if (shaderName == null)
-                {
-                    Debug.LogError("Cannot create camera background material compatible with the render pipeline");
-                }
-                else
-                {
-                    m_CameraMaterial = CreateCameraMaterial(shaderName);
-                }
             }
 
             public override Feature currentCamera => NativeApi.UnityARKit_Camera_GetCurrentCamera();
@@ -253,6 +296,46 @@ namespace UnityEngine.XR.ARKit
                     Api.SetFeatureRequested(value, true);
                 }
             }
+
+            /// <summary>
+            /// Describes the subsystem's current (xref: UnityEngine.XR.ARSubsystems.XRCameraBackgroundRenderingMode).
+            /// </summary>
+            /// <remarks>
+            /// If the <see cref="requestedBackgroundRenderingMode"/> is set to (xref: UnityEngine.XR.ARSubsystems.XRCameraBackgroundRenderingMode.Any)
+            /// then this subsystem will default to (xref: UnityEngine.XR.ARSubsystems.XRCameraBackgroundRenderingMode.BeforeOpaques).
+            /// </remarks>
+            public override XRCameraBackgroundRenderingMode currentBackgroundRenderingMode
+            {
+                get
+                {
+                    switch (m_RequestedCameraRenderingMode)
+                    {
+                        case XRSupportedCameraBackgroundRenderingMode.Any:
+                        case XRSupportedCameraBackgroundRenderingMode.BeforeOpaques:
+                            return XRCameraBackgroundRenderingMode.BeforeOpaques;
+
+                        case XRSupportedCameraBackgroundRenderingMode.AfterOpaques:
+                            return XRCameraBackgroundRenderingMode.AfterOpaques;
+
+                        case XRSupportedCameraBackgroundRenderingMode.None:
+                        default:
+                            return XRCameraBackgroundRenderingMode.None;
+                    }
+                }
+            }
+
+            /// <inheritdoc />
+            public override XRSupportedCameraBackgroundRenderingMode requestedBackgroundRenderingMode
+            {
+                get => m_RequestedCameraRenderingMode;
+                set => m_RequestedCameraRenderingMode = value;
+            }
+
+            XRSupportedCameraBackgroundRenderingMode m_RequestedCameraRenderingMode = XRSupportedCameraBackgroundRenderingMode.Any;
+
+            /// <inheritdoc />
+            public override XRSupportedCameraBackgroundRenderingMode supportedBackgroundRenderingMode
+                => XRSupportedCameraBackgroundRenderingMode.Any;
 
             /// <summary>
             /// Start the camera functionality.

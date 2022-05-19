@@ -7,7 +7,7 @@ Use the Apple ARKit XR Plug-in package to enable ARKit support via Unity's multi
 
 * [Session](xref:arsubsystems-session-subsystem)
 * [Camera](xref:arsubsystems-camera-subsystem)
-* [Depth](xref:arsubsystems-depth-subsystem)
+* [Point cloud](xref:arsubsystems-point-cloud-subsystem)
 * [Input](xref:UnityEngine.XR.XRInputSubsystem)
 * [Planes](xref:arsubsystems-plane-subsystem)
 * [Raycast](xref:arsubsystems-raycast-subsystem)
@@ -39,13 +39,22 @@ This version of Apple ARKit XR Plug-in supports the following features:
 * Occlusion
 
 > [!IMPORTANT]
-> Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, [face tracking](xref:arsubsystems-face-subsystem) support is available only when face tracking is enabled. Go to **Edit** &gt; **Project Settings** &gt; **XR Plug-in Management** &gt; **ARKit** to enable or disable face tracking.
+> Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, [face tracking](xref:arsubsystems-face-subsystem) support is available only when face tracking is enabled. See [Enable the Face tracking subsytem](xref:arkit-project-config#enable-face-tracking) for instructions for changing this setting. 
 
 # Installing Apple ARKit XR Plug-in
 
-To install this package, follow the instructions in the [Package Manager documentation](https://docs.unity3d.com/Packages/com.unity.package-manager-ui@latest/index.html).
+When you enable the ARKit plug-in in the **XR Plug-in Management** settings, Unity automatically installs the ARKit package (if necessary). See [Enable the ARKit plug-in](xref:arkit-project-config#enable-the-apple-arkit-plug-in) for instructions.
 
-In addition, install the AR Foundation package, which uses Apple ARKit XR Plug-in and provides many useful scripts and Prefabs. For more information about this package, see the [AR Foundation documentation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@latest).
+In addition, you can install the AR Foundation package, which uses Apple ARKit XR Plug-in and provides many useful scripts and Prefabs. For more information about this package, see the [AR Foundation documentation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@latest).
+
+> [!TIP]
+> You can also install and uninstall this package using the Unity Package Manager. Installing through the Package Manager does not automatically enable the plug-in. You must still enable it in the **XR Plug-in Management settings**. See [Installing from a registry](xref:upm-ui-install) for more information about installing packages with the Unity Package Manager.
+
+
+# Project configuration
+
+See [Project configuration](xref:arkit-project-config) for information about the project settings that affect ARKit applications. 
+
 
 # Using Apple ARKit XR Plug-in
 
@@ -55,25 +64,17 @@ Including the Apple ARKit XR Plug-in also includes source files, static librarie
 
 ARKit requires iOS 11.0. Some specific features require later versions (see below).
 
-## Build settings
 
-To access ARKit build settings, from Unity's main menu, go to **Edit &gt; Project Settings**, then navigate to the **XR Plug-in Management** menu and enable the **ARKit** provider, as shown in the screenshot below:
+## Requiring AR
 
-![XR Plug-in Management](images/arkit-xrmanagement.png "ARKit in XR Management")
+You can flag ARKit as either required or optional. By default, ARKit is required, which means your app can only be installed on AR-supported devices and operating systems (iOS 11.0 and above). If you specify that AR is optional, your app can also be installed on iOS devices that don't support ARKit.
 
-This creates an `ARKitSettings` asset that you can access under **XR Plug-in Management &gt; ARKit**, as shown in the screenshot below:
+See [Set the ARKit support Requirement](xref:arkit-project-config#arkit-required) for instructions on how to change this setting.
 
-![ARKit Settings](images/arkitsettings-dialog.png "ARKit Settings")
 
-### Requiring AR
+## Project Validation
 
-You can flag ARKit as either required or optional. By default, ARKit is required, which means your app can only be installed on AR-supported devices and operating systems (iOS 11.0 and above). If you specify that AR is optional, your app can be installed on all iOS devices.
-
-#### Targeting 32-bit devices
-
-To target 32-bit devices, OpenGLES2 must be included in the list of Graphics APIs. From Unity's main menu, go to **Edit &gt; Project Settings**, then navigate to **Player &gt; Other Settings &gt; Graphics APIs**, as shown in the screenshot below:
-
-![alt text](images/build-to-32bit-reference.png "ARKitSettings dialog")
+Apple ARKit XR Plug-in package supports project validation. Project validation is a set of rules that the Unity Editor checks to detect possible problems with your project's configuration. See [Project Validation](xref:arkit-project-config#project-validation) section for more information about the rules checked for Apple ARKit XR Plug-in.
 
 # Technical details
 

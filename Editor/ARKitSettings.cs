@@ -13,7 +13,7 @@ namespace UnityEditor.XR.ARKit
     /// Holds settings that are used to configure the Apple ARKit XR Plug-in.
     /// </summary>
     [Serializable]
-    [XRConfigurationData("ARKit", "UnityEditor.XR.ARKit.ARKitSettings")]
+    [XRConfigurationData("Apple ARKit", "UnityEditor.XR.ARKit.ARKitSettings")]
     public class ARKitSettings : ScriptableObject
     {
         /// <summary>

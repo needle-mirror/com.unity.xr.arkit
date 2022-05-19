@@ -8,6 +8,7 @@ Shader "Unlit/ARKitBackground"
         _HumanDepth ("HumanDepth", 2D) = "black" {}
         _EnvironmentDepth ("EnvironmentDepth", 2D) = "black" {}
     }
+
     SubShader
     {
         Tags

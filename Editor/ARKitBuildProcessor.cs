@@ -42,7 +42,9 @@ namespace UnityEditor.XR.ARKit
                     return;
                 }
 
-                BuildHelper.RemoveShaderFromProject(ARKitCameraSubsystem.backgroundShaderName);
+                foreach (var shaderName in ARKitCameraSubsystem.backgroundShaderNames)
+                    BuildHelper.RemoveShaderFromProject(shaderName);
+
                 HandleARKitRequiredFlag(report.summary.outputPath);
             }
 
@@ -102,18 +104,20 @@ namespace UnityEditor.XR.ARKit
             void ProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> data)
             {
                 // Remove shader variants for the camera background shader that will fail compilation because of package dependencies.
-                string backgroundShaderName = ARKitCameraSubsystem.backgroundShaderName;
-                if (backgroundShaderName.Equals(shader.name))
+                foreach (var backgroundShaderName in ARKitCameraSubsystem.backgroundShaderNames)
                 {
-                    foreach (var backgroundShaderKeywordToNotCompile in ARKitCameraSubsystem.backgroundShaderKeywordsToNotCompile)
+                    if (backgroundShaderName.Equals(shader.name))
                     {
-                        ShaderKeyword shaderKeywordToNotCompile = new ShaderKeyword(shader, backgroundShaderKeywordToNotCompile);
-
-                        for (int i = (data.Count - 1); i >= 0; --i)
+                        foreach (var backgroundShaderKeywordToNotCompile in ARKitCameraSubsystem.backgroundShaderKeywordsToNotCompile)
                         {
-                            if (data[i].shaderKeywordSet.IsEnabled(shaderKeywordToNotCompile))
+                            ShaderKeyword shaderKeywordToNotCompile = new ShaderKeyword(shader, backgroundShaderKeywordToNotCompile);
+
+                            for (int i = (data.Count - 1); i >= 0; --i)
                             {
-                                data.RemoveAt(i);
+                                if (data[i].shaderKeywordSet.IsEnabled(shaderKeywordToNotCompile))
+                                {
+                                    data.RemoveAt(i);
+                                }
                             }
                         }
                     }
@@ -149,7 +153,10 @@ namespace UnityEditor.XR.ARKit
                     EnsureOpenGLIsUsed();
                 }
 
-                BuildHelper.AddBackgroundShaderToProject(ARKitCameraSubsystem.backgroundShaderName);
+                foreach (var backgroundShaderName in ARKitCameraSubsystem.backgroundShaderNames)
+                {
+                    BuildHelper.AddBackgroundShaderToProject(backgroundShaderName);
+                }
             }
 
             public void OnPreprocessBuild(BuildReport report)

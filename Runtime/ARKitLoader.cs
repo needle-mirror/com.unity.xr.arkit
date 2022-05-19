@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.Management;
@@ -11,7 +12,7 @@ namespace UnityEngine.XR.ARKit
     {
         static List<XRSessionSubsystemDescriptor> s_SessionSubsystemDescriptors = new List<XRSessionSubsystemDescriptor>();
         static List<XRCameraSubsystemDescriptor> s_CameraSubsystemDescriptors = new List<XRCameraSubsystemDescriptor>();
-        static List<XRDepthSubsystemDescriptor> s_DepthSubsystemDescriptors = new List<XRDepthSubsystemDescriptor>();
+        static List<XRPointCloudSubsystemDescriptor> s_PointCloudSubsystemDescriptors = new List<XRPointCloudSubsystemDescriptor>();
         static List<XRPlaneSubsystemDescriptor> s_PlaneSubsystemDescriptors = new List<XRPlaneSubsystemDescriptor>();
         static List<XRAnchorSubsystemDescriptor> s_AnchorSubsystemDescriptors = new List<XRAnchorSubsystemDescriptor>();
         static List<XRRaycastSubsystemDescriptor> s_RaycastSubsystemDescriptors = new List<XRRaycastSubsystemDescriptor>();
@@ -37,8 +38,15 @@ namespace UnityEngine.XR.ARKit
 
         /// <summary>
         /// The [XRDepthSubsystem](xref:UnityEngine.XR.ARSubsystems.XRDepthSubsystem) whose lifecycle is managed by this loader.
+        /// This field is obsolete. Use <see cref="pointCloudSubsystem"/> instead.
         /// </summary>
+        [Obsolete("Use pointCloudSubsystem instead. (2022-02-03)")]
         public XRDepthSubsystem depthSubsystem => GetLoadedSubsystem<XRDepthSubsystem>();
+        
+        /// <summary>
+        /// The [XRPointCloudSubsystem](xref:UnityEngine.XR.ARSubsystems.XRPointCloudSubsystem) whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRPointCloudSubsystem pointCloudSubsystem => GetLoadedSubsystem<XRPointCloudSubsystem>();
 
         /// <summary>
         /// The [XRPlaneSubsystem](xref:UnityEngine.XR.ARSubsystems.XRPlaneSubsystem) whose lifecycle is managed by this loader.
@@ -110,7 +118,7 @@ namespace UnityEngine.XR.ARKit
 #if UNITY_IOS && !UNITY_EDITOR
             CreateSubsystem<XRSessionSubsystemDescriptor, XRSessionSubsystem>(s_SessionSubsystemDescriptors, "ARKit-Session");
             CreateSubsystem<XRCameraSubsystemDescriptor, XRCameraSubsystem>(s_CameraSubsystemDescriptors, "ARKit-Camera");
-            CreateSubsystem<XRDepthSubsystemDescriptor, XRDepthSubsystem>(s_DepthSubsystemDescriptors, "ARKit-Depth");
+            CreateSubsystem<XRPointCloudSubsystemDescriptor, XRPointCloudSubsystem>(s_PointCloudSubsystemDescriptors, "ARKit-PointCloud");
             CreateSubsystem<XRPlaneSubsystemDescriptor, XRPlaneSubsystem>(s_PlaneSubsystemDescriptors, "ARKit-Plane");
             CreateSubsystem<XRAnchorSubsystemDescriptor, XRAnchorSubsystem>(s_AnchorSubsystemDescriptors, "ARKit-Anchor");
             CreateSubsystem<XRRaycastSubsystemDescriptor, XRRaycastSubsystem>(s_RaycastSubsystemDescriptors, "ARKit-Raycast");
@@ -171,7 +179,7 @@ namespace UnityEngine.XR.ARKit
         {
 #if UNITY_IOS && !UNITY_EDITOR
             DestroySubsystem<XRCameraSubsystem>();
-            DestroySubsystem<XRDepthSubsystem>();
+            DestroySubsystem<XRPointCloudSubsystem>();
             DestroySubsystem<XRPlaneSubsystem>();
             DestroySubsystem<XRAnchorSubsystem>();
             DestroySubsystem<XRRaycastSubsystem>();

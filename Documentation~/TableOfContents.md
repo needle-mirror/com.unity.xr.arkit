@@ -1,9 +1,10 @@
 * [Introduction](index.md)
   * [What's new](whats-new.md)
   * [Upgrade guide](upgrade-guide.md)
+  * [Project configuration](project-configuration-arkit.md)
 * Subsystems
   * [Session](arkit-session.md)
-  * [Depth](arkit-depth.md)
+  * [Point cloud](arkit-point-cloud.md)
   * [Plane tracking](arkit-plane-tracking.md)
   * [Image tracking](arkit-image-tracking.md)
   * [Object tracking](arkit-object-tracking.md)

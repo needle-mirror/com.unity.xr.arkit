@@ -15,7 +15,8 @@ namespace UnityEditor.XR.ARKit
             {
                 // Sometimes (e.g., build failure), the shader can get "stuck" in the Preloaded Assets array.
                 // Make sure that if we are not building for iOS, we remove that shader.
-                BuildHelper.RemoveShaderFromProject(ARKitCameraSubsystem.backgroundShaderName);
+                foreach (var backgroundShaderName in ARKitCameraSubsystem.backgroundShaderNames)
+                    BuildHelper.RemoveShaderFromProject(backgroundShaderName);
             }
         }
     }

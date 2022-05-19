@@ -8,6 +8,25 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.0.0-pre.12] - 2022-05-19
+
+### Added
+
+- Added support for changing the Camera Background rendering order so that the background can be rendered either `BeforeOpaques` or `AfterOpaques` by setting the `ARKitCameraSubsystem.requestedRenderingMode`.
+- Added a shader to support rendering `AfterOpaques` both with Occlusion and without. Shader code can be found in `com.unity.xr.arkit/Assets/ARKitBackgroundAfterOpaque.shader`.
+- Added Project Validation for assessing project setup correctness. See [Project Validation manual](xref:arkit-project-config#project-validation) for details.
+
+### Changed
+
+- Static library was built with Xcode 13.3 (13E113)
+
+### Deprecated
+
+- `ARKitCameraSubsystem.backgroundShaderName` has been marked obsolete. Instead use `ARKitCameraSubsystem.backgroundShaderNames` to receive an array of available shader names.
+- Deprecated the following depth subsystem APIs in favor of point cloud subsystem APIs. Unity's API Updater should automatically convert any deprecated APIs references to the new APIs when the project is loaded into the Editor again.
+  - `ARKitXRDepthSubsystem` has been renamed to `ARKitXRPointCloudSubsystem`.
+  - `ARKitLoader.depthSubsystem` has been deprecated. Use `ARKitLoader.pointCloudSubsystem` instead.
+
 ## [5.0.0-pre.9] - 2022-03-01
 
 ### Added

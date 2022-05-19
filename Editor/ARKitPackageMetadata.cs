@@ -39,7 +39,7 @@ namespace UnityEditor.XR.ARKit
             {
                 new ARKitLoaderMetadata()
                 {
-                    loaderName = "ARKit",
+                    loaderName = "Apple ARKit",
                     loaderType = typeof(ARKitLoader).FullName,
                     supportedBuildTargets = new List<BuildTargetGroup>()
                     {
