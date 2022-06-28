@@ -52,8 +52,8 @@ Shader "Unlit/ARKitBackground/AfterOpaques"
             #define ARKIT_SAMPLER_FLOAT(sampler) SAMPLER(sampler)
             #define ARKIT_SAMPLE_TEXTURE2D(texture,sampler,texcoord) SAMPLE_TEXTURE2D(texture,sampler,texcoord)
 
-            #define ARKIT_DECLARE_CAMERA_DEPTH_TEXTURE(texture) ARKIT_TEXTURE2D_FLOAT(texture); ARKIT_SAMPLER_FLOAT(sampler##texture)
-            #define ARKIT_SAMPLE_CAMERA_DEPTH_TEXTURE(texture, uv) ARKIT_SAMPLE_TEXTURE2D(texture, sampler##texture, uv).r
+            #define ARKIT_DECLARE_CAMERA_DEPTH_TEXTURE(texture) TEXTURE2D_X(texture); SAMPLER(sampler##texture)
+            #define ARKIT_SAMPLE_CAMERA_DEPTH_TEXTURE(texture, uv) SampleSceneDepth(uv)
 
 #else // Legacy RP
 
@@ -188,7 +188,6 @@ Shader "Unlit/ARKitBackground/AfterOpaques"
                 // was occluded.
                 float depthValue = 0.0f;
 
-                // Depth texture is flipped about y by default. Flip u coordinate to grab the proper place
                 float cameraDepthValue = ARKIT_SAMPLE_CAMERA_DEPTH_TEXTURE(_CameraDepthTexture, i.depthTexCoord);
 
 #if ARKIT_ENVIRONMENT_DEPTH_ENABLED

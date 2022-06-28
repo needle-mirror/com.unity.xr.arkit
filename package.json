@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "Apple ARKit XR Plugin",
-  "version": "5.0.0-pre.12",
+  "version": "5.0.0-pre.13",
   "unity": "2021.2",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion\n\n* Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.",
   "keywords": [
@@ -13,19 +13,19 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arfoundation": "5.0.0-pre.12",
+    "com.unity.xr.arfoundation": "5.0.0-pre.13",
     "com.unity.xr.core-utils": "2.1.0-pre.1",
     "com.unity.xr.management": "4.0.1"
   },
   "_upm": {
-    "changelog": "### Added\n\n- Added support for changing the Camera Background rendering order so that the background can be rendered either `BeforeOpaques` or `AfterOpaques` by setting the `ARKitCameraSubsystem.requestedRenderingMode`.\n- Added a shader to support rendering `AfterOpaques` both with Occlusion and without. Shader code can be found in `com.unity.xr.arkit/Assets/ARKitBackgroundAfterOpaque.shader`.\n- Added Project Validation for assessing project setup correctness. See [Project Validation manual](xref:arkit-project-config#project-validation) for details.\n\n### Changed\n\n- Static library was built with Xcode 13.3 (13E113)\n\n### Deprecated\n\n- `ARKitCameraSubsystem.backgroundShaderName` has been marked obsolete. Instead use `ARKitCameraSubsystem.backgroundShaderNames` to receive an array of available shader names.\n- Deprecated the following depth subsystem APIs in favor of point cloud subsystem APIs. Unity's API Updater should automatically convert any deprecated APIs references to the new APIs when the project is loaded into the Editor again.\n  - `ARKitXRDepthSubsystem` has been renamed to `ARKitXRPointCloudSubsystem`.\n  - `ARKitLoader.depthSubsystem` has been deprecated. Use `ARKitLoader.pointCloudSubsystem` instead."
+    "changelog": "No changes"
   },
   "upmCi": {
-    "footprint": "864dc16d0eef52d54833f342b977388182740790"
+    "footprint": "e91370384caab5e6e54f805f4ea5e2d875890396"
   },
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "4577f2a07a8b076ccc52ae239e6b66396e9d05eb"
+    "revision": "3a1b3b7b0713aa242ec7d951f519b8b5e99e975b"
   }
 }

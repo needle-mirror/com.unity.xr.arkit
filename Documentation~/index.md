@@ -83,7 +83,9 @@ Apple ARKit XR Plug-in package supports project validation. Project validation i
 This version of Apple ARKit XR Plug-in is compatible with the following versions of the Unity Editor:
 
 * 2021.2
+* 2021.3
 * 2022.1
+* 2022.2
 
 You must use Xcode 12 or later when compiling an iOS Player that includes this package.
 
