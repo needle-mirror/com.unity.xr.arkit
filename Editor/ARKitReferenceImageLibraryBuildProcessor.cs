@@ -115,7 +115,7 @@ namespace UnityEditor.XR.ARKit
 
             void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
             {
-#if UNITY_XR_ARKIT_LOADER_ENABLED
+#if UNITY_XR_ARKIT_LOADER_ENABLED && UNITY_IOS
                 if (report.summary.platform != BuildTarget.iOS)
                     return;
 
@@ -130,7 +130,7 @@ namespace UnityEditor.XR.ARKit
 
             public void OnPostprocessBuild(BuildReport report)
             {
-#if UNITY_XR_ARKIT_LOADER_ENABLED
+#if UNITY_XR_ARKIT_LOADER_ENABLED && UNITY_IOS
                 if (report.summary.platform != BuildTarget.iOS)
                     return;
 

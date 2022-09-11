@@ -4,13 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
-using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEditor.Callbacks;
 using UnityEditor.iOS;
 using UnityEditor.iOS.Xcode;
 using UnityEditor.Rendering;
@@ -18,9 +13,7 @@ using UnityEditor.XR.ARSubsystems;
 using UnityEditor.XR.Management;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.ARKit;
-using UnityEngine.XR.Management;
 using Unity.EditorCoroutines.Editor;
 
 using OSVersion = UnityEngine.XR.ARKit.OSVersion;
@@ -273,7 +266,10 @@ namespace UnityEditor.XR.ARKit
     {
         public static void Add(string define)
         {
-            var definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+            var buildTarget =
+                NamedBuildTarget.FromBuildTargetGroup(
+                    BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+            var definesString = PlayerSettings.GetScriptingDefineSymbols(buildTarget);
             var allDefines = new HashSet<string>(definesString.Split(';'));
 
             if (allDefines.Contains(define))
@@ -282,18 +278,21 @@ namespace UnityEditor.XR.ARKit
             }
 
             allDefines.Add(define);
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(
-                BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget),
+            PlayerSettings.SetScriptingDefineSymbols(
+                buildTarget,
                 string.Join(";", allDefines));
         }
 
         public static void Remove(string define)
         {
-            string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+            var buildTarget =
+                NamedBuildTarget.FromBuildTargetGroup(
+                    BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+            var definesString = PlayerSettings.GetScriptingDefineSymbols(buildTarget);
             var allDefines = new HashSet<string>(definesString.Split(';'));
             allDefines.Remove(define);
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(
-                BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget),
+            PlayerSettings.SetScriptingDefineSymbols(
+                buildTarget,
                 string.Join(";", allDefines));
         }
     }
