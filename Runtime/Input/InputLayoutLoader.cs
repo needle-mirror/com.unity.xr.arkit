@@ -28,8 +28,10 @@ namespace UnityEngine.XR.ARKit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterLayouts()
         {
+#if !UNITY_EDITOR
             if (!Api.AtLeast11_0())
                 return;
+#endif
 
             Inputs.RegisterLayout<HandheldARInputDevice>(
                 matches: new InputDeviceMatcher()
