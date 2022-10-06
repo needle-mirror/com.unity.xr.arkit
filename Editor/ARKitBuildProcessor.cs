@@ -141,7 +141,7 @@ namespace UnityEditor.XR.ARKit
                     EnsureMinimumBuildTarget();
                     EnsureTargetArchitecturesAreSupported(report.summary.platformGroup);
                 }
-                else if (PlayerSettings.GetArchitecture(report.summary.platformGroup) == k_TargetArchitectureUniversal)
+                else if (PlayerSettings.GetArchitecture(NamedBuildTarget.FromBuildTargetGroup(report.summary.platformGroup)) == k_TargetArchitectureUniversal)
                 {
                     EnsureOpenGLIsUsed();
                 }
@@ -189,10 +189,11 @@ namespace UnityEditor.XR.ARKit
 
             void EnsureTargetArchitecturesAreSupported(BuildTargetGroup buildTargetGroup)
             {
+                var buildTarget = NamedBuildTarget.FromBuildTargetGroup(
+                    BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
 
-                if (PlayerSettings.GetArchitecture(buildTargetGroup) != k_TargetArchitectureArm64)
+                if (PlayerSettings.GetArchitecture(buildTarget) != k_TargetArchitectureArm64)
                     throw new BuildFailedException("Apple ARKit XR Plug-in only supports the ARM64 architecture. See Player Settings > Other Settings > Architecture.");
-
             }
 
             void EnsureMetalIsFirstApi()
@@ -264,11 +265,12 @@ namespace UnityEditor.XR.ARKit
 
     static class AddDefineSymbols
     {
+        static NamedBuildTarget s_BuildTarget => NamedBuildTarget.FromBuildTargetGroup(
+            BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+        
         public static void Add(string define)
         {
-            var buildTarget =
-                NamedBuildTarget.FromBuildTargetGroup(
-                    BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+            var buildTarget = s_BuildTarget;
             var definesString = PlayerSettings.GetScriptingDefineSymbols(buildTarget);
             var allDefines = new HashSet<string>(definesString.Split(';'));
 
@@ -285,9 +287,7 @@ namespace UnityEditor.XR.ARKit
 
         public static void Remove(string define)
         {
-            var buildTarget =
-                NamedBuildTarget.FromBuildTargetGroup(
-                    BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+            var buildTarget = s_BuildTarget;
             var definesString = PlayerSettings.GetScriptingDefineSymbols(buildTarget);
             var allDefines = new HashSet<string>(definesString.Split(';'));
             allDefines.Remove(define);
