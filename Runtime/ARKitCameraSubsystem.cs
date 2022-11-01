@@ -216,6 +216,24 @@ namespace UnityEngine.XR.ARKit
             /// </value>
             static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new List<string>() { k_BackgroundShaderKeywordURP };
 
+            /// <summary>
+            /// Current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.
+            /// </summary>
+            /// <value>
+            /// Current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.
+            /// </value>
+            static readonly RenderingThreadingMode k_RenderingThreadingMode = SystemInfo.renderingThreadingMode;
+
+            /// <summary>
+            /// Returns <see langword="true"/> if the multithreaded rendering is enabled. Returns <see langword="false"/> otherwise.
+            /// </summary>
+            /// <value>
+            /// Returns <see langword="true"/> if the multithreaded rendering is enabled. Returns <see langword="false"/> otherwise.
+            /// </value>
+            static readonly bool k_MultithreadedRenderingEnabled =
+                k_RenderingThreadingMode == RenderingThreadingMode.MultiThreaded ||
+                k_RenderingThreadingMode == RenderingThreadingMode.NativeGraphicsJobs;
+
 #if MODULE_URP_ENABLED
             /// <summary>
             /// The shader keywords to enable when URP is enabled.
@@ -279,7 +297,8 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             public ARKitProvider()
             {
-                NativeApi.UnityARKit_Camera_Construct(k_TextureYPropertyNameId, k_TextureCbCrPropertyNameId);
+                NativeApi.UnityARKit_Camera_Construct(k_TextureYPropertyNameId, k_TextureCbCrPropertyNameId,
+                    k_MultithreadedRenderingEnabled);
             }
 
             public override Feature currentCamera => NativeApi.UnityARKit_Camera_GetCurrentCamera();
@@ -554,6 +573,18 @@ namespace UnityEngine.XR.ARKit
             /// </returns>
             public override bool TryAcquireLatestCpuImage(out XRCpuImage.Cinfo cameraImageCinfo)
                 => ARKitCpuImageApi.TryAcquireLatestImage(ARKitCpuImageApi.ImageType.Camera, out cameraImageCinfo);
+            
+            /// <summary>
+            /// Called on the render thread by background rendering code immediately before the background
+            /// is rendered.
+            /// For ARKit, this is required in order to free the metal textures retained on the main thread.
+            /// </summary>
+            /// <param name="id">Platform-specific data.</param>
+            public override void OnBeforeBackgroundRender(int id)
+            {
+                // callback to schedule the release of the metal texture buffers after rendering is complete
+                NativeApi.UnityARKit_Camera_ScheduleReleaseTextureBuffers();
+            }
         }
 
         /// <summary>
@@ -567,7 +598,8 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_Camera_Construct(int textureYPropertyNameId,
-                                                                  int textureCbCrPropertyNameId);
+                                                                  int textureCbCrPropertyNameId,
+                                                                  bool mtRenderingEnabled);
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_Camera_Destruct();
@@ -614,13 +646,17 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_Camera_GetAutoFocusEnabled();
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_Camera_ScheduleReleaseTextureBuffers();
 #else
             static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
             public static Feature GetCurrentLightEstimation() => Feature.None;
 
             public static void UnityARKit_Camera_Construct(int textureYPropertyNameId,
-                                                                  int textureCbCrPropertyNameId)
+                                                           int textureCbCrPropertyNameId,
+                                                           bool mtRenderingEnabled)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
@@ -682,6 +718,11 @@ namespace UnityEngine.XR.ARKit
 
             public static unsafe void UnityARKit_Camera_ReleaseTextureDescriptors(
                 void* descriptors)
+            {
+                throw new System.NotImplementedException(k_ExceptionMsg);
+            }
+
+            public static void UnityARKit_Camera_ScheduleReleaseTextureBuffers()
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }

@@ -8,12 +8,23 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.1.0-pre.2] - 2022-11-01
+
+### Changed
+
+- Static libraries were rebuilt with Xcode Version 14.0 (14A309).
+
+### Fixed
+
+- Fixed [issue ARKB-23](https://issuetracker.unity3d.com/issues/ios-fps-in-the-player-is-very-low-when-using-xrcamerasubsystem-dot-trygetlatestframe) where the frame rate in the player is low when the `ARKitCameraSubsystem.TryGetLatestFrame(out XRCameraImage)` API is used.
+- Fixed [issue ARKB-28](https://issuetracker.unity3d.com/issues/ios-disabling-ar-camera-background-kills-position-tracking-on-ios-in-arfoundation-4-dot-2-6) where disabling and re-enabling the `ARCameraBackground` component freezes the camera textures and device tracking.
+
 ## [5.1.0-pre.1] - 2022-10-06
 
 ### Changed
 
 - Static library was rebuilt with Xcode Version 14.0 beta 2 (14A5229c). Please note that Xcode no longer supports building iOS projects with deployment targets for the armv7 and armv7s architectures.
-- ARKit 6 introduced a change to the way plane anchor rotations are updated on iOS 16 devices as they learn more about the environment during an AR Session. To preserve AR Foundation's default behavior and maintain cross-platform consistency, this package applies the new [ARPlaneExtent.rotationOnYAxis](xref:https://developer.apple.com/documentation/arkit/arplaneextent/3950861-rotationonyaxis?language=objc) transformation to plane trackables on iOS 16 devices before returning them. As a result of this change, your application will continue to behave identically on all iOS versions with no developer action required. For more information, see [Apple's ARKit documentation](https://developer.apple.com/documentation/arkit/arplaneextent?changes=latest_major&language=objc).
+- ARKit 6 introduced a change to the way plane anchor rotations are updated on iOS 16 devices as they learn more about the environment during an AR Session. To preserve AR Foundation's default behavior and maintain cross-platform consistency, this package applies the new [ARPlaneExtent.rotationOnYAxis](https://developer.apple.com/documentation/arkit/arplaneextent/3950861-rotationonyaxis?language=objc) transformation to plane trackables on iOS 16 devices before returning them. As a result of this change, your application will continue to behave identically on all iOS versions with no developer action required. For more information, see [Apple's ARKit documentation](https://developer.apple.com/documentation/arkit/arplaneextent?changes=latest_major&language=objc).
 
 ## [5.0.2] - 2022-09-11
 
@@ -54,7 +65,7 @@ No changes
 
 ### Added
 
-- Added support for a new [OcclusionPreferenceMode.NoOcclusion](xref:UnityEngine.XR.ARSubsystems.Configuration.OcclusionPreferenceMode) mode that, when set, disables occlusion rendering on the camera background when using [ARCameraBackground](xref:UnityEngine.XR.ARFoundation.ARCameraBackground) and [AROcclusionManager](xref:UnityEngine.XR.ARFoundation.AROcclusionManager).
+- Added support for a new [OcclusionPreferenceMode.NoOcclusion](xref:UnityEngine.XR.ARSubsystems.OcclusionPreferenceMode) mode that, when set, disables occlusion rendering on the camera background when using [ARCameraBackground](xref:UnityEngine.XR.ARFoundation.ARCameraBackground) and [AROcclusionManager](xref:UnityEngine.XR.ARFoundation.AROcclusionManager).
 
 ### Changed
 
