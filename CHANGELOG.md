@@ -5,11 +5,22 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.13] - 2022-11-01
+
+### Changes
+
+- Static library was rebuilt with Xcode 13.4.1 (13F100).
+
+### Fixes
+
+- Fixed [issue ARKB-23](https://issuetracker.unity3d.com/issues/ios-fps-in-the-player-is-very-low-when-using-xrcamerasubsystem-dot-trygetlatestframe) where the frame rate in the player is low when the `ARKitCameraSubsystem.TryGetLatestFrame(out XRCameraImage)` API is used.
+- Fixed [issue ARKB-28](https://issuetracker.unity3d.com/issues/ios-disabling-ar-camera-background-kills-position-tracking-on-ios-in-arfoundation-4-dot-2-6) where disabling and re-enabling the `ARCameraBackground` component freezes the camera textures and device tracking.
+
 ## [4.1.12] - 2022-09-11
 
 ### Changes
 
-- Static library was built with Xcode 13.4.1 (13F100)
+- Static library was built with Xcode 13.4.1 (13F100).
 
 ### Fixes
 
@@ -20,7 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changes
 
-- Static library was built with Xcode 13.2.1 (13C100)
+- Static library was built with Xcode 13.2.1 (13C100).
 
 ## [4.1.9] - 2022-01-06
 
