@@ -1,14 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
 using UnityEngine;
 using UnityEngine.XR.ARKit;
-
-using UnityEditor;
-using UnityEditor.XR.Management;
 using UnityEditor.XR.Management.Metadata;
 
 namespace UnityEditor.XR.ARKit

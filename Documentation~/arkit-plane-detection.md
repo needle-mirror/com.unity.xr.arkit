@@ -1,5 +1,5 @@
 ---
-uid: arkit-plane-tracking
+uid: arkit-plane-detection
 ---
 # Plane tracking
 
@@ -11,4 +11,4 @@ The ARKit plane subsystem requires additional CPU resources and can be energy-in
 
 Setting the plane detection mode to [PlaneDetectionMode.None](xref:UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None) is equivalent to calling `Stop()` on the subsystem.
 
-For more information, see the [ARSubsystems plane subsystem documentation](xref:arsubsystems-plane-subsystem).
+For more information, see [Plane detection](xref:arfoundation-plane-detection).

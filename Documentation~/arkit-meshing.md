@@ -13,7 +13,7 @@ This new mesh functionality requires Xcode 11.4 or later, and it only works on i
 
 This Apple ARKit package requires Unity 2021.2 or later.
 
-## Using meshing in a scene
+## Use meshing in a scene
 
 Using the LiDAR sensor, ARKit scene reconstruction scans the environment to create mesh geometry representing the real world environment. Additionally, ARKit provides an optional classification of each triangle in the scanned mesh. The per-triangle classification identifies the type of surface corresponding to the triangle's location in the real world.
 

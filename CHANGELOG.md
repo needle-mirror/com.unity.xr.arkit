@@ -8,6 +8,13 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.0.4] - 2023-02-06
+
+### Fixed
+
+- Fixed a rare issue where the ARKit Build Processor could incorrectly add the "UNITY_XR_ARKIT_LOADER_ENABLED" preprocessor directive to non-iOS build targets.
+- Fixed an issue where enabling or disabling the Apple ARKit XR Plug-in in **Project Settings** > **XR Plug-in Management** while iOS was not the active build target would not immediately add or remove the "UNITY_XR_ARKIT_LOADER_ENABLED" preprocessor directive for the iOS build target. (Previously this change was not applied until iOS became the Editor's active build target.)
+
 ## [5.0.3] - 2022-11-01
 
 ### Changed
@@ -59,7 +66,7 @@ No changes
 
 ### Added
 
-- Added support for a new [OcclusionPreferenceMode.NoOcclusion](xref:UnityEngine.XR.ARSubsystems.Configuration.OcclusionPreferenceMode) mode that, when set, disables occlusion rendering on the camera background when using [ARCameraBackground](xref:UnityEngine.XR.ARFoundation.ARCameraBackground) and [AROcclusionManager](xref:UnityEngine.XR.ARFoundation.AROcclusionManager).
+- Added support for a new [OcclusionPreferenceMode.NoOcclusion](xref:UnityEngine.XR.ARSubsystems.OcclusionPreferenceMode) mode that, when set, disables occlusion rendering on the camera background when using [ARCameraBackground](xref:UnityEngine.XR.ARFoundation.ARCameraBackground) and [AROcclusionManager](xref:UnityEngine.XR.ARFoundation.AROcclusionManager).
 
 ### Changed
 

@@ -1,7 +1,7 @@
 ---
-uid: arkit-point-cloud
+uid: arkit-point-clouds
 ---
-# Point Cloud subsystem
+# Point Clouds
 
 Raycasts always return a `Pose` for the item the raycast hit. When raycasting against feature points, the pose is oriented to provide an estimate for the surface the feature point might represent.
 
@@ -9,4 +9,4 @@ The point cloud subsystem doesn't require additional resources, so enabling it d
 
 ARKit's point cloud subsystem only ever produces a single [XRPointCloud](xref:UnityEngine.XR.ARSubsystems.XRPointCloud).
 
-For more information, see the [ARSubsystems point cloud subsystem documentation](xref:arsubsystems-point-cloud-subsystem).
+For more information, see [Point clouds](xref:arfoundation-point-clouds).

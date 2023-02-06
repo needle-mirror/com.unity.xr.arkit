@@ -2,11 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.XR.Management;
 
-using UnityEditor.PackageManager;
-using UnityEditor.PackageManager.Requests;
-
-using System.Linq;
-
 namespace UnityEditor.XR.ARKit
 {
     /// <summary>
@@ -16,6 +11,9 @@ namespace UnityEditor.XR.ARKit
     [XRConfigurationData("Apple ARKit", "UnityEditor.XR.ARKit.ARKitSettings")]
     public class ARKitSettings : ScriptableObject
     {
+        const string k_SettingsKey = "UnityEditor.XR.ARKit.ARKitSettings";
+        const string k_OldConfigObjectName = "com.unity.xr.arkit.PlayerSettings";
+
         /// <summary>
         /// Enum which defines whether ARKit is optional or required.
         /// </summary>
@@ -99,7 +97,7 @@ namespace UnityEditor.XR.ARKit
             return true;
         }
 
-        internal static SerializedObject GetSerializedSettings() => new SerializedObject(GetOrCreateSettings());
+        internal static SerializedObject GetSerializedSettings() => new(GetOrCreateSettings());
 
         void Awake()
         {
@@ -108,8 +106,5 @@ namespace UnityEditor.XR.ARKit
                 EditorBuildSettings.RemoveConfigObject(k_OldConfigObjectName);
             }
         }
-
-        const string k_SettingsKey = "UnityEditor.XR.ARKit.ARKitSettings";
-        const string k_OldConfigObjectName = "com.unity.xr.arkit.PlayerSettings";
     }
 }

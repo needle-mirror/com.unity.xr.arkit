@@ -1,9 +1,7 @@
 ---
-uid: arkitfacetracking-manual
+uid: arkit-face-tracking
 ---
-# Face Tracking
-
-This package implements the [face tracking subsystem](xref:arsubsystems-face-subsystem) defined in the [AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@latest/index.html) package specific to ARKit.
+# Face tracking
 
 ARKit provides a series of [blend shapes](https://developer.apple.com/documentation/arkit/arfaceanchor/2928251-blendshapes?language=objc) to describe different features of a face. Each blend shape is modulated from 0..1. For example, one blend shape defines how open the mouth is.
 
@@ -17,23 +15,10 @@ Different iOS devices support different combinations of features. If you `Start`
 
 ### Requirements
 
-To use face tracking, you must have:
-
-- An iOS device capable of performing face tracking. Such devices require either a front-facing TrueDepth camera or an A12 Bionic chip (or later). Devices include:
-  - iPhone X
-  - iPhone XS
-  - iPhone XS Max
-  - iPhone XR
-  - iPhone 11
-  - iPhone 12
-  - iPad Pro (11-inch)
-  - iPad Pro (12.9-inch, 3rd generation)
-  - iPhone SE
-- iOS 11.0 or later
-- Xcode 11.0 or later
+Face tracking supports devices with Apple Neural Engine in iOS 14 and iPadOS 14 and requires a device with a TrueDepth camera on iOS 13 and iPadOS 13 and earlier. See Apple's [Tracking and Visualizing Faces](https://developer.apple.com/documentation/arkit/content_anchors/tracking_and_visualizing_faces?language=objc) documentation for more information.
 
 ### Contents
 
-**Apple ARKit XR Plug-in** includes a static library that provides an implementation of the [XRFaceSubsystem](xref:arsubsystems-face-subsystem).
+**Apple ARKit XR Plug-in** includes a static library that provides an implementation of the AR Foundation [Face tracking](xref:arfoundation-face-tracking) feature.
 
 [!include[](snippets/apple-arkit-trademark.md)]

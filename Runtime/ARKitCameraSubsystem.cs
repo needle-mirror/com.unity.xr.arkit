@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using UnityEngine.Rendering;
@@ -21,46 +20,70 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// The identifying name for the camera-providing implementation.
         /// </summary>
-        /// <value>
-        /// The identifying name for the camera-providing implementation.
-        /// </value>
+        /// <value>The identifying name for the camera-providing implementation.</value>
         const string k_SubsystemId = "ARKit-Camera";
 
         /// <summary>
         /// The name of the shader for rendering the camera texture before opaques render.
         /// </summary>
-        /// <value>
-        /// The name of the shader for rendering the camera texture.
-        /// </value>
+        /// <value>The name of the shader for rendering the camera texture.</value>
         const string k_BeforeOpaquesBackgroundShaderName = "Unlit/ARKitBackground";
 
         /// <summary>
         /// The name of the shader for rendering the camera texture after opaques have rendered.
         /// </summary>
-        /// <value>
-        /// The name of the shader for rendering the camera texture.
-        /// </value>
+        /// <value>The name of the shader for rendering the camera texture.</value>
         const string k_AfterOpaquesBackgroundShaderName = "Unlit/ARKitBackground/AfterOpaques";
 
         /// <summary>
         /// The shader keyword for enabling URP rendering.
         /// </summary>
-        /// <value>
-        /// The shader keyword for enabling URP rendering.
-        /// </value>
+        /// <value>The shader keyword for enabling URP rendering.</value>
         const string k_BackgroundShaderKeywordURP = "ARKIT_BACKGROUND_URP";
 
         /// <summary>
         /// The list of shader keywords to avoid during compilation.
         /// </summary>
-        /// <value>
-        /// The list of shader keywords to avoid during compilation.
-        /// </value>
-        static readonly List<string> k_BackgroundShaderKeywordsToNotCompile = new List<string> {
+        /// <value>The list of shader keywords to avoid during compilation.</value>
+        static readonly List<string> k_BackgroundShaderKeywordsToNotCompile = new()
+        {
 #if !MODULE_URP_ENABLED
             k_BackgroundShaderKeywordURP,
 #endif // !MODULE_URP_ENABLED
         };
+
+        /// <summary>
+        /// The names for the background shaders based on the current render pipeline.
+        /// </summary>
+        /// <value>The names for the background shaders based on the current render pipeline.</value>
+        /// <remarks>
+        /// <para>There are two shaders in the Apple ARKit Provider Package. One is used for rendering
+        /// before opaques and one is used for rendering after opaques.</para>
+        ///<para>In order:
+        /// <list type="number">
+        /// <item>Before Opaques Shader Name</item>
+        /// <item>After Opaques Shader Name</item>
+        /// </list>
+        /// </para>
+        /// </remarks>
+        public static readonly string[] backgroundShaderNames = new[]
+        {
+            k_BeforeOpaquesBackgroundShaderName,
+            k_AfterOpaquesBackgroundShaderName
+        };
+
+        /// <summary>
+        /// The name for the background shader.
+        /// </summary>
+        /// <value>The name for the background shader.</value>
+        [Obsolete("'backgroundShaderName' is obsolete, use backgroundShaderNames instead. (2022/04/04)")]
+        public static string backgroundShaderName => k_BeforeOpaquesBackgroundShaderName;
+
+        /// <summary>
+        /// The list of shader keywords to avoid during compilation.
+        /// </summary>
+        /// <value>The list of shader keywords to avoid during compilation.</value>
+        internal static List<string> backgroundShaderKeywordsToNotCompile => k_BackgroundShaderKeywordsToNotCompile;
 
         /// <summary>
         /// Resulting values from setting the camera configuration.
@@ -89,81 +112,6 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// The name for the background shader.
-        /// </summary>
-        /// <value>
-        /// The name for the background shader.
-        /// </value>
-        [Obsolete("'backgroundShaderName' is obsolete, use backgroundShaderNames instead. (2022/04/04)")]
-        public static string backgroundShaderName => k_BeforeOpaquesBackgroundShaderName;
-
-        /// <summary>
-        /// The names for the background shaders based on the current render pipeline.
-        /// </summary>
-        /// <value>
-        /// The names for the background shaders based on the current render pipeline.
-        /// </value>
-        /// <remarks>
-        /// There are two shaders in the Apple ARKit Provider Package. One is used for rendering
-        /// before opaques and one is used for rendering after opaques.
-        ///
-        /// In order:
-        /// 1. Before Opaque Shader Name
-        /// 2. After Opaque Shader Name
-        /// </remarks>
-        public static readonly string[] backgroundShaderNames = new[]
-        {
-            k_BeforeOpaquesBackgroundShaderName,
-            k_AfterOpaquesBackgroundShaderName
-        };
-
-        /// <summary>
-        /// The list of shader keywords to avoid during compilation.
-        /// </summary>
-        /// <value>
-        /// The list of shader keywords to avoid during compilation.
-        /// </value>
-        internal static List<string> backgroundShaderKeywordsToNotCompile => k_BackgroundShaderKeywordsToNotCompile;
-
-        /// <summary>
-        /// Create and register the camera subsystem descriptor to advertise a providing implementation for camera
-        /// functionality.
-        /// </summary>
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void Register()
-        {
-            if (!Api.AtLeast11_0())
-                return;
-
-            XRCameraSubsystemCinfo cameraSubsystemCinfo = new XRCameraSubsystemCinfo
-            {
-                id = k_SubsystemId,
-                providerType = typeof(ARKitCameraSubsystem.ARKitProvider),
-                subsystemTypeOverride = typeof(ARKitCameraSubsystem),
-                supportsAverageBrightness = false,
-                supportsAverageColorTemperature = true,
-                supportsColorCorrection = false,
-                supportsDisplayMatrix = true,
-                supportsProjectionMatrix = true,
-                supportsTimestamp = true,
-                supportsCameraConfigurations = true,
-                supportsCameraImage = true,
-                supportsAverageIntensityInLumens = true,
-                supportsFocusModes = true,
-                supportsFaceTrackingAmbientIntensityLightEstimation = true,
-                supportsFaceTrackingHDRLightEstimation = true,
-                supportsWorldTrackingAmbientIntensityLightEstimation = true,
-                supportsWorldTrackingHDRLightEstimation = false,
-                supportsCameraGrain = Api.AtLeast13_0(),
-            };
-
-            if (!XRCameraSubsystem.Register(cameraSubsystemCinfo))
-            {
-                Debug.LogError($"Cannot register the {k_SubsystemId} subsystem");
-            }
-        }
-
-        /// <summary>
         /// Provides the camera functionality for the ARKit implementation.
         /// </summary>
         class ARKitProvider : Provider
@@ -171,65 +119,49 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The shader property name for the luminance component of the camera video frame.
             /// </summary>
-            /// <value>
-            /// The shader property name for the luminance component of the camera video frame.
-            /// </value>
+            /// <value>The shader property name for the luminance component of the camera video frame.</value>
             const string k_TextureYPropertyName = "_textureY";
 
             /// <summary>
             /// The shader property name for the chrominance components of the camera video frame.
             /// </summary>
-            /// <value>
-            /// The shader property name for the chrominance components of the camera video frame.
-            /// </value>
+            /// <value>The shader property name for the chrominance components of the camera video frame.</value>
             const string k_TextureCbCrPropertyName = "_textureCbCr";
 
             /// <summary>
             /// The shader property name identifier for the luminance component of the camera video frame.
             /// </summary>
-            /// <value>
-            /// The shader property name identifier for the luminance component of the camera video frame.
-            /// </value>
+            /// <value>The shader property name identifier for the luminance component of the camera video frame.</value>
             static readonly int k_TextureYPropertyNameId = Shader.PropertyToID(k_TextureYPropertyName);
 
             /// <summary>
             /// The shader property name identifier for the chrominance components of the camera video frame.
             /// </summary>
-            /// <value>
-            /// The shader property name identifier for the chrominance components of the camera video frame.
-            /// </value>
+            /// <value>The shader property name identifier for the chrominance components of the camera video frame.</value>
             static readonly int k_TextureCbCrPropertyNameId = Shader.PropertyToID(k_TextureCbCrPropertyName);
 
             /// <summary>
             /// The shader keywords to enable when the Legacy RP is enabled.
             /// </summary>
-            /// <value>
-            /// The shader keywords to enable when the Legacy RP is enabled.
-            /// </value>
+            /// <value>The shader keywords to enable when the Legacy RP is enabled.</value>
             static readonly List<string> k_LegacyRPEnabledMaterialKeywords = null;
 
             /// <summary>
             /// The shader keywords to disable when the Legacy RP is enabled.
             /// </summary>
-            /// <value>
-            /// The shader keywords to disable when the Legacy RP is enabled.
-            /// </value>
-            static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new List<string>() { k_BackgroundShaderKeywordURP };
+            /// <value>The shader keywords to disable when the Legacy RP is enabled.</value>
+            static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new() { k_BackgroundShaderKeywordURP };
 
             /// <summary>
-            /// Current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.
+            /// The current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.
             /// </summary>
-            /// <value>
-            /// Current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.
-            /// </value>
+            /// <value>Current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.</value>
             static readonly RenderingThreadingMode k_RenderingThreadingMode = SystemInfo.renderingThreadingMode;
 
             /// <summary>
-            /// Returns <see langword="true"/> if the multithreaded rendering is enabled. Returns <see langword="false"/> otherwise.
+            /// Indicates whether multithreaded rendering is enabled.
             /// </summary>
-            /// <value>
-            /// Returns <see langword="true"/> if the multithreaded rendering is enabled. Returns <see langword="false"/> otherwise.
-            /// </value>
+            /// <value><see langword="true"/> if multithreaded rendering is enabled. Otherwise, <see langword="false"/>.</value>
             static readonly bool k_MultithreadedRenderingEnabled =
                 k_RenderingThreadingMode == RenderingThreadingMode.MultiThreaded ||
                 k_RenderingThreadingMode == RenderingThreadingMode.NativeGraphicsJobs;
@@ -238,26 +170,23 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The shader keywords to enable when URP is enabled.
             /// </summary>
-            /// <value>
-            /// The shader keywords to enable when URP is enabled.
-            /// </value>
+            /// <value>The shader keywords to enable when URP is enabled.</value>
             static readonly List<string> k_URPEnabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordURP};
 
             /// <summary>
             /// The shader keywords to disable when URP is enabled.
             /// </summary>
-            /// <value>
-            /// The shader keywords to disable when URP is enabled.
-            /// </value>
+            /// <value>The shader keywords to disable when URP is enabled.</value>
             static readonly List<string> k_URPDisabledMaterialKeywords = null;
 #endif // MODULE_URP_ENABLED
 
+            Material m_BeforeOpaqueCameraMaterial;
+            Material m_AfterOpaqueCameraMaterial;
+
             /// <summary>
-            /// Get the material used by <c>XRCameraSubsystem</c> to render the camera texture.
+            /// Get the Material used by <c>XRCameraSubsystem</c> to render the camera texture.
             /// </summary>
-            /// <returns>
-            /// The material to render the camera texture.
-            /// </returns>
+            /// <returns>The Material to render the camera texture.</returns>
             /// <remarks>
             /// This subsystem will lazily create the camera materials depending on the <see cref="currentBackgroundRenderingMode"/>.
             /// Once created, the materials exist for the lifespan of the subsystem.
@@ -281,15 +210,10 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            Material m_BeforeOpaqueCameraMaterial;
-            Material m_AfterOpaqueCameraMaterial;
-
             /// <summary>
             /// Whether camera permission has been granted.
             /// </summary>
-            /// <value>
-            /// <c>true</c> if camera permission has been granted for this app. Otherwise, <c>false</c>.
-            /// </value>
+            /// <value><see langword="true"/> if camera permission has been granted for this app. Otherwise, <see langword="false"/>.</value>
             public override bool permissionGranted => NativeApi.UnityARKit_Camera_IsCameraPermissionGranted();
 
             /// <summary>
@@ -317,12 +241,8 @@ namespace UnityEngine.XR.ARKit
             }
 
             /// <summary>
-            /// Describes the subsystem's current (xref: UnityEngine.XR.ARSubsystems.XRCameraBackgroundRenderingMode).
+            /// Describes the subsystem's current <see cref="XRCameraBackgroundRenderingMode"/>.
             /// </summary>
-            /// <remarks>
-            /// If the <see cref="requestedBackgroundRenderingMode"/> is set to (xref: UnityEngine.XR.ARSubsystems.XRCameraBackgroundRenderingMode.Any)
-            /// then this subsystem will default to (xref: UnityEngine.XR.ARSubsystems.XRCameraBackgroundRenderingMode.BeforeOpaques).
-            /// </remarks>
             public override XRCameraBackgroundRenderingMode currentBackgroundRenderingMode
             {
                 get
@@ -376,9 +296,7 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             /// <param name="cameraParams">The current Unity <c>Camera</c> parameters.</param>
             /// <param name="cameraFrame">The current camera frame returned by the method.</param>
-            /// <returns>
-            /// <c>true</c> if the method successfully got a frame. Otherwise, <c>false</c>.
-            /// </returns>
+            /// <returns><see langword="true"/> if the method successfully got a frame. Otherwise, <see langword="false"/>.</returns>
             public override bool TryGetFrame(XRCameraParams cameraParams, out XRCameraFrame cameraFrame)
             {
                 return NativeApi.UnityARKit_Camera_TryGetFrame(cameraParams, out cameraFrame);
@@ -418,9 +336,8 @@ namespace UnityEngine.XR.ARKit
             /// Get the camera intrinsics information.
             /// </summary>
             /// <param name="cameraIntrinsics">The camera intrinsics information returned from the method.</param>
-            /// <returns>
-            /// <c>true</c> if the method successfully gets the camera intrinsics information. Otherwise, <c>false</c>.
-            /// </returns>
+            /// <returns><see langword="true"/> if the method successfully gets the camera intrinsics information.
+            /// Otherwise, <see langword="false"/>.</returns>
             public override bool TryGetIntrinsics(out XRCameraIntrinsics cameraIntrinsics)
             {
                 return NativeApi.UnityARKit_Camera_TryGetIntrinsics(out cameraIntrinsics);
@@ -429,26 +346,27 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// Queries the supported camera configurations.
             /// </summary>
-            /// <param name="defaultCameraConfiguration">A default value used to fill the returned array before copying
-            /// in real values. This ensures future additions to this struct are backwards compatible.</param>
+            /// <param name="defaultCameraConfiguration">A default value used to fill the returned array before copying in
+            /// real values. This ensures future additions to this struct are backwards compatible.</param>
             /// <param name="allocator">The allocation strategy to use for the returned data.</param>
-            /// <returns>
-            /// The supported camera configurations.
-            /// </returns>
-            public override NativeArray<XRCameraConfiguration> GetConfigurations(XRCameraConfiguration defaultCameraConfiguration,
-                                                                                 Allocator allocator)
+            /// <returns>The supported camera configurations.</returns>
+            public override NativeArray<XRCameraConfiguration> GetConfigurations(
+                XRCameraConfiguration defaultCameraConfiguration,
+                Allocator allocator)
             {
-                IntPtr configurations = NativeApi.UnityARKit_Camera_AcquireConfigurations(out int configurationsCount,
-                                                                                          out int configurationSize);
+                IntPtr configurations = NativeApi.UnityARKit_Camera_AcquireConfigurations(
+                    out int configurationsCount,
+                    out int configurationSize);
 
                 try
                 {
                     unsafe
                     {
-                        return NativeCopyUtility.PtrToNativeArrayWithDefault(defaultCameraConfiguration,
-                                                                             (void*)configurations,
-                                                                             configurationSize, configurationsCount,
-                                                                             allocator);
+                        return NativeCopyUtility.PtrToNativeArrayWithDefault(
+                            defaultCameraConfiguration,
+                            (void*)configurations,
+                            configurationSize, configurationsCount,
+                            allocator);
                     }
                 }
                 finally
@@ -460,9 +378,7 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The current camera configuration.
             /// </summary>
-            /// <value>
-            /// The current camera configuration if it exists. Otherise, <c>null</c>.
-            /// </value>
+            /// <value>The current camera configuration if it exists. Otherwise, <see langword="null"/>.</value>
             /// <exception cref="System.ArgumentException">Thrown when setting the current configuration if the given
             /// configuration is not a valid, supported camera configuration.</exception>
             /// <exception cref="System.InvalidOperationException">Thrown when setting the current configuration if the
@@ -494,14 +410,14 @@ namespace UnityEngine.XR.ARKit
                         case CameraConfigurationResult.Success:
                             break;
                         case CameraConfigurationResult.Unsupported:
-                            throw new InvalidOperationException("cannot set camera configuration because ARKit version "
-                                                                + "does not support camera configurations");
+                            throw new InvalidOperationException(
+                                "cannot set camera configuration because ARKit version does not support camera configurations");
                         case CameraConfigurationResult.InvalidCameraConfiguration:
-                            throw new ArgumentException("camera configuration does not exist in the available "
-                                                        + "configurations", "value");
+                            throw new ArgumentException(
+                                "camera configuration does not exist in the available configurations", nameof(value));
                         case CameraConfigurationResult.InvalidSession:
-                            throw new InvalidOperationException("cannot set camera configuration because the ARKit "
-                                                                + "session is not valid");
+                            throw new InvalidOperationException(
+                                "cannot set camera configuration because the ARKit session is not valid");
                         default:
                             throw new InvalidOperationException("cannot set camera configuration for ARKit");
                     }
@@ -568,9 +484,7 @@ namespace UnityEngine.XR.ARKit
             /// Query for the latest native camera image.
             /// </summary>
             /// <param name="cameraImageCinfo">The metadata required to construct a <see cref="XRCpuImage"/></param>
-            /// <returns>
-            /// <c>true</c> if the camera image is acquired. Otherwise, <c>false</c>.
-            /// </returns>
+            /// <returns><see langword="true"/> if the camera image is acquired. Otherwise, <see langword="false"/>.</returns>
             public override bool TryAcquireLatestCpuImage(out XRCpuImage.Cinfo cameraImageCinfo)
                 => ARKitCpuImageApi.TryAcquireLatestImage(ARKitCpuImageApi.ImageType.Camera, out cameraImageCinfo);
             
@@ -588,6 +502,44 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
+        /// Create and register the camera subsystem descriptor to advertise a providing implementation for camera
+        /// functionality.
+        /// </summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void Register()
+        {
+            if (!Api.AtLeast11_0())
+                return;
+
+            var cameraSubsystemCinfo = new XRCameraSubsystemCinfo
+            {
+                id = k_SubsystemId,
+                providerType = typeof(ARKitProvider),
+                subsystemTypeOverride = typeof(ARKitCameraSubsystem),
+                supportsAverageBrightness = false,
+                supportsAverageColorTemperature = true,
+                supportsColorCorrection = false,
+                supportsDisplayMatrix = true,
+                supportsProjectionMatrix = true,
+                supportsTimestamp = true,
+                supportsCameraConfigurations = true,
+                supportsCameraImage = true,
+                supportsAverageIntensityInLumens = true,
+                supportsFocusModes = true,
+                supportsFaceTrackingAmbientIntensityLightEstimation = true,
+                supportsFaceTrackingHDRLightEstimation = true,
+                supportsWorldTrackingAmbientIntensityLightEstimation = true,
+                supportsWorldTrackingHDRLightEstimation = false,
+                supportsCameraGrain = Api.AtLeast13_0(),
+            };
+
+            if (!XRCameraSubsystem.Register(cameraSubsystemCinfo))
+            {
+                Debug.LogError($"Cannot register the {k_SubsystemId} subsystem");
+            }
+        }
+
+        /// <summary>
         /// Container to wrap the native ARKit camera APIs.
         /// </summary>
         static class NativeApi
@@ -597,9 +549,10 @@ namespace UnityEngine.XR.ARKit
             public static extern Feature GetCurrentLightEstimation();
 
             [DllImport("__Internal")]
-            public static extern void UnityARKit_Camera_Construct(int textureYPropertyNameId,
-                                                                  int textureCbCrPropertyNameId,
-                                                                  bool mtRenderingEnabled);
+            public static extern void UnityARKit_Camera_Construct(
+                int textureYPropertyNameId,
+                int textureCbCrPropertyNameId,
+                bool mtRenderingEnabled);
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_Camera_Destruct();
@@ -611,8 +564,9 @@ namespace UnityEngine.XR.ARKit
             public static extern void UnityARKit_Camera_Stop();
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_Camera_TryGetFrame(XRCameraParams cameraParams,
-                                                                    out XRCameraFrame cameraFrame);
+            public static extern bool UnityARKit_Camera_TryGetFrame(
+                XRCameraParams cameraParams,
+                out XRCameraFrame cameraFrame);
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_Camera_TryGetIntrinsics(out XRCameraIntrinsics cameraIntrinsics);
@@ -621,17 +575,20 @@ namespace UnityEngine.XR.ARKit
             public static extern bool UnityARKit_Camera_IsCameraPermissionGranted();
 
             [DllImport("__Internal")]
-            public static extern IntPtr UnityARKit_Camera_AcquireConfigurations(out int configurationsCount,
-                                                                                out int configurationSize);
+            public static extern IntPtr UnityARKit_Camera_AcquireConfigurations(
+                out int configurationsCount,
+                out int configurationSize);
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_Camera_ReleaseConfigurations(IntPtr configurations);
 
             [DllImport("__Internal")]
-            public static extern bool UnityARKit_Camera_TryGetCurrentConfiguration(out XRCameraConfiguration cameraConfiguration);
+            public static extern bool UnityARKit_Camera_TryGetCurrentConfiguration(
+                out XRCameraConfiguration cameraConfiguration);
 
             [DllImport("__Internal")]
-            public static extern CameraConfigurationResult UnityARKit_Camera_TrySetCurrentConfiguration(XRCameraConfiguration cameraConfiguration);
+            public static extern CameraConfigurationResult UnityARKit_Camera_TrySetCurrentConfiguration(
+                XRCameraConfiguration cameraConfiguration);
 
             [DllImport("__Internal")]
             public static extern unsafe void* UnityARKit_Camera_AcquireTextureDescriptors(
@@ -654,9 +611,11 @@ namespace UnityEngine.XR.ARKit
 
             public static Feature GetCurrentLightEstimation() => Feature.None;
 
-            public static void UnityARKit_Camera_Construct(int textureYPropertyNameId,
-                                                           int textureCbCrPropertyNameId,
-                                                           bool mtRenderingEnabled)
+
+            public static void UnityARKit_Camera_Construct(
+                int textureYPropertyNameId,
+                int textureCbCrPropertyNameId,
+                bool mtRenderingEnabled)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
@@ -676,8 +635,7 @@ namespace UnityEngine.XR.ARKit
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            public static bool UnityARKit_Camera_TryGetFrame(XRCameraParams cameraParams,
-                                                                    out XRCameraFrame cameraFrame)
+            public static bool UnityARKit_Camera_TryGetFrame(XRCameraParams cameraParams, out XRCameraFrame cameraFrame)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
@@ -689,8 +647,9 @@ namespace UnityEngine.XR.ARKit
 
             public static bool UnityARKit_Camera_IsCameraPermissionGranted() => false;
 
-            public static IntPtr UnityARKit_Camera_AcquireConfigurations(out int configurationsCount,
-                                                                                out int configurationSize)
+            public static IntPtr UnityARKit_Camera_AcquireConfigurations(
+                out int configurationsCount,
+                out int configurationSize)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
@@ -711,13 +670,13 @@ namespace UnityEngine.XR.ARKit
             }
 
             public static unsafe void* UnityARKit_Camera_AcquireTextureDescriptors(
-                out int length, out int elementSize)
+                out int length,
+                out int elementSize)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            public static unsafe void UnityARKit_Camera_ReleaseTextureDescriptors(
-                void* descriptors)
+            public static unsafe void UnityARKit_Camera_ReleaseTextureDescriptors(void* descriptors)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }

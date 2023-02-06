@@ -16,9 +16,8 @@ using UnityEditor.iOS.Xcode;
 namespace UnityEditor.XR.ARKit
 {
     /// <summary>
-    /// Looks at all XRReferenceImageLibraries in the project and generates
-    /// an AR Resource Group for each library, then inserts them into a new
-    /// Xcode asset catalog called "ARReferenceImages".
+    /// Looks at all XRReferenceImageLibraries in the project and generates an AR Resource Group for each library,
+    /// then inserts them into a new Xcode asset catalog called "ARReferenceImages".
     /// </summary>
     static class ARKitReferenceImageLibraryBuildProcessor
     {

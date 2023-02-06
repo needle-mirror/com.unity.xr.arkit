@@ -1,7 +1,9 @@
-using System.Runtime.InteropServices;
 using Unity.Collections;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
+#if UNITY_IOS && !UNITY_EDITOR
+using System.Runtime.InteropServices;
+#endif
 
 namespace UnityEngine.XR.ARKit
 {
@@ -65,7 +67,7 @@ namespace UnityEngine.XR.ARKit
                 return UnityARKit_refPoints_tryRemove(anchorId);
             }
 
-#if UNITY_XR_ARKIT_LOADER_ENABLED
+#if UNITY_IOS && !UNITY_EDITOR
             [DllImport("__Internal")]
             static extern void UnityARKit_refPoints_onStart();
 

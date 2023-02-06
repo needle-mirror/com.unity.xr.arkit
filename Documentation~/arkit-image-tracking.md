@@ -3,13 +3,13 @@ uid: arkit-image-tracking
 ---
 # Image tracking
 
-To use image tracking on ARKit, you first need to create a Reference Image Library. See the [AR Subsystems documentation on image tracking](xref:arsubsystems-image-tracking-subsystem) for instructions.
+To use image tracking on ARKit, you first need to create a Reference Image Library. See [Image tracking](xref:arfoundation-image-tracking) for instructions.
 
 During an iOS player build, this package compiles the reference image libraries into the necessary runtime data required by ARKit. There are two ways this can be done:
 
 1. This package attempts to run a command line tool which generates the binary data. This data is then added to the [XRReferenceImageLibrary](xref:UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) asset. This technique requires macOS with Xcode installed.
 1. This package can also create an AR Resource Group in the generated Xcode project:
-![alt text](images/arresource-group-images.png "AR Resource Group of Reference Images") The resource group and the images within it are named according to the name the user specifies in the Unity Editor concatenated with a GUID so the image can be uniquely identified at runtime.
+![AR Resource Group of Reference Images](images/arresource-group-images.png) The resource group and the images within it are named according to the name the user specifies in the Unity Editor concatenated with a GUID so the image can be uniquely identified at runtime.
  This process can be performed on any desktop platform.
 
 > [!NOTE]
