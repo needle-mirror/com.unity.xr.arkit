@@ -8,6 +8,26 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.1.0-pre.3] - 2023-02-06
+
+### Added
+
+- Added support for [Advanced camera hardware configuration](xref:arkit-camera#advanced-camera-hardware-configuration) on iOS 16 or newer:
+  - Lock native camera device to configure hardware properties
+  - Set exposure mode, duration, and ISO on the camera device
+- Added support for [High resolution CPU image](xref:arkit-camera#high-resolution-cpu-image) capture on iOS 16 or newer:
+  - Added class [HighResolutionCpuImagePromise](xref:UnityEngine.XR.ARKit.HighResolutionCpuImagePromise)
+  - Added method [ARKitCameraSubsystem.TryAcquireHighResolutionCpuImage](xref:UnityEngine.XR.ARKit.ARKitCameraSubsystem.TryAcquireHighResolutionCpuImage)
+
+### Changed
+
+- Static libraries were rebuilt with Xcode Version 14.1 (14B47b).
+
+### Fixed
+
+- Fixed a rare issue where the ARKit Build Processor could incorrectly add the "UNITY_XR_ARKIT_LOADER_ENABLED" preprocessor directive to non-iOS build targets.
+- Fixed an issue where enabling or disabling the Apple ARKit XR Plug-in in **Project Settings** > **XR Plug-in Management** while iOS was not the active build target would not immediately add or remove the "UNITY_XR_ARKIT_LOADER_ENABLED" preprocessor directive for the iOS build target. (Previously this change was not applied until iOS became the Editor's active build target.)
+
 ## [5.1.0-pre.2] - 2022-11-01
 
 ### Changed

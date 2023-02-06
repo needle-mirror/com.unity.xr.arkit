@@ -64,6 +64,10 @@ public class CameraConfigurator : MonoBehaviour
 }
 ```
 
+### High resolution CPU image
+
+You are able to asynchronously request a [High resolution CPU image](xref:arkit-camera#high-resolution-cpu-image) capture on iOS 16 or newer. This API natively calls the [captureHighResolutionFrameWithCompletion](https://developer.apple.com/documentation/arkit/arsession/3975720-capturehighresolutionframewithco) API introduced in ARKit 6.
+
 ### New 2D skeleton joints
 
 You are able to access the new ear joints introduced to the 2D skeleton using the pre-existing AR Foundation APIs. See the [HumanBodyTracking2D](https://github.com/Unity-Technologies/arfoundation-samples#humanbodytracking2d) sample scene for example code and scene setup.
@@ -73,5 +77,10 @@ You are able to access the new ear joints introduced to the 2D skeleton using th
 ARKit 6 introduces a new class called [ARPlaneExtent](https://developer.apple.com/documentation/arkit/arplaneextent?language=objc) that changes the way ARKit natively handles plane rotations on iOS 16 and up. To preserve backwards compatibility and a consistent experience across all devices, the Apple ARKit XR Plug-in now applies the new [rotationOnYAxis](https://developer.apple.com/documentation/arkit/arplaneextent/3950861-rotationonyaxis?language=objc) on your behalf. The end result for you is that no action is necessary, and nothing has changed.
 
 For a more stable way to anchor AR content to a plane, you can add your own anchor to the plane's surface after the plane is initially detected.
+
+## Advanced Camera Hardware Configuration
+
+ARKit 6 allow access to the underlying configurable primary camera in some configurations when running iOS 16 or newer on a device with ultra-wide camera. If available, you can get a lock on this device to configure the hardware properties of the camera such as exposure, white balance, etc. Currently, configuring following properties are suported
+  - Setting exposure mode, duration, and ISO.
 
 [!include[](snippets/apple-arkit-trademark.md)]

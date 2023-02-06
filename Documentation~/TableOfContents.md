@@ -5,7 +5,7 @@
 * Subsystems
   * [Session](xref:arkit-session)
   * [Camera](xref:arkit-camera)
-  * [Plane tracking](xref:arkit-plane-tracking)
+  * [Plane detection](xref:arkit-plane-detection)
   * [Image tracking](xref:arkit-image-tracking)
   * [Object tracking](xref:arkit-object-tracking)
   * [Face tracking](xref:arkit-face-tracking)

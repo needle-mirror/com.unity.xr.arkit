@@ -7,21 +7,21 @@ Use the Apple ARKit XR Plug-in package to enable ARKit support in your [AR Found
 
 | Feature | Description |
 | :------ | :---------- |
-| [Session](xref:arfoundation-session) | Enable, disable, and configure AR on the target platform. |
+| [Session](xref:arkit-session) | Enable, disable, and configure AR on the target platform. |
 | [Device tracking](xref:arfoundation-device-tracking) | Track the device's position and rotation in physical space. |
-| [Camera](xref:arfoundation-camera) | Render images from device cameras and perform light estimation. |
-| [Plane detection](xref:arfoundation-plane-detection) | Detect and track surfaces. |
-| [Image tracking](xref:arfoundation-image-tracking) | Detect and track 2D images. |
-| [Object tracking](xref:arfoundation-object-tracking) | Detect and track 3D objects. |
-| [Face tracking](xref:arfoundation-face-tracking) | Detect and track human faces. |
-| [Body tracking](xref:UnityEngine.XR.ARFoundation.ARHumanBodyManager) | Detect and track a human body. |
-| [Point clouds](xref:arfoundation-point-clouds) | Detect and track feature points. |
-| [Raycasts](xref:arfoundation-raycasts) | Cast a ray against tracked items. |
-| [Anchors](xref:arfoundation-anchors) | Track an arbitrary point in space. |
-| [Meshing](xref:arfoundation-meshing) | Generate meshes of the environment. |
+| [Camera](xref:arkit-camera) | Render images from device cameras and perform light estimation. |
+| [Plane detection](xref:arkit-plane-detection) | Detect and track surfaces. |
+| [Image tracking](xref:arkit-image-tracking) | Detect and track 2D images. |
+| [Object tracking](xref:arkit-object-tracking) | Detect and track 3D objects. |
+| [Face tracking](xref:arkit-face-tracking) | Detect and track human faces. |
+| [Body tracking](xref:arfoundation-body-tracking) | Detect and track a human body. |
+| [Point clouds](xref:arkit-point-clouds) | Detect and track feature points. |
+| [Raycasts](xref:arfoundation-raycasts) | Cast rays against tracked items. |
+| [Anchors](xref:arfoundation-anchors) | Track arbitrary points in space. |
+| [Meshing](xref:arkit-meshing) | Generate meshes of the environment. |
 | [Environment probes](xref:arfoundation-environment-probes) | Generate cubemaps of the environment. |
-| [Occlusion](xref:arfoundation-occlusion) | Occlude AR content with physical objects and perform human segmentation. |
-| [Participants](xref:arfoundation-participants) | Track other devices in a shared AR session. |
+| [Occlusion](xref:arkit-occlusion) | Occlude AR content with physical objects and perform human segmentation. |
+| [Participants](xref:arkit-participant-tracking) | Track other devices in a shared AR session. |
 
 > [!IMPORTANT]
 > Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, face tracking support is available only when face tracking is enabled. See [Enable the Face tracking subsytem](xref:arkit-project-config#enable-face-tracking) for instructions for changing this setting. 
