@@ -8,6 +8,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.0.5] - 2023-03-04
+
+### Fixed
+
+- Fixed [issue ARKB-34](https://issuetracker.unity3d.com/issues/webgl-build-fails-when-apple-arkit-xr-plugin-is-used-in-the-project) where the ARKit package would break non-iOS builds.
+
 ## [5.0.4] - 2023-02-06
 
 ### Fixed
