@@ -8,13 +8,26 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.1.0-pre.4] - 2023-04-11
+
+### Added
+
+- Added support for additional [Advanced camera hardware configuration](xref:arkit-camera#advanced-camera-hardware-configuration) on iOS 16 or newer:
+  - Set [white balance](https://docs.unity3d.com/Packages/com.unity.xr.arkit@5.1/manual/arkit-camera.html#white-balance) mode and gains on the camera device
+  - Set [focus](https://docs.unity3d.com/Packages/com.unity.xr.arkit@5.1/manual/arkit-camera.html#focus) mode and lens position on the camera device
+  - `ARKitLockedCamera.supportedExposureModes` to query supported exposure modes on a device
+
+### Changed
+
+- Static libraries were rebuilt with Xcode Version 14.2 (14C18).
+
 ## [5.1.0-pre.3] - 2023-02-06
 
 ### Added
 
 - Added support for [Advanced camera hardware configuration](xref:arkit-camera#advanced-camera-hardware-configuration) on iOS 16 or newer:
   - Lock native camera device to configure hardware properties
-  - Set exposure mode, duration, and ISO on the camera device
+  - Set [exposure](https://docs.unity3d.com/Packages/com.unity.xr.arkit@5.1/manual/arkit-camera.html#exposure) mode, duration, and ISO on the camera device
 - Added support for [High resolution CPU image](xref:arkit-camera#high-resolution-cpu-image) capture on iOS 16 or newer:
   - Added class [HighResolutionCpuImagePromise](xref:UnityEngine.XR.ARKit.HighResolutionCpuImagePromise)
   - Added method [ARKitCameraSubsystem.TryAcquireHighResolutionCpuImage](xref:UnityEngine.XR.ARKit.ARKitCameraSubsystem.TryAcquireHighResolutionCpuImage)

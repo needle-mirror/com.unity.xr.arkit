@@ -1,9 +1,11 @@
-using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
+#if UNITY_XR_ARKIT_LOADER_ENABLED
+using System.Runtime.InteropServices;
+#endif
 
 namespace UnityEngine.XR.ARKit
 {
@@ -31,12 +33,10 @@ namespace UnityEngine.XR.ARKit
                 Allocator allocator,
                 ref NativeArray<Vector2> boundary)
             {
-                int numPoints;
-                void* verticesPtr;
                 void* plane = NativeApi.UnityARKit_Planes_AcquireBoundary(
                     trackableId,
-                    out verticesPtr,
-                    out numPoints);
+                    out void* verticesPtr,
+                    out int numPoints);
 
                 try
                 {
@@ -68,9 +68,7 @@ namespace UnityEngine.XR.ARKit
                     for (int i = 0; i < half; ++i)
                     {
                         var j = positions.Length - 1 - i;
-                        var temp = positions[i];
-                        positions[i] = positions[j];
-                        positions[j] = temp;
+                        (positions[i], positions[j]) = (positions[j], positions[i]);
                     }
                 }
             }
@@ -86,7 +84,7 @@ namespace UnityEngine.XR.ARKit
                 public void Execute(int index)
                 {
                     positionsOut[index] = new Vector2(
-                        // NB: https://developer.apple.com/documentation/arkit/arplanegeometry/2941052-boundaryvertices?language=objc
+                        // https://developer.apple.com/documentation/arkit/arplanegeometry/2941052-boundaryvertices?language=objc
                         // "The owning plane anchor's transform matrix defines the coordinate system for these points."
                         // It doesn't explicitly state the y component is zero, but that must be the case if the
                         // boundary points are in plane-space. Emperically, it has been true for horizontal and vertical planes.
@@ -104,13 +102,11 @@ namespace UnityEngine.XR.ARKit
                 BoundedPlane defaultPlane,
                 Allocator allocator)
             {
-                int addedLength, updatedLength, removedLength, elementSize;
-                void* addedArrayPtr, updatedArrayPtr, removedArrayPtr;
                 var context = NativeApi.UnityARKit_Planes_AcquireChanges(
-                    out addedArrayPtr, out addedLength,
-                    out updatedArrayPtr, out updatedLength,
-                    out removedArrayPtr, out removedLength,
-                    out elementSize);
+                    out void* addedArrayPtr, out int addedLength,
+                    out void* updatedArrayPtr, out int updatedLength,
+                    out void* removedArrayPtr, out int removedLength,
+                    out int elementSize);
 
                 try
                 {
@@ -141,66 +137,66 @@ namespace UnityEngine.XR.ARKit
         {
 #if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
-            static internal extern unsafe bool UnityARKit_Planes_SupportsClassification();
+            internal static extern unsafe bool UnityARKit_Planes_SupportsClassification();
 
             [DllImport("__Internal")]
-            static internal extern void UnityARKit_Planes_Shutdown();
+            internal static extern void UnityARKit_Planes_Shutdown();
 
             [DllImport("__Internal")]
-            static internal extern void UnityARKit_Planes_Start();
+            internal static extern void UnityARKit_Planes_Start();
 
             [DllImport("__Internal")]
-            static internal extern void UnityARKit_Planes_Stop();
+            internal static extern void UnityARKit_Planes_Stop();
 
             [DllImport("__Internal")]
-            static internal extern unsafe void* UnityARKit_Planes_AcquireChanges(
+            internal static extern unsafe void* UnityARKit_Planes_AcquireChanges(
                 out void* addedPtr, out int addedLength,
                 out void* updatedPtr, out int updatedLength,
                 out void* removedPtr, out int removedLength,
                 out int elementSize);
 
             [DllImport("__Internal")]
-            static internal extern unsafe void UnityARKit_Planes_ReleaseChanges(void* changes);
+            internal static extern unsafe void UnityARKit_Planes_ReleaseChanges(void* changes);
 
             [DllImport("__Internal")]
-            static internal extern PlaneDetectionMode UnityARKit_Planes_GetRequestedPlaneDetectionMode();
+            internal static extern PlaneDetectionMode UnityARKit_Planes_GetRequestedPlaneDetectionMode();
 
             [DllImport("__Internal")]
-            static internal extern void UnityARKit_Planes_SetRequestedPlaneDetectionMode(PlaneDetectionMode mode);
+            internal static extern void UnityARKit_Planes_SetRequestedPlaneDetectionMode(PlaneDetectionMode mode);
 
             [DllImport("__Internal")]
-            static internal extern PlaneDetectionMode UnityARKit_Planes_GetCurrentPlaneDetectionMode();
+            internal static extern PlaneDetectionMode UnityARKit_Planes_GetCurrentPlaneDetectionMode();
 
             [DllImport("__Internal")]
-            static internal extern unsafe void* UnityARKit_Planes_AcquireBoundary(
+            internal static extern unsafe void* UnityARKit_Planes_AcquireBoundary(
                 TrackableId trackableId,
                 out void* verticiesPtr,
                 out int numPoints);
 
             [DllImport("__Internal")]
-            static internal extern unsafe void UnityARKit_Planes_ReleaseBoundary(
+            internal static extern unsafe void UnityARKit_Planes_ReleaseBoundary(
                 void* boundary);
 #else
             static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
-            static internal unsafe bool UnityARKit_Planes_SupportsClassification() => false;
+            internal static unsafe bool UnityARKit_Planes_SupportsClassification() => false;
 
-            static internal void UnityARKit_Planes_Shutdown()
+            internal static void UnityARKit_Planes_Shutdown()
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static internal void UnityARKit_Planes_Start()
+            internal static void UnityARKit_Planes_Start()
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static internal void UnityARKit_Planes_Stop()
+            internal static void UnityARKit_Planes_Stop()
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static internal unsafe void* UnityARKit_Planes_AcquireChanges(
+            internal static unsafe void* UnityARKit_Planes_AcquireChanges(
                 out void* addedPtr, out int addedLength,
                 out void* updatedPtr, out int updatedLength,
                 out void* removedPtr, out int removedLength,
@@ -209,27 +205,27 @@ namespace UnityEngine.XR.ARKit
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static internal unsafe void UnityARKit_Planes_ReleaseChanges(void* changes)
+            internal static unsafe void UnityARKit_Planes_ReleaseChanges(void* changes)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static internal PlaneDetectionMode UnityARKit_Planes_GetRequestedPlaneDetectionMode()
+            internal static PlaneDetectionMode UnityARKit_Planes_GetRequestedPlaneDetectionMode()
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static internal void UnityARKit_Planes_SetRequestedPlaneDetectionMode(PlaneDetectionMode mode)
+            internal static void UnityARKit_Planes_SetRequestedPlaneDetectionMode(PlaneDetectionMode mode)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static internal PlaneDetectionMode UnityARKit_Planes_GetCurrentPlaneDetectionMode()
+            internal static PlaneDetectionMode UnityARKit_Planes_GetCurrentPlaneDetectionMode()
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static internal unsafe void* UnityARKit_Planes_AcquireBoundary(
+            internal static unsafe void* UnityARKit_Planes_AcquireBoundary(
                 TrackableId trackableId,
                 out void* verticiesPtr,
                 out int numPoints)
@@ -237,8 +233,7 @@ namespace UnityEngine.XR.ARKit
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static internal unsafe void UnityARKit_Planes_ReleaseBoundary(
-                void* boundary)
+            internal static unsafe void UnityARKit_Planes_ReleaseBoundary(void* boundary)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
@@ -254,7 +249,7 @@ namespace UnityEngine.XR.ARKit
             var cinfo = new XRPlaneSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Plane",
-                providerType = typeof(ARKitXRPlaneSubsystem.ARKitProvider),
+                providerType = typeof(ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitXRPlaneSubsystem),
                 supportsHorizontalPlaneDetection = true,
                 supportsVerticalPlaneDetection = Api.AtLeast11_3(),

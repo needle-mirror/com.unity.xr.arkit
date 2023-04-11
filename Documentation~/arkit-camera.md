@@ -44,6 +44,40 @@ using (lockedCamera)
 }
 ```
 
+### White Balance
+
+```C#
+var cameraManager = GetComponent<ARCameraManager>();
+var subsystem = cameraManager.subsystem as ARKitCameraSubsystem;
+
+if (subsystem == null || !subsystem.TryGetLockedCamera(out var lockedCamera))
+    return;
+
+using (lockedCamera)
+{
+    float blueGain = 2.0f;
+    float greenGain = 1.0f;
+    float redGain = 1.5f;
+    lockedCamera.whiteBalance = new ARKitWhiteBalanceGains(blueGain, greenGain, redGain);
+}
+```
+
+### Focus
+
+```C#
+var cameraManager = GetComponent<ARCameraManager>();
+var subsystem = cameraManager.subsystem as ARKitCameraSubsystem;
+
+if (subsystem == null || !subsystem.TryGetLockedCamera(out var lockedCamera))
+    return;
+
+using (lockedCamera)
+{
+    float lensPosition = 2.0f;
+    lockedCamera.focus = new ARKitFocus(lensPosition);
+}
+```
+
 ## High resolution CPU image
 
 You can asynchronously capture a high resolution [XRCpuImage](xref:UnityEngine.XR.ARSubsystems.XRCpuImage) (or simply, CPU Image) using [ARKitCameraSubsystem.TryAcquireHighResolutionCpuImage](xref:UnityEngine.XR.ARKit.ARKitCameraSubsystem.TryAcquireHighResolutionCpuImage) on iOS 16 and newer.

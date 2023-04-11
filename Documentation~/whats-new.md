@@ -80,7 +80,9 @@ For a more stable way to anchor AR content to a plane, you can add your own anch
 
 ## Advanced Camera Hardware Configuration
 
-ARKit 6 allow access to the underlying configurable primary camera in some configurations when running iOS 16 or newer on a device with ultra-wide camera. If available, you can get a lock on this device to configure the hardware properties of the camera such as exposure, white balance, etc. Currently, configuring following properties are suported
-  - Setting exposure mode, duration, and ISO.
+ARKit 6 allows access to the underlying configurable primary camera in some configurations when running iOS 16 or newer on a device with ultra-wide camera. If available, you can get a lock on this device to configure the hardware properties of the camera, such as exposure, white balance, etc. Currently, the following properties are supported for configuration:
+  - Exposure mode, duration, and ISO
+  - White balance mode and gains
+  - Focus mode and lens position
 
 [!include[](snippets/apple-arkit-trademark.md)]

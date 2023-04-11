@@ -12,6 +12,8 @@ namespace UnityEngine.XR.ARKit
     {
         IntPtr m_Self;
         ARKitExposureMode m_ExposureMode;
+        ARKitWhiteBalanceMode m_WhiteBalanceMode;
+        ARKitFocusMode m_FocusMode;
 
         /// <summary>
         /// Get the native pointer of [AVCaptureDevice]
@@ -22,10 +24,37 @@ namespace UnityEngine.XR.ARKit
         public IntPtr AsIntPtr() => m_Self;
 
         /// <summary>
+        /// Get the supported exposure modes for the camera.
+        /// </summary>
+        public ARKitExposureMode supportedExposureModes => NativeApi.UnityARKit_Camera_GetSupportedExposureModes(m_Self);
+
+        /// <summary>
+        /// Get the supported white balance modes for the camera.
+        /// </summary>
+        public ARKitWhiteBalanceMode supportedWhiteBalanceModes => NativeApi.UnityARKit_Camera_GetSupportedWhiteBalanceModes(m_Self);
+
+        /// <summary>
+        /// Get the supported focus modes for the camera.
+        /// </summary>
+        public ARKitFocusMode supportedFocusModes => NativeApi.UnityARKit_Camera_GetSupportedFocusModes(m_Self);
+
+        /// <summary>
         /// Get the current exposure mode for the camera.
         /// </summary>
         /// <seealso cref="requestedExposureMode"/>
         public ARKitExposureMode currentExposureMode => NativeApi.UnityARKit_Camera_GetExposureMode(m_Self);
+
+        /// <summary>
+        /// Get the current white balance mode for the camera device.
+        /// </summary>
+        /// <seealso cref="requestedWhiteBalanceMode"/>
+        public ARKitWhiteBalanceMode currentWhiteBalanceMode => NativeApi.UnityARKit_Camera_GetWhiteBalanceMode(m_Self);
+
+        /// <summary>
+        /// Get the current focus mode for the camera.
+        /// </summary>
+        /// <seealso cref="requestedFocusMode"/>
+        public ARKitFocusMode currentFocusMode => NativeApi.UnityARKit_Camera_GetFocusMode(m_Self);
 
         /// <summary>
         /// Get or set the requested exposure mode for the camera.
@@ -42,6 +71,34 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
+        /// Get or set the requested white balance mode for the camera device.
+        /// </summary>
+        /// <seealso cref="currentWhiteBalanceMode"/>
+        public ARKitWhiteBalanceMode requestedWhiteBalanceMode
+        {
+            get => m_WhiteBalanceMode;
+            set
+            {
+                m_WhiteBalanceMode = value;
+                NativeApi.UnityARKit_Camera_SetWhiteBalanceMode(m_Self, value);
+            }
+        }
+
+        /// <summary>
+        /// Get or set the requested focus mode for the camera.
+        /// </summary>
+        /// <seealso cref="currentFocusMode"/>
+        public ARKitFocusMode requestedFocusMode
+        {
+            get => m_FocusMode;
+            set
+            {
+                m_FocusMode = value;
+                NativeApi.UnityARKit_Camera_SetFocusMode(m_Self, value);
+            }
+        }
+
+        /// <summary>
         /// Get the supported exposure range of the camera.
         /// </summary>
         public ARKitExposureRange exposureRange
@@ -49,6 +106,30 @@ namespace UnityEngine.XR.ARKit
             get
             {
                 NativeApi.UnityARKit_Camera_GetExposureRange(m_Self, out var range);
+                return range;
+            }
+        }
+
+        /// <summary>
+        /// Get the supported white balance gain values.
+        /// </summary>
+        public ARKitWhiteBalanceRange whiteBalanceRange
+        {
+            get
+            {
+                NativeApi.UnityARKit_Camera_GetWhiteBalanceRange(m_Self, out var range);
+                return range;
+            }
+        }
+
+        /// <summary>
+        /// Get the supported focus range of the camera.
+        /// </summary>
+        public ARKitFocusRange focusRange
+        {
+            get
+            {
+                NativeApi.UnityARKit_Camera_GetFocusRange(m_Self, out var range);
                 return range;
             }
         }
@@ -67,10 +148,40 @@ namespace UnityEngine.XR.ARKit
             set => NativeApi.UnityARKit_Camera_TrySetExposure(m_Self, value.duration, value.iso);
         }
 
+        /// <summary>
+        /// Get or set the current white balance of the camera.
+        /// </summary>
+        public ARKitWhiteBalanceGains whiteBalance
+        {
+            get
+            {
+                NativeApi.UnityARKit_Camera_GetWhiteBalance(m_Self, out var blue, out var green, out var red);
+                return new ARKitWhiteBalanceGains(blue, green, red);
+            }
+
+            set => NativeApi.UnityARKit_Camera_TrySetWhiteBalance(m_Self, value.blue, value.green, value.red);
+        }
+
+        /// <summary>
+        /// Get or set the current focus of the camera.
+        /// </summary>
+        public ARKitFocus focus
+        {
+            get
+            {
+                NativeApi.UnityARKit_Camera_GetFocus(m_Self, out var lensPosition);
+                return new ARKitFocus(lensPosition);
+            }
+
+            set => NativeApi.UnityARKit_Camera_TrySetFocus(m_Self, value.lensPosition);
+        }
+
         ARKitLockedCamera(IntPtr value)
         {
             m_Self = value;
             m_ExposureMode = ARKitExposureMode.Auto;
+            m_WhiteBalanceMode = ARKitWhiteBalanceMode.Auto;
+            m_FocusMode = ARKitFocusMode.Auto;
         }
 
         /// <summary>
@@ -242,13 +353,52 @@ namespace UnityEngine.XR.ARKit
             public static extern ARKitExposureMode UnityARKit_Camera_GetExposureMode(IntPtr cameraDevice);
 
             [DllImport("__Internal")]
+            public static extern ARKitExposureMode UnityARKit_Camera_GetSupportedExposureModes(IntPtr cameraDevice);
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_Camera_SetWhiteBalanceMode(IntPtr cameraDevice, ARKitWhiteBalanceMode whiteBalanceMode);
+
+            [DllImport("__Internal")]
+            public static extern ARKitWhiteBalanceMode UnityARKit_Camera_GetWhiteBalanceMode(IntPtr cameraDevice);
+
+            [DllImport("__Internal")]
+            public static extern ARKitWhiteBalanceMode UnityARKit_Camera_GetSupportedWhiteBalanceModes(IntPtr cameraDevice);
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_Camera_SetFocusMode(IntPtr cameraDevice, ARKitFocusMode exposureMode);
+
+            [DllImport("__Internal")]
+            public static extern ARKitFocusMode UnityARKit_Camera_GetFocusMode(IntPtr cameraDevice);
+
+            [DllImport("__Internal")]
+            public static extern ARKitFocusMode UnityARKit_Camera_GetSupportedFocusModes(IntPtr cameraDevice);
+
+            [DllImport("__Internal")]
             public static extern void UnityARKit_Camera_GetExposureRange(IntPtr cameraDevice, out ARKitExposureRange exposureRange);
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_Camera_GetWhiteBalanceRange(IntPtr cameraDevice, out ARKitWhiteBalanceRange whiteBalanceRange);
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_Camera_GetFocusRange(IntPtr cameraDevice, out ARKitFocusRange focusRange);
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_Camera_TrySetExposure(IntPtr cameraDevice, double duration, float iso);
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_Camera_GetExposure(IntPtr cameraDevice, out double duration, out float iso);
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_Camera_TrySetWhiteBalance(IntPtr cameraDevice, float blue, float green, float red);
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_Camera_GetWhiteBalance(IntPtr cameraDevice, out float blue, out float green, out float red);
+
+            [DllImport("__Internal")]
+            public static extern bool UnityARKit_Camera_TrySetFocus(IntPtr cameraDevice, float lensPosition);
+
+            [DllImport("__Internal")]
+            public static extern void UnityARKit_Camera_GetFocus(IntPtr cameraDevice, out float lensPosition);
 #else
             public static void UnityARKit_Camera_ReleaseCameraLock(IntPtr cameraDevice)
                 => throw new System.NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
@@ -258,12 +408,44 @@ namespace UnityEngine.XR.ARKit
 
             public static ARKitExposureMode UnityARKit_Camera_GetExposureMode(IntPtr cameraDevice) => ARKitExposureMode.None;
 
+            public static ARKitExposureMode UnityARKit_Camera_GetSupportedExposureModes(IntPtr cameraDevice) => ARKitExposureMode.None;
+
+            public static void UnityARKit_Camera_SetWhiteBalanceMode(IntPtr cameraDevice, ARKitWhiteBalanceMode whiteBalanceMode)
+                => throw new System.NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
+
+            public static ARKitWhiteBalanceMode UnityARKit_Camera_GetWhiteBalanceMode(IntPtr cameraDevice) => ARKitWhiteBalanceMode.None;
+
+            public static ARKitWhiteBalanceMode UnityARKit_Camera_GetSupportedWhiteBalanceModes(IntPtr cameraDevice) => ARKitWhiteBalanceMode.None;
+
+            public static void UnityARKit_Camera_SetFocusMode(IntPtr cameraDevice, ARKitFocusMode exposureMode)
+                => throw new System.NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
+
+            public static ARKitFocusMode UnityARKit_Camera_GetFocusMode(IntPtr cameraDevice) => ARKitFocusMode.None;
+
+            public static ARKitFocusMode UnityARKit_Camera_GetSupportedFocusModes(IntPtr cameraDevice) => ARKitFocusMode.None;
+
             public static void UnityARKit_Camera_GetExposureRange(IntPtr cameraDevice, out ARKitExposureRange exposureRange)
+                => throw new System.NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
+
+            public static void UnityARKit_Camera_GetWhiteBalanceRange(IntPtr cameraDevice, out ARKitWhiteBalanceRange whiteBalanceRange)
+                => throw new System.NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
+
+            public static void UnityARKit_Camera_GetFocusRange(IntPtr cameraDevice, out ARKitFocusRange focusRange)
                 => throw new System.NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
 
             public static bool UnityARKit_Camera_TrySetExposure(IntPtr cameraDevice, double duration, float iso) => false;
 
             public static void UnityARKit_Camera_GetExposure(IntPtr cameraDevice, out double duration, out float iso)
+                => throw new System.NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
+
+            public static bool UnityARKit_Camera_TrySetWhiteBalance(IntPtr cameraDevice, float blue, float green, float red) => false;
+
+            public static void UnityARKit_Camera_GetWhiteBalance(IntPtr cameraDevice, out float blue, out float green, out float red)
+                => throw new System.NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
+
+            public static bool UnityARKit_Camera_TrySetFocus(IntPtr cameraDevice, float lensPosition) => false;
+
+            public static void UnityARKit_Camera_GetFocus(IntPtr cameraDevice, out float lensPosition)
                 => throw new System.NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
 #endif
         }
