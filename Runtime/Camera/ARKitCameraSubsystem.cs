@@ -635,6 +635,7 @@ namespace UnityEngine.XR.ARKit
                 supportsWorldTrackingAmbientIntensityLightEstimation = true,
                 supportsWorldTrackingHDRLightEstimation = false,
                 supportsCameraGrain = Api.AtLeast13_0(),
+                supportsExifData = Api.AtLeast16_0(),
             };
 
             if (!XRCameraSubsystem.Register(cameraSubsystemCinfo))

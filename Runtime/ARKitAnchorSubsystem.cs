@@ -55,11 +55,11 @@ namespace UnityEngine.XR.ARKit
             }
 
             public override bool TryAttachAnchor(
-                TrackableId trackableToAffix,
+                TrackableId attachedToId,
                 Pose pose,
                 out XRAnchor anchor)
             {
-                return UnityARKit_refPoints_tryAttach(trackableToAffix, pose, out anchor);
+                return UnityARKit_refPoints_tryAttach(attachedToId, pose, out anchor);
             }
 
             public override bool TryRemoveAnchor(TrackableId anchorId)

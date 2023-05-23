@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "Apple ARKit XR Plugin",
-  "version": "5.1.0-pre.4",
+  "version": "5.1.0-pre.6",
   "unity": "2021.2",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion\n\n* Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.",
   "keywords": [
@@ -13,20 +13,20 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arfoundation": "5.1.0-pre.4",
+    "com.unity.xr.arfoundation": "5.1.0-pre.6",
     "com.unity.xr.core-utils": "2.1.0",
     "com.unity.xr.management": "4.0.1"
   },
   "_upm": {
-    "changelog": "### Added\n\n- Added support for additional [Advanced camera hardware configuration](xref:arkit-camera#advanced-camera-hardware-configuration) on iOS 16 or newer:\n  - Set [white balance](https://docs.unity3d.com/Packages/com.unity.xr.arkit@5.1/manual/arkit-camera.html#white-balance) mode and gains on the camera device\n  - Set [focus](https://docs.unity3d.com/Packages/com.unity.xr.arkit@5.1/manual/arkit-camera.html#focus) mode and lens position on the camera device\n  - `ARKitLockedCamera.supportedExposureModes` to query supported exposure modes on a device\n\n### Changed\n\n- Static libraries were rebuilt with Xcode Version 14.2 (14C18)."
+    "changelog": "### Added\n\n- Added support for camera frame [EXIF](xref:arkit-camera#exif) data introduced in ARKit 6 (available on iOS 16 or newer).\n\n### Changed\n\n- Static libraries were rebuilt with Xcode Version 14.3 (14E222b)."
   },
   "upmCi": {
-    "footprint": "43ed78a93b842519273731714d6b6f3b9d4a7d66"
+    "footprint": "8c615c2d0052e8f49ca07908d0e7560b26a81639"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@5.1/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "95e9680ca1314ca58b5df9a9b3bdbf19eedeacdb"
+    "revision": "9925313cbe381f68184f63d7deff386be33ecf59"
   }
 }

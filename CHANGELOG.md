@@ -8,6 +8,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.1.0-pre.6] - 2023-05-23
+
+### Added
+
+- Added support for camera frame [EXIF](xref:arkit-camera#exif) data introduced in ARKit 6 (available on iOS 16 or newer).
+
+### Changed
+
+- Static libraries were rebuilt with Xcode Version 14.3 (14E222b).
+
 ## [5.1.0-pre.4] - 2023-04-11
 
 ### Added

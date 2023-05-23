@@ -27,56 +27,24 @@ To configure the camera's advanced hardware properties, you must first lock the 
 
 The following code samples demonstrate how to configure advanced camera hardware properties:
 
+### Check Support
+The following example method checks whether the ARKitCameraSubsystem is available and whether it supports the advanced camera configuration feature. This method is used by the other code examples on this page.
+
+[!code-cs[CameraExposure](../Tests/CodeSamples/ARKitCameraSubsystemTests.cs#AdvancedConfigurationSupport)]
+
 ### Exposure
-
-```C#
-var cameraManager = GetComponent<ARCameraManager>();
-var subsystem = cameraManager.subsystem as ARKitCameraSubsystem;
-
-if (!subsystem.TryGetLockedCamera(out var lockedCamera))
-    return;
-
-using (lockedCamera)
-{
-    var duration = 0.1f;
-    var iso = 500f;
-    lockedCamera.exposure = new ARKitExposure(duration, iso);
-}
-```
+The following example method tries to lock the camera and, if successful, sets the exposure.
+[!code-cs[CameraExposure](../Tests/CodeSamples/ARKitCameraSubsystemTests.cs#CameraExposure)]
 
 ### White Balance
+The following example method tries to lock the camera and, if successful, sets the white balance.
 
-```C#
-var cameraManager = GetComponent<ARCameraManager>();
-var subsystem = cameraManager.subsystem as ARKitCameraSubsystem;
-
-if (subsystem == null || !subsystem.TryGetLockedCamera(out var lockedCamera))
-    return;
-
-using (lockedCamera)
-{
-    float blueGain = 2.0f;
-    float greenGain = 1.0f;
-    float redGain = 1.5f;
-    lockedCamera.whiteBalance = new ARKitWhiteBalanceGains(blueGain, greenGain, redGain);
-}
-```
+[!code-cs[CameraWhiteBalance](../Tests/CodeSamples/ARKitCameraSubsystemTests.cs#CameraWhiteBalance)]
 
 ### Focus
+The following example method tries to lock the camera and, if successful, sets the focus.
+[!code-cs[CameraFocus](../Tests/CodeSamples/ARKitCameraSubsystemTests.cs#CameraFocus)]
 
-```C#
-var cameraManager = GetComponent<ARCameraManager>();
-var subsystem = cameraManager.subsystem as ARKitCameraSubsystem;
-
-if (subsystem == null || !subsystem.TryGetLockedCamera(out var lockedCamera))
-    return;
-
-using (lockedCamera)
-{
-    float lensPosition = 2.0f;
-    lockedCamera.focus = new ARKitFocus(lensPosition);
-}
-```
 
 ## High resolution CPU image
 
@@ -95,5 +63,11 @@ For a complete usage example, see the [AR Foundation Samples](https://github.com
 The exact resolution of the high resolution CPU image you receive depends on your camera manager's [currentConfiguration](xref:UnityEngine.XR.ARFoundation.ARCameraManager.currentConfiguration). For the highest resolution capture, choose a configuration with a non-binned video format such as 4K resolution (3840x2160).
 
 For more information on binned vs non-binned video formats, see Apple's [Discover ARKit 6](https://developer.apple.com/videos/play/wwdc2022/10126/) video, which explains the ARKit camera architecture in greater detail.
+
+## EXIF data
+
+You are able to access camera frame's [EXIF data](xref:arfoundation-exif-data) on devices running iOS 16 or newer.
+
+For more information, refer to the [EXIF specification](https://web.archive.org/web/20190624045241if_/http://www.cipa.jp:80/std/documents/e/DC-008-Translation-2019-E.pdf).
 
 [!include[](snippets/apple-arkit-trademark.md)]

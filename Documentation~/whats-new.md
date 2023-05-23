@@ -68,6 +68,10 @@ public class CameraConfigurator : MonoBehaviour
 
 You are able to asynchronously request a [High resolution CPU image](xref:arkit-camera#high-resolution-cpu-image) capture on iOS 16 or newer. This API natively calls the [captureHighResolutionFrameWithCompletion](https://developer.apple.com/documentation/arkit/arsession/3975720-capturehighresolutionframewithco) API introduced in ARKit 6.
 
+### EXIF data
+
+You are able to access camera frame's [EXIF data](xref:arkit-camera#exif-data) on devices running iOS 16 or newer. This API natively accesses ARKit's [exifData](https://developer.apple.com/documentation/arkit/arframe/3930051-exifdata) and returns a [blittable](https://learn.microsoft.com/en-us/dotnet/framework/interop/blittable-and-non-blittable-types) subset of available data.
+
 ### New 2D skeleton joints
 
 You are able to access the new ear joints introduced to the 2D skeleton using the pre-existing AR Foundation APIs. See the [HumanBodyTracking2D](https://github.com/Unity-Technologies/arfoundation-samples#humanbodytracking2d) sample scene for example code and scene setup.
