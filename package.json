@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "Apple ARKit XR Plugin",
-  "version": "5.1.0-pre.10",
+  "version": "5.1.0",
   "unity": "2021.2",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion\n\n* Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.",
   "keywords": [
@@ -13,20 +13,20 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arfoundation": "5.1.0-pre.10",
+    "com.unity.xr.arfoundation": "5.1.0",
     "com.unity.xr.core-utils": "2.1.0",
     "com.unity.xr.management": "4.0.1"
   },
   "_upm": {
-    "changelog": "No changes"
+    "changelog": "### Changed\n\n- Updated AR Foundation dependency to version 5.1.0.\n\n### Fixed\n\n- Fixed issue [ARKB-1](https://issuetracker.unity3d.com/issues/mutableruntimereferenceimagelibrary-dot-scheduleaddimagewithvalidationjob-intermittently-does-not-set-the-reference-image-name) where adding duplicate images to the [ARTrackedImageManager.referenceLibrary](xref:UnityEngine.XR.ARFoundation.ARTrackedImageManager.referenceLibrary) would cause `ARTrackedImage`'s reference image data to be empty when `ARTrackedImageManager.trackedImagesChanged` is invoked."
   },
   "upmCi": {
-    "footprint": "c4079a407cb49e19959cdf387056beb3e4c3e604"
+    "footprint": "d9b3d7b91be516872210adf7b722682ec77648ae"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@5.1/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "2c5f82238dac5958c754a564acedfd17c524156e"
+    "revision": "73f49e36b422f20856c71e3466ba7331add35064"
   }
 }

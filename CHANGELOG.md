@@ -8,6 +8,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.1.0] - 2023-08-30
+
+### Changed
+
+- Updated AR Foundation dependency to version 5.1.0.
+
+### Fixed
+
+- Fixed issue [ARKB-1](https://issuetracker.unity3d.com/issues/mutableruntimereferenceimagelibrary-dot-scheduleaddimagewithvalidationjob-intermittently-does-not-set-the-reference-image-name) where adding duplicate images to the [ARTrackedImageManager.referenceLibrary](xref:UnityEngine.XR.ARFoundation.ARTrackedImageManager.referenceLibrary) would cause `ARTrackedImage`'s reference image data to be empty when `ARTrackedImageManager.trackedImagesChanged` is invoked.
+
 ## [5.1.0-pre.10] - 2023-07-21
 
 No changes
