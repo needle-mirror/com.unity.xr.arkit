@@ -8,6 +8,28 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.0-pre.3] - 2023-09-11
+
+### Deprecated
+
+- Several subsystems have been deprecated and renamed for consistency with other subsystems. Unity's API Updater should automatically convert any deprecated APIs references to the new APIs when the project is loaded into the Editor again.
+  - `ARKitXRObjectTrackingSubsystem` has been renamed to `ARKitObjectTrackingSubsystem`.
+  - `ARKitXRPlaneSubsystem` has been renamed to `ARKitPlaneSubsystem`.
+  - `ARKitXRPointCloudSubsystem` has been renamed to `ARKitPointCloudSubsystem`.
+
+### Removed
+
+- Removed the `Description` attribute from `ARMeshClassification` enum as the attribute was unused.
+- Removed the following deprecated APIs:
+  - `ARKitErrorCode.CollaborationDataUnavailable` enum value
+  - `ARKitSessionSubsystem.coachingGoal` property
+  - `ARKitSettingsProvider` class
+  - `NSError.isNull` property
+
+### Fixed
+
+- Fixed issue [ARKB-1](https://issuetracker.unity3d.com/issues/mutableruntimereferenceimagelibrary-dot-scheduleaddimagewithvalidationjob-intermittently-does-not-set-the-reference-image-name) where adding duplicate images to the [ARTrackedImageManager.referenceLibrary](xref:UnityEngine.XR.ARFoundation.ARTrackedImageManager.referenceLibrary) would cause `ARTrackedImage`'s reference image data to be empty when `ARTrackedImageManager.trackedImagesChanged` is invoked.
+
 ## [5.1.0-pre.10] - 2023-07-21
 
 No changes
@@ -24,7 +46,7 @@ No changes
 
 ### Added
 
-- Added support for camera frame [EXIF](xref:arkit-camera#exif) data introduced in ARKit 6 (available on iOS 16 or newer).
+- Added support for camera frame [EXIF](xref:arkit-camera#exif-data) data introduced in ARKit 6 (available on iOS 16 or newer).
 
 ### Changed
 

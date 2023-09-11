@@ -163,7 +163,7 @@ namespace UnityEngine.XR.ARKit
             if (!Api.AtLeast11_3())
                 return;
 
-            XRImageTrackingSubsystemDescriptor.Create(new XRImageTrackingSubsystemDescriptor.Cinfo
+            XRImageTrackingSubsystemDescriptor.Register(new XRImageTrackingSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-ImageTracking",
                 providerType = typeof(ARKitImageTrackingSubsystem.ARKitProvider),

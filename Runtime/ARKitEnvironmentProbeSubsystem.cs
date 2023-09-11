@@ -22,7 +22,7 @@ namespace UnityEngine.XR.ARKit
                 return;
 
             const string subsystemId = "ARKit-EnvironmentProbe";
-            XREnvironmentProbeSubsystemCinfo environmentProbeSubsystemInfo = new XREnvironmentProbeSubsystemCinfo()
+            var environmentProbeSubsystemInfo = new XREnvironmentProbeSubsystemDescriptor.Cinfo()
             {
                 id = subsystemId,
                 providerType = typeof(ARKitEnvironmentProbeSubsystem.ARKitProvider),
@@ -35,7 +35,7 @@ namespace UnityEngine.XR.ARKit
                 supportsEnvironmentTextureHDR = Api.AtLeast13_0(),
             };
 
-            XREnvironmentProbeSubsystem.Register(environmentProbeSubsystemInfo);
+            XREnvironmentProbeSubsystemDescriptor.Register(environmentProbeSubsystemInfo);
         }
 
         class ARKitProvider : Provider

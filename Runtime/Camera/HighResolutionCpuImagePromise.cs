@@ -20,7 +20,7 @@ namespace UnityEngine.XR.ARKit
         /// <para>This design has a limitation that only one promise instance at a time can await a result; however, the
         /// native ARKit API for high resolution frame capture has the same limitation, so there is no net negative impact.</para>
         /// <para>See ARKit's <see href="https://developer.apple.com/documentation/arkit/arsession/3975720-capturehighresolutionframewithco?language=objc">
-        /// captureHighResolutionFrameWithCompletion</see> documentation for more information.</para> 
+        /// captureHighResolutionFrameWithCompletion</see> documentation for more information.</para>
         /// </remarks>
         static HighResolutionCpuImagePromise s_Instance;
 
@@ -51,12 +51,6 @@ namespace UnityEngine.XR.ARKit
             s_Instance = this;
             ARKitCameraSubsystem.TryAcquireHighResolutionCpuImageNative(s_OnPromiseCompleteFuncPtr, out s_Cinfo);
         }
-
-        /// <summary>
-        /// Unused but required by parent class.
-        /// </summary>
-        protected override void OnKeepWaiting()
-        { }
 
         [MonoPInvokeCallback(typeof(HighResolutionCpuImageCallback))]
         static void OnPromiseComplete(bool wasSuccessful)

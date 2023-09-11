@@ -80,12 +80,6 @@ namespace UnityEngine.XR.ARKit
         InvalidConfiguration = 303,
 
         /// <summary>
-        /// Collaboration data is not available.
-        /// </summary>
-        [Obsolete("Use " + nameof(InvalidCollaborationData) + " instead. (2020-10-15)")]
-        CollaborationDataUnavailable = 304,
-
-        /// <summary>
         /// Invalid collaboration data.
         /// </summary>
         InvalidCollaborationData = 304,

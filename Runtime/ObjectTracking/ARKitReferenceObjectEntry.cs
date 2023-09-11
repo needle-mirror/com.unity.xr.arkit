@@ -81,7 +81,7 @@ namespace UnityEngine.XR.ARKit
             if (loader == null)
                 return;
 
-            if (loader.GetLoadedSubsystem<XRObjectTrackingSubsystem>() is ARKitXRObjectTrackingSubsystem subsystem)
+            if (loader.GetLoadedSubsystem<XRObjectTrackingSubsystem>() is ARKitObjectTrackingSubsystem subsystem)
             {
                 subsystem.AddReferenceObject(library, GetARKitReferenceObject(xrReferenceObject));
             }

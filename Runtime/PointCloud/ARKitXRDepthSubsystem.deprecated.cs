@@ -12,8 +12,7 @@ namespace UnityEngine.XR.ARKit
     /// <summary>
     /// The ARKit implementation of the <c>XRDepthSubsystem</c>. Do not create this directly. Use the <c>SubsystemManager</c> instead.
     /// </summary>
-    [Preserve]
-    [Obsolete("ARKitXRDepthSubsystem has been deprecated. Use ARKitXRPointCloudSubsystem instead (UnityUpgradable) -> UnityEngine.XR.ARKit.ARKitXRPointCloudSubsystem", true)]
+    [Obsolete("ARKitXRDepthSubsystem has been deprecated. Use ARKitPointCloudSubsystem instead (UnityUpgradable) -> UnityEngine.XR.ARKit.ARKitPointCloudSubsystem", true)]
     public sealed class ARKitXRDepthSubsystem : XRDepthSubsystem
     {
         class ARKitProvider : Provider
@@ -174,28 +173,6 @@ namespace UnityEngine.XR.ARKit
                      positionsIn[index].y,
                     -positionsIn[index].z);
             }
-        }
-
-        //this method is run on startup of the app to register this provider with XR Subsystem Manager
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void RegisterDescriptor()
-        {
-            if (!Api.AtLeast11_0())
-                return;
-
-#if UNITY_IOS && !UNITY_EDITOR
-            var descriptorParams = new XRDepthSubsystemDescriptor.Cinfo
-            {
-                id = "ARKit-Depth",
-                providerType = typeof(ARKitXRDepthSubsystem.ARKitProvider),
-                subsystemTypeOverride = typeof(ARKitXRDepthSubsystem),
-                supportsFeaturePoints = true,
-                supportsConfidence = false,
-                supportsUniqueIds = true
-            };
-
-            XRDepthSubsystemDescriptor.RegisterDescriptor(descriptorParams);
-#endif
         }
     }
 }

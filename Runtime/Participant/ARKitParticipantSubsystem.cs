@@ -83,9 +83,13 @@ namespace UnityEngine.XR.ARKit
             if (!Api.AtLeast13_0())
                 return;
 
-            XRParticipantSubsystemDescriptor.Register<ARKitParticipantSubsystem.ARKitProvider, ARKitParticipantSubsystem>(
-                "ARKit-Participant",
-                XRParticipantSubsystemDescriptor.Capabilities.None);
+            XRParticipantSubsystemDescriptor.Register(
+                new XRParticipantSubsystemDescriptor.Cinfo()
+                {
+                    id = "ARKit-Participant",
+                    providerType = typeof(ARKitParticipantSubsystem.ARKitProvider),
+                    subsystemTypeOverride = typeof(ARKitParticipantSubsystem)
+                });
         }
     }
 }

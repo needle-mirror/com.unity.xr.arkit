@@ -397,7 +397,7 @@ namespace UnityEngine.XR.ARKit
 
             UnityARKit_FaceProvider_OnRegisterDescriptor();
 
-            var descriptorParams = new FaceSubsystemParams
+            var descriptorParams = new XRFaceSubsystemDescriptor.Cinfo
             {
                 supportsFacePose = true,
                 supportsFaceMeshVerticesAndIndices = true,
@@ -408,7 +408,7 @@ namespace UnityEngine.XR.ARKit
                 subsystemTypeOverride = typeof(ARKitFaceSubsystem)
             };
 
-            XRFaceSubsystemDescriptor.Create(descriptorParams);
+            XRFaceSubsystemDescriptor.Register(descriptorParams);
         }
     }
 }

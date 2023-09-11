@@ -166,10 +166,11 @@ namespace UnityEngine.XR.ARKit
                 id = "ARKit-Anchor",
                 providerType = typeof(ARKitAnchorSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitAnchorSubsystem),
-                supportsTrackableAttachments = true
+                supportsTrackableAttachments = true,
+                supportsSynchronousAdd = true,
             };
 
-            XRAnchorSubsystemDescriptor.Create(cinfo);
+            XRAnchorSubsystemDescriptor.Register(cinfo);
 #endif
         }
     }

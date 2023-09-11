@@ -38,17 +38,6 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Defines the [Coaching Goal](https://developer.apple.com/documentation/arkit/arcoachingoverlayview/3192180-goal).
-        /// This property is obsolete. Use <see cref="requestedCoachingGoal"/> or <see cref="currentCoachingGoal"/> instead.
-        /// </summary>
-        [Obsolete("Use requestedCoachingGoal or currentCoachingGoal instead. (2020-01-17)")]
-        public ARCoachingGoal coachingGoal
-        {
-            get => currentCoachingGoal;
-            set => requestedCoachingGoal = value;
-        }
-
-        /// <summary>
         /// Requests the [Coaching Goal](https://developer.apple.com/documentation/arkit/arcoachingoverlayview/3192180-goal).
         /// This should be based on your app's tracking requirements and affects the UI that the coaching overlay presents.
         /// </summary>
@@ -403,7 +392,7 @@ namespace UnityEngine.XR.ARKit
 
             Api.EnsureRootViewIsSetup();
 
-            XRSessionSubsystemDescriptor.RegisterDescriptor(new XRSessionSubsystemDescriptor.Cinfo
+            XRSessionSubsystemDescriptor.Register(new XRSessionSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Session",
                 providerType = typeof(ARKitSessionSubsystem.ARKitProvider),

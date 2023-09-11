@@ -16,13 +16,6 @@ namespace UnityEngine.XR.ARKit
         IntPtr m_Self;
 
         /// <summary>
-        /// (Read Only) Whether the underlying native pointer is `null`. This property is deprecated. Compare
-        /// an <see cref="NSError"/> with `null` instead.
-        /// </summary>
-        [Obsolete("Compare with null instead, e.g., error == null. (2021-02-03)")]
-        public bool isNull => m_Self == IntPtr.Zero;
-
-        /// <summary>
         /// Gets the underlying Objective-C pointer.
         /// </summary>
         /// <returns>Returns the underlying Objective-C pointer.</returns>

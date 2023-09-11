@@ -615,7 +615,7 @@ namespace UnityEngine.XR.ARKit
             if (!Api.AtLeast11_0())
                 return;
 
-            var cameraSubsystemCinfo = new XRCameraSubsystemCinfo
+            var cameraSubsystemCinfo = new XRCameraSubsystemDescriptor.Cinfo
             {
                 id = k_SubsystemId,
                 providerType = typeof(ARKitProvider),
@@ -638,10 +638,7 @@ namespace UnityEngine.XR.ARKit
                 supportsExifData = Api.AtLeast16_0(),
             };
 
-            if (!XRCameraSubsystem.Register(cameraSubsystemCinfo))
-            {
-                Debug.LogError($"Cannot register the {k_SubsystemId} subsystem");
-            }
+            XRCameraSubsystemDescriptor.Register(cameraSubsystemCinfo);
         }
 
         /// <summary>

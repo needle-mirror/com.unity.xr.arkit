@@ -10,7 +10,7 @@ Use the Apple ARKit XR Plug-in package to enable ARKit support in your [AR Found
 | [Session](xref:arkit-session) | Enable, disable, and configure AR on the target platform. |
 | [Device tracking](xref:arfoundation-device-tracking) | Track the device's position and rotation in physical space. |
 | [Camera](xref:arkit-camera) | Render images from device cameras and perform light estimation. |
-| [Plane detection](xref:arkit-plane-detection) | Detect and track surfaces. |
+| [Plane detection](xref:arkit-plane-detection) | Detect and track flat surfaces. |
 | [Image tracking](xref:arkit-image-tracking) | Detect and track 2D images. |
 | [Object tracking](xref:arkit-object-tracking) | Detect and track 3D objects. |
 | [Face tracking](xref:arkit-face-tracking) | Detect and track human faces. |
@@ -60,10 +60,8 @@ Apple ARKit XR Plug-in package supports project validation. Project validation i
 
 This version of Apple ARKit XR Plug-in is compatible with the following versions of the Unity Editor:
 
-* 2021.2
-* 2021.3
-* 2022.1
-* 2022.2
+* 2023.2
+* 2023.3
 
 You must use Xcode 14 or later when compiling an iOS Player that includes this package.
 

@@ -112,7 +112,7 @@ namespace UnityEngine.XR.ARKit
             if (!Api.AtLeast11_0())
                 return;
 
-            XRRaycastSubsystemDescriptor.RegisterDescriptor(new XRRaycastSubsystemDescriptor.Cinfo
+            XRRaycastSubsystemDescriptor.Register(new XRRaycastSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Raycast",
                 providerType = typeof(ARKitRaycastSubsystem.ARKitProvider),
