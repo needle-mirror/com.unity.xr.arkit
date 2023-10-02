@@ -8,6 +8,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.9] - 2023-10-02
+
+### Changed
+
+- Static Libraries were rebuilt with XCode version 14.3.1 (14E300c).
+- Upgraded AR Subsystems dependency version from 4.2.8 to 4.2.9.
+
+### Fixed
+
+- Fixed issue [ARKB-1](https://issuetracker.unity3d.com/issues/mutableruntimereferenceimagelibrary-dot-scheduleaddimagewithvalidationjob-intermittently-does-not-set-the-reference-image-name) where adding duplicate images to the [ARTrackedImageManager.referenceLibrary](xref:UnityEngine.XR.ARFoundation.ARTrackedImageManager.referenceLibrary) would cause `ARTrackedImage`'s reference image data to be empty when `ARTrackedImageManager.trackedImagesChanged` is invoked.
+- Fixed issue [ARKB-48](https://issuetracker.unity3d.com/issues/ios-scanned-objects-plane-is-detected-incorrectly-when-the-object-is-rotated-and-its-axis-is-not-aligned-with-world-space-and-using-arkit-arplanes) where plane boundaries surfaced from ARKit on iOS 16 or newer could be rotated incorrectly in some cases.
+
 ## [4.2.8] - 2023-05-15
 
 No changes

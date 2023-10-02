@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "ARKit XR Plugin",
-  "version": "4.2.8",
+  "version": "4.2.9",
   "unity": "2020.3",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion",
   "keywords": [
@@ -13,19 +13,19 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arsubsystems": "4.2.8",
+    "com.unity.xr.arsubsystems": "4.2.9",
     "com.unity.xr.management": "4.0.1"
   },
   "_upm": {
-    "changelog": "No changes"
+    "changelog": "### Changed\n\n- Static Libraries were rebuilt with XCode version 14.3.1 (14E300c).\n- Upgraded AR Subsystems dependency version from 4.2.8 to 4.2.9.\n\n### Fixed\n\n- Fixed issue [ARKB-1](https://issuetracker.unity3d.com/issues/mutableruntimereferenceimagelibrary-dot-scheduleaddimagewithvalidationjob-intermittently-does-not-set-the-reference-image-name) where adding duplicate images to the [ARTrackedImageManager.referenceLibrary](xref:UnityEngine.XR.ARFoundation.ARTrackedImageManager.referenceLibrary) would cause `ARTrackedImage`'s reference image data to be empty when `ARTrackedImageManager.trackedImagesChanged` is invoked.\n- Fixed issue [ARKB-48](https://issuetracker.unity3d.com/issues/ios-scanned-objects-plane-is-detected-incorrectly-when-the-object-is-rotated-and-its-axis-is-not-aligned-with-world-space-and-using-arkit-arplanes) where plane boundaries surfaced from ARKit on iOS 16 or newer could be rotated incorrectly in some cases."
   },
   "upmCi": {
-    "footprint": "113669bfdf57911b7c50241b80cee427dca3fbf5"
+    "footprint": "9260f8c5127331997257847eb6bdf899d4474a67"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@4.2/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "5b1ef9f4a949ea59c1da0629c04f20980ed88117"
+    "revision": "02114516022b88bbfb56c3f2a6399bdc86280b94"
   }
 }

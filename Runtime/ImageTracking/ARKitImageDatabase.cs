@@ -46,7 +46,10 @@ namespace UnityEngine.XR.ARKit
             using var groupName = library.GetARResourceGroupName();
             using var referenceImages = ARReferenceImage.GetReferenceImagesInGroupNamed(groupName, bundle);
             if (referenceImages.Count != managedReferenceImages.Length)
-                throw new InvalidOperationException($"The number of images in the {nameof(XRReferenceImageLibrary)} named '{library.name}' ({library.count}) does nat match the number of images in the native reference image data ({referenceImages.Count}). The {nameof(XRReferenceImageLibrary)} may need to be re-exported for iOS.");
+            {
+                throw new InvalidOperationException(
+                    $"The number of images in the {nameof(XRReferenceImageLibrary)} named '{library.name}' ({library.count}) does not match the number of images in the native reference image data ({referenceImages.Count}). The {nameof(XRReferenceImageLibrary)} may need to be re-exported for iOS. Check if the {nameof(XRReferenceImageLibrary)} has any duplicate images.");
+            }
 
             return InitWithImages(referenceImages.AsIntPtr(), managedReferenceImages.AsNativeView());
         }
