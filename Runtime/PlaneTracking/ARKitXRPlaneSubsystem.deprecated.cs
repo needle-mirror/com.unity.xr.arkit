@@ -36,6 +36,7 @@ namespace UnityEngine.XR.ARKit
             {
                 void* plane = NativeApi.UnityARKit_Planes_AcquireBoundary(
                     trackableId,
+                    out Quaternion rotation,
                     out void* verticesPtr,
                     out int numPoints);
 
@@ -45,7 +46,8 @@ namespace UnityEngine.XR.ARKit
                     var transformPositionsHandle = new TransformBoundaryPositionsJob
                     {
                         positionsIn = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector4>(verticesPtr, numPoints, Allocator.None),
-                        positionsOut = boundary
+                        positionsOut = boundary,
+                        inverseYAxisRotation = Quaternion.Inverse(rotation)
                     }.Schedule(numPoints, 1);
 
                     new FlipBoundaryWindingJob
@@ -82,20 +84,28 @@ namespace UnityEngine.XR.ARKit
                 [WriteOnly]
                 public NativeArray<Vector2> positionsOut;
 
+                [ReadOnly]
+                public Quaternion inverseYAxisRotation;
+
                 public void Execute(int index)
                 {
-                    positionsOut[index] = new Vector2(
-                        // https://developer.apple.com/documentation/arkit/arplanegeometry/2941052-boundaryvertices?language=objc
-                        // "The owning plane anchor's transform matrix defines the coordinate system for these points."
-                        // It doesn't explicitly state the y component is zero, but that must be the case if the
-                        // boundary points are in plane-space. Emperically, it has been true for horizontal and vertical planes.
-                        // This IS explicitly true for the extents (see above) and would follow the same logic.
-                        //
-                        // Boundary vertices are in right-handed coordinates and clockwise winding order. To convert
-                        // to left-handed, we flip the Z coordinate, but that also flips the winding, so we have to
-                        // flip the winding back to clockwise by reversing the polygon index (j).
-                         positionsIn[index].x,
-                        -positionsIn[index].z);
+                    var positionIn = positionsIn[index];
+
+                    // https://developer.apple.com/documentation/arkit/arplanegeometry/2941052-boundaryvertices?language=objc
+                    // "The owning plane anchor's transform matrix defines the coordinate system for these points."
+                    // It doesn't explicitly state the y component is zero, but that must be the case if the
+                    // boundary points are in plane-space. Empirically, it has been true for horizontal and vertical planes.
+                    // This IS explicitly true for the extents (see above) and would follow the same logic.
+                    //
+                    // Boundary vertices are in right-handed coordinates and clockwise winding order. To convert
+                    // to left-handed, we flip the Z coordinate, but that also flips the winding, so we have to
+                    // flip the winding back to clockwise by reversing the polygon index (j).
+                    // we also compensate for ARKit rotationOnYAxis, if the build target is iOS 16.0 or greater.
+                    // It's necessary to do this here since we can't work with arkit rotations due to handedness.
+                    // so we flip the signs first then rotate "back" into the correct place.
+                    var position = new Vector3(positionIn.x, 0.0f, -positionIn.z);
+                    position = inverseYAxisRotation * position;
+                    positionsOut[index] = new Vector2(position.x, position.z);
                 }
             }
 
@@ -103,7 +113,7 @@ namespace UnityEngine.XR.ARKit
                 BoundedPlane defaultPlane,
                 Allocator allocator)
             {
-                var context = NativeApi.UnityARKit_Planes_AcquireChanges(
+                void* context = NativeApi.UnityARKit_Planes_AcquireChanges(
                     out void* addedArrayPtr, out int addedLength,
                     out void* updatedArrayPtr, out int updatedLength,
                     out void* removedArrayPtr, out int removedLength,
@@ -171,6 +181,7 @@ namespace UnityEngine.XR.ARKit
             [DllImport("__Internal")]
             internal static extern unsafe void* UnityARKit_Planes_AcquireBoundary(
                 TrackableId trackableId,
+                out Quaternion rotation,
                 out void* verticiesPtr,
                 out int numPoints);
 
@@ -228,6 +239,7 @@ namespace UnityEngine.XR.ARKit
 
             internal static unsafe void* UnityARKit_Planes_AcquireBoundary(
                 TrackableId trackableId,
+                out Quaternion rotation,
                 out void* verticiesPtr,
                 out int numPoints)
             {

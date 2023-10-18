@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Unity.Collections;
 using UnityEngine.Rendering;
 using UnityEngine.Scripting;
@@ -214,6 +215,8 @@ namespace UnityEngine.XR.ARKit
             /// <value>The shader keywords to disable when the Legacy RP is enabled.</value>
             static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new() { k_BackgroundShaderKeywordURP };
 
+            static readonly ShaderKeywords k_BuiltInRPShaderKeywords = new ShaderKeywords(k_LegacyRPEnabledMaterialKeywords?.AsReadOnly(), k_LegacyRPDisabledMaterialKeywords?.AsReadOnly());
+
             /// <summary>
             /// The current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.
             /// </summary>
@@ -239,7 +242,11 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             /// <value>The shader keywords to disable when URP is enabled.</value>
             static readonly List<string> k_URPDisabledMaterialKeywords = null;
+
+            static readonly ShaderKeywords k_URPShaderKeywords = new ShaderKeywords(k_URPEnabledMaterialKeywords?.AsReadOnly(), k_URPDisabledMaterialKeywords?.AsReadOnly());
 #endif // MODULE_URP_ENABLED
+
+            static readonly ShaderKeywords k_EmptyRPShaderKeywords = new ShaderKeywords();
 
             Material m_BeforeOpaqueCameraMaterial;
             Material m_AfterOpaqueCameraMaterial;
@@ -558,7 +565,9 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             /// <param name="enabledKeywords">The keywords to enable for the material.</param>
             /// <param name="disabledKeywords">The keywords to disable for the material.</param>
+#pragma warning disable CS0672 // This internal method intentionally overrides a publicly deprecated method
             public override void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
+#pragma warning restore CS0672
             {
                 if (GraphicsSettings.currentRenderPipeline == null)
                 {
@@ -576,6 +585,24 @@ namespace UnityEngine.XR.ARKit
                 {
                     enabledKeywords = null;
                     disabledKeywords = null;
+                }
+            }
+
+            public override ShaderKeywords GetShaderKeywords()
+            {
+                if (GraphicsSettings.currentRenderPipeline == null)
+                {
+                    return k_BuiltInRPShaderKeywords;
+                }
+#if MODULE_URP_ENABLED
+                else if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
+                {
+                    return k_URPShaderKeywords;
+                }
+#endif // MODULE_URP_ENABLED
+                else
+                {
+                    return k_EmptyRPShaderKeywords;
                 }
             }
 

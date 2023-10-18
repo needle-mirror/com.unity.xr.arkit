@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "Apple ARKit XR Plugin",
-  "version": "6.0.0-pre.3",
+  "version": "6.0.0-pre.4",
   "unity": "2023.2",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion\n\n* Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.",
   "keywords": [
@@ -13,20 +13,20 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arfoundation": "6.0.0-pre.3",
+    "com.unity.xr.arfoundation": "6.0.0-pre.4",
     "com.unity.xr.core-utils": "2.2.2",
     "com.unity.xr.management": "4.4.0"
   },
   "_upm": {
-    "changelog": "### Deprecated\n\n- Several subsystems have been deprecated and renamed for consistency with other subsystems. Unity's API Updater should automatically convert any deprecated APIs references to the new APIs when the project is loaded into the Editor again.\n  - `ARKitXRObjectTrackingSubsystem` has been renamed to `ARKitObjectTrackingSubsystem`.\n  - `ARKitXRPlaneSubsystem` has been renamed to `ARKitPlaneSubsystem`.\n  - `ARKitXRPointCloudSubsystem` has been renamed to `ARKitPointCloudSubsystem`.\n\n### Removed\n\n- Removed the `Description` attribute from `ARMeshClassification` enum as the attribute was unused.\n- Removed the following deprecated APIs:\n  - `ARKitErrorCode.CollaborationDataUnavailable` enum value\n  - `ARKitSessionSubsystem.coachingGoal` property\n  - `ARKitSettingsProvider` class\n  - `NSError.isNull` property\n\n### Fixed\n\n- Fixed issue [ARKB-1](https://issuetracker.unity3d.com/issues/mutableruntimereferenceimagelibrary-dot-scheduleaddimagewithvalidationjob-intermittently-does-not-set-the-reference-image-name) where adding duplicate images to the [ARTrackedImageManager.referenceLibrary](xref:UnityEngine.XR.ARFoundation.ARTrackedImageManager.referenceLibrary) would cause `ARTrackedImage`'s reference image data to be empty when `ARTrackedImageManager.trackedImagesChanged` is invoked."
+    "changelog": "### Added\n\n- Added support for [BoundedPlane.classifications](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.classifications) for [BoundedPlanes](xref:UnityEngine.XR.ARSubsystems.BoundedPlane) provided by the `ARKitPlaneSubsystem`.\n- Added support for `XRCameraSubsystem.GetShaderKeywords` to `ARKitCameraSubsystem` and `ARKitOcclusionSubsystem`.\n\n### Changed\n\n- Static libraries were rebuilt with Xcode Version 14.3.1 (14E300c).\n\n### Deprecated\n\n- Deprecated and replaced the following APIs:\n  - `ARKitCameraSubsystem.GetMaterialKeywords` to `ARKitCameraSubsystem.GetShaderKeywords`\n  - `ARKitOcclusionSubsystem.GetMaterialKeywords` to `ARKitOcclusionSubsystem.GetShaderKeywords`\n\n### Fixed\n\n- Fixed issue [ARKB-49](https://issuetracker.unity3d.com/issues/arkit-files-are-created-in-xcode-project-when-building-an-ios-platform-project-with-arkit-support-disabled) where the static libraries could be unintentionally included in iOS builds when the ARKit provider plug-in was not enabled in XR Plug-in Management."
   },
   "upmCi": {
-    "footprint": "ce0e954d003a7705aa998fb6a3a4310df0d8ab24"
+    "footprint": "a94d1c994154dc8415b41f92fc430c77957cb23e"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@6.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "a042bebcd46c7ff6c9b11fbb803c8def4eea81e3"
+    "revision": "e423e473bfabfe8cbc6c60b3f9a029a6fdfdd144"
   }
 }

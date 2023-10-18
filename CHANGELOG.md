@@ -8,7 +8,32 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.0-pre.4] - 2023-10-18
+
+### Added
+
+- Added support for [BoundedPlane.classifications](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.classifications) for [BoundedPlanes](xref:UnityEngine.XR.ARSubsystems.BoundedPlane) provided by the `ARKitPlaneSubsystem`.
+- Added support for `XRCameraSubsystem.GetShaderKeywords` to `ARKitCameraSubsystem` and `ARKitOcclusionSubsystem`.
+
+### Changed
+
+- Static libraries were rebuilt with Xcode Version 14.3.1 (14E300c).
+
+### Deprecated
+
+- Deprecated and replaced the following APIs:
+  - `ARKitCameraSubsystem.GetMaterialKeywords` to `ARKitCameraSubsystem.GetShaderKeywords`
+  - `ARKitOcclusionSubsystem.GetMaterialKeywords` to `ARKitOcclusionSubsystem.GetShaderKeywords`
+
+### Fixed
+
+- Fixed issue [ARKB-49](https://issuetracker.unity3d.com/issues/arkit-files-are-created-in-xcode-project-when-building-an-ios-platform-project-with-arkit-support-disabled) where the static libraries could be unintentionally included in iOS builds when the ARKit provider plug-in was not enabled in XR Plug-in Management.
+
 ## [6.0.0-pre.3] - 2023-09-11
+
+### Changed
+
+- Static libraries were rebuilt with Xcode Version 14.3.1 (14E300c).
 
 ### Deprecated
 
@@ -29,6 +54,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed issue [ARKB-1](https://issuetracker.unity3d.com/issues/mutableruntimereferenceimagelibrary-dot-scheduleaddimagewithvalidationjob-intermittently-does-not-set-the-reference-image-name) where adding duplicate images to the [ARTrackedImageManager.referenceLibrary](xref:UnityEngine.XR.ARFoundation.ARTrackedImageManager.referenceLibrary) would cause `ARTrackedImage`'s reference image data to be empty when `ARTrackedImageManager.trackedImagesChanged` is invoked.
+- Fixed issue [ARKB-48](https://issuetracker.unity3d.com/issues/ios-scanned-objects-plane-is-detected-incorrectly-when-the-object-is-rotated-and-its-axis-is-not-aligned-with-world-space-and-using-arkit-arplanes) where plane boundaries surfaced from ARKit on iOS 16 or newer could be rotated incorrectly in some cases.
 
 ## [5.1.0-pre.10] - 2023-07-21
 

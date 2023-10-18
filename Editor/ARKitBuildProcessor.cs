@@ -80,8 +80,9 @@ namespace UnityEditor.XR.ARKit
 
             void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
             {
-#if UNITY_IOS && UNITY_XR_ARKIT_LOADER_ENABLED
+                // Sets delegate to return whether or not a plugin should be included in the build
                 SetRuntimePluginCopyDelegate();
+#if UNITY_IOS && UNITY_XR_ARKIT_LOADER_ENABLED
                 PreprocessBuild(report);
 #elif UNITY_XR_ARKIT_LOADER_ENABLED
                 if (report.summary.platform == BuildTarget.iOS)

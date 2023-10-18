@@ -16,11 +16,11 @@ namespace UnityEngine.XR.ARKit
     {
         class ARKitProvider : Provider
         {
-            public override void Start() => UnityARKit_refPoints_onStart();
+            public override void Start() => UnityARKit_anchors_onStart();
 
-            public override void Stop() => UnityARKit_refPoints_onStop();
+            public override void Stop() => UnityARKit_anchors_onStop();
 
-            public override void Destroy() => UnityARKit_refPoints_onDestroy();
+            public override void Destroy() => UnityARKit_anchors_onDestroy();
 
             public override unsafe TrackableChanges<XRAnchor> GetChanges(
                 XRAnchor defaultAnchor,
@@ -28,7 +28,7 @@ namespace UnityEngine.XR.ARKit
             {
                 void* addedPtr, updatedPtr, removedPtr;
                 int addedCount, updatedCount, removedCount, elementSize;
-                var context = UnityARKit_refPoints_acquireChanges(
+                var context = UnityARKit_anchors_acquireChanges(
                     out addedPtr, out addedCount,
                     out updatedPtr, out updatedCount,
                     out removedPtr, out removedCount,
@@ -45,13 +45,13 @@ namespace UnityEngine.XR.ARKit
                 }
                 finally
                 {
-                    UnityARKit_refPoints_releaseChanges(context);
+                    UnityARKit_anchors_releaseChanges(context);
                 }
             }
 
             public override bool TryAddAnchor(Pose pose, out XRAnchor anchor)
             {
-                return UnityARKit_refPoints_tryAdd(pose, out anchor);
+                return UnityARKit_anchors_tryAdd(pose, out anchor);
             }
 
             public override bool TryAttachAnchor(
@@ -59,66 +59,66 @@ namespace UnityEngine.XR.ARKit
                 Pose pose,
                 out XRAnchor anchor)
             {
-                return UnityARKit_refPoints_tryAttach(attachedToId, pose, out anchor);
+                return UnityARKit_anchors_tryAttach(attachedToId, pose, out anchor);
             }
 
             public override bool TryRemoveAnchor(TrackableId anchorId)
             {
-                return UnityARKit_refPoints_tryRemove(anchorId);
+                return UnityARKit_anchors_tryRemove(anchorId);
             }
 
 #if UNITY_IOS && !UNITY_EDITOR
             [DllImport("__Internal")]
-            static extern void UnityARKit_refPoints_onStart();
+            static extern void UnityARKit_anchors_onStart();
 
             [DllImport("__Internal")]
-            static extern void UnityARKit_refPoints_onStop();
+            static extern void UnityARKit_anchors_onStop();
 
             [DllImport("__Internal")]
-            static extern unsafe void UnityARKit_refPoints_onDestroy();
+            static extern unsafe void UnityARKit_anchors_onDestroy();
 
             [DllImport("__Internal")]
-            static extern unsafe void* UnityARKit_refPoints_acquireChanges(
+            static extern unsafe void* UnityARKit_anchors_acquireChanges(
                 out void* addedPtr, out int addedCount,
                 out void* updatedPtr, out int updatedCount,
                 out void* removedPtr, out int removedCount,
                 out int elementSize);
 
             [DllImport("__Internal")]
-            static extern unsafe void UnityARKit_refPoints_releaseChanges(void* changes);
+            static extern unsafe void UnityARKit_anchors_releaseChanges(void* changes);
 
             [DllImport("__Internal")]
-            static extern bool UnityARKit_refPoints_tryAdd(
+            static extern bool UnityARKit_anchors_tryAdd(
                 Pose pose,
                 out XRAnchor anchor);
 
             [DllImport("__Internal")]
-            static extern bool UnityARKit_refPoints_tryAttach(
+            static extern bool UnityARKit_anchors_tryAttach(
                 TrackableId trackableToAffix,
                 Pose pose,
                 out XRAnchor anchor);
 
             [DllImport("__Internal")]
-            static extern bool UnityARKit_refPoints_tryRemove(TrackableId anchorId);
+            static extern bool UnityARKit_anchors_tryRemove(TrackableId anchorId);
 #else
             static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
-            static void UnityARKit_refPoints_onStart()
+            static void UnityARKit_anchors_onStart()
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static void UnityARKit_refPoints_onStop()
+            static void UnityARKit_anchors_onStop()
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static unsafe void UnityARKit_refPoints_onDestroy()
+            static unsafe void UnityARKit_anchors_onDestroy()
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static unsafe void* UnityARKit_refPoints_acquireChanges(
+            static unsafe void* UnityARKit_anchors_acquireChanges(
                 out void* addedPtr, out int addedCount,
                 out void* updatedPtr, out int updatedCount,
                 out void* removedPtr, out int removedCount,
@@ -127,19 +127,19 @@ namespace UnityEngine.XR.ARKit
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static unsafe void UnityARKit_refPoints_releaseChanges(void* changes)
+            static unsafe void UnityARKit_anchors_releaseChanges(void* changes)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static bool UnityARKit_refPoints_tryAdd(
+            static bool UnityARKit_anchors_tryAdd(
                 Pose pose,
                 out XRAnchor anchor)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static bool UnityARKit_refPoints_tryAttach(
+            static bool UnityARKit_anchors_tryAttach(
                 TrackableId trackableToAffix,
                 Pose pose,
                 out XRAnchor anchor)
@@ -147,7 +147,7 @@ namespace UnityEngine.XR.ARKit
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static bool UnityARKit_refPoints_tryRemove(TrackableId anchorId)
+            static bool UnityARKit_anchors_tryRemove(TrackableId anchorId)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }

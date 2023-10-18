@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using UnityEngine.Scripting;
@@ -130,7 +131,7 @@ namespace UnityEngine.XR.ARKit
             /// <value>
             /// The shader keywords for enabling human segmentation rendering.
             /// </value>
-            static readonly List<string> m_HumanEnabledMaterialKeywords = new List<string>() {k_HumanEnabledMaterialKeyword};
+            static readonly List<string> k_HumanEnabledMaterialKeywords = new List<string>() {k_HumanEnabledMaterialKeyword};
 
             /// <summary>
             /// The shader keywords for enabling environment depth rendering.
@@ -138,7 +139,7 @@ namespace UnityEngine.XR.ARKit
             /// <value>
             /// The shader keywords for enabling environment depth rendering.
             /// </value>
-            static readonly List<string> m_EnvironmentDepthEnabledMaterialKeywords = new List<string>() {k_EnvironmentDepthEnabledMaterialKeyword};
+            static readonly List<string> k_EnvironmentDepthEnabledMaterialKeywords = new List<string>() {k_EnvironmentDepthEnabledMaterialKeyword};
 
             /// <summary>
             /// The shader keywords for enabling environment depth rendering.
@@ -146,7 +147,13 @@ namespace UnityEngine.XR.ARKit
             /// <value>
             /// The shader keywords for enabling environment depth rendering.
             /// </value>
-            static readonly List<string> m_AllDisabledMaterialKeywords = new List<string>() {k_HumanEnabledMaterialKeyword, k_EnvironmentDepthEnabledMaterialKeyword};
+            static readonly List<string> k_AllDisabledMaterialKeywords = new List<string>() {k_HumanEnabledMaterialKeyword, k_EnvironmentDepthEnabledMaterialKeyword};
+
+            static readonly ShaderKeywords k_DepthDisabledShaderKeywords = new ShaderKeywords(null, k_AllDisabledMaterialKeywords?.AsReadOnly()) ;
+
+            static readonly ShaderKeywords k_EnvDepthEnabledShaderKeywords = new ShaderKeywords(k_EnvironmentDepthEnabledMaterialKeywords?.AsReadOnly(), k_HumanEnabledMaterialKeywords?.AsReadOnly());
+
+            static readonly ShaderKeywords k_HumanDepthEnabledShaderKeywords = new ShaderKeywords(k_HumanEnabledMaterialKeywords?.AsReadOnly(), k_EnvironmentDepthEnabledMaterialKeywords?.AsReadOnly());
 
             /// <summary>
             /// The occlusion preference mode for when rendering the background.
@@ -417,7 +424,9 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             /// <param name="enabledKeywords">The keywords to enable for the material.</param>
             /// <param name="disabledKeywords">The keywords to disable for the material.</param>
+#pragma warning disable CS0672 // This internal method intentionally overrides a publicly deprecated method
             public override void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
+#pragma warning restore CS0672
             {
                 bool isEnvDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsEnvironmentEnabled();
                 bool isHumanDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsHumanEnabled();
@@ -426,21 +435,49 @@ namespace UnityEngine.XR.ARKit
                 if ((m_OcclusionPreferenceMode == OcclusionPreferenceMode.NoOcclusion) || (!isEnvDepthEnabled && !isHumanDepthEnabled))
                 {
                     enabledKeywords = null;
-                    disabledKeywords = m_AllDisabledMaterialKeywords;
+                    disabledKeywords = k_AllDisabledMaterialKeywords;
                 }
                 // Else if environment depth is enabled and human depth is not enabled/prefered, then use environment depth.
                 else if (isEnvDepthEnabled && (!isHumanDepthEnabled || (m_OcclusionPreferenceMode == OcclusionPreferenceMode.PreferEnvironmentOcclusion)))
-
                 {
-                    enabledKeywords = m_EnvironmentDepthEnabledMaterialKeywords;
-                    disabledKeywords = m_HumanEnabledMaterialKeywords;
+                    enabledKeywords = k_EnvironmentDepthEnabledMaterialKeywords;
+                    disabledKeywords = k_HumanEnabledMaterialKeywords;
                 }
                 // Otherwise, human depth is enabled and/or preferred, so use human depth.
                 else
                 {
-                    enabledKeywords = m_HumanEnabledMaterialKeywords;
-                    disabledKeywords = m_EnvironmentDepthEnabledMaterialKeywords;
+                    enabledKeywords = k_HumanEnabledMaterialKeywords;
+                    disabledKeywords = k_EnvironmentDepthEnabledMaterialKeywords;
                 }
+            }
+
+            public override ShaderKeywords GetShaderKeywords()
+            {
+                bool isEnvDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsEnvironmentEnabled();
+                bool isHumanDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsHumanEnabled();
+
+                if (ShouldUseDepthDisabledKeywords(isEnvDepthEnabled, isHumanDepthEnabled))
+                {
+                    return k_DepthDisabledShaderKeywords;
+                }
+                else if (ShouldUseEnvironmentDepthEnabledKeywords(isEnvDepthEnabled, isHumanDepthEnabled))
+                {
+                    return k_EnvDepthEnabledShaderKeywords;
+                }
+                else
+                {
+                    return k_HumanDepthEnabledShaderKeywords;
+                }
+            }
+
+            bool ShouldUseDepthDisabledKeywords(bool isEnvDepthEnabled, bool isHumanDepthEnabled)
+            {
+                return (m_OcclusionPreferenceMode == OcclusionPreferenceMode.NoOcclusion) || (!isEnvDepthEnabled && !isHumanDepthEnabled);
+            }
+
+            bool ShouldUseEnvironmentDepthEnabledKeywords(bool isEnvDepthEnabled, bool isHumanDepthEnabled)
+            {
+                return isEnvDepthEnabled && (!isHumanDepthEnabled || (m_OcclusionPreferenceMode == OcclusionPreferenceMode.PreferEnvironmentOcclusion));
             }
         }
 

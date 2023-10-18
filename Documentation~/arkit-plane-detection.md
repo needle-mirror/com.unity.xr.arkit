@@ -11,4 +11,31 @@ The ARKit plane subsystem requires additional CPU resources and can be energy-in
 
 Setting the plane detection mode to [PlaneDetectionMode.None](xref:UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None) is equivalent to calling `Stop()` on the subsystem.
 
-For more information, see [Plane detection](xref:arfoundation-plane-detection).
+For more information, refer to [Plane detection](xref:arfoundation-plane-detection).
+
+## Plane classifications
+
+This package maps ARKit's [ARPlaneAnchor.Classification](https://developer.apple.com/documentation/arkit/arplaneanchor/classification) to AR Foundation's [PlaneClassifications](xref:UnityEngine.XR.ARFoundation.PlaneClassifications). 
+
+> [!NOTE] 
+> While AR Foundation allows XR providers to assign multiple classifications per plane, ARKit only assigns a single classification to any given plane. 
+
+Refer to the table below to understand the mapping between AR Foundation's classifications and ARKit's classifications:
+
+| AR Foundation label   | ARKit label      |
+| :-------------------- | :--------------- |
+| Table                 | table            |
+| Couch                 |                  |
+| Seat                  | seat             |
+| Floor                 | floor            |
+| Ceiling               | ceiling          |
+| WallFace              | wall             |
+| WallArt               |                  |
+| DoorFrame             | door             |
+| WindowFrame           | window           |
+| Screen                |                  |
+| Lamp                  |                  |
+| Plant                 |                  |
+| Storage               |                  |
+| Bed                   |                  |
+| Other                 |                  |

@@ -5,6 +5,10 @@ uid: arkit-whats-new
 
 The most significant updates in this release include:
 
+## Added
+
+- Added support for `XRCameraSubsystem.GetShaderKeywords` to `ARKitCameraSubsystem` and `ARKitOcclusionSubsystem`.
+
 ## Deprecated
 
 - Several subsystems have been deprecated and renamed for consistency with other subsystems. Unity's API Updater should automatically convert any deprecated APIs references to the new APIs when the project is loaded into the Editor again.
