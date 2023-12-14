@@ -13,9 +13,13 @@ During an iOS player build, this package compiles the reference image libraries 
  This process can be performed on any desktop platform.
 
 > [!NOTE]
-> **Using reference image libraries with asset bundles**
+> **Using reference image libraries with AssetBundles**
 >
-> <p>In order to use an XRReferenceImageLibrary in an [asset bundle](xref:AssetBundlesIntro), the asset bundle must be built on macOS with Xcode installed. This is because technique #2 mentioned above builds the reference images into the Player, not the XRReferenceImageLibrary asset.</p>
+> <p>In order to use an XRReferenceImageLibrary in an [AssetBundle](xref:AssetBundlesIntro), the AssetBundle must be built on macOS with Xcode installed. This is required because technique #2 mentioned above builds the reference images into the Player, not the XRReferenceImageLibrary asset.</p>
+
+## AssetBundles
+
+Reference image libraries can be stored in AssetBundles and loaded at runtime, but setting up your project to build the AssetBundles correctly requires special instructions. Refer to [Use reference image libraries with AssetBundles](xref:arfoundation-image-tracking#use-reference-image-libraries-with-assetbundles) in AR Foundation for more information.
 
 ## Image format requirements
 

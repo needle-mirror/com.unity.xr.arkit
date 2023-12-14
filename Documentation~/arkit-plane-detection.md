@@ -33,9 +33,5 @@ Refer to the table below to understand the mapping between AR Foundation's class
 | WallArt               |                  |
 | DoorFrame             | door             |
 | WindowFrame           | window           |
-| Screen                |                  |
-| Lamp                  |                  |
-| Plant                 |                  |
-| Storage               |                  |
-| Bed                   |                  |
+| InvisibleWallFace     |                  |
 | Other                 |                  |

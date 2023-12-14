@@ -122,6 +122,13 @@ namespace UnityEditor.XR.ARKit
             // ReSharper disable once UnusedMember.Local
             static void PreprocessBuild(BuildReport report)
             {
+                if (Application.isBatchMode)
+                {
+                    // by the time we reach the preprocessor in batch mode the AssetDatabase is ready to load our iOS XR
+                    // settings, so we manually update the arkit defines here.
+                    LoaderEnabledCheck.UpdateARKitDefines();
+                }
+
                 if (report.summary.platform != BuildTarget.iOS || !loaderEnabled)
                     return;
 
@@ -283,6 +290,12 @@ namespace UnityEditor.XR.ARKit
             s_ARKitSettings = ARKitSettings.GetOrCreateSettings();
             ARKitBuildProcessor.loaderEnabled = false;
 
+            // in batch mode, the AssetDatabase may not yet be properly initialized and trying to load the xr settings
+            // and check the loader won't work. This can leave us in a state where the build processor can't execute
+            // properly down the line even though the loader is enabled in the settings
+            if (Application.isBatchMode)
+                return;
+
             UpdateARKitDefines();
             EditorCoroutineUtility.StartCoroutineOwnerless(UpdateARKitDefinesCoroutine());
         }
@@ -298,7 +311,7 @@ namespace UnityEditor.XR.ARKit
             }
         }
 
-        static void UpdateARKitDefines()
+        internal static void UpdateARKitDefines()
         {
             var iOSXRSettings = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(
                 BuildPipeline.GetBuildTargetGroup(BuildTarget.iOS));

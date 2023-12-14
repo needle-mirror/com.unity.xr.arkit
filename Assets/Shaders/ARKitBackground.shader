@@ -101,7 +101,7 @@ Shader "Unlit/ARKitBackground"
                 float4 position = TransformObjectToHClip(v.position);
 
                 // Remap the texture coordinates based on the device rotation.
-                float2 texcoord = mul(float3(v.texcoord, 1.0f), _UnityDisplayTransform).xy;
+                float2 texcoord = mul(float4(v.texcoord, 1.0f, 1.0f), _UnityDisplayTransform).xy;
 
                 v2f o;
                 o.position = position;

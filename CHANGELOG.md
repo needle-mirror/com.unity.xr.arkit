@@ -8,6 +8,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.0-pre.5] - 2023-12-14
+
+### Changed
+
+- Changed AR Foundation dependency version from 6.0.0-pre.4 to 6.0.0-pre.5.
+- Changed the image tracking documentation to mention the steps for building AssetBundles, referencing [new AR Foundation documentation](xref:arfoundation-image-tracking#use-reference-image-libraries-with-assetbundles).
+- Static libraries were rebuilt with Xcode Version 14.3.1 (14E300c).
+
+### Fixed
+
+- Updated the `ARKitPlaneSubsystem` to be compatible with the [PlaneClassifications](xref:UnityEngine.XR.ARSubsystems.PlaneClassifications) enum.
+- Fixed an issue requiring batch mode to be run twice if executed on a clean project with no library, when making ARKit builds via Linux or Mac OS X.
+
 ## [6.0.0-pre.4] - 2023-10-18
 
 ### Added
