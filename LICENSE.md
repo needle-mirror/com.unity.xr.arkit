@@ -1,4 +1,4 @@
-ARKit XR Plug-in © 2018 Unity Technologies
+ARKit XR Plug-in © 2024 Unity Technologies
 
 Licensed under the Unity Companion License for Unity-dependent projects (see [Unity Companion License](https://unity3d.com/legal/licenses/unity_companion_license)).
 

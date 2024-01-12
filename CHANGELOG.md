@@ -8,6 +8,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.10] - 2024-01-12
+
+### Changed
+
+- Rebuilt static libraries with Xcode version 15.1 (15C65). You are now required to build iOS apps using Xcode version 15.1 or newer.
+- Changed the image tracking documentation to mention the steps for building AssetBundles, referencing [new AR Foundation documentation](xref:arfoundation-image-tracking#use-reference-image-libraries-with-assetbundles).
+- Changed the AR Subsystems dependency version from 4.2.9 to 4.2.10.
+
+### Fixed
+
+- Fixed issue [ARKB-66](https://issuetracker.unity3d.com/issues/application-crashes-when-enabling-and-disabling-ar-for-a-while-on-ios-devices) where iOS apps could intermittently crash when destroying the `ARCameraManager` with multithreaded rendering enabled. This fix requires that you build your app with Unity 2021.3.34f1 or newer.
+- Fixed an issue requiring batch mode to be run twice if executed on a clean project with no library, when making ARKit builds via Linux or Mac OS X.
+
 ## [4.2.9] - 2023-10-02
 
 ### Changed
