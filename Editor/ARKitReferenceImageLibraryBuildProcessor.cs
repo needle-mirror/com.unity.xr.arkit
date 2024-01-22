@@ -102,6 +102,8 @@ namespace UnityEditor.XR.ARKit
                     // Convert the resource group to a 'car' (compiled asset catalog) file
                     library.SetDataForKey(ARKitPackageInfo.identifier, resourceGroup.ToCar(minimumDeploymentTarget));
                 }
+
+                EditorUtility.ClearProgressBar();
             }
 
             void ARBuildProcessor.IPreprocessBuild.OnPreprocessBuild(PreprocessBuildEventArgs eventArgs)

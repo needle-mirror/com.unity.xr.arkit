@@ -8,6 +8,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.1.2] - 2024-01-22
+
+### Changed
+
+- Rebuilt static libraries with Xcode version 15.1 (15C65). You are now required to build iOS apps using Xcode version 15.1 or newer.
+- Changed the image tracking documentation to mention the steps for building AssetBundles, referencing [new AR Foundation documentation](xref:arfoundation-image-tracking#use-reference-image-libraries-with-assetbundles).
+- Changed AR Foundation dependency version to 5.1.2.
+
+### Fixed
+
+- Fixed issue [ARKB-66](https://issuetracker.unity3d.com/issues/application-crashes-when-enabling-and-disabling-ar-for-a-while-on-ios-devices) where iOS apps could intermittently crash when destroying the `ARCameraManager` with multithreaded rendering enabled. This fix requires that you build your app with one of the following Unity versions or newer: 2023.3.0b1, 2023.2.5f1, 2022.3.17f1, 2021.3.34f1.
+- Fixed shader warnings when using URP.
+
 ## [5.1.1] - 2023-11-14
 
 ### Changed
@@ -18,6 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed issue [ARKB-49](https://issuetracker.unity3d.com/issues/arkit-files-are-created-in-xcode-project-when-building-an-ios-platform-project-with-arkit-support-disabled) where the static libraries could be unintentionally included in iOS builds when the ARKit provider plug-in was not enabled in XR Plug-in Management.
+- Fixed an issue requiring batch mode to be run twice if executed on a clean project with no library, when making ARKit builds via Linux or Mac OS X.
 
 ## [5.1.0] - 2023-08-30
 
