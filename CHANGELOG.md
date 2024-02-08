@@ -8,6 +8,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.0-pre.6] - 2024-02-08
+
+### Changed
+
+- Rebuilt static libraries with Xcode version 15.1 (15C65). You are now required to build iOS apps using Xcode version 15.1 or newer.
+- Changed minimum Unity Editor version to `2023.3`.
+- Changed AR Foundation dependency version from 6.0.0-pre.5 to 6.0.0-pre.6.
+
+### Fixed
+
+- Fixed issue [ARKB-66](https://issuetracker.unity3d.com/issues/application-crashes-when-enabling-and-disabling-ar-for-a-while-on-ios-devices) where iOS apps could intermittently crash when destroying the `ARCameraManager` with multithreaded rendering enabled. This fix requires that you build your app with one of the following Unity versions or newer: 2023.3.0b1, 2023.2.5f1.
+
 ## [6.0.0-pre.5] - 2023-12-14
 
 ### Changed

@@ -8,7 +8,7 @@ using UnityEngine.XR.ARSubsystems;
 #if UNITY_XR_ARKIT_LOADER_ENABLED
 using System.Runtime.InteropServices;
 #endif
-#if MODULE_URP_ENABLED
+#if URP_7_OR_NEWER
 using UnityEngine.Rendering.Universal;
 #endif
 
@@ -50,9 +50,9 @@ namespace UnityEngine.XR.ARKit
         /// <value>The list of shader keywords to avoid during compilation.</value>
         static readonly List<string> k_BackgroundShaderKeywordsToNotCompile = new()
         {
-#if !MODULE_URP_ENABLED
+#if !URP_7_OR_NEWER
             k_BackgroundShaderKeywordURP,
-#endif // !MODULE_URP_ENABLED
+#endif // !URP_7_OR_NEWER
         };
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace UnityEngine.XR.ARKit
             static readonly bool k_MultithreadedRenderingEnabled =
                 k_RenderingThreadingMode is RenderingThreadingMode.MultiThreaded or RenderingThreadingMode.NativeGraphicsJobs;
 
-#if MODULE_URP_ENABLED
+#if URP_7_OR_NEWER
             /// <summary>
             /// The shader keywords to enable when URP is enabled.
             /// </summary>
@@ -244,7 +244,7 @@ namespace UnityEngine.XR.ARKit
             static readonly List<string> k_URPDisabledMaterialKeywords = null;
 
             static readonly ShaderKeywords k_URPShaderKeywords = new ShaderKeywords(k_URPEnabledMaterialKeywords?.AsReadOnly(), k_URPDisabledMaterialKeywords?.AsReadOnly());
-#endif // MODULE_URP_ENABLED
+#endif // URP_7_OR_NEWER
 
             static readonly ShaderKeywords k_EmptyRPShaderKeywords = new ShaderKeywords();
 
@@ -574,13 +574,13 @@ namespace UnityEngine.XR.ARKit
                     enabledKeywords = k_LegacyRPEnabledMaterialKeywords;
                     disabledKeywords = k_LegacyRPDisabledMaterialKeywords;
                 }
-#if MODULE_URP_ENABLED
+#if URP_7_OR_NEWER
                 else if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
                 {
                     enabledKeywords = k_URPEnabledMaterialKeywords;
                     disabledKeywords = k_URPDisabledMaterialKeywords;
                 }
-#endif // MODULE_URP_ENABLED
+#endif // URP_7_OR_NEWER
                 else
                 {
                     enabledKeywords = null;
@@ -594,12 +594,12 @@ namespace UnityEngine.XR.ARKit
                 {
                     return k_BuiltInRPShaderKeywords;
                 }
-#if MODULE_URP_ENABLED
+#if URP_7_OR_NEWER
                 else if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
                 {
                     return k_URPShaderKeywords;
                 }
-#endif // MODULE_URP_ENABLED
+#endif // URP_7_OR_NEWER
                 else
                 {
                     return k_EmptyRPShaderKeywords;

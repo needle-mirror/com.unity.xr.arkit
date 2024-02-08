@@ -11,7 +11,7 @@ This release includes the following significant changes:
 
 ## Changed
 
-- Upgraded minimum Unity version from 2021.2 to 2023.2.
+- Upgraded minimum Unity version from 2021.2 to 2023.3.
 
 ## Deprecated
 
