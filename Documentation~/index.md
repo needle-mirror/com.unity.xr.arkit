@@ -23,6 +23,14 @@ Use the Apple ARKit XR Plug-in package to enable ARKit support in your [AR Found
 | [Occlusion](xref:arkit-occlusion) | Occlude AR content with physical objects and perform human segmentation. |
 | [Participants](xref:arkit-participant-tracking) | Track other devices in a shared AR session. |
 
+## Unsupported features
+
+This package does not implement the following AR Foundation features as they are not supported by ARKit:
+
+| Feature | Description |
+| :------ | :---------- |
+| [Bounding Box detection](xref:arfoundation-bounding-box-detection) | Detect and track bounding boxes of 3D objects |
+
 > [!IMPORTANT]
 > Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, face tracking support is available only when face tracking is enabled. See [Enable the Face tracking subsytem](xref:arkit-project-config#enable-face-tracking) for instructions for changing this setting. 
 
