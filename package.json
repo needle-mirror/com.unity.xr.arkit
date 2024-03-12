@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "Apple ARKit XR Plugin",
-  "version": "5.1.2",
+  "version": "5.1.3",
   "unity": "2021.2",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion\n\n* Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.",
   "keywords": [
@@ -13,20 +13,20 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arfoundation": "5.1.2",
+    "com.unity.xr.arfoundation": "5.1.3",
     "com.unity.xr.core-utils": "2.1.0",
     "com.unity.xr.management": "4.0.1"
   },
   "_upm": {
-    "changelog": "### Changed\n\n- Rebuilt static libraries with Xcode version 15.1 (15C65). You are now required to build iOS apps using Xcode version 15.1 or newer.\n- Changed the image tracking documentation to mention the steps for building AssetBundles, referencing [new AR Foundation documentation](xref:arfoundation-image-tracking#use-reference-image-libraries-with-assetbundles).\n- Changed AR Foundation dependency version to 5.1.2.\n\n### Fixed\n\n- Fixed issue [ARKB-66](https://issuetracker.unity3d.com/issues/application-crashes-when-enabling-and-disabling-ar-for-a-while-on-ios-devices) where iOS apps could intermittently crash when destroying the `ARCameraManager` with multithreaded rendering enabled. This fix requires that you build your app with one of the following Unity versions or newer: 2023.3.0b1, 2023.2.5f1, 2022.3.17f1, 2021.3.34f1.\n- Fixed shader warnings when using URP."
+    "changelog": "### Changed\n\n- Changed the AR Foundation dependency version from 5.1.2 to 5.1.3"
   },
   "upmCi": {
-    "footprint": "bf9136c1ea35ffe049f7d958125dd8437435f395"
+    "footprint": "807d82ba5c99d8cf70e0a6bd342f395a7473f98e"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@5.1/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "2a2d7e68e9dbb44480d9eb6ad93001c401bbca01"
+    "revision": "c3f7a8160ce1b8e2200765cc03caf0e0f1e29226"
   }
 }
