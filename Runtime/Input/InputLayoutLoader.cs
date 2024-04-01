@@ -21,17 +21,20 @@ namespace UnityEngine.XR.ARKit
 #if UNITY_EDITOR
         static InputLayoutLoader()
         {
+#if ENABLE_INPUT_SYSTEM && (ENABLE_VR || UNITY_GAMECORE) && !UNITY_FORCE_INPUTSYSTEM_XR_OFF || PACKAGE_DOCS_GENERATION
             RegisterLayouts();
+#endif // ENABLE_INPUT_SYSTEM && (ENABLE_VR || UNITY_GAMECORE) && !UNITY_FORCE_INPUTSYSTEM_XR_OFF || PACKAGE_DOCS_GENERATION
         }
-#endif
+#endif // UNITY_EDITOR
 
+#if ENABLE_INPUT_SYSTEM && (ENABLE_VR || UNITY_GAMECORE) && !UNITY_FORCE_INPUTSYSTEM_XR_OFF || PACKAGE_DOCS_GENERATION
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterLayouts()
         {
 #if !UNITY_EDITOR
             if (!Api.AtLeast11_0())
                 return;
-#endif
+#endif // !UNITY_EDITOR
 
             Inputs.RegisterLayout<HandheldARInputDevice>(
                 matches: new InputDeviceMatcher()
@@ -39,6 +42,7 @@ namespace UnityEngine.XR.ARKit
                     .WithProduct("(ARKit)")
                 );
         }
+#endif // ENABLE_INPUT_SYSTEM && (ENABLE_VR || UNITY_GAMECORE) && !UNITY_FORCE_INPUTSYSTEM_XR_OFF || PACKAGE_DOCS_GENERATION
     }
 }
 #endif

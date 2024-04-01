@@ -14,26 +14,26 @@ You can review the [Project validation](#project-validation) section of the **XR
 
 Some ARKit features require specific Unity Project settings to function properly. The settings include:
 
-* **[Apple ARKit plug-in enabled](#enable-arkit)**: must be enabled to use ARKit features.
-* **[Target minimum iOS Version](#minimum-ios-version)**: must be set to 11 or higher.
-* **[Camera Usage Description](#camera-usage)**: must be filled in to use AR.
-* **[Face tracking subsystem enabled](#enable-face-tracking)**: must be enabled to use Face tracking features.
-* **[ARKit support Requirement](#arkit-required)**: can be set to **optional** or **required** depending on whether your app can be used without ARKit support.
+* **[Apple ARKit plug-in enabled](#enable-arkit)**: enable to use ARKit features.
+* **[Target minimum iOS Version](#minimum-ios-version)**: set to 11 or higher.
+* **[Camera Usage Description](#camera-usage)**: fill in to use AR.
+* **[Face tracking subsystem enabled](#enable-face-tracking)**: enable to use Face tracking features.
+* **[ARKit support Requirement](#arkit-required)**: set to **optional** or **required** depending on whether your app can be used without ARKit support.
 
 
 <a name="enable-arkit"></a>
 ### Enable the Apple ARKit plug-in
 
-To use ARKit, you must enable the plug-in in your **XR Plug-in Management** settings. (Installing the package from the Package Manager does not automatically enable the plug-in.)
+To use ARKit, you must enable the plug-in in your **XR Plug-in Management** settings. (Installing the package from the Package Manager doesn't automatically enable the plug-in.)
 
 > [!NOTE]
-> Enabling ARKit also installs the package, if necessary. However, disabling ARkit does not uninstall the package.
+> Enabling ARKit also installs the package, if necessary. However, disabling ARkit doesn't uninstall the package.
 
-You must install the **iOS Module** using the Unity Hub before you can enable the ARKit plug-in. See the [Add modules](https://docs.unity3d.com/hub/manual/AddModules.html) section of the Unity Hub documentation for instructions.
+You must install the **iOS Module** using the Unity Hub before you can enable the ARKit plug-in. Refer to the [Add modules](https://docs.unity3d.com/hub/manual/AddModules.html) section of the Unity Hub documentation for instructions.
 
 To enable ARKit:
 
-1. Open the **Player Settings** window (menu: **Edit &gt; Player Settings**).
+1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
 2. Select **XR Plug-in Management** to view the plug-in management settings.
 3. Select the **iOS** tab to view the iOS settings. (This tab is only shown when you have installed the Editor iOS Module.)
 4. Enable the **ARKit** option in the **Plug-in Providers** list.
@@ -48,14 +48,14 @@ The minimum version of iOS that supports ARKit is iOS 11.
 
 To change this setting:
 
-1. Open the **Player Settings** window (menu: **Edit &gt; Player Settings**).
+1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
 2. Select **Player** on the left to view the **Player Settings** page.
 3. Select the **iOS** tab to view the iOS settings.
 4. Open the **Other Settings** group (if necessary).
 5. Scroll down to the **Configuration** section.
 6. Set the **Target minimum iOS Version** field to 11.0 or higher.
 
-See Apple's [Verifying Device Support and User Permission](https://developer.apple.com/documentation/arkit/verifying_device_support_and_user_permission) for additional information.
+Refer to Apple's [Verifying Device Support and User Permission](https://developer.apple.com/documentation/arkit/verifying_device_support_and_user_permission) for additional information.
 
 <a name="camera-usage"></a>
 ### Set the Camera Usage Description
@@ -66,14 +66,14 @@ the `NSCameraUsageDescription` key.
 
 To set or change this setting:
 
-1. Open the **Player Settings** window (menu: **Edit &gt; Player Settings**).
+1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
 2. Select **Player** on the left to view the **Player Settings** page.
 3. Select the **iOS** tab to view the iOS settings.
 4. Open the **Other Settings** group (if necessary).
 5. Scroll down to the **Configuration** section.
 6. Enter the desired string in the **Camera Usage Description** field.
 
-See Apple's [Handle User Consent and Privacy](https://developer.apple.com/documentation/arkit/verifying_device_support_and_user_permission) for additional information.
+Refer to Apple's [Handle User Consent and Privacy](https://developer.apple.com/documentation/arkit/verifying_device_support_and_user_permission) for additional information.
 
 
 <a name="enable-face-tracking"></a>
@@ -81,27 +81,27 @@ See Apple's [Handle User Consent and Privacy](https://developer.apple.com/docume
 
 To use ARKit's face tracking features, you must enable the ARKit face tracking subsystem in your **XR Plug-in Management** settings.
 
-You must install the ARKit package before enabling ARKit face tracking. See [Apple ARKit plug-in enabled](#enable-arkit) for instructions.
+You must install the ARKit package before enabling ARKit face tracking. Refer to [Apple ARKit plug-in enabled](#enable-arkit) for instructions.
 
 To enable ARKit face tracking:
 
-1. Open the **Player Settings** window (menu: **Edit &gt; Player Settings**).
+1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
 2. Click **XR Plug-in Management** on the left to open the plug-in provider list.
 3. Select **ARKit** in the list to view the ARKit plug-in settings page.
 4. Check the box next to **Face Tracking** to enable the feature.
 
 <a name="arkit-required"></a>
-### Set the ARKit support Requirement
+### Set the ARKit support requirement
 
-If your app cannot function without ARKit support, you can prevent prevent it from being installed on devices without ARKit support by setting the ARKit plug-in **Requirement** setting to **Required**. Alternately, if your app works with or without ARKit, you can set the **Requirement** setting to **Optional**.
+If your app can't function without ARKit support, you can prevent it from being installed on devices without ARKit support by setting the ARKit plug-in **Requirement** setting to **Required**. Alternately, if your app works with or without ARKit, you can set the **Requirement** setting to **Optional**.
 
-When you require ARKit, the `arkit` key is added to the `UIRequiredDeviceCapabilities` section of your app's `Info.plist` file. See Apple's [Verifying Device Support and User Permission](https://developer.apple.com/documentation/arkit/verifying_device_support_and_user_permission) for additional information.
+When you require ARKit, the `arkit` key is added to the `UIRequiredDeviceCapabilities` section of your app's `Info.plist` file. Refer to Apple's [Verifying Device Support and User Permission](https://developer.apple.com/documentation/arkit/verifying_device_support_and_user_permission) for additional information.
 
-You must install the ARKit package before you can change the ARKit requirement setting. See [Enable the Apple ARKit plug-in](#enable-arkit) for instructions.
+You must install the ARKit package before you can change the ARKit requirement setting. Refer to [Enable the Apple ARKit plug-in](#enable-arkit) for instructions.
 
 To change this setting:
 
-1. Open the **Player Settings** window (menu: **Edit &gt; Player Settings**).
+1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
 2. Click **XR Plug-in Management** on the left to open the plug-in provider list.
 3. Select **ARKit** in the list to view the ARKit plug-in settings page.
 
@@ -118,16 +118,16 @@ To change this setting:
 
 The Apple ARKit package defines a set of rules for the Project Validation system. These rules check for possible mistakes in the project configuration.
 
-Some of the rules serve as warnings for possible configuration problems; you are not required to fix these. Other rules flag configuration errors that would result in your app failing to build or not working once built. You must fix these errors.
+Some rules serve as warnings for possible configuration problems; you aren't required to fix these. Other rules flag configuration errors that might result in your app failing to build or not working once built. You must fix these errors.
 
 To review the ARKit project validation rules:
 
-1. Open the **Player Settings** window (menu: **Edit &gt; Player Settings**).
+1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
 2. Click **XR Plug-in Management** on the left to open the plug-in provider list.
 3. Select **Project Validation** in the list to view the validation page.
 4. Select the **iOS** tab to view the status of the validation checks for iOS XR plug-ins, including ARKit.
 
-Rules that pass validation are not shown unless you enable **Show all**. 
+Rules that pass validation aren't shown unless you enable **Show all**. 
 
 Some rules provide a **Fix** button that updates the configuration so that the rule passes validation. Other rules provide an **Edit** button that takes you to the relevant setting so that you can make the necessary adjustments yourself.
 

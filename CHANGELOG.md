@@ -8,6 +8,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.1] - 2024-04-01
+
+### Changed
+
+- Changed AR Foundation dependency version from 6.0.0-pre.8 to 6.0.1.
+- Changed the minimum Unity version from 2023.3 to 6000.0, reflecting the new version number of Unity 6. Refer to the official [Unity 6 New Naming Convention](https://forum.unity.com/threads/unity-6-new-naming-convention.1558592/) announcement for more information.
+
+### Fixed
+
+- Fixed an issue where the tvOS build target would have compile errors in `ARKit.InputLayoutLoader`.
+
 ## [6.0.0-pre.8] - 2024-03-19
 
 ### Changed
