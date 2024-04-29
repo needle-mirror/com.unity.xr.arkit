@@ -8,6 +8,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.1.4] - 2024-04-29
+
+### Changed
+
+- Changed the AR Foundation dependency version from 5.1.3 to 5.1.4
+
+### Fixed
+
+- Fixed an issue where the tvOS build target would have compile errors in `ARKit.InputLayoutLoader`.
+
 ## [5.1.3] - 2024-03-12
 
 ### Changed
