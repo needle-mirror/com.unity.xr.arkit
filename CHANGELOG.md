@@ -8,6 +8,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.2] - 2024-05-22
+
+### Changed
+
+- Rebuilt static libraries with Xcode version 15.4 (15F31d). You are now required to build iOS apps using Xcode 15.4 or newer.
+- Changed AR Foundation dependency version from 6.0.1 to 6.0.2.
+
+### Fixed
+
+- Fixed issue [ARKB-58](https://issuetracker.unity3d.com/issues/arfoundation-application-crashes-when-arocclusionmanager-is-disabled-if-multithreaded-rendering-is-enabled-on-ios-devices-that-use-lidar) where iOS apps could intermittently crash when destroying the `AROcclusionManager` with multithreaded rendering enabled.
+- Fixed the native input provider so that it now explicitly sets **Device** mode as its only supported [Tracking Origin Mode](xref:Unity.XR.CoreUtils.XROrigin.TrackingOriginMode). The [XR Origin component](xref:xr-core-utils-xr-origin-reference) will always use **Device** mode as its Tracking Origin Mode. You should set the XR Origin component's **Camera Y Offset** value to `0` to avoid adding a height offset to your camera and trackables.
+
 ## [6.0.1] - 2024-04-01
 
 ### Changed

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "Apple ARKit XR Plugin",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "unity": "6000.0",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion\n\n* Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.",
   "keywords": [
@@ -13,20 +13,20 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arfoundation": "6.0.1",
+    "com.unity.xr.arfoundation": "6.0.2",
     "com.unity.xr.core-utils": "2.2.2",
     "com.unity.xr.management": "4.4.0"
   },
   "_upm": {
-    "changelog": "### Changed\n\n- Changed AR Foundation dependency version from 6.0.0-pre.8 to 6.0.1.\n- Changed the minimum Unity version from 2023.3 to 6000.0, reflecting the new version number of Unity 6. Refer to the official [Unity 6 New Naming Convention](https://forum.unity.com/threads/unity-6-new-naming-convention.1558592/) announcement for more information.\n\n### Fixed\n\n- Fixed an issue where the tvOS build target would have compile errors in `ARKit.InputLayoutLoader`."
+    "changelog": "### Changed\n\n- Rebuilt static libraries with Xcode version 15.4 (15F31d). You are now required to build iOS apps using Xcode 15.4 or newer.\n- Changed AR Foundation dependency version from 6.0.1 to 6.0.2.\n\n### Fixed\n\n- Fixed issue [ARKB-58](https://issuetracker.unity3d.com/issues/arfoundation-application-crashes-when-arocclusionmanager-is-disabled-if-multithreaded-rendering-is-enabled-on-ios-devices-that-use-lidar) where iOS apps could intermittently crash when destroying the `AROcclusionManager` with multithreaded rendering enabled.\n- Fixed the native input provider so that it now explicitly sets **Device** mode as its only supported [Tracking Origin Mode](xref:Unity.XR.CoreUtils.XROrigin.TrackingOriginMode). The [XR Origin component](xref:xr-core-utils-xr-origin-reference) will always use **Device** mode as its Tracking Origin Mode. You should set the XR Origin component's **Camera Y Offset** value to `0` to avoid adding a height offset to your camera and trackables."
   },
   "upmCi": {
-    "footprint": "af4737e4c7e8cc7ab170a0be4a8288053c08d8d7"
+    "footprint": "0493f591f40f520f5507d6b57df073b84eb1b147"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@6.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "ab1d4a9449006f78f8ac4b3cd32ab363fbd763c3"
+    "revision": "03bcccd104761b6777cf28a41bd02d3a1966ea20"
   }
 }

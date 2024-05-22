@@ -33,7 +33,7 @@ You must install the **iOS Module** using the Unity Hub before you can enable th
 
 To enable ARKit:
 
-1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
+1. Open the **Project Settings** window (menu: **Edit** &gt; **Project Settings**).
 2. Select **XR Plug-in Management** to view the plug-in management settings.
 3. Select the **iOS** tab to view the iOS settings. (This tab is only shown when you have installed the Editor iOS Module.)
 4. Enable the **ARKit** option in the **Plug-in Providers** list.
@@ -48,7 +48,7 @@ The minimum version of iOS that supports ARKit is iOS 11.
 
 To change this setting:
 
-1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
+1. Open the **Project Settings** window (menu: **Edit** &gt; **Project Settings**).
 2. Select **Player** on the left to view the **Player Settings** page.
 3. Select the **iOS** tab to view the iOS settings.
 4. Open the **Other Settings** group (if necessary).
@@ -66,7 +66,7 @@ the `NSCameraUsageDescription` key.
 
 To set or change this setting:
 
-1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
+1. Open the **Project Settings** window (menu: **Edit** &gt; **Project Settings**).
 2. Select **Player** on the left to view the **Player Settings** page.
 3. Select the **iOS** tab to view the iOS settings.
 4. Open the **Other Settings** group (if necessary).
@@ -85,7 +85,7 @@ You must install the ARKit package before enabling ARKit face tracking. Refer to
 
 To enable ARKit face tracking:
 
-1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
+1. Open the **Project Settings** window (menu: **Edit** &gt; **Project Settings**).
 2. Click **XR Plug-in Management** on the left to open the plug-in provider list.
 3. Select **ARKit** in the list to view the ARKit plug-in settings page.
 4. Check the box next to **Face Tracking** to enable the feature.
@@ -101,7 +101,7 @@ You must install the ARKit package before you can change the ARKit requirement s
 
 To change this setting:
 
-1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
+1. Open the **Project Settings** window (menu: **Edit** &gt; **Project Settings**).
 2. Click **XR Plug-in Management** on the left to open the plug-in provider list.
 3. Select **ARKit** in the list to view the ARKit plug-in settings page.
 
@@ -122,7 +122,7 @@ Some rules serve as warnings for possible configuration problems; you aren't req
 
 To review the ARKit project validation rules:
 
-1. Open the **Project Settings** window (menu: **Edit &gt; Project Settings**).
+1. Open the **Project Settings** window (menu: **Edit** &gt; **Project Settings**).
 2. Click **XR Plug-in Management** on the left to open the plug-in provider list.
 3. Select **Project Validation** in the list to view the validation page.
 4. Select the **iOS** tab to view the status of the validation checks for iOS XR plug-ins, including ARKit.

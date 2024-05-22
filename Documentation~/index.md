@@ -32,7 +32,7 @@ This package does not implement the following AR Foundation features as they are
 | [Bounding Box detection](xref:arfoundation-bounding-box-detection) | Detect and track bounding boxes of 3D objects |
 
 > [!IMPORTANT]
-> Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, face tracking support is available only when face tracking is enabled. See [Enable the Face tracking subsytem](xref:arkit-project-config#enable-face-tracking) for instructions for changing this setting. 
+> Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, face tracking support is available only when face tracking is enabled. Refer to [Enable the Face tracking subsystem](xref:arkit-project-config#enable-face-tracking) for instructions for changing this setting. 
 
 # Install the Apple ARKit XR Plug-in
 
@@ -88,6 +88,6 @@ This version of Apple ARKit XR Plug-in includes:
 * A shader used for rendering the camera image
 * A plug-in metadata file
 
-For more code examples, see the [AR Foundation Samples repo](https://github.com/Unity-Technologies/arfoundation-samples).
+For more code examples, refer to the [AR Foundation Samples repository](https://github.com/Unity-Technologies/arfoundation-samples).
 
 [!include[](snippets/apple-arkit-trademark.md)]

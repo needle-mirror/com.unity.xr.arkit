@@ -1,6 +1,5 @@
 * [Introduction](xref:arkit-manual)
   * [What's new](xref:arkit-whats-new)
-  * [Upgrade guide](xref:arkit-upgrade-guide)
   * [Project configuration](xref:arkit-project-config)
 * Subsystems
   * [Session](xref:arkit-session)
