@@ -8,6 +8,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.1.5] - 2024-05-31
+
+### Changed
+
+- Rebuilt static libraries with Xcode version 15.4 (15F31d). You are now required to build iOS apps with Xcode 15.4 or newer.
+- Changed the AR Foundation dependency version from 5.1.4 to 5.1.5.
+
+### Fixed
+
+- Fixed issue [ARKB-58](https://issuetracker.unity3d.com/issues/arfoundation-application-crashes-when-arocclusionmanager-is-disabled-if-multithreaded-rendering-is-enabled-on-ios-devices-that-use-lidar) where iOS apps could intermittently crash when destroying the `AROcclusionManager` with multithreaded rendering enabled.
+
 ## [5.1.4] - 2024-04-29
 
 ### Changed
