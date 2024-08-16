@@ -15,6 +15,8 @@ namespace UnityEngine.XR.ARKit
     /// </remarks>
     public struct ARCollaborationDataBuilder : IDisposable, IEquatable<ARCollaborationDataBuilder>
     {
+        internal NSMutableData m_NSMutableData;
+
         /// <summary>
         /// Whether the <see cref="ARCollaborationDataBuilder"/> has allocated any data. If <c>true</c>,
         /// this struct must be disposed to avoid leaking native resources. If <c>false</c>, this struct
@@ -29,7 +31,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <seealso cref="Append(byte[])"/>
         /// <seealso cref="Append(byte[],int,int)"/>
-        /// <seealso cref="Append(Unity.Collections.NativeSlice{byte})"/>.
+        /// <seealso cref="Append(Unity.Collections.NativeSlice{byte})"/>
         public int length => m_NSMutableData.created ? m_NSMutableData.length : 0;
 
         /// <summary>
@@ -52,12 +54,12 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Appends <paramref name="size"/> <c>byte</c>s of the array <paramref name="buffer"/> to an existing array of bytes.
+        /// Appends <paramref name="size"/> bytes of the array <paramref name="buffer"/> to an existing array of bytes.
         /// </summary>
-        /// <param name="buffer">A buffer containing <c>byte</c>s to append.</param>
+        /// <param name="buffer">A buffer containing bytes to append.</param>
         /// <param name="offset">The offset within <paramref name="buffer"/> to start appending bytes to the internal array.</param>
-        /// <param name="size">The number of bytes from <paramref name="buffer"/> to append. Must be less than <c><paramref name="bytes"/>.Length + <paramref name="offset"/>></c>.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="buffer"/> is <c>null</c>.</exception>
+        /// <param name="size">The number of bytes from <paramref name="buffer"/> to append. Must be less than <paramref name="buffer"/>`.Length` + <paramref name="offset"/>.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="buffer"/> is <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="size"/> is less than zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> is less than zero.</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="size"/> is less than zero or greater than the length of <paramref name="buffer"/>.</exception>
@@ -82,10 +84,10 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Appends all <c>byte</c>s of the array <paramref name="buffer"/> to an existing array of bytes.
+        /// Appends all bytes of the array <paramref name="buffer"/> to an existing array of bytes.
         /// </summary>
-        /// <param name="buffer">A buffer containing <c>byte</c>s to append.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="buffer"/> is <c>null</c>.</exception>
+        /// <param name="buffer">A buffer containing bytes to append.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="buffer"/> is <see langword="null"/>.</exception>
         public unsafe void Append(byte[] buffer)
         {
             if (buffer == null)
@@ -136,39 +138,40 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Computes a hash code suitable for use in a <c>Dictionary</c> or <c>HashSet</c>.
         /// </summary>
-        /// <returns>A hash code suitable for use in a <c>Dictionary</c> or <c>HashSet</c>.</returns>
+        /// <returns>The hash code for this instance.</returns>
         public override int GetHashCode() => m_NSMutableData.GetHashCode();
 
         /// <summary>
-        /// IEquatable interface. Compares for equality.
+        /// Compares for equality.
         /// </summary>
         /// <param name="obj">The object to compare for equality.</param>
-        /// <returns><c>true</c> if <paramref name="obj"/> is of type <see cref="ARCollaborationDataBuilder"/> and compares equal with <see cref="Equals(ARCollaborationDataBuilder)"/>.</returns>
+        /// <returns><see langword="true"/> if <paramref name="obj"/> is of type `ARCollaborationDataBuilder` and
+        /// compares equal to this instance with <see cref="Equals(ARCollaborationDataBuilder)"/>.
+        /// Otherwise, returns <see langword="false"/>.</returns>
         public override bool Equals(object obj) => (obj is ARCollaborationDataBuilder) && Equals((ARCollaborationDataBuilder)obj);
 
         /// <summary>
-        /// IEquatable interface. Compares for equality.
+        /// Compares for equality.
         /// </summary>
         /// <param name="other">The <see cref="ARCollaborationDataBuilder"/> to compare against.</param>
-        /// <returns><c>true</c> if all fields of this <see cref="ARCollaborationDataBuilder"/> compare equal to <paramref name="other"/>.</returns>
+        /// <returns><see langword="true"/> if all fields of this instance compare equal to <paramref name="other"/>.
+        /// Otherwise, returns <see langword="false"/>.</returns>
         public bool Equals(ARCollaborationDataBuilder other) => m_NSMutableData.Equals(other.m_NSMutableData);
 
         /// <summary>
-        /// Compares for equality. Same as <see cref="Equals(ARCollaborationDataBuilder)"/>.
+        /// Compares for equality. Equivalent to <see cref="Equals(ARCollaborationDataBuilder)"/>.
         /// </summary>
         /// <param name="lhs">The left-hand side of the comparison.</param>
         /// <param name="rhs">The right-hand side of the comparison.</param>
-        /// <returns><c>true</c> if all fields of this <see cref="ARCollaborationDataBuilder"/> compare equal to <paramref name="other"/>.</returns>
+        /// <returns><see langword="true"/> if all fields of the instances are equal. Otherwise, returns <see langword="false"/>.</returns>
         public static bool operator ==(ARCollaborationDataBuilder lhs, ARCollaborationDataBuilder rhs) => lhs.Equals(rhs);
 
         /// <summary>
-        /// Compares for inequality. Same as <c>!</c><see cref="Equals(ARCollaborationDataBuilder)"/>.
+        /// Compares for inequality. Equivalent to <c>!</c><see cref="Equals(ARCollaborationDataBuilder)"/>.
         /// </summary>
         /// <param name="lhs">The left-hand side of the comparison.</param>
         /// <param name="rhs">The right-hand side of the comparison.</param>
-        /// <returns><c>true</c> if any of the fields of this <see cref="ARCollaborationDataBuilder"/> are not equal to <paramref name="other"/>.</returns>
+        /// <returns><see langword="true"/> if any of the fields of the instances are not equal. Otherwise, returns <see langword="false"/>.</returns>
         public static bool operator !=(ARCollaborationDataBuilder lhs, ARCollaborationDataBuilder rhs) => !lhs.Equals(rhs);
-
-        internal NSMutableData m_NSMutableData;
     }
 }

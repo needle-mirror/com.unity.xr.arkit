@@ -15,10 +15,10 @@ For more information, refer to [Plane detection](xref:arfoundation-plane-detecti
 
 ## Plane classifications
 
-This package maps ARKit's [ARPlaneAnchor.Classification](https://developer.apple.com/documentation/arkit/arplaneanchor/classification) to AR Foundation's [PlaneClassifications](xref:UnityEngine.XR.ARFoundation.PlaneClassifications). 
+This package maps ARKit's [ARPlaneAnchor.Classification](https://developer.apple.com/documentation/arkit/arplaneanchor/classification) to AR Foundation's [PlaneClassifications](xref:UnityEngine.XR.ARFoundation.PlaneClassifications).
 
-> [!NOTE] 
-> While AR Foundation allows XR providers to assign multiple classifications per plane, ARKit only assigns a single classification to any given plane. 
+> [!NOTE]
+> While AR Foundation allows XR providers to assign multiple classifications per plane, ARKit only assigns a single classification to any given plane.
 
 Refer to the table below to understand the mapping between AR Foundation's classifications and ARKit's classifications:
 

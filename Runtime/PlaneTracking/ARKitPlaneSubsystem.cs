@@ -20,7 +20,7 @@ namespace UnityEngine.XR.ARKit
         {
             public override void Destroy() => NativeApi.UnityARKit_Planes_Shutdown();
 
-            public override void Start() =>  NativeApi.UnityARKit_Planes_Start();
+            public override void Start() => NativeApi.UnityARKit_Planes_Start();
 
             public override void Stop() => NativeApi.UnityARKit_Planes_Stop();
 
@@ -90,7 +90,7 @@ namespace UnityEngine.XR.ARKit
                 public void Execute(int index)
                 {
                     var positionIn = positionsIn[index];
-                    
+
                     // https://developer.apple.com/documentation/arkit/arplanegeometry/2941052-boundaryvertices?language=objc
                     // "The owning plane anchor's transform matrix defines the coordinate system for these points."
                     // It doesn't explicitly state the y component is zero, but that must be the case if the

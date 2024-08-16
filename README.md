@@ -1,6 +1,6 @@
 # Apple ARKit XR Plug-in Package
 
-The purpose of this package is to provide ARKit XR Support. 
+The purpose of this package is to provide ARKit XR Support.
 
 ## Package structure
 
@@ -19,13 +19,13 @@ The purpose of this package is to provide ARKit XR Support.
   └── Runtime
       ├── FaceTracking
       │   ├── ARKitFaceSubsystem.cs
-      │   ├── Unity.XR.ARKit.FaceTracking.asmdef 
+      │   ├── Unity.XR.ARKit.FaceTracking.asmdef
       ├── iOS
       │   ├── link.xml
-      │   ├── Resources 
-      │   │   └── ARKitShader.shader 
-      │   ├── UnityARKit.a 
-	  │   └── UnityARKit.m 
+      │   ├── Resources
+      │   │   └── ARKitShader.shader
+      │   ├── UnityARKit.a
+      │   └── UnityARKit.m
       ├── UnitySubsystemsManifest.json
       └── Unity.XR.ARKit.asmdef
 ```

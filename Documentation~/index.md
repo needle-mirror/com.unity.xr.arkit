@@ -16,8 +16,8 @@ Use the Apple ARKit XR Plug-in package to enable ARKit support in your [AR Found
 | [Face tracking](xref:arkit-face-tracking) | Detect and track human faces. |
 | [Body tracking](xref:arfoundation-body-tracking) | Detect and track a human body. |
 | [Point clouds](xref:arkit-point-clouds) | Detect and track feature points. |
-| [Raycasts](xref:arfoundation-raycasts) | Cast rays against tracked items. |
-| [Anchors](xref:arfoundation-anchors) | Track arbitrary points in space. |
+| [Ray casts](xref:arkit-raycasts) | Cast rays against tracked items. |
+| [Anchors](xref:arkit-anchors) | Track arbitrary points in space. |
 | [Meshing](xref:arkit-meshing) | Generate meshes of the environment. |
 | [Environment probes](xref:arfoundation-environment-probes) | Generate cubemaps of the environment. |
 | [Occlusion](xref:arkit-occlusion) | Occlude AR content with physical objects and perform human segmentation. |
@@ -32,7 +32,7 @@ This package does not implement the following AR Foundation features as they are
 | [Bounding Box detection](xref:arfoundation-bounding-box-detection) | Detect and track bounding boxes of 3D objects |
 
 > [!IMPORTANT]
-> Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, face tracking support is available only when face tracking is enabled. Refer to [Enable the Face tracking subsystem](xref:arkit-project-config#enable-face-tracking) for instructions for changing this setting. 
+> Apple's App Store rejects any app that contains certain face tracking-related symbols in its binary if the app developer doesn't intend to use face tracking. To avoid ambiguity, face tracking support is available only when face tracking is enabled. Refer to [Enable the Face tracking subsystem](xref:arkit-project-config#enable-face-tracking) for instructions for changing this setting.
 
 # Install the Apple ARKit XR Plug-in
 
@@ -42,7 +42,7 @@ You can also install and uninstall this package using the [Package Manager](http
 
 # Project configuration
 
-See [Project configuration](xref:arkit-project-config) for information about the project settings that affect ARKit apps. 
+See [Project configuration](xref:arkit-project-config) for information about the project settings that affect ARKit apps.
 
 # Usage
 

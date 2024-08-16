@@ -3,7 +3,7 @@ uid: arkit-project-config
 ---
 # Project configuration
 
-Use the **XR Plug-in Management** settings to configure the Apple ARKit plug-in for your project. 
+Use the **XR Plug-in Management** settings to configure the Apple ARKit plug-in for your project.
 
 To get started, follow the instructions in [Enable the ARKit plug-in](#enable-arkit). This also installs the ARKit package, if needed. Once installed and enabled, you can configure your project settings as described in the [ARKit Project settings](#project-settings) section.
 
@@ -60,9 +60,9 @@ Refer to Apple's [Verifying Device Support and User Permission](https://develope
 <a name="camera-usage"></a>
 ### Set the Camera Usage Description
 
-The camera usage description is a message that tells the user why your app is requesting access to 
-the device’s camera. The string assigned to this field is added to your app's `Info.plist` file for 
-the `NSCameraUsageDescription` key. 
+The camera usage description is a message that tells the user why your app is requesting access to
+the device’s camera. The string assigned to this field is added to your app's `Info.plist` file for
+the `NSCameraUsageDescription` key.
 
 To set or change this setting:
 
@@ -110,7 +110,7 @@ To change this setting:
 4. For **Requirement**, choose either **Optional** or **Required**.
 
 > [!NOTE]
-> The Apple ARKit plug-in **Requirement** overrides the similar iOS Player setting, **Requires ARKit support**. When you have the ARKit plug-in installed, Unity ignores the Player **Requires ARKit support** setting and uses the plug-in **Requirement** value.  
+> The Apple ARKit plug-in **Requirement** overrides the similar iOS Player setting, **Requires ARKit support**. When you have the ARKit plug-in installed, Unity ignores the Player **Requires ARKit support** setting and uses the plug-in **Requirement** value.
 
 
 <a name="project-validation"></a>
@@ -127,7 +127,7 @@ To review the ARKit project validation rules:
 3. Select **Project Validation** in the list to view the validation page.
 4. Select the **iOS** tab to view the status of the validation checks for iOS XR plug-ins, including ARKit.
 
-Rules that pass validation aren't shown unless you enable **Show all**. 
+Rules that pass validation aren't shown unless you enable **Show all**.
 
 Some rules provide a **Fix** button that updates the configuration so that the rule passes validation. Other rules provide an **Edit** button that takes you to the relevant setting so that you can make the necessary adjustments yourself.
 

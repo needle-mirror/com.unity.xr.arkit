@@ -1,5 +1,7 @@
-﻿using System;
+using System;
+#if UNITY_XR_ARKIT_LOADER_ENABLED && !UNITY_EDITOR
 using System.Runtime.InteropServices;
+#endif
 
 namespace UnityEngine.XR.ARKit
 {
@@ -16,9 +18,57 @@ namespace UnityEngine.XR.ARKit
         IntPtr m_Self;
 
         /// <summary>
+        /// Get the error code associated with this <see cref="NSError"/>.
+        /// </summary>
+        /// <remarks>
+        /// Error codes are domain-specific. See <see cref="ToErrorDomain"/> and <see cref="domain"/>.
+        ///
+        /// Refer to [Apple's documentation](https://developer.apple.com/documentation/foundation/nserror/1409165-code?language=objc)
+        /// for more information.
+        /// </remarks>
+        public long code => GetCode(this);
+
+        /// <summary>
+        /// Get a string containing the error domain.
+        /// </summary>
+        /// <remarks>
+        /// Refer to [Apple's documentation](https://developer.apple.com/documentation/foundation/nserror/1413924-domain?language=objc)
+        /// for more information.
+        /// </remarks>
+        /// <seealso cref="ToErrorDomain"/>
+        public string domain => GetDomain(this).GetStringAndDispose();
+
+        /// <summary>
+        /// Get a string containing the localized description of the error.
+        /// </summary>
+        /// <remarks>
+        /// Refer to [Apple's documentation](https://developer.apple.com/documentation/foundation/nserror/1414418-localizeddescription?language=objc)
+        /// for more information.
+        /// </remarks>
+        public string localizedDescription => GetLocalizedDescription(this).GetStringAndDispose();
+
+        /// <summary>
+        /// Get a string containing the localized recovery suggestion for the error.
+        /// </summary>
+        /// <remarks>
+        /// Refer to [Apple's documentation](https://developer.apple.com/documentation/foundation/nserror/1407500-localizedrecoverysuggestion?language=objc)
+        /// for more information.
+        /// </remarks>
+        public string localizedRecoverySuggestion => GetLocalizedRecoverySuggestion(this).GetStringAndDispose();
+
+        /// <summary>
+        /// Get a string containing the localized explanation of the reason for the error.
+        /// </summary>
+        /// <remarks>
+        /// Refer to [Apple's documentation](https://developer.apple.com/documentation/foundation/nserror/1412752-localizedfailurereason?language=objc)
+        /// for more information.
+        /// </remarks>
+        public string localizedFailureReason => GetLocalizedFailureReason(this).GetStringAndDispose();
+
+        /// <summary>
         /// Gets the underlying Objective-C pointer.
         /// </summary>
-        /// <returns>Returns the underlying Objective-C pointer.</returns>
+        /// <returns>The native pointer.</returns>
         public IntPtr AsIntPtr() => m_Self;
 
         /// <summary>
@@ -29,29 +79,8 @@ namespace UnityEngine.XR.ARKit
         /// [NSObject's description property](https://developer.apple.com/documentation/objectivec/1418956-nsobject/1418746-description)
         /// to generate the string.
         /// </remarks>
-        /// <returns>Returns a string representation of this <see cref="NSError"/>.</returns>
+        /// <returns>A string representation of this <see cref="NSError"/>.</returns>
         public override string ToString() => NSObject.ToString(this);
-
-        /// <summary>
-        /// (Read Only) The error code associated with this <see cref="NSError"/>.
-        /// </summary>
-        /// <remarks>
-        /// Error codes are domain-specific. See <see cref="ToErrorDomain"/> and <see cref="domain"/>.
-        ///
-        /// See [Apple's documentation](https://developer.apple.com/documentation/foundation/nserror/1409165-code?language=objc)
-        /// for more information.
-        /// </remarks>
-        public long code => GetCode(this);
-
-        /// <summary>
-        /// (Read Only) A string containing the error domain.
-        /// </summary>
-        /// <remarks>
-        /// See [Apple's documentation](https://developer.apple.com/documentation/foundation/nserror/1413924-domain?language=objc)
-        /// for more information.
-        /// </remarks>
-        /// <seealso cref="ToErrorDomain"/>
-        public string domain => GetDomain(this).GetStringAndDispose();
 
         /// <summary>
         /// The <see cref="domain"/> as an <see cref="NSErrorDomain"/> enum.
@@ -75,33 +104,6 @@ namespace UnityEngine.XR.ARKit
                 return NSErrorDomain.Unknown;
             }
         }
-
-        /// <summary>
-        /// (Read Only) A string containing the localized description of the error.
-        /// </summary>
-        /// <remarks>
-        /// See [Apple's documentation](https://developer.apple.com/documentation/foundation/nserror/1414418-localizeddescription?language=objc)
-        /// for more information.
-        /// </remarks>
-        public string localizedDescription => GetLocalizedDescription(this).GetStringAndDispose();
-
-        /// <summary>
-        /// (Read Only) A string containing the localized recovery suggestion for the error.
-        /// </summary>
-        /// <remarks>
-        /// See [Apple's documentation](https://developer.apple.com/documentation/foundation/nserror/1407500-localizedrecoverysuggestion?language=objc)
-        /// for more information.
-        /// </remarks>
-        public string localizedRecoverySuggestion => GetLocalizedRecoverySuggestion(this).GetStringAndDispose();
-
-        /// <summary>
-        /// (Read Only) A string containing the localized explanation of the reason for the error.
-        /// </summary>
-        /// <remarks>
-        /// See [Apple's documentation](https://developer.apple.com/documentation/foundation/nserror/1412752-localizedfailurereason?language=objc)
-        /// for more information.
-        /// </remarks>
-        public string localizedFailureReason => GetLocalizedFailureReason(this).GetStringAndDispose();
 
         /// <summary>
         /// Determines whether <paramref name="other"/> is equal to this one as determined by
@@ -128,7 +130,7 @@ namespace UnityEngine.XR.ARKit
         /// The hash code is generated using NSObject's
         /// [hash](https://developer.apple.com/documentation/objectivec/1418956-nsobject/1418859-hash) property.
         /// </remarks>
-        /// <returns>Returns a hash code for this <see cref="NSError"/>.</returns>
+        /// <returns>A hash code for this instance.</returns>
         public override int GetHashCode() => NSObject.GetHashCode(this);
 
         /// <summary>
@@ -139,10 +141,10 @@ namespace UnityEngine.XR.ARKit
         /// <see cref="NSError"/>s could still be considered equal. See
         /// <see cref="Equals(UnityEngine.XR.ARKit.NSError)"/>.
         /// </remarks>
-        /// <param name="lhs">The <see cref="NSError"/> to compare with <paramref name="rhs"/>.</param>
-        /// <param name="rhs">The <see cref="NSError"/> to compare with <paramref name="lhs"/>.</param>
-        /// <returns>Returns `true` if the underlying pointers of <paramref name="lhs"/> and <paramref name="rhs"/>
-        /// are the same. Returns `false` otherwise.</returns>
+        /// <param name="lhs">The instance to compare with <paramref name="rhs"/>.</param>
+        /// <param name="rhs">The instance to compare with <paramref name="lhs"/>.</param>
+        /// <returns><see langword="true"/> if the native pointers of <paramref name="lhs"/> and <paramref name="rhs"/>
+        /// are equal. Otherwise, returns <see langword="false"/>.</returns>
         public static bool operator ==(NSError lhs, NSError rhs) => lhs.m_Self == rhs.m_Self;
 
         /// <summary>
@@ -153,18 +155,19 @@ namespace UnityEngine.XR.ARKit
         /// <see cref="NSError"/>s could still be considered equal. See
         /// <see cref="Equals(UnityEngine.XR.ARKit.NSError)"/>.
         /// </remarks>
-        /// <param name="lhs">The <see cref="NSError"/> to compare with <paramref name="rhs"/>.</param>
-        /// <param name="rhs">The <see cref="NSError"/> to compare with <paramref name="lhs"/>.</param>
-        /// <returns>Returns `true` if the underlying pointers of <paramref name="lhs"/> and <paramref name="rhs"/>
-        /// are different. Returns `false` otherwise.</returns>
+        /// <param name="lhs">The instance to compare with <paramref name="rhs"/>.</param>
+        /// <param name="rhs">The instance to compare with <paramref name="lhs"/>.</param>
+        /// <returns><see langword="false"/> if the native pointers of <paramref name="lhs"/> and <paramref name="rhs"/>
+        /// are equal. Otherwise, returns <see langword="true"/>.</returns>
         public static bool operator !=(NSError lhs, NSError rhs) => lhs.m_Self != rhs.m_Self;
 
         /// <summary>
         /// Tests for equality.
         /// </summary>
         /// <remarks>
-        /// This equality operator allows you to compare `null` with an <see cref="NSError"/> to determine whether its
-        /// underlying pointer is null. This allows for a more natural comparison with the Objective-C object:
+        /// This equality operator allows you to compare an instance with <see langword="null"/> to determine whether its
+        /// native pointer is `null`.
+        /// </remarks>
         /// <example>
         /// <code>
         /// void TestForNull(NSError error)
@@ -177,25 +180,24 @@ namespace UnityEngine.XR.ARKit
         /// }
         /// </code>
         /// </example>
-        /// </remarks>
-        /// <param name="lhs">The nullable <see cref="NSError"/> to compare with <paramref name="rhs"/>.</param>
-        /// <param name="rhs">The nullable <see cref="NSError"/> to compare with <paramref name="lhs"/>.</param>
-        /// <returns>Returns true if any of these conditions are met:
-        /// - <paramref name="lhs"/> and <paramref name="rhs"/> are both not null and their underlying pointers are equal.
-        /// - <paramref name="lhs"/> is null and <paramref name="rhs"/>'s underlying pointer is null.
-        /// - <paramref name="rhs"/> is null and <paramref name="lhs"/>'s underlying pointer is null.
-        /// - Both <paramref name="lhs"/> and <paramref name="rhs"/> are null.
+        /// <param name="lhs">The nullable `NSError` to compare with <paramref name="rhs"/>.</param>
+        /// <param name="rhs">The nullable `NSError` to compare with <paramref name="lhs"/>.</param>
+        /// <returns><see langword="true"/> if any of these conditions are met:
+        /// - <paramref name="lhs"/> and <paramref name="rhs"/> are both not `null` and their native pointers are equal.
+        /// - <paramref name="lhs"/> is `null` and <paramref name="rhs"/>'s native pointer is `null`.
+        /// - <paramref name="rhs"/> is `null` and <paramref name="lhs"/>'s native pointer is `null`.
+        /// - Both <paramref name="lhs"/> and <paramref name="rhs"/> are `null`.
         ///
-        /// Returns false otherwise.
+        /// Otherwise, returns <see langword="false"/>
         /// </returns>
         public static bool operator ==(NSError? lhs, NSError? rhs) => NSObject.ArePointersEqual(lhs, rhs);
 
         /// <summary>
         /// Tests for inequality.
         /// </summary>
-        /// <param name="lhs">The nullable <see cref="NSError"/> to compare with <paramref name="rhs"/>.</param>
-        /// <param name="rhs">The nullable <see cref="NSError"/> to compare with <paramref name="lhs"/>.</param>
-        /// <returns>Returns the opposite of <see cref="operator==(NSError?,NSError?)"/>.</returns>
+        /// <param name="lhs">The nullable `NSError` to compare with <paramref name="rhs"/>.</param>
+        /// <param name="rhs">The nullable `NSError` to compare with <paramref name="lhs"/>.</param>
+        /// <returns>The negation of <see cref="operator==(NSError?,NSError?)"/>.</returns>
         public static bool operator !=(NSError? lhs, NSError? rhs) => !(lhs == rhs);
 
         /// <inheritdoc cref="INSObject.SetUnderlyingNativePtr"/>

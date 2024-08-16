@@ -168,6 +168,11 @@ namespace UnityEngine.XR.ARKit
                 subsystemTypeOverride = typeof(ARKitAnchorSubsystem),
                 supportsTrackableAttachments = true,
                 supportsSynchronousAdd = true,
+                supportsSaveAnchor = false,
+                supportsLoadAnchor = false,
+                supportsEraseAnchor = false,
+                supportsGetSavedAnchorIds = false,
+                supportsAsyncCancellation = false,
             };
 
             XRAnchorSubsystemDescriptor.Register(cinfo);

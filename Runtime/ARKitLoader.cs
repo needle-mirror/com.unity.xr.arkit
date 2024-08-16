@@ -22,9 +22,9 @@ namespace UnityEngine.XR.ARKit
         static List<XRImageTrackingSubsystemDescriptor> s_ImageTrackingSubsystemDescriptors = new List<XRImageTrackingSubsystemDescriptor>();
         static List<XRObjectTrackingSubsystemDescriptor> s_ObjectTrackingSubsystemDescriptors = new List<XRObjectTrackingSubsystemDescriptor>();
         static List<XRFaceSubsystemDescriptor> s_FaceSubsystemDescriptors = new List<XRFaceSubsystemDescriptor>();
-        static List<XROcclusionSubsystemDescriptor> s_OcclusionSubsystemDescriptors  = new List<XROcclusionSubsystemDescriptor>();
-        static List<XRParticipantSubsystemDescriptor> s_ParticipantSubsystemDescriptors  = new List<XRParticipantSubsystemDescriptor>();
-        static List<XRMeshSubsystemDescriptor> s_MeshSubsystemDescriptors  = new List<XRMeshSubsystemDescriptor>();
+        static List<XROcclusionSubsystemDescriptor> s_OcclusionSubsystemDescriptors = new List<XROcclusionSubsystemDescriptor>();
+        static List<XRParticipantSubsystemDescriptor> s_ParticipantSubsystemDescriptors = new List<XRParticipantSubsystemDescriptor>();
+        static List<XRMeshSubsystemDescriptor> s_MeshSubsystemDescriptors = new List<XRMeshSubsystemDescriptor>();
 
         /// <summary>
         /// The [XRSessionSubsystem](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem) whose lifecycle is managed by this loader.
@@ -42,7 +42,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         [Obsolete("Use pointCloudSubsystem instead. (2022-02-03)")]
         public XRDepthSubsystem depthSubsystem => GetLoadedSubsystem<XRDepthSubsystem>();
-        
+
         /// <summary>
         /// The [XRPointCloudSubsystem](xref:UnityEngine.XR.ARSubsystems.XRPointCloudSubsystem) whose lifecycle is managed by this loader.
         /// </summary>

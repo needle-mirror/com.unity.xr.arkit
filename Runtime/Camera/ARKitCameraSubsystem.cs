@@ -21,33 +21,28 @@ namespace UnityEngine.XR.ARKit
     public sealed class ARKitCameraSubsystem : XRCameraSubsystem
     {
         /// <summary>
-        /// The identifying name for the camera-providing implementation.
+        /// The identifying name for the camera provider implementation.
         /// </summary>
-        /// <value>The identifying name for the camera-providing implementation.</value>
         const string k_SubsystemId = "ARKit-Camera";
 
         /// <summary>
         /// The name of the shader for rendering the camera texture before opaques render.
         /// </summary>
-        /// <value>The name of the shader for rendering the camera texture.</value>
         const string k_BeforeOpaquesBackgroundShaderName = "Unlit/ARKitBackground";
 
         /// <summary>
         /// The name of the shader for rendering the camera texture after opaques have rendered.
         /// </summary>
-        /// <value>The name of the shader for rendering the camera texture.</value>
         const string k_AfterOpaquesBackgroundShaderName = "Unlit/ARKitBackground/AfterOpaques";
 
         /// <summary>
         /// The shader keyword for enabling URP rendering.
         /// </summary>
-        /// <value>The shader keyword for enabling URP rendering.</value>
         const string k_BackgroundShaderKeywordURP = "ARKIT_BACKGROUND_URP";
 
         /// <summary>
         /// The list of shader keywords to avoid during compilation.
         /// </summary>
-        /// <value>The list of shader keywords to avoid during compilation.</value>
         static readonly List<string> k_BackgroundShaderKeywordsToNotCompile = new()
         {
 #if !URP_7_OR_NEWER
@@ -131,8 +126,8 @@ namespace UnityEngine.XR.ARKit
         /// </code>
         /// </example>
         /// <remarks>
-        /// <para>See ARKit's <see href="https://developer.apple.com/documentation/arkit/arsession/3975720-capturehighresolutionframewithco?language=objc">
-        /// captureHighResolutionFrameWithCompletion</see> documentation for more information.</para>
+        /// <para>Refer to ARKit's <a href="https://developer.apple.com/documentation/arkit/arsession/3975720-capturehighresolutionframewithco?language=objc">
+        /// captureHighResolutionFrameWithCompletion</a> documentation for more information.</para>
         /// <para>On iOS 15 or below, promises will immediately resolve with an unsuccessful result.</para>
         /// <para>Only one instance of <see cref="HighResolutionCpuImagePromise"/> at a time can await a result.
         /// Promises created while another promise is in progress will immediately resolve with an unsuccessful result.</para>
@@ -154,8 +149,8 @@ namespace UnityEngine.XR.ARKit
         /// Get whether advanced camera hardware configuration is supported. Advanced camera
         /// hardware configuration requires iOS 16 or newer and a device with an ultra-wide camera.
         /// </summary>
-        /// <returns><see langword="true"/> if setting advance camera hardware configurations is
-        /// supported. Otherwise, <see langword="false"/>.</returns>
+        /// <value><see langword="true"/> if setting advance camera hardware configurations is
+        /// supported. Otherwise, <see langword="false"/>.</value>
         /// <seealso cref="TryGetLockedCamera"/>
         public bool advancedCameraConfigurationSupported =>
             Api.AtLeast16_0() && ((ARKitProvider)provider).nativePtr != IntPtr.Zero;
@@ -182,37 +177,31 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The shader property name for the luminance component of the camera video frame.
             /// </summary>
-            /// <value>The shader property name for the luminance component of the camera video frame.</value>
             const string k_TextureYPropertyName = "_textureY";
 
             /// <summary>
             /// The shader property name for the chrominance components of the camera video frame.
             /// </summary>
-            /// <value>The shader property name for the chrominance components of the camera video frame.</value>
             const string k_TextureCbCrPropertyName = "_textureCbCr";
 
             /// <summary>
             /// The shader property name identifier for the luminance component of the camera video frame.
             /// </summary>
-            /// <value>The shader property name identifier for the luminance component of the camera video frame.</value>
             static readonly int k_TextureYPropertyNameId = Shader.PropertyToID(k_TextureYPropertyName);
 
             /// <summary>
             /// The shader property name identifier for the chrominance components of the camera video frame.
             /// </summary>
-            /// <value>The shader property name identifier for the chrominance components of the camera video frame.</value>
             static readonly int k_TextureCbCrPropertyNameId = Shader.PropertyToID(k_TextureCbCrPropertyName);
 
             /// <summary>
             /// The shader keywords to enable when the Legacy RP is enabled.
             /// </summary>
-            /// <value>The shader keywords to enable when the Legacy RP is enabled.</value>
             static readonly List<string> k_LegacyRPEnabledMaterialKeywords = null;
 
             /// <summary>
             /// The shader keywords to disable when the Legacy RP is enabled.
             /// </summary>
-            /// <value>The shader keywords to disable when the Legacy RP is enabled.</value>
             static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new() { k_BackgroundShaderKeywordURP };
 
             static readonly ShaderKeywords k_BuiltInRPShaderKeywords = new ShaderKeywords(k_LegacyRPEnabledMaterialKeywords?.AsReadOnly(), k_LegacyRPDisabledMaterialKeywords?.AsReadOnly());
@@ -220,13 +209,11 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.
             /// </summary>
-            /// <value>Current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.</value>
             static readonly RenderingThreadingMode k_RenderingThreadingMode = SystemInfo.renderingThreadingMode;
 
             /// <summary>
             /// Indicates whether multithreaded rendering is enabled.
             /// </summary>
-            /// <value><see langword="true"/> if multithreaded rendering is enabled. Otherwise, <see langword="false"/>.</value>
             static readonly bool k_MultithreadedRenderingEnabled =
                 k_RenderingThreadingMode is RenderingThreadingMode.MultiThreaded or RenderingThreadingMode.NativeGraphicsJobs;
 
@@ -234,27 +221,25 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The shader keywords to enable when URP is enabled.
             /// </summary>
-            /// <value>The shader keywords to enable when URP is enabled.</value>
-            static readonly List<string> k_URPEnabledMaterialKeywords = new List<string>() {k_BackgroundShaderKeywordURP};
+            static readonly List<string> k_URPEnabledMaterialKeywords = new() {k_BackgroundShaderKeywordURP};
 
             /// <summary>
             /// The shader keywords to disable when URP is enabled.
             /// </summary>
-            /// <value>The shader keywords to disable when URP is enabled.</value>
             static readonly List<string> k_URPDisabledMaterialKeywords = null;
 
-            static readonly ShaderKeywords k_URPShaderKeywords = new ShaderKeywords(k_URPEnabledMaterialKeywords?.AsReadOnly(), k_URPDisabledMaterialKeywords?.AsReadOnly());
+            static readonly ShaderKeywords k_URPShaderKeywords = new(k_URPEnabledMaterialKeywords?.AsReadOnly(), k_URPDisabledMaterialKeywords?.AsReadOnly());
 #endif // URP_7_OR_NEWER
 
-            static readonly ShaderKeywords k_EmptyRPShaderKeywords = new ShaderKeywords();
+            static readonly ShaderKeywords k_EmptyRPShaderKeywords = new();
 
             Material m_BeforeOpaqueCameraMaterial;
             Material m_AfterOpaqueCameraMaterial;
 
             /// <summary>
-            /// Get the Material used by <c>XRCameraSubsystem</c> to render the camera texture.
+            /// Get the Material used by `XRCameraSubsystem` to render the camera texture.
             /// </summary>
-            /// <returns>The Material to render the camera texture.</returns>
+            /// <value>The Material to render the camera texture.</value>
             /// <remarks>
             /// This subsystem will lazily create the camera materials depending on the <see cref="currentBackgroundRenderingMode"/>.
             /// Once created, the materials exist for the lifespan of the subsystem.
@@ -279,7 +264,7 @@ namespace UnityEngine.XR.ARKit
             }
 
             /// <summary>
-            /// Whether camera permission has been granted.
+            /// Indicates whether camera permission has been granted.
             /// </summary>
             /// <value><see langword="true"/> if camera permission has been granted for this app. Otherwise, <see langword="false"/>.</value>
             public override bool permissionGranted => NativeApi.UnityARKit_Camera_IsCameraPermissionGranted();
@@ -296,7 +281,7 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// Creates and returns a <see cref="HighResolutionCpuImagePromise"/>.
             /// </summary>
-            /// <returns>The promise instance.</returns>
+            /// <returns>The promise.</returns>
             // ReSharper disable once MemberCanBeMadeStatic.Local -- This method is dependent on a valid provider instance
             public HighResolutionCpuImagePromise TryAcquireHighResolutionCpuImage() => new();
 
@@ -338,7 +323,6 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            /// <inheritdoc />
             public override XRSupportedCameraBackgroundRenderingMode requestedBackgroundRenderingMode
             {
                 get => m_RequestedCameraRenderingMode;
@@ -347,7 +331,6 @@ namespace UnityEngine.XR.ARKit
 
             XRSupportedCameraBackgroundRenderingMode m_RequestedCameraRenderingMode = XRSupportedCameraBackgroundRenderingMode.Any;
 
-            /// <inheritdoc />
             public override XRSupportedCameraBackgroundRenderingMode supportedBackgroundRenderingMode
                 => XRSupportedCameraBackgroundRenderingMode.Any;
 
@@ -377,7 +360,6 @@ namespace UnityEngine.XR.ARKit
                 return NativeApi.UnityARKit_Camera_TryGetFrame(cameraParams, out cameraFrame);
             }
 
-            /// <inheritdoc/>
             public override bool autoFocusEnabled => NativeApi.UnityARKit_Camera_GetAutoFocusEnabled();
 
             /// <summary>
@@ -561,7 +543,7 @@ namespace UnityEngine.XR.ARKit
             }
 
             /// <summary>
-            /// Get the enabled and disabled shader keywords for the material.
+            /// Gets the enabled and disabled shader keywords for the material.
             /// </summary>
             /// <param name="enabledKeywords">The keywords to enable for the material.</param>
             /// <param name="disabledKeywords">The keywords to disable for the material.</param>

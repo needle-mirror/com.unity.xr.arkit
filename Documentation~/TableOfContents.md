@@ -9,6 +9,8 @@
   * [Object tracking](xref:arkit-object-tracking)
   * [Face tracking](xref:arkit-face-tracking)
   * [Point clouds](xref:arkit-point-clouds)
+  * [Anchors](xref:arkit-anchors)
   * [Meshing](xref:arkit-meshing)
   * [Occlusion](xref:arkit-occlusion)
+  * [Ray casts](xref:arkit-raycasts)
   * [Participants](xref:arkit-participant-tracking)

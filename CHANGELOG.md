@@ -8,6 +8,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.3] - 2024-08-16
+
+### Changed
+
+- Changed AR Foundation dependency version from 6.0.2 to 6.0.3
+
 ## [6.0.2] - 2024-05-22
 
 ### Changed
@@ -199,7 +205,7 @@ No changes
 
 - Fixed [an issue](https://issuetracker.unity3d.com/issues/ar-camera-feed-jitters-and-shakes-with-mutithreaded-rendering-when-running-on-ios-16) where rendered frames comes out of order on iOS 16 when built with multi-threaded rendering enabled in Unity.
 - Fixed a bug where the `HandheldARInputDevice` did not appear in the Editor's InputActions UI. Now, if you are manually configuring the **Tracked Pose Driver** component on the camera under XR Origin, you can select **AR Handheld Device > devicePosition** and **AR Handheld Device > deviceRotation** for position and rotation input bindings respectively.
-- Fixed a bug where `ARKitReferenceImageLibraryBuildProcessor` could cause compile error when build target is not iOS. 
+- Fixed a bug where `ARKitReferenceImageLibraryBuildProcessor` could cause compile error when build target is not iOS.
 
 ## [5.0.0-pre.13] - 2022-06-28
 

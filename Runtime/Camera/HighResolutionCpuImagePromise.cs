@@ -19,8 +19,8 @@ namespace UnityEngine.XR.ARKit
         /// the callback, this class must keep a static reference to the instance that will be resolved by the callback.</para>
         /// <para>This design has a limitation that only one promise instance at a time can await a result; however, the
         /// native ARKit API for high resolution frame capture has the same limitation, so there is no net negative impact.</para>
-        /// <para>See ARKit's <see href="https://developer.apple.com/documentation/arkit/arsession/3975720-capturehighresolutionframewithco?language=objc">
-        /// captureHighResolutionFrameWithCompletion</see> documentation for more information.</para>
+        /// <para>Refer to ARKit's <a href="https://developer.apple.com/documentation/arkit/arsession/3975720-capturehighresolutionframewithco?language=objc">
+        /// captureHighResolutionFrameWithCompletion</a> documentation for more information.</para>
         /// </remarks>
         static HighResolutionCpuImagePromise s_Instance;
 

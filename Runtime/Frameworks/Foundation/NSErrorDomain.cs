@@ -1,4 +1,4 @@
-﻿namespace UnityEngine.XR.ARKit
+namespace UnityEngine.XR.ARKit
 {
     /// <summary>
     /// The domain associated with an <see cref="NSError"/>. See <see cref="NSError.ToErrorDomain"/>.
