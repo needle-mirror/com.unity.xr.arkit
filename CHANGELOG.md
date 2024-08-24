@@ -8,18 +8,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [6.0.3] - 2024-08-16
+## [6.1.0-pre.1] - 2024-08-24
+
+### Added
+
+- Added [ARKitEnvironmentProbeSubsystem](xref:UnityEngine.XR.ARKit.ARKitEnvironmentProbeSubsystem), [ARKitHumanBodySubsystem](xref:UnityEngine.XR.ARKit.ARKitHumanBodySubsystem), and [ARKitOcclusionSubsystem](xref:UnityEngine.XR.ARKit.ARKitOcclusionSubsystem). These classes were previously internal, and are now public.
+- Added C header file necessary to interpret native pointers: `Includes~/UnityXRNativePtrs.h`
 
 ### Changed
 
-- Changed AR Foundation dependency version from 6.0.2 to 6.0.3
-
-## [6.0.2] - 2024-05-22
-
-### Changed
-
-- Rebuilt static libraries with Xcode version 15.4 (15F31d). You are now required to build iOS apps using Xcode 15.4 or newer.
-- Changed AR Foundation dependency version from 6.0.1 to 6.0.2.
+- Rebuilt static libraries with Xcode version 15.4 (15F31d).
 
 ### Fixed
 

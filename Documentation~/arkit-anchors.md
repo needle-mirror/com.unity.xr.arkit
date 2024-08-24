@@ -22,4 +22,5 @@ ARKit implements the following optional features of AR Foundation's [XRAnchorSub
 | **Async cancellation** | [supportsAsyncCancellation](xref:UnityEngine.XR.ARSubsystems.XRAnchorSubsystemDescriptor.supportsAsyncCancellation) |  |
 
 > [!NOTE]
-> Refer to AR Foundation [Anchors platform support](xref:arfoundation-anchors-platform-support) for more information on the optional features of the anchor subsystem.
+> Refer to AR Foundation [Anchors platform support](xref:arfoundation-anchors-platform-support) for more information
+> on the optional features of the anchor subsystem.

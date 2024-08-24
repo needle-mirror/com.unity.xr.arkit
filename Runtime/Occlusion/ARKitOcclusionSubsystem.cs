@@ -12,7 +12,7 @@ namespace UnityEngine.XR.ARKit
     /// This subsystem provides implementing functionality for the <c>XROcclusionSubsystem</c> class.
     /// </summary>
     [Preserve]
-    class ARKitOcclusionSubsystem : XROcclusionSubsystem
+    public sealed class ARKitOcclusionSubsystem : XROcclusionSubsystem
     {
         /// <summary>
         /// Register the ARKit occlusion subsystem if iOS and not the editor.
@@ -43,7 +43,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// The implementation provider class.
         /// </summary>
-        class ARKitProvider : XROcclusionSubsystem.Provider
+        class ARKitProvider : Provider
         {
             /// <summary>
             /// The shader property name for the human segmentation stencil texture.
@@ -163,10 +163,11 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// Construct the implementation provider.
             /// </summary>
-            public ARKitProvider() => NativeApi.UnityARKit_OcclusionProvider_Construct(k_TextureHumanStencilPropertyId,
-                                                                                       k_TextureHumanDepthPropertyId,
-                                                                                       k_TextureEnvironmentDepthPropertyId,
-                                                                                       k_TextureEnvironmentDepthConfidencePropertyId);
+            public ARKitProvider() => NativeApi.UnityARKit_OcclusionProvider_Construct(
+                k_TextureHumanStencilPropertyId,
+                k_TextureHumanDepthPropertyId,
+                k_TextureEnvironmentDepthPropertyId,
+                k_TextureEnvironmentDepthConfidencePropertyId);
 
             /// <summary>
             /// Start the provider.
@@ -402,16 +403,22 @@ namespace UnityEngine.XR.ARKit
             /// <param name="defaultDescriptor">The default descriptor value.</param>
             /// <param name="allocator">The allocator to use when creating the returned <c>NativeArray</c>.</param>
             /// <returns>The occlusion texture descriptors.</returns>
-            public override unsafe NativeArray<XRTextureDescriptor> GetTextureDescriptors(XRTextureDescriptor defaultDescriptor,
-                                                                                          Allocator allocator)
+            public override unsafe NativeArray<XRTextureDescriptor> GetTextureDescriptors(
+                XRTextureDescriptor defaultDescriptor,
+                Allocator allocator)
             {
-                var textureDescriptors = NativeApi.UnityARKit_OcclusionProvider_AcquireTextureDescriptors(out int length,
-                                                                                                          out int elementSize);
+                var textureDescriptors = NativeApi.UnityARKit_OcclusionProvider_AcquireTextureDescriptors(
+                    out var length,
+                    out var elementSize);
 
                 try
                 {
-                    return NativeCopyUtility.PtrToNativeArrayWithDefault(defaultDescriptor, textureDescriptors,
-                                                                         elementSize, length, allocator);
+                    return NativeCopyUtility.PtrToNativeArrayWithDefault(
+                        defaultDescriptor,
+                        textureDescriptors,
+                        elementSize,
+                        length,
+                        allocator);
                 }
                 finally
                 {
@@ -428,8 +435,8 @@ namespace UnityEngine.XR.ARKit
             public override void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
 #pragma warning restore CS0672
             {
-                bool isEnvDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsEnvironmentEnabled();
-                bool isHumanDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsHumanEnabled();
+                var isEnvDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsEnvironmentEnabled();
+                var isHumanDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsHumanEnabled();
 
                 // If no occlusion is preferred or if neither depth is enabled, then all disable occlusion.
                 if ((m_OcclusionPreferenceMode == OcclusionPreferenceMode.NoOcclusion) || (!isEnvDepthEnabled && !isHumanDepthEnabled))
@@ -453,8 +460,8 @@ namespace UnityEngine.XR.ARKit
 
             public override ShaderKeywords GetShaderKeywords()
             {
-                bool isEnvDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsEnvironmentEnabled();
-                bool isHumanDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsHumanEnabled();
+                var isEnvDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsEnvironmentEnabled();
+                var isHumanDepthEnabled = NativeApi.UnityARKit_OcclusionProvider_IsHumanEnabled();
 
                 if (ShouldUseDepthDisabledKeywords(isEnvDepthEnabled, isHumanDepthEnabled))
                 {
@@ -488,10 +495,11 @@ namespace UnityEngine.XR.ARKit
         {
 #if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
-            public static extern void UnityARKit_OcclusionProvider_Construct(int textureHumanStencilPropertyId,
-                                                                             int textureHumanDepthPropertyId,
-                                                                             int textureEnvDepthPropertyId,
-                                                                             int textureEnvDepthConfidencePropertyId);
+            public static extern void UnityARKit_OcclusionProvider_Construct(
+                int textureHumanStencilPropertyId,
+                int textureHumanDepthPropertyId,
+                int textureEnvDepthPropertyId,
+                int textureEnvDepthConfidencePropertyId);
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_OcclusionProvider_Start();
@@ -570,10 +578,11 @@ namespace UnityEngine.XR.ARKit
 #else
             static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
-            public static void UnityARKit_OcclusionProvider_Construct(int textureHumanStencilPropertyId,
-                                                                      int textureHumanDepthPropertyId,
-                                                                      int textureEnvDepthPropertyId,
-                                                                      int textureEnvDepthConfidencePropertyId)
+            public static void UnityARKit_OcclusionProvider_Construct(
+                int textureHumanStencilPropertyId,
+                int textureHumanDepthPropertyId,
+                int textureEnvDepthPropertyId,
+                int textureEnvDepthConfidencePropertyId)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }

@@ -13,7 +13,7 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitRaycastSubsystem : XRRaycastSubsystem
     {
-        class ARKitProvider : XRRaycastSubsystem.Provider
+        class ARKitProvider : Provider
         {
             IntPtr m_Self;
 

@@ -9,7 +9,7 @@ namespace UnityEngine.XR.ARKit
     /// This subsystem provides implementing functionality for the <c>XREnvironmentProbeSubsystem</c> class.
     /// </summary>
     [Preserve]
-    class ARKitEnvironmentProbeSubsystem : XREnvironmentProbeSubsystem
+    public sealed class ARKitEnvironmentProbeSubsystem : XREnvironmentProbeSubsystem
     {
         /// <summary>
         /// Create and register the environment probe subsystem descriptor to advertise a providing implementation for
@@ -106,24 +106,15 @@ namespace UnityEngine.XR.ARKit
                 return EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_TryRemoveEnvironmentProbe(trackableId);
             }
 
-            public override TrackableChanges<XREnvironmentProbe> GetChanges(XREnvironmentProbe defaultEnvironmentProbe,
-                                                                            Allocator allocator)
+            public override TrackableChanges<XREnvironmentProbe> GetChanges(
+                XREnvironmentProbe defaultEnvironmentProbe,
+                Allocator allocator)
             {
-                int numAddedEnvironmentProbes;
-                IntPtr addedEnvironmentProbesPointer;
-
-                int numUpdatedEnvironmentProbes;
-                IntPtr updatedEnvironmentProbesPointer;
-
-                int numRemovedEnvironmentProbeIds;
-                IntPtr removedEnvironmentProbeIdsPointer;
-
-                int stride;
-
-                var context = EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_AcquireChanges(out numAddedEnvironmentProbes, out addedEnvironmentProbesPointer,
-                                                                                                     out numUpdatedEnvironmentProbes, out updatedEnvironmentProbesPointer,
-                                                                                                     out numRemovedEnvironmentProbeIds, out removedEnvironmentProbeIdsPointer,
-                                                                                                     out stride);
+                var context = EnvironmentProbeApi.UnityARKit_EnvironmentProbeProvider_AcquireChanges(
+                    out var numAddedEnvironmentProbes, out var addedEnvironmentProbesPointer,
+                    out var numUpdatedEnvironmentProbes, out var updatedEnvironmentProbesPointer,
+                    out var numRemovedEnvironmentProbeIds, out var removedEnvironmentProbeIdsPointer,
+                    out var stride);
 
                 try
                 {

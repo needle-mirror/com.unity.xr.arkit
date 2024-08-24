@@ -10,7 +10,7 @@ namespace UnityEngine.XR.ARKit
     /// This subsystem provides implementing functionality for the <c>XRHumanBodySubsystem</c> class.
     /// </summary>
     [Preserve]
-    class ARKitHumanBodySubsystem : XRHumanBodySubsystem
+    public sealed class ARKitHumanBodySubsystem : XRHumanBodySubsystem
     {
         /// <summary>
         /// Register the ARKit human body subsystem if iOS and not the editor.
@@ -39,7 +39,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// The implementation provider class.
         /// </summary>
-        class ARKitProvider : XRHumanBodySubsystem.Provider
+        class ARKitProvider : Provider
         {
             /// <summary>
             /// Construct the implementation provider.
@@ -126,21 +126,11 @@ namespace UnityEngine.XR.ARKit
             /// </returns>
             public override unsafe TrackableChanges<XRHumanBody> GetChanges(XRHumanBody defaultHumanBody, Allocator allocator)
             {
-                int numAddedHumanBodies;
-                void* addedHumanBodiesPointer;
-
-                int numUpdatedHumanBodies;
-                void* updatedHumanBodiesPointer;
-
-                int numRemovedHumanBodyIds;
-                void* removedHumanBodyIdsPointer;
-
-                int stride;
-
-                var context = NativeApi.UnityARKit_HumanBodyProvider_AcquireChanges(out numAddedHumanBodies, out addedHumanBodiesPointer,
-                                                                                    out numUpdatedHumanBodies, out updatedHumanBodiesPointer,
-                                                                                    out numRemovedHumanBodyIds, out removedHumanBodyIdsPointer,
-                                                                                    out stride);
+                var context = NativeApi.UnityARKit_HumanBodyProvider_AcquireChanges(
+                    out var numAddedHumanBodies, out var addedHumanBodiesPointer,
+                    out var numUpdatedHumanBodies, out var updatedHumanBodiesPointer,
+                    out var numRemovedHumanBodyIds, out var removedHumanBodyIdsPointer,
+                    out var stride);
 
                 try
                 {
@@ -188,7 +178,11 @@ namespace UnityEngine.XR.ARKit
 
                     if (joints != null)
                     {
-                        NativeArray<XRHumanBodyJoint> tmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<XRHumanBodyJoint>(joints, numJoints, Allocator.None);
+                        var tmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<XRHumanBodyJoint>(
+                            joints,
+                            numJoints,
+                            Allocator.None);
+
                         skeleton.CopyFrom(tmp);
                     }
                 }
@@ -213,23 +207,28 @@ namespace UnityEngine.XR.ARKit
             /// <remarks>
             /// The returned array can be empty if the system does not detect a human in the camera image.
             /// </remarks>
-            public override unsafe NativeArray<XRHumanBodyPose2DJoint> GetHumanBodyPose2DJoints(XRHumanBodyPose2DJoint defaultHumanBodyPose2DJoint,
-                                                                                                int screenWidth,
-                                                                                                int screenHeight,
-                                                                                                ScreenOrientation screenOrientation,
-                                                                                                Allocator allocator)
+            public override unsafe NativeArray<XRHumanBodyPose2DJoint> GetHumanBodyPose2DJoints(
+                XRHumanBodyPose2DJoint defaultHumanBodyPose2DJoint,
+                int screenWidth,
+                int screenHeight,
+                ScreenOrientation screenOrientation,
+                Allocator allocator)
             {
-                var joints = NativeApi.UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(screenWidth,
-                                                                                                 screenHeight,
-                                                                                                 screenOrientation,
-                                                                                                 out int length,
-                                                                                                 out int elementSize);
+                var joints = NativeApi.UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(
+                    screenWidth,
+                    screenHeight,
+                    screenOrientation,
+                    out var length,
+                    out var elementSize);
 
                 try
                 {
-                    var returnJoints = NativeCopyUtility.PtrToNativeArrayWithDefault(defaultHumanBodyPose2DJoint,
-                                                                                     joints, elementSize, length,
-                                                                                     allocator);
+                    var returnJoints = NativeCopyUtility.PtrToNativeArrayWithDefault(
+                        defaultHumanBodyPose2DJoint,
+                        joints,
+                        elementSize,
+                        length,
+                        allocator);
 
                     return returnJoints;
                 }
@@ -259,10 +258,11 @@ namespace UnityEngine.XR.ARKit
             public static extern void UnityARKit_HumanBodyProvider_Destruct();
 
             [DllImport("__Internal")]
-            public static extern unsafe void* UnityARKit_HumanBodyProvider_AcquireChanges(out int numAddedHumanBodies, out void* addedBodys,
-                                                                                          out int numUpdatedHumanBodies, out void* updatedBodys,
-                                                                                          out int numRemovedHumanBodyIds, out void* removedBodyIds,
-                                                                                          out int stride);
+            public static extern unsafe void* UnityARKit_HumanBodyProvider_AcquireChanges(
+                out int numAddedHumanBodies, out void* addedBodys,
+                out int numUpdatedHumanBodies, out void* updatedBodys,
+                out int numRemovedHumanBodyIds, out void* removedBodyIds,
+                out int stride);
 
             [DllImport("__Internal")]
             public static extern unsafe void UnityARKit_HumanBodyProvider_ReleaseChanges(void* context);
@@ -274,11 +274,12 @@ namespace UnityEngine.XR.ARKit
             public static extern unsafe void UnityARKit_HumanBodyProvider_ReleaseJoints(void* joints);
 
             [DllImport("__Internal")]
-            public static unsafe extern void* UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(int screenWidth,
-                                                                                                        int screenHeight,
-                                                                                                        ScreenOrientation screenOrientation,
-                                                                                                        out int length,
-                                                                                                        out int elementSize);
+            public static unsafe extern void* UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(
+                int screenWidth,
+                int screenHeight,
+                ScreenOrientation screenOrientation,
+                out int length,
+                out int elementSize);
 
             [DllImport("__Internal")]
             public static unsafe extern void UnityARKit_HumanBodyProvider_ReleaseHumanBodyPose2DJoints(void* joints);
@@ -323,10 +324,11 @@ namespace UnityEngine.XR.ARKit
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            public static unsafe void* UnityARKit_HumanBodyProvider_AcquireChanges(out int numAddedHumanBodies, out void* addedBodys,
-                                                                                          out int numUpdatedHumanBodies, out void* updatedBodys,
-                                                                                          out int numRemovedHumanBodyIds, out void* removedBodyIds,
-                                                                                          out int stride)
+            public static unsafe void* UnityARKit_HumanBodyProvider_AcquireChanges(
+                out int numAddedHumanBodies, out void* addedBodys,
+                out int numUpdatedHumanBodies, out void* updatedBodys,
+                out int numRemovedHumanBodyIds, out void* removedBodyIds,
+                out int stride)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
@@ -346,11 +348,12 @@ namespace UnityEngine.XR.ARKit
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            public static unsafe void* UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(int screenWidth,
-                                                                                                        int screenHeight,
-                                                                                                        ScreenOrientation screenOrientation,
-                                                                                                        out int length,
-                                                                                                        out int elementSize)
+            public static unsafe void* UnityARKit_HumanBodyProvider_AcquireHumanBodyPose2DJoints(
+                int screenWidth,
+                int screenHeight,
+                ScreenOrientation screenOrientation,
+                out int length,
+                out int elementSize)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }

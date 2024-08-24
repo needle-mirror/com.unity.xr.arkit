@@ -9,12 +9,12 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
     /// </summary>
     public class ARKitCameraSubsystemTests
     {
-        ARCameraManager m_CameraManager;
-
         #region HighResolutionCpuImageSample
         IEnumerator CaptureHighResolutionCpuImage()
         {
-            if (m_CameraManager.subsystem is not ARKitCameraSubsystem subsystem)
+            // This is inefficient. You should re-use a saved reference instead.
+            var cameraManager = FindAnyObjectByType<ARCameraManager>();
+            if (cameraManager.subsystem is not ARKitCameraSubsystem subsystem)
             {
                 Debug.LogError("High resolution CPU image capture requires ARKit.");
                 yield break;
@@ -38,8 +38,11 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
         #region AdvancedConfigurationSupport
         bool AdvancedConfigurationSupported(out ARKitCameraSubsystem subsystem)
         {
+            // This is inefficient. You should re-use a saved reference instead.
+            var cameraManager = FindAnyObjectByType<ARCameraManager>();
+
             // check if arkit subsystem is available
-            subsystem = m_CameraManager.subsystem as ARKitCameraSubsystem;
+            subsystem = cameraManager.subsystem as ARKitCameraSubsystem;
             if (subsystem == null)
             {
                 Debug.LogError("Advanced camera configuration requires ARKit.");

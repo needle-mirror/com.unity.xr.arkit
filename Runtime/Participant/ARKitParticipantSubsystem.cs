@@ -72,7 +72,7 @@ namespace UnityEngine.XR.ARKit
 #else
             static IntPtr UnityARKit_Participant_init()
             {
-                throw new System.NotImplementedException("Apple ARKit XR Plug-in Provider not enabled in project settings.");
+                throw new NotImplementedException("Apple ARKit XR Plug-in Provider not enabled in project settings.");
             }
 #endif
         }
