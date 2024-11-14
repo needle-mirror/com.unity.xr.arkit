@@ -62,6 +62,9 @@ namespace UnityEngine.XR.ARKit
         [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast16_0")]
         public static extern bool AtLeast16_0();
 
+        [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast17_0")]
+        public static extern bool AtLeast17_0();
+
         [DllImport("__Internal", EntryPoint="UnityARKit_EnsureRootViewIsSetup")]
         public static extern void EnsureRootViewIsSetup();
 
@@ -149,6 +152,7 @@ namespace UnityEngine.XR.ARKit
         public static bool AtLeast12_0() => false;
         public static bool AtLeast13_0() => false;
         public static bool AtLeast16_0() => false;
+        public static bool AtLeast17_0() => false;
 #endif
     }
 }

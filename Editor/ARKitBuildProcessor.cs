@@ -272,6 +272,31 @@ namespace UnityEditor.XR.ARKit
                 }
 
                 File.WriteAllText(plistPath, plist.WriteToString());
+
+                // update for Unity-iOS.xcodeproj's Build Setting
+                var projectPath = pathToBuiltProject + "/Unity-iPhone.xcodeproj/project.pbxproj";
+                var project = new PBXProject();
+                project.ReadFromFile(projectPath);
+
+                // target : unity-iphone
+                string targetGUID = project.GetUnityMainTargetGuid();
+                project.AddBuildProperty(targetGUID, "OTHER_LDFLAGS", "-ld64");
+                project.SetBuildProperty(targetGUID, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+                project.AddBuildProperty(targetGUID, "LD_RUNPATH_SEARCH_PATHS", "/usr/lib/swift");
+                project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)");
+                project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)");
+
+                // target : unityframework
+                targetGUID = project.GetUnityFrameworkTargetGuid();
+                project.AddBuildProperty(targetGUID, "OTHER_LDFLAGS", "-ld64");
+                project.SetBuildProperty(targetGUID, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+                project.AddBuildProperty(targetGUID, "LD_RUNPATH_SEARCH_PATHS", "/usr/lib/swift");
+                project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "/usr/lib/swift");
+                project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)");
+                project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)");
+
+                // After we're done editing the build settings we save it
+                project.WriteToFile(projectPath);
             }
         }
 #endif // UNITY_IOS

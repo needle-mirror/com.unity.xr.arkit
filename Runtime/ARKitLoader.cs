@@ -25,6 +25,7 @@ namespace UnityEngine.XR.ARKit
         static List<XROcclusionSubsystemDescriptor> s_OcclusionSubsystemDescriptors = new List<XROcclusionSubsystemDescriptor>();
         static List<XRParticipantSubsystemDescriptor> s_ParticipantSubsystemDescriptors = new List<XRParticipantSubsystemDescriptor>();
         static List<XRMeshSubsystemDescriptor> s_MeshSubsystemDescriptors = new List<XRMeshSubsystemDescriptor>();
+        static List<XRBoundingBoxSubsystemDescriptor> s_BoundingBoxSubsystemDescriptors = new List<XRBoundingBoxSubsystemDescriptor>();
 
         /// <summary>
         /// The [XRSessionSubsystem](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem) whose lifecycle is managed by this loader.
@@ -110,6 +111,11 @@ namespace UnityEngine.XR.ARKit
         public XRMeshSubsystem meshSubsystem => GetLoadedSubsystem<XRMeshSubsystem>();
 
         /// <summary>
+        /// The [XRBoundingBoxSubsystem](xref:UnityEngine.XR.ARSubsystems.XRBoundingBoxSubsystem) whose lifecycle is managed by this loader.
+        /// </summary>
+        public XRBoundingBoxSubsystem boundingBoxSubsystem => GetLoadedSubsystem<XRBoundingBoxSubsystem>();
+
+        /// <summary>
         /// Initializes the loader.
         /// </summary>
         /// <returns>`True` if the session subsystem was successfully created, otherwise `false`.</returns>
@@ -133,6 +139,7 @@ namespace UnityEngine.XR.ARKit
             CreateSubsystem<XROcclusionSubsystemDescriptor, XROcclusionSubsystem>(s_OcclusionSubsystemDescriptors, "ARKit-Occlusion");
             CreateSubsystem<XRParticipantSubsystemDescriptor, XRParticipantSubsystem>(s_ParticipantSubsystemDescriptors, "ARKit-Participant");
             CreateSubsystem<XRMeshSubsystemDescriptor, XRMeshSubsystem>(s_MeshSubsystemDescriptors, "ARKit-Meshing");
+            CreateSubsystem<XRBoundingBoxSubsystemDescriptor, XRBoundingBoxSubsystem>(s_BoundingBoxSubsystemDescriptors, "ARKit-RoomPlan-BoundingBox");
 
             if (sessionSubsystem == null)
             {
@@ -193,6 +200,7 @@ namespace UnityEngine.XR.ARKit
             DestroySubsystem<XRParticipantSubsystem>();
             DestroySubsystem<XRMeshSubsystem>();
             DestroySubsystem<XRSessionSubsystem>();
+            DestroySubsystem<XRBoundingBoxSubsystem>();
 #endif
             return true;
         }

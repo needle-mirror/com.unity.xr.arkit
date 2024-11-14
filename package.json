@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "Apple ARKit XR Plugin",
-  "version": "6.1.0-pre.2",
+  "version": "6.1.0-pre.3",
   "unity": "6000.0",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion\n\n* Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.",
   "keywords": [
@@ -13,20 +13,20 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arfoundation": "6.1.0-pre.2",
+    "com.unity.xr.arfoundation": "6.1.0-pre.3",
     "com.unity.xr.core-utils": "2.2.2",
     "com.unity.xr.management": "4.4.0"
   },
   "_upm": {
-    "changelog": "### Changed\n\n- Changed AR Foundation dependency version from 6.1.0-pre.1 to 6.1.0-pre.2."
+    "changelog": "### Added\n\n- Added support for bounding boxes. Refer to [Bounding boxes](xref:arkit-bounding-boxes) for more information.\n\n### Changed\n\n- Rebuilt static libraries with Xcode version 16.1 (16B40). You are now required to build iOS apps that include this package with Xcode 16.1 or newer.\n- Changed AR Foundation dependency version from 6.1.0-pre.2 to 6.1.0-pre.3."
   },
   "upmCi": {
-    "footprint": "277e33dab8d4c65edc7149da7881dfa8eff04888"
+    "footprint": "55ef6cf678c58b888c66a3ef4a245fda5e93ff51"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@6.1/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "6d848aff38f014c5bc9a0c5755663734a40bcf96"
+    "revision": "b0b7626b9f7b60a40f43615ef897926cb4ebf98c"
   }
 }

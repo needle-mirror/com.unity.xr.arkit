@@ -533,8 +533,7 @@ namespace UnityEngine.XR.ARKit
                 try
                 {
                     return NativeCopyUtility.PtrToNativeArrayWithDefault(
-                        defaultDescriptor,
-                        textureDescriptors, elementSize, length, allocator);
+                        defaultDescriptor, textureDescriptors, elementSize, length, allocator);
                 }
                 finally
                 {

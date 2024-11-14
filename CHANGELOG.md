@@ -8,6 +8,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.1.0-pre.3] - 2024-11-14
+
+### Added
+
+- Added support for bounding boxes. Refer to [Bounding boxes](xref:arkit-bounding-boxes) for more information.
+
+### Changed
+
+- Rebuilt static libraries with Xcode version 16.1 (16B40). You are now required to build iOS apps that include this package with Xcode 16.1 or newer.
+- Changed AR Foundation dependency version from 6.1.0-pre.2 to 6.1.0-pre.3.
+
 ## [6.1.0-pre.2] - 2024-10-09
 
 ### Changed
