@@ -8,6 +8,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.4] - 2024-12-05
+
+### Changed
+
+- Changed AR Foundation dependency version from 6.0.3 to 6.0.4
+
+### Fixed
+
+- Fixed linker error when ARKit was not enabled in XR Management.
+
 ## [6.0.3] - 2024-08-16
 
 ### Changed

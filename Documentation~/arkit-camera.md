@@ -61,20 +61,20 @@ The following code samples demonstrate how to configure advanced camera hardware
 ### Check Support
 The following example method checks whether the ARKitCameraSubsystem is available and whether it supports the advanced camera configuration feature. This method is used by the other code examples on this page.
 
-[!code-cs[CameraExposure](../Tests/CodeSamples/ARKitCameraSubsystemTests.cs#AdvancedConfigurationSupport)]
+[!code-cs[CameraExposure](../Tests/Runtime/CodeSamples/ARKitCameraSubsystemTests.cs#AdvancedConfigurationSupport)]
 
 ### Exposure
 The following example method tries to lock the camera and, if successful, sets the exposure.
-[!code-cs[CameraExposure](../Tests/CodeSamples/ARKitCameraSubsystemTests.cs#CameraExposure)]
+[!code-cs[CameraExposure](../Tests/Runtime/CodeSamples/ARKitCameraSubsystemTests.cs#CameraExposure)]
 
 ### White Balance
 The following example method tries to lock the camera and, if successful, sets the white balance.
 
-[!code-cs[CameraWhiteBalance](../Tests/CodeSamples/ARKitCameraSubsystemTests.cs#CameraWhiteBalance)]
+[!code-cs[CameraWhiteBalance](../Tests/Runtime/CodeSamples/ARKitCameraSubsystemTests.cs#CameraWhiteBalance)]
 
 ### Focus
 The following example method tries to lock the camera and, if successful, sets the focus.
-[!code-cs[CameraFocus](../Tests/CodeSamples/ARKitCameraSubsystemTests.cs#CameraFocus)]
+[!code-cs[CameraFocus](../Tests/Runtime/CodeSamples/ARKitCameraSubsystemTests.cs#CameraFocus)]
 
 
 ## High resolution CPU image
@@ -83,7 +83,7 @@ You can asynchronously capture a high resolution [XRCpuImage](xref:UnityEngine.X
 
 The example below demonstrates a coroutine to set up and handle the asynchronous request:
 
-[!code-cs[HighResolutionCpuImageSample](../Tests/CodeSamples/ARKitCameraSubsystemTests.cs#HighResolutionCpuImageSample)]
+[!code-cs[HighResolutionCpuImageSample](../Tests/Runtime/CodeSamples/ARKitCameraSubsystemTests.cs#HighResolutionCpuImageSample)]
 
 Whenever you successfully acquire a high resolution CPU image, you should [Dispose](xref:UnityEngine.XR.ARSubsystems.XRCpuImage.Dispose) it as soon as possible, as CPU images require native memory resources. If you retain too many high-resolution images, ARKit can be prevented from rendering new frames.
 
