@@ -1,4 +1,4 @@
-﻿namespace UnityEngine.XR.ARKit
+namespace UnityEngine.XR.ARKit
 {
     /// <summary>
     /// Specifies how the session maps real-world device motion into a 3D scene coordinate system.

@@ -237,29 +237,30 @@ namespace UnityEngine.XR.ARKit
         public override int GetHashCode() => m_Self.GetHashCode();
 
         /// <summary>
-        /// Tests for equality. Same as <see cref="Equals(ARKitLockedCamera)"/>.
+        /// Tests for equality. Equivalent to <see cref="Equals(ARKitLockedCamera)"/>.
         /// </summary>
-        /// <param name="lhs">The <see cref="ARKitLockedCamera"/> to compare with <paramref name="rhs"/>.</param>
-        /// <param name="rhs">The <see cref="ARKitLockedCamera"/> to compare with <paramref name="lhs"/>.</param>
-        /// <returns>Returns <see langword="true"/> if <paramref name="lhs"/> is equal to <paramref name="rhs"/> using
-        ///     <see cref="Equals(ARKitLockedCamera)"/>. Returns <see langword="false"/> otherwise.</returns>
+        /// <param name="lhs">The instance to compare with <paramref name="rhs"/>.</param>
+        /// <param name="rhs">The instance to compare with <paramref name="lhs"/>.</param>
+        /// <returns><see langword="true"/> if <paramref name="lhs"/> is equal to <paramref name="rhs"/> using
+        /// <see cref="Equals(ARKitLockedCamera)"/>. Otherwise, returns <see langword="false"/>.</returns>
         public static bool operator ==(ARKitLockedCamera lhs, ARKitLockedCamera rhs) => lhs.Equals(rhs);
 
         /// <summary>
-        /// Tests for inequality. Same as the negation of <see cref="Equals(ARKitLockedCamera)"/>.
+        /// Tests for inequality. Equivalent to the negation of <see cref="Equals(ARKitLockedCamera)"/>.
         /// </summary>
         /// <param name="lhs">The <see cref="ARKitLockedCamera"/> to compare with <paramref name="rhs"/>.</param>
         /// <param name="rhs">The <see cref="ARKitLockedCamera"/> to compare with <paramref name="lhs"/>.</param>
-        /// <returns>Returns <see langword="false"/> if <paramref name="lhs"/> is equal to <paramref name="rhs"/> using
-        ///     <see cref="Equals(ARKitLockedCamera)"/>. Returns <see langword="true"/> otherwise.</returns>
+        /// <returns><see langword="false"/> if <paramref name="lhs"/> is equal to <paramref name="rhs"/> using
+        /// <see cref="Equals(ARKitLockedCamera)"/>. Otherwise, returns <see langword="true"/>.</returns>
         public static bool operator !=(ARKitLockedCamera lhs, ARKitLockedCamera rhs) => !lhs.Equals(rhs);
 
         /// <summary>
         /// Tests for equality.
         /// </summary>
         /// <remarks>
-        /// This equality operator lets you to compare an <see cref="ARKitLockedCamera"/> with <see langword="null"/> to determine whether its
-        /// underlying pointer is null. This allows for a more natural comparison with the native ARKit camera object:
+        /// This equality operator lets you compare an instance with <see langword="null"/> to determine whether its
+        /// native pointer is `null`.
+        /// </remarks>
         /// <example>
         /// <code>
         /// bool TestForNull(ARKitLockedCamera obj)
@@ -271,16 +272,15 @@ namespace UnityEngine.XR.ARKit
         /// }
         /// </code>
         /// </example>
-        /// </remarks>
-        /// <param name="lhs">The nullable <see cref="ARKitLockedCamera"/> to compare with <paramref name="rhs"/>.</param>
-        /// <param name="rhs">The nullable <see cref="ARKitLockedCamera"/> to compare with <paramref name="lhs"/>.</param>
-        /// <returns>Returns <see langword="true"/> if any of these conditions are met:
-        /// - <paramref name="lhs"/> and <paramref name="rhs"/> are both not null and their underlying pointers are equal.
-        /// - <paramref name="lhs"/> is null and <paramref name="rhs"/>'s underlying pointer is null.
-        /// - <paramref name="rhs"/> is null and <paramref name="lhs"/>'s underlying pointer is null.
-        /// - Both <paramref name="lhs"/> and <paramref name="rhs"/> are null.
+        /// <param name="lhs">The nullable `ARKitLockedCamera` to compare with <paramref name="rhs"/>.</param>
+        /// <param name="rhs">The nullable `ARKitLockedCamera` to compare with <paramref name="lhs"/>.</param>
+        /// <returns><see langword="true"/> if any of these conditions are met:
+        /// - <paramref name="lhs"/> and <paramref name="rhs"/> are both not `null` and their native pointers are equal.
+        /// - <paramref name="lhs"/> is `null` and <paramref name="rhs"/>'s native pointer is `null`.
+        /// - <paramref name="rhs"/> is `null` and <paramref name="lhs"/>'s native pointer is `null`.
+        /// - Both <paramref name="lhs"/> and <paramref name="rhs"/> are `null`.
         ///
-        /// Returns <see langword="false"/> otherwise.
+        /// Otherwise, returns <see langword="false"/>.
         /// </returns>
         public static bool operator ==(ARKitLockedCamera? lhs, ARKitLockedCamera? rhs)
         {
@@ -307,8 +307,9 @@ namespace UnityEngine.XR.ARKit
         /// Tests for inequality.
         /// </summary>
         /// <remarks>
-        /// This inequality operator lets you to compare an <see cref="ARKitLockedCamera"/> with <see langword="null"/> to determine whether its
-        /// underlying pointer is null. This allows for a more natural comparison with the native ARKit camera object:
+        /// This inequality operator lets you compare an instance with <see langword="null"/> to determine whether its
+        /// native pointer is `null`.
+        /// </remarks>
         /// <example>
         /// <code>
         /// bool TestForNull(ARKitLockedCamera obj)
@@ -320,24 +321,23 @@ namespace UnityEngine.XR.ARKit
         /// }
         /// </code>
         /// </example>
-        /// </remarks>
-        /// <param name="lhs">The native object to compare with <paramref name="rhs"/>.</param>
-        /// <param name="rhs">The native object to compare with <paramref name="lhs"/>.</param>
-        /// <returns>Returns <see langword="false"/> if any of these conditions are met:
-        /// - <paramref name="lhs"/> and <paramref name="rhs"/> are both not null and their underlying pointers are equal.
-        /// - <paramref name="lhs"/> is null and <paramref name="rhs"/>'s underlying pointer is null.
-        /// - <paramref name="rhs"/> is null and <paramref name="lhs"/>'s underlying pointer is null.
-        /// - Both <paramref name="lhs"/> and <paramref name="rhs"/> are null.
+        /// <param name="lhs">The nullable `ARKitLockedCamera` to compare with <paramref name="rhs"/>.</param>
+        /// <param name="rhs">The nullable `ARKitLockedCamera` to compare with <paramref name="lhs"/>.</param>
+        /// <returns><see langword="false"/> if any of these conditions are met:
+        /// - <paramref name="lhs"/> and <paramref name="rhs"/> are both not `null` and their native pointers are equal.
+        /// - <paramref name="lhs"/> is `null` and <paramref name="rhs"/>'s native pointer is `null`.
+        /// - <paramref name="rhs"/> is `null` and <paramref name="lhs"/>'s native pointer is `null`.
+        /// - Both <paramref name="lhs"/> and <paramref name="rhs"/> are `null`.
         ///
-        /// Returns <see langword="true"/> otherwise.
+        /// Otherwise, returns <see langword="true"/>.
         /// </returns>
         public static bool operator !=(ARKitLockedCamera? lhs, ARKitLockedCamera? rhs) => !(lhs == rhs);
 
         /// <summary>
-        /// Casts an <see cref="ARKitLockedCamera"/> to its underlying native pointer.
+        /// Casts an instance to its underlying native pointer.
         /// </summary>
-        /// <param name="lockedCamera">The <see cref="ARKitLockedCamera"/> to cast.</param>
-        /// <returns>Returns the underlying native pointer for <paramref name="lockedCamera"/></returns>
+        /// <param name="lockedCamera">The instance to cast.</param>
+        /// <returns>The native pointer.</returns>
         public static explicit operator IntPtr(ARKitLockedCamera lockedCamera) => lockedCamera.AsIntPtr();
 
         static class NativeApi

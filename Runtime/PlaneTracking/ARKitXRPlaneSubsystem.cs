@@ -20,7 +20,7 @@ namespace UnityEngine.XR.ARKit
         {
             public override void Destroy() => NativeApi.UnityARKit_Planes_Shutdown();
 
-            public override void Start() =>  NativeApi.UnityARKit_Planes_Start();
+            public override void Start() => NativeApi.UnityARKit_Planes_Start();
 
             public override void Stop() => NativeApi.UnityARKit_Planes_Stop();
 

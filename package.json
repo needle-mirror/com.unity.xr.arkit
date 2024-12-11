@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "Apple ARKit XR Plugin",
-  "version": "5.1.5",
+  "version": "5.1.6",
   "unity": "2021.2",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion\n\n* Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.",
   "keywords": [
@@ -13,20 +13,20 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arfoundation": "5.1.5",
+    "com.unity.xr.arfoundation": "5.1.6",
     "com.unity.xr.core-utils": "2.1.0",
     "com.unity.xr.management": "4.0.1"
   },
   "_upm": {
-    "changelog": "### Changed\n\n- Rebuilt static libraries with Xcode version 15.4 (15F31d). You are now required to build iOS apps with Xcode 15.4 or newer.\n- Changed the AR Foundation dependency version from 5.1.4 to 5.1.5.\n\n### Fixed\n\n- Fixed issue [ARKB-58](https://issuetracker.unity3d.com/issues/arfoundation-application-crashes-when-arocclusionmanager-is-disabled-if-multithreaded-rendering-is-enabled-on-ios-devices-that-use-lidar) where iOS apps could intermittently crash when destroying the `AROcclusionManager` with multithreaded rendering enabled."
+    "changelog": "### Changed\n\n- Changed the AR Foundation dependency version from 5.1.5 to 5.1.6."
   },
   "upmCi": {
-    "footprint": "dbc564c15f671b1311199382bc23b58640cf9ed3"
+    "footprint": "97fcc41fb64dc81e72cad9dfd992f56d6704811d"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@5.1/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "52ff43b68913047c2a4e0ddb5111a68a428287c0"
+    "revision": "37df803cce57e6d6a12eb76538d244f7c5d84618"
   }
 }

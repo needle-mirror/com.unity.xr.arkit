@@ -47,7 +47,7 @@ namespace UnityEditor.XR.ARKit
             };
 
             public int callbackOrder => 0;
-        
+
             void IPreprocessShaders.OnProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> data)
             {
 #if UNITY_IOS && UNITY_XR_ARKIT_LOADER_ENABLED
@@ -158,7 +158,7 @@ namespace UnityEditor.XR.ARKit
                 if (userSetTargetVersion < new OSVersion(11))
                 {
                     throw new BuildFailedException(
-                        $"You have selected a minimum target iOS version of {userSetTargetVersion} and have " + 
+                        $"You have selected a minimum target iOS version of {userSetTargetVersion} and have " +
                         " the Apple ARKit XR Plug-in package installed. ARKit requires at least iOS version 11.0. " +
                         "See Player Settings > Other Settings > Target minimum iOS Version.");
                 }
@@ -213,9 +213,9 @@ namespace UnityEditor.XR.ARKit
             }
         }
 
-// Our PostProcessor depends on UnityEditor.iOS.PlistDocument, a class in Unity's iOS module.
-// To ensure that this package successfully compiles in projects that don't have the iOS module installed, we must
-// wrap the PostProcessor with a UNITY_IOS preprocessor directive.
+        // Our PostProcessor depends on UnityEditor.iOS.PlistDocument, a class in Unity's iOS module.
+        // To ensure that this package successfully compiles in projects that don't have the iOS module installed, we must
+        // wrap the PostProcessor with a UNITY_IOS preprocessor directive.
 #if UNITY_IOS
         class PostProcessor : IPostprocessBuildWithReport
         {

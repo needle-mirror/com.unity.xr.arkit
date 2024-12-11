@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace UnityEngine.XR.ARKit
@@ -171,7 +171,8 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <remarks>
         /// This equality operator allows you to compare `null` with an <see cref="NSError"/> to determine whether its
-        /// underlying pointer is null. This allows for a more natural comparison with the Objective-C object:
+        /// underlying pointer is null.
+        /// </remarks>
         /// <example>
         /// <code>
         /// void TestForNull(NSError error)
@@ -184,7 +185,6 @@ namespace UnityEngine.XR.ARKit
         /// }
         /// </code>
         /// </example>
-        /// </remarks>
         /// <param name="lhs">The nullable <see cref="NSError"/> to compare with <paramref name="rhs"/>.</param>
         /// <param name="rhs">The nullable <see cref="NSError"/> to compare with <paramref name="lhs"/>.</param>
         /// <returns>Returns true if any of these conditions are met:

@@ -130,8 +130,8 @@ namespace UnityEngine.XR.ARKit
         /// </code>
         /// </example>
         /// <remarks>
-        /// <para>See ARKit's <see href="https://developer.apple.com/documentation/arkit/arsession/3975720-capturehighresolutionframewithco?language=objc">
-        /// captureHighResolutionFrameWithCompletion</see> documentation for more information.</para>
+        /// <para>See ARKit's <a href="https://developer.apple.com/documentation/arkit/arsession/3975720-capturehighresolutionframewithco?language=objc">
+        /// captureHighResolutionFrameWithCompletion</a> documentation for more information.</para>
         /// <para>On iOS 15 or below, promises will immediately resolve with an unsuccessful result.</para>
         /// <para>Only one instance of <see cref="HighResolutionCpuImagePromise"/> at a time can await a result.
         /// Promises created while another promise is in progress will immediately resolve with an unsuccessful result.</para>
@@ -153,8 +153,8 @@ namespace UnityEngine.XR.ARKit
         /// Get whether advanced camera hardware configuration is supported. Advanced camera
         /// hardware configuration requires iOS 16 or newer and a device with an ultra-wide camera.
         /// </summary>
-        /// <returns><see langword="true"/> if setting advance camera hardware configurations is
-        /// supported. Otherwise, <see langword="false"/>.</returns>
+        /// <value><see langword="true"/> if setting advance camera hardware configurations is
+        /// supported. Otherwise, <see langword="false"/>.</value>
         /// <seealso cref="TryGetLockedCamera"/>
         public bool advancedCameraConfigurationSupported =>
             Api.AtLeast16_0() && ((ARKitProvider)provider).nativePtr != IntPtr.Zero;

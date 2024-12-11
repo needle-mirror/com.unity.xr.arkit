@@ -10,7 +10,7 @@ using UnityEngine.XR.ARSubsystems;
 namespace UnityEngine.XR.ARKit
 {
     /// <summary>
-    /// ARKit implementation of the <c>XRSessionSubsystem</c>. Do not create this directly. Use the <c>SubsystemManager</c> instead.
+    /// ARKit implementation of the `XRSessionSubsystem`. Do not create this directly. Use the `SubsystemManager` instead.
     /// </summary>
     [Preserve]
     public sealed class ARKitSessionSubsystem : XRSessionSubsystem
@@ -23,7 +23,8 @@ namespace UnityEngine.XR.ARKit
         public ARKitSessionDelegate sessionDelegate { get; set; } = new DefaultARKitSessionDelegate();
 
         /// <summary>
-        /// <c>true</c> if [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview) is supported, otherwise <c>false</c>.
+        /// <see langword="true"/> if [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview) is supported.
+        /// Otherwise, <see langword="false"/>.
         /// </summary>
         public static bool coachingOverlaySupported => Api.AtLeast13_0();
 
@@ -63,11 +64,12 @@ namespace UnityEngine.XR.ARKit
         /// The current [Coaching Goal](https://developer.apple.com/documentation/arkit/arcoachingoverlayview/3192180-goal).
         /// This can be different than the <see cref="requestedCoachingGoal"/>.
         /// </summary>
-        /// <returns>The type of goal the coaching overlay will guide the user through.</returns>
+        /// <value>The coaching goal.</value>
         public ARCoachingGoal currentCoachingGoal => NativeApi.UnityARKit_Session_GetCurrentCoachingGoal(self);
 
         /// <summary>
-        /// <c>true</c> if the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview) is active.
+        /// <see langword="true"/> if the [Coaching Overlay](https://developer.apple.com/documentation/arkit/arcoachingoverlayview) is active.
+        /// Otherwise, <see langword="false"/>.
         /// </summary>
         public bool coachingActive => NativeApi.UnityARKit_Session_IsCoachingOverlayActive(self);
 
@@ -129,9 +131,9 @@ namespace UnityEngine.XR.ARKit
         }
 
         /// <summary>
-        /// Detect <see cref="ARWorldMap"/> support. <c>ARWorldMap</c> requires iOS 12 or greater.
+        /// Detect <see cref="ARWorldMap"/> support. `ARWorldMap` requires iOS 12 or greater.
         /// </summary>
-        /// <returns><c>true</c> if <c>ARWorldMap</c>s are supported, otherwise <c>false</c>.</returns>
+        /// <value><see langword="true"/> if `ARWorldMap`s are supported. Otherwise, <see langword="false"/>.</value>
         /// <seealso cref="GetARWorldMapAsync()"/>
         public static bool worldMapSupported => Api.AtLeast12_0();
 
@@ -139,7 +141,7 @@ namespace UnityEngine.XR.ARKit
         /// Get the world mapping status. Used to determine the suitability of the current session for
         /// creating an <see cref="ARWorldMap"/>.
         /// </summary>
-        /// <returns>The <see cref="ARWorldMappingStatus"/> of the session.</returns>
+        /// <value>The <see cref="ARWorldMappingStatus"/> of the session.</value>
         public ARWorldMappingStatus worldMappingStatus => NativeApi.UnityARKit_Session_GetWorldMappingStatus(self);
 
         /// <summary>
