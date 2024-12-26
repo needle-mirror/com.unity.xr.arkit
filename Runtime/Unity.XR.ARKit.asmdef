@@ -5,7 +5,8 @@
         "Unity.RenderPipelines.Universal.Runtime",
         "Unity.XR.ARSubsystems",
         "Unity.XR.Management",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.XR.CoreUtils"
     ],
     "includePlatforms": [
         "Editor",

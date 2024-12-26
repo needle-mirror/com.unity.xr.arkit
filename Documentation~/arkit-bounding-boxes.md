@@ -56,7 +56,7 @@ Apple provides [instructions](https://developer.apple.com/documentation/roomplan
 
 The following example method checks whether the [RoomPlanBoundingBoxSubsystem](xref:UnityEngine.XR.ARKit.RoomPlanBoundingBoxSubsystem) is available. This method is used by the other code examples on this page.
 
-[!code-cs[CheckRoomCaptureSupportSample](../Tests/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs#CheckRoomCaptureSupportSample)]
+[!code-cs[CheckRoomCaptureSupportSample](../Tests/Runtime/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs#CheckRoomCaptureSupportSample)]
 
 ## Take a room capture
 

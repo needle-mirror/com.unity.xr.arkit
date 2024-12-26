@@ -1,8 +1,10 @@
 using System;
-using System.Runtime.InteropServices;
 using Unity.Collections;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
+#if UNITY_XR_ARKIT_LOADER_ENABLED
+using System.Runtime.InteropServices;
+#endif
 
 namespace UnityEngine.XR.ARKit
 {
@@ -94,7 +96,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <returns>`True` if room capture is successfully set up, otherwise false.</returns>
         /// <example>
-        /// <code source="../Tests/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="SetupRoomCaptureSample"/>
+        /// <code source="../Tests/Runtime/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="SetupRoomCaptureSample"/>
         /// </example>
         public bool SetupRoomCapture() => NativeApi.UnityARKit_BoundingBox_SetupRoomCapture();
 
@@ -102,7 +104,7 @@ namespace UnityEngine.XR.ARKit
         /// Start the room capture process.
         /// </summary>
         /// <example>
-        /// <code source="../Tests/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="StartRoomCaptureSample"/>
+        /// <code source="../Tests/Runtime/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="StartRoomCaptureSample"/>
         /// </example>
         public void StartRoomCapture() => NativeApi.UnityARKit_BoundingBox_StartRoomCapture();
 
@@ -110,7 +112,7 @@ namespace UnityEngine.XR.ARKit
         /// Stop the room capture process.
         /// </summary>
         /// <example>
-        /// <code source="../Tests/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="StopRoomCaptureSample"/>
+        /// <code source="../Tests/Runtime/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="StopRoomCaptureSample"/>
         /// </example>
         public void StopRoomCapture() => NativeApi.UnityARKit_BoundingBox_StopRoomCapture();
 
@@ -119,7 +121,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <returns>`True` if the process is room capturing, otherwise false.</returns>
         /// <example>
-        /// <code source="../Tests/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="IsRoomCapturingSample"/>
+        /// <code source="../Tests/Runtime/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="IsRoomCapturingSample"/>
         /// </example>
         public bool IsRoomCapturing() => NativeApi.UnityARKit_BoundingBox_IsRoomCapturing();
 
@@ -128,7 +130,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         /// <param name="instruction">The instruction from room capture process.</param>
         /// <example>
-        /// <code source="../Tests/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="GetRoomCaptureInstructionSample"/>
+        /// <code source="../Tests/Runtime/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="GetRoomCaptureInstructionSample"/>
         /// </example>
         public void GetRoomCaptureInstruction(out XRBoundingBoxInstructions instruction)
             => NativeApi.UnityARKit_BoundingBox_GetRoomCaptureInstruction(out instruction);
@@ -159,7 +161,7 @@ namespace UnityEngine.XR.ARKit
         /// </summary>
         static class NativeApi
         {
-#if UNITY_IOS && !UNITY_EDITOR
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             public static extern void UnityARKit_BoundingBox_Construct();
 

@@ -8,6 +8,20 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.1.0-pre.4] - 2024-12-26
+
+### Added
+
+- Added support for the `XRShaderKeywords` struct to the camera and occlusion providers.
+
+### Changed
+
+- Changed AR Foundation dependency version from 6.1.0-pre.3 to 6.1.0-pre.4.
+
+### Fixed
+
+- Fixed linker error when ARKit was not enabled in XR Management.
+
 ## [6.1.0-pre.3] - 2024-11-14
 
 ### Added

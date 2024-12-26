@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Unity.Collections;
+using Unity.XR.CoreUtils.Collections;
 using UnityEngine.Rendering;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
@@ -20,29 +21,11 @@ namespace UnityEngine.XR.ARKit
     [Preserve]
     public sealed class ARKitCameraSubsystem : XRCameraSubsystem
     {
-        /// <summary>
-        /// The identifying name for the camera provider implementation.
-        /// </summary>
         const string k_SubsystemId = "ARKit-Camera";
-
-        /// <summary>
-        /// The name of the shader for rendering the camera texture before opaques render.
-        /// </summary>
         const string k_BeforeOpaquesBackgroundShaderName = "Unlit/ARKitBackground";
-
-        /// <summary>
-        /// The name of the shader for rendering the camera texture after opaques have rendered.
-        /// </summary>
         const string k_AfterOpaquesBackgroundShaderName = "Unlit/ARKitBackground/AfterOpaques";
-
-        /// <summary>
-        /// The shader keyword for enabling URP rendering.
-        /// </summary>
         const string k_BackgroundShaderKeywordURP = "ARKIT_BACKGROUND_URP";
 
-        /// <summary>
-        /// The list of shader keywords to avoid during compilation.
-        /// </summary>
         static readonly List<string> k_BackgroundShaderKeywordsToNotCompile = new()
         {
 #if !URP_7_OR_NEWER
@@ -76,10 +59,6 @@ namespace UnityEngine.XR.ARKit
         [Obsolete("'backgroundShaderName' is obsolete, use backgroundShaderNames instead. (2022/04/04)")]
         public static string backgroundShaderName => k_BeforeOpaquesBackgroundShaderName;
 
-        /// <summary>
-        /// The list of shader keywords to avoid during compilation.
-        /// </summary>
-        /// <value>The list of shader keywords to avoid during compilation.</value>
         internal static List<string> backgroundShaderKeywordsToNotCompile => k_BackgroundShaderKeywordsToNotCompile;
 
         /// <summary>
@@ -169,9 +148,6 @@ namespace UnityEngine.XR.ARKit
         public bool TryGetLockedCamera(out ARKitLockedCamera lockedCamera) =>
             ((ARKitProvider)provider).TryGetLockedCamera(out lockedCamera);
 
-        /// <summary>
-        /// Provides the camera functionality for the ARKit implementation.
-        /// </summary>
         class ARKitProvider : Provider
         {
             /// <summary>
@@ -195,16 +171,11 @@ namespace UnityEngine.XR.ARKit
             static readonly int k_TextureCbCrPropertyNameId = Shader.PropertyToID(k_TextureCbCrPropertyName);
 
             /// <summary>
-            /// The shader keywords to enable when the Legacy RP is enabled.
+            /// The shader keywords to disable when the Built-in Render Pipeline is enabled.
             /// </summary>
-            static readonly List<string> k_LegacyRPEnabledMaterialKeywords = null;
-
-            /// <summary>
-            /// The shader keywords to disable when the Legacy RP is enabled.
-            /// </summary>
-            static readonly List<string> k_LegacyRPDisabledMaterialKeywords = new() { k_BackgroundShaderKeywordURP };
-
-            static readonly ShaderKeywords k_BuiltInRPShaderKeywords = new ShaderKeywords(k_LegacyRPEnabledMaterialKeywords?.AsReadOnly(), k_LegacyRPDisabledMaterialKeywords?.AsReadOnly());
+            static readonly List<string> k_BuiltInRPKeywordsToDisable = new(){ k_BackgroundShaderKeywordURP };
+            static readonly ReadOnlyList<string> k_BuiltInRPKeywordsToDisableReadOnly = new(k_BuiltInRPKeywordsToDisable);
+            static readonly XRShaderKeywords k_BuiltInRPShaderKeywords = new(null, k_BuiltInRPKeywordsToDisableReadOnly);
 
             /// <summary>
             /// The current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.
@@ -221,25 +192,15 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The shader keywords to enable when URP is enabled.
             /// </summary>
-            static readonly List<string> k_URPEnabledMaterialKeywords = new() {k_BackgroundShaderKeywordURP};
+            static readonly List<string> k_URPEnabledKeywordList = new(){ k_BackgroundShaderKeywordURP };
+            static readonly ReadOnlyList<string> k_URPEnabledKeywordListReadOnly = new(k_URPEnabledKeywordList);
 
-            /// <summary>
-            /// The shader keywords to disable when URP is enabled.
-            /// </summary>
-            static readonly List<string> k_URPDisabledMaterialKeywords = null;
-
-            static readonly ShaderKeywords k_URPShaderKeywords = new(k_URPEnabledMaterialKeywords?.AsReadOnly(), k_URPDisabledMaterialKeywords?.AsReadOnly());
+            static readonly XRShaderKeywords k_URPShaderKeywords = new(k_URPEnabledKeywordListReadOnly, null);
 #endif // URP_7_OR_NEWER
-
-            static readonly ShaderKeywords k_EmptyRPShaderKeywords = new();
 
             Material m_BeforeOpaqueCameraMaterial;
             Material m_AfterOpaqueCameraMaterial;
 
-            /// <summary>
-            /// Get the Material used by `XRCameraSubsystem` to render the camera texture.
-            /// </summary>
-            /// <value>The Material to render the camera texture.</value>
             /// <remarks>
             /// This subsystem will lazily create the camera materials depending on the <see cref="currentBackgroundRenderingMode"/>.
             /// Once created, the materials exist for the lifespan of the subsystem.
@@ -263,33 +224,19 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            /// <summary>
-            /// Indicates whether camera permission has been granted.
-            /// </summary>
-            /// <value><see langword="true"/> if camera permission has been granted for this app. Otherwise, <see langword="false"/>.</value>
             public override bool permissionGranted => NativeApi.UnityARKit_Camera_IsCameraPermissionGranted();
 
-            /// <summary>
-            /// Constructs the ARKit camera functionality provider.
-            /// </summary>
             public ARKitProvider()
             {
                 NativeApi.UnityARKit_Camera_Construct(k_TextureYPropertyNameId, k_TextureCbCrPropertyNameId,
                     k_MultithreadedRenderingEnabled);
             }
 
-            /// <summary>
-            /// Creates and returns a <see cref="HighResolutionCpuImagePromise"/>.
-            /// </summary>
-            /// <returns>The promise.</returns>
             // ReSharper disable once MemberCanBeMadeStatic.Local -- This method is dependent on a valid provider instance
             public HighResolutionCpuImagePromise TryAcquireHighResolutionCpuImage() => new();
 
             public override Feature currentCamera => NativeApi.UnityARKit_Camera_GetCurrentCamera();
 
-            /// <summary>
-            /// Get the currently active camera or set the requested camera.
-            /// </summary>
             public override Feature requestedCamera
             {
                 get => Api.GetRequestedFeatures();
@@ -300,9 +247,6 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            /// <summary>
-            /// Describes the subsystem's current <see cref="XRCameraBackgroundRenderingMode"/>.
-            /// </summary>
             public override XRCameraBackgroundRenderingMode currentBackgroundRenderingMode
             {
                 get
@@ -334,37 +278,15 @@ namespace UnityEngine.XR.ARKit
             public override XRSupportedCameraBackgroundRenderingMode supportedBackgroundRenderingMode
                 => XRSupportedCameraBackgroundRenderingMode.Any;
 
-            /// <summary>
-            /// Start the camera functionality.
-            /// </summary>
             public override void Start() => NativeApi.UnityARKit_Camera_Start();
-
-            /// <summary>
-            /// Stop the camera functionality.
-            /// </summary>
             public override void Stop() => NativeApi.UnityARKit_Camera_Stop();
-
-            /// <summary>
-            /// Destroy any resources required for the camera functionality.
-            /// </summary>
             public override void Destroy() => NativeApi.UnityARKit_Camera_Destruct();
 
-            /// <summary>
-            /// Get the current camera frame for the subsystem.
-            /// </summary>
-            /// <param name="cameraParams">The current Unity <c>Camera</c> parameters.</param>
-            /// <param name="cameraFrame">The current camera frame returned by the method.</param>
-            /// <returns><see langword="true"/> if the method successfully got a frame. Otherwise, <see langword="false"/>.</returns>
             public override bool TryGetFrame(XRCameraParams cameraParams, out XRCameraFrame cameraFrame)
-            {
-                return NativeApi.UnityARKit_Camera_TryGetFrame(cameraParams, out cameraFrame);
-            }
+                => NativeApi.UnityARKit_Camera_TryGetFrame(cameraParams, out cameraFrame);
 
             public override bool autoFocusEnabled => NativeApi.UnityARKit_Camera_GetAutoFocusEnabled();
 
-            /// <summary>
-            /// Get or set the requested focus mode for the camera.
-            /// </summary>
             public override bool autoFocusRequested
             {
                 get => Api.GetRequestedFeatures().All(Feature.AutoFocus);
@@ -377,9 +299,6 @@ namespace UnityEngine.XR.ARKit
             /// </summary>
             public override Feature currentLightEstimation => NativeApi.GetCurrentLightEstimation();
 
-            /// <summary>
-            /// Get or set the requested light estimation mode.
-            /// </summary>
             public override Feature requestedLightEstimation
             {
                 get => Api.GetRequestedFeatures();
@@ -401,16 +320,6 @@ namespace UnityEngine.XR.ARKit
             /// <remarks>Requires iOS 16 or newer and a device with an ultra-wide camera.</remarks>
             internal IntPtr nativePtr => NativeApi.UnityARKit_Camera_GetConfigurableCamera();
 
-            /// <summary>
-            /// Locks the primary camera associated with the current session configuration and returns an
-            /// object that represents it. Use this object to configure advanced camera hardware properties.
-            /// For more information, see ARKit's [AVCaptureDevice.lockForConfiguration]
-            /// (https://developer.apple.com/documentation/avfoundation/avcapturedevice/1387810-lockforconfiguration?language=objc).
-            /// </summary>
-            /// <param name="lockedCamera">A disposable object that represents the locked configurable primary camera.</param>
-            /// <returns><see langword="true"/> if a configurable camera is available in the current session
-            /// configuration and can be locked. Otherwise, <see langword="false"/>.</returns>
-            /// <remarks>Requires iOS 16 or newer and a device with an ultra-wide camera.</remarks>
             public bool TryGetLockedCamera(out ARKitLockedCamera lockedCamera)
             {
                 lockedCamera = default;
@@ -425,24 +334,9 @@ namespace UnityEngine.XR.ARKit
                 return false;
             }
 
-            /// <summary>
-            /// Get the camera intrinsics information.
-            /// </summary>
-            /// <param name="cameraIntrinsics">The camera intrinsics information returned from the method.</param>
-            /// <returns><see langword="true"/> if the method successfully gets the camera intrinsics information.
-            /// Otherwise, <see langword="false"/>.</returns>
             public override bool TryGetIntrinsics(out XRCameraIntrinsics cameraIntrinsics)
-            {
-                return NativeApi.UnityARKit_Camera_TryGetIntrinsics(out cameraIntrinsics);
-            }
+                => NativeApi.UnityARKit_Camera_TryGetIntrinsics(out cameraIntrinsics);
 
-            /// <summary>
-            /// Queries the supported camera configurations.
-            /// </summary>
-            /// <param name="defaultCameraConfiguration">A default value used to fill the returned array before copying in
-            /// real values. This ensures future additions to this struct are backwards compatible.</param>
-            /// <param name="allocator">The allocation strategy to use for the returned data.</param>
-            /// <returns>The supported camera configurations.</returns>
             public override NativeArray<XRCameraConfiguration> GetConfigurations(
                 XRCameraConfiguration defaultCameraConfiguration,
                 Allocator allocator)
@@ -517,12 +411,6 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            /// <summary>
-            /// Gets the texture descriptors associated with the current camera frame.
-            /// </summary>
-            /// <param name="defaultDescriptor">Default descriptor.</param>
-            /// <param name="allocator">Allocator.</param>
-            /// <returns>The texture descriptors.</returns>
             public override unsafe NativeArray<XRTextureDescriptor> GetTextureDescriptors(
                 XRTextureDescriptor defaultDescriptor,
                 Allocator allocator)
@@ -541,25 +429,19 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            /// <summary>
-            /// Gets the enabled and disabled shader keywords for the material.
-            /// </summary>
-            /// <param name="enabledKeywords">The keywords to enable for the material.</param>
-            /// <param name="disabledKeywords">The keywords to disable for the material.</param>
-#pragma warning disable CS0672 // This internal method intentionally overrides a publicly deprecated method
+            [Obsolete]
             public override void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
-#pragma warning restore CS0672
             {
                 if (GraphicsSettings.currentRenderPipeline == null)
                 {
-                    enabledKeywords = k_LegacyRPEnabledMaterialKeywords;
-                    disabledKeywords = k_LegacyRPDisabledMaterialKeywords;
+                    enabledKeywords = null;
+                    disabledKeywords = k_BuiltInRPKeywordsToDisable;
                 }
 #if URP_7_OR_NEWER
                 else if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
                 {
-                    enabledKeywords = k_URPEnabledMaterialKeywords;
-                    disabledKeywords = k_URPDisabledMaterialKeywords;
+                    enabledKeywords = k_URPEnabledKeywordList;
+                    disabledKeywords = null;
                 }
 #endif // URP_7_OR_NEWER
                 else
@@ -569,34 +451,31 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
+            [Obsolete]
             public override ShaderKeywords GetShaderKeywords()
             {
                 if (GraphicsSettings.currentRenderPipeline == null)
-                {
-                    return k_BuiltInRPShaderKeywords;
-                }
+                    return new ShaderKeywords(null, k_BuiltInRPKeywordsToDisable.AsReadOnly());
 #if URP_7_OR_NEWER
-                else if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
-                {
-                    return k_URPShaderKeywords;
-                }
+                if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
+                    return new ShaderKeywords(k_URPEnabledKeywordList.AsReadOnly(), null);
 #endif // URP_7_OR_NEWER
-                else
-                {
-                    return k_EmptyRPShaderKeywords;
-                }
+                return default;
             }
 
-            /// <summary>
-            /// An instance of the <see cref="XRCpuImage.Api"/> used to operate on <see cref="XRCpuImage"/> objects.
-            /// </summary>
+            public override XRShaderKeywords GetShaderKeywords2()
+            {
+                if (GraphicsSettings.currentRenderPipeline == null)
+                    return k_BuiltInRPShaderKeywords;
+#if URP_7_OR_NEWER
+                if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
+                    return k_URPShaderKeywords;
+#endif // URP_7_OR_NEWER
+                return default;
+            }
+
             public override XRCpuImage.Api cpuImageApi => ARKitCpuImageApi.instance;
 
-            /// <summary>
-            /// Query for the latest native camera image.
-            /// </summary>
-            /// <param name="cameraImageCinfo">The metadata required to construct a <see cref="XRCpuImage"/></param>
-            /// <returns><see langword="true"/> if the camera image is acquired. Otherwise, <see langword="false"/>.</returns>
             public override bool TryAcquireLatestCpuImage(out XRCpuImage.Cinfo cameraImageCinfo)
                 => ARKitCpuImageApi.TryAcquireLatestImage(ARKitCpuImageApi.ImageType.Camera, out cameraImageCinfo);
 
@@ -613,10 +492,6 @@ namespace UnityEngine.XR.ARKit
             }
         }
 
-        /// <summary>
-        /// Create and register the camera subsystem descriptor to advertise a providing implementation for camera
-        /// functionality.
-        /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Register()
         {
@@ -649,9 +524,6 @@ namespace UnityEngine.XR.ARKit
             XRCameraSubsystemDescriptor.Register(cameraSubsystemCinfo);
         }
 
-        /// <summary>
-        /// Container to wrap the native ARKit camera APIs.
-        /// </summary>
         static class NativeApi
         {
 #if UNITY_XR_ARKIT_LOADER_ENABLED
@@ -781,7 +653,7 @@ namespace UnityEngine.XR.ARKit
             public static IntPtr UnityARKit_Camera_GetConfigurableCamera() => IntPtr.Zero;
 
             public static bool UnityARKit_Camera_TryLockCamera(IntPtr cameraDevicePtr)
-                => throw new System.NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
+                => throw new NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
 
             public static void TryAcquireHighResolutionCpuImage(IntPtr callback, out XRCpuImage.Cinfo cpuImageCinfo)
                 => throw new NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);

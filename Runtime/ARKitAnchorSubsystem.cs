@@ -1,7 +1,7 @@
 using Unity.Collections;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
-#if UNITY_IOS && !UNITY_EDITOR
+#if UNITY_XR_ARKIT_LOADER_ENABLED
 using System.Runtime.InteropServices;
 #endif
 
@@ -67,7 +67,7 @@ namespace UnityEngine.XR.ARKit
                 return UnityARKit_anchors_tryRemove(anchorId);
             }
 
-#if UNITY_IOS && !UNITY_EDITOR
+#if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
             static extern void UnityARKit_anchors_onStart();
 
