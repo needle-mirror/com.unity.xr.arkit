@@ -28,13 +28,13 @@ ARKit implements the following optional features of AR Foundation's [XRFaceSubsy
 
 ## Session configuration
 
-Face tracking requires the use of the user-facing or "selfie" camera. It is the responsibility of your session's [XRSessionSubsystem.configurationChooser](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem.configurationChooser) to choose the camera facing direction. You can override the configuration chooser to meet your app's needs. For more information on the [ConfigurationChooser](xref:UnityEngine.XR.ARSubsystems.ConfigurationChooser), refer to the [What’s new in Unity’s AR Foundation | Unite Now 2020](https://www.youtube.com/watch?v=jBRxY2KnrUs&t=677s) video (YouTube). You can access a sample that shows how to use the `ConfigurationChooser` to choose between the user-facing and world-facing camera on the [AR Foundation samples](https://github.com/Unity-Technologies/arfoundation-samples/tree/5.1/Assets/Scenes/Configurations) GitHub repository.
+Face tracking requires the use of the user-facing or "selfie" camera. It is the responsibility of your session's [XRSessionSubsystem.configurationChooser](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem.configurationChooser) to choose the camera facing direction. You can override the configuration chooser to meet your app's needs. For more information on the [ConfigurationChooser](xref:UnityEngine.XR.ARSubsystems.ConfigurationChooser), refer to the [What’s new in Unity’s AR Foundation | Unite Now 2020](https://www.youtube.com/watch?v=jBRxY2KnrUs&t=677s) video (YouTube). You can access a sample that shows how to use the `ConfigurationChooser` to choose between the user-facing and world-facing camera on the [AR Foundation samples](https://github.com/Unity-Technologies/arfoundation-samples/tree/5.2/Assets/Scenes/Configurations) GitHub repository.
 
 ### Configuration chooser
 
 iOS devices support different combinations of features in different camera facing directions. If your scene contains several manager components that require the world-facing camera, AR Foundation's default configuration chooser might decide to use the world-facing camera, even if the AR Face Manager component is also enabled in your scene. You can create your own [ConfigurationChooser](xref:UnityEngine.XR.ARSubsystems.ConfigurationChooser) to prioritize face tracking functionality over other features if you desire greater control over the camera's facing direction.
 
-You can access an example of using a custom `ConfigurationChooser` in the `Rear Camera (ARKit)` sample on the [AR Foundations samples](https://github.com/Unity-Technologies/arfoundation-samples/blob/5.1/Assets/Scenes/FaceTracking/WorldCameraWithUserFacingFaceTracking.unity) GitHub. This example demonstrates how you can use the user-facing camera for face tracking, and the world-facing (rear) camera for passthrough video (iOS 13+).
+You can access an example of using a custom `ConfigurationChooser` in the `Rear Camera (ARKit)` sample on the [AR Foundations samples](https://github.com/Unity-Technologies/arfoundation-samples/blob/5.2/Assets/Scenes/FaceTracking/WorldCameraWithUserFacingFaceTracking.unity) GitHub. This example demonstrates how you can use the user-facing camera for face tracking, and the world-facing (rear) camera for passthrough video (iOS 13+).
 
 ## Blend shapes
 
@@ -42,17 +42,17 @@ ARKit provides a series of [blend shapes](https://developer.apple.com/documentat
 
 A blend shape represents action at a location on a face. Each blend shape is defined by an [ARKitBlendShapeLocation](xref:UnityEngine.XR.ARKit.ARKitBlendShapeLocation) to identify the location of the face action and a [ARKitBlendShapeCoefficient](xref:UnityEngine.XR.ARKit.ARKitBlendShapeCoefficient) to describe the amount of action at the location. The `ARKitBlendShapeCoefficient` is a value between `0.0` and `1.0`.
 
-You can learn more about blend shapes with the `Blend shapes` sample on the [AR Foundation Samples](https://github.com/Unity-Technologies/arfoundation-samples/blob/5.1/Assets/Scripts/Runtime/ARKitBlendShapeVisualizer.cs) GitHub. This sample uses blend shapes to puppet a cartoon face which is displayed over the detected face.
+You can learn more about blend shapes with the `Blend shapes` sample on the [AR Foundation Samples](https://github.com/Unity-Technologies/arfoundation-samples/blob/5.2/Assets/Scripts/Runtime/ARKitBlendShapeVisualizer.cs) GitHub. This sample uses blend shapes to puppet a cartoon face which is displayed over the detected face.
 
 ## Face visualizer samples
 
-The [AR Foundation Samples](https://github.com/Unity-Technologies/arfoundation-samples/tree/5.1) GitHub repository contains ARKit-specific prefabs that you can use to visualize faces in your scene, as outlined in the following table. Refer to the AR Foundation [AR Face](xref:arfoundation-face-tracking-arface) manual for more information on how to use these prefabs.
+The [AR Foundation Samples](https://github.com/Unity-Technologies/arfoundation-samples/tree/5.2) GitHub repository contains ARKit-specific prefabs that you can use to visualize faces in your scene, as outlined in the following table. Refer to the AR Foundation [AR Face](xref:arfoundation-face-tracking-arface) manual for more information on how to use these prefabs.
 
 | Prefab | Description |
 | :----- | :---------- |
-| [AR Eye Pose Visualizer](https://github.com/Unity-Technologies/arfoundation-samples/blob/5.1/Assets/Prefabs/AR%20Eye%20Pose%20Visualizer.prefab) | Visualize the location and direction of the eyes of a detected face. |
-| [Eye Laser Visualizer](https://github.com/Unity-Technologies/arfoundation-samples/blob/5.1/Assets/Prefabs/Eye%20Laser%20Prefab.prefab) | Use the eye pose to draw laser beams emitted from the detected face. |
-| [Sloth Head](https://github.com/Unity-Technologies/arfoundation-samples/blob/5.1/Assets/Prefabs/SlothHead.prefab) | Use the face blend shapes provided by ARKit to animate a 3D character. |
+| [AR Eye Pose Visualizer](https://github.com/Unity-Technologies/arfoundation-samples/blob/5.2/Assets/Prefabs/AR%20Eye%20Pose%20Visualizer.prefab) | Visualize the location and direction of the eyes of a detected face. |
+| [Eye Laser Visualizer](https://github.com/Unity-Technologies/arfoundation-samples/blob/5.2/Assets/Prefabs/Eye%20Laser%20Prefab.prefab) | Use the eye pose to draw laser beams emitted from the detected face. |
+| [Sloth Head](https://github.com/Unity-Technologies/arfoundation-samples/blob/5.2/Assets/Prefabs/SlothHead.prefab) | Use the face blend shapes provided by ARKit to animate a 3D character. |
 
 <a id="requirements"></a>
 
