@@ -29,6 +29,7 @@ ARKit implements the following optional features of AR Foundation's [XRCameraSub
 | **Camera grain** | [supportsCameraGrain](xref:UnityEngine.XR.ARSubsystems.XRCameraSubsystemDescriptor.supportsCameraGrain) | iOS 13+ |
 | **Image stabilization** | [supportsImageStabilization](xref:UnityEngine.XR.ARSubsystems.XRCameraSubsystemDescriptor.supportsImageStabilization) | |
 | **Exif data** | [supportsExifData](xref:UnityEngine.XR.ARSubsystems.XRCameraSubsystemDescriptor.supportsExifData) | iOS 16+ |
+| **Camera torch mode** | [supportsCameraTorchMode](xref:UnityEngine.XR.ARSubsystems.XRCameraSubsystemDescriptor.supportsCameraTorchMode) | Yes |
 
 > [!NOTE]
 > Refer to AR Foundation [Camera platform support](xref:arfoundation-camera-platform-support) for more information

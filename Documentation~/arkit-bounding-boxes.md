@@ -21,7 +21,7 @@ This package maps Apple's native [semantic labels](https://developer.apple.com/d
 Refer to the following table to understand the mapping between AR Foundation's classifications and Apple's semantic labels:
 
 | AR Foundation Label | Apple Label  |
-|:--------------------|:-------------|
+| :------------------ | :----------- |
 | Couch               | sofa         |
 | Table               | table        |
 | Bed                 | bed          |
@@ -44,7 +44,7 @@ Refer to the following table to understand the mapping between AR Foundation's c
 Apple provides [instructions](https://developer.apple.com/documentation/roomplan/roomcapturesession/instruction) to guide the user through the room capture process. Refer to the following table for the set of instruction enumerations:
 
 | ARKit Label      | Apple Label      | Description                                               |
-|:-----------------|:-----------------|:----------------------------------------------------------|
+| :--------------- | :--------------- | :-------------------------------------------------------- |
 | Normal           | normal           | Room capturing normally and the user needs no coaching.   |
 | MoveCloseToWall  | moveCloseToWall  | The user should move closer to the wall.                  |
 | MoveAwayFromWall | moveAwayFromWall | The user should move further from the wall.               |
@@ -62,10 +62,10 @@ The following example method checks whether the [RoomPlanBoundingBoxSubsystem](x
 
 Use the following methods to take a room capture:
 
-| Life cycle event                                                                                                                                               | Description                                          |
-|:---------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------|
-| [SetupRoomCapture](xref:UnityEngine.XR.ARKit.RoomPlanBoundingBoxSubsystem.SetupRoomCapture)                                                                    | Set up room capture before the process.              |
-| [StartRoomCapture](xref:UnityEngine.XR.ARKit.RoomPlanBoundingBoxSubsystem.StartRoomCapture)                                                                    | Start room capture process.                          |
-| [StopRoomCapture](xref:UnityEngine.XR.ARKit.RoomPlanBoundingBoxSubsystem.StopRoomCapture)                                                                      | Stop room capture process.                           |
-| [IsRoomCapturing](xref:UnityEngine.XR.ARKit.RoomPlanBoundingBoxSubsystem.IsRoomCapturing)                                                                      | Check the room capture status.                       |
+| Life cycle event | Description |
+| :--------------- | :---------- |
+| [SetupRoomCapture](xref:UnityEngine.XR.ARKit.RoomPlanBoundingBoxSubsystem.SetupRoomCapture) | Set up room capture before the process. |
+| [StartRoomCapture](xref:UnityEngine.XR.ARKit.RoomPlanBoundingBoxSubsystem.StartRoomCapture) | Start room capture process. |
+| [StopRoomCapture](xref:UnityEngine.XR.ARKit.RoomPlanBoundingBoxSubsystem.StopRoomCapture) | Stop room capture process. |
+| [IsRoomCapturing](xref:UnityEngine.XR.ARKit.RoomPlanBoundingBoxSubsystem.IsRoomCapturing) | Check the room capture status. |
 | [GetRoomCaptureInstruction](xref:UnityEngine.XR.ARKit.RoomPlanBoundingBoxSubsystem.GetRoomCaptureInstruction(UnityEngine.XR.ARKit.XRBoundingBoxInstructions@)) | Retrieve the instructions for accurate room capture. |

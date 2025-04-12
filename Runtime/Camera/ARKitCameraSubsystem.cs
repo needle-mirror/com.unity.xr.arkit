@@ -173,7 +173,7 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The shader keywords to disable when the Built-in Render Pipeline is enabled.
             /// </summary>
-            static readonly List<string> k_BuiltInRPKeywordsToDisable = new(){ k_BackgroundShaderKeywordURP };
+            static readonly List<string> k_BuiltInRPKeywordsToDisable = new() { k_BackgroundShaderKeywordURP };
             static readonly ReadOnlyList<string> k_BuiltInRPKeywordsToDisableReadOnly = new(k_BuiltInRPKeywordsToDisable);
             static readonly XRShaderKeywords k_BuiltInRPShaderKeywords = new(null, k_BuiltInRPKeywordsToDisableReadOnly);
 
@@ -292,6 +292,38 @@ namespace UnityEngine.XR.ARKit
                 get => Api.GetRequestedFeatures().All(Feature.AutoFocus);
                 set => Api.SetFeatureRequested(Feature.AutoFocus, value);
             }
+
+            /// <summary>
+            /// Get or set the requested camera torch mode.
+            /// </summary>
+            /// <value><see langword="true"/> if the torch is requested to be on. Otherwise, <see langword="false"/>.</value>
+            public override XRCameraTorchMode requestedCameraTorchMode
+            {
+                get => Api.GetRequestedFeatures().All(Feature.CameraTorch) ? XRCameraTorchMode.On : XRCameraTorchMode.Off;
+                set
+                {
+                    if (!NativeApi.UnityARKit_Camera_SetRequestedCameraTorchMode(value))
+                    {
+                        Debug.LogWarning("Failed to set the requested camera torch mode because of the failure in locking the device for configuration.");
+                        return;
+                    }
+                    Api.SetFeatureRequested(Feature.CameraTorch, (value == XRCameraTorchMode.On ? true : false));
+                }
+            }
+
+            /// <summary>
+            /// Get the current camera torch mode.
+            /// </summary>
+            /// <value>The current <see cref="XRCameraTorchMode"/>.</value>
+            public override XRCameraTorchMode currentCameraTorchMode
+                => NativeApi.UnityARKit_Camera_GetCameraTorchMode();
+
+            /// <summary>
+            /// Get whether the current session configuration allows the camera torch to be turned on or off.
+            /// </summary>
+            /// <value><see langword="true"/> if supported. Otherwise, <see langword="false"/>.</value>
+            public override bool DoesCurrentCameraSupportTorch()
+                => NativeApi.UnityARKit_Camera_GetSupportsCameraTorchMode() == Supported.Supported;
 
             /// <summary>
             /// Gets the current light estimation mode as reported by the
@@ -519,6 +551,7 @@ namespace UnityEngine.XR.ARKit
                 supportsWorldTrackingHDRLightEstimation = false,
                 supportsCameraGrain = Api.AtLeast13_0(),
                 supportsExifData = Api.AtLeast16_0(),
+                supportsCameraTorchMode = true,
             };
 
             XRCameraSubsystemDescriptor.Register(cameraSubsystemCinfo);
@@ -597,6 +630,16 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern bool UnityARKit_Camera_TryLockCamera(IntPtr cameraDevicePtr);
+
+            [DllImport("__Internal")]
+            public static extern XRCameraTorchMode UnityARKit_Camera_GetCameraTorchMode();
+
+            [DllImport("__Internal")]
+            public static extern Supported UnityARKit_Camera_GetSupportsCameraTorchMode();
+
+            [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.U1)]
+            public static extern bool UnityARKit_Camera_SetRequestedCameraTorchMode(XRCameraTorchMode cameraTorchMode);
 #else
             public static Feature GetCurrentLightEstimation() => Feature.None;
 
@@ -656,6 +699,13 @@ namespace UnityEngine.XR.ARKit
                 => throw new NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
 
             public static void TryAcquireHighResolutionCpuImage(IntPtr callback, out XRCpuImage.Cinfo cpuImageCinfo)
+                => throw new NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
+
+            public static XRCameraTorchMode UnityARKit_Camera_GetCameraTorchMode() => XRCameraTorchMode.Off;
+
+            public static Supported UnityARKit_Camera_GetSupportsCameraTorchMode() => Supported.Unsupported;
+
+            public static bool UnityARKit_Camera_SetRequestedCameraTorchMode(XRCameraTorchMode cameraTorchMode)
                 => throw new NotImplementedException(Constants.k_LoaderDisabledExceptionMsg);
 #endif
         }
