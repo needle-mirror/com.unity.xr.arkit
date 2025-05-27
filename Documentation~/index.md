@@ -81,6 +81,8 @@ This version of Apple ARKit XR Plug-in includes:
 * A shader used for rendering the camera image
 * A plug-in metadata file
 
-For more code examples, refer to the [AR Foundation Samples repository](https://github.com/Unity-Technologies/arfoundation-samples).
+## Samples
+
+You can access pre-configured sample scenes that demonstrate AR Foundation features from the [AR Foundation Samples](https://github.com/Unity-Technologies/arfoundation-samples) GitHub repository. This project also contains [ARKit samples](xref:arfoundation-samples-arkit) that demonstrate ARKit-specific functionality. To understand how to use these samples, and learn more about each scene, refer to [AR Foundation samples](xref:arfoundation-samples).
 
 [!include[](snippets/apple-arkit-trademark.md)]

@@ -10,3 +10,5 @@ The point cloud subsystem doesn't require additional resources, so enabling it d
 ARKit's point cloud subsystem only ever produces a single [XRPointCloud](xref:UnityEngine.XR.ARSubsystems.XRPointCloud).
 
 For more information, see [Point clouds](xref:arfoundation-point-clouds).
+
+[!include[](snippets/apple-arkit-trademark.md)]
