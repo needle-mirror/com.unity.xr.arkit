@@ -26,7 +26,9 @@ ARKit implements the following optional features of AR Foundation's [XRFaceSubsy
 
 ## Session configuration
 
-Face tracking requires the use of the user-facing or "selfie" camera. It is the responsibility of your session's [XRSessionSubsystem.configurationChooser](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem.configurationChooser) to choose the camera facing direction. You can override the configuration chooser to meet your app's needs. For more information on the [ConfigurationChooser](xref:UnityEngine.XR.ARSubsystems.ConfigurationChooser), refer to the [What’s new in Unity’s AR Foundation | Unite Now 2020](https://www.youtube.com/watch?v=jBRxY2KnrUs&t=677s) video (YouTube). You can access a sample that shows how to use the `ConfigurationChooser` to choose between the user-facing and world-facing camera on the [AR Foundation samples](https://github.com/Unity-Technologies/arfoundation-samples/tree/main/Assets/Scenes/ConfigurationChooser) GitHub repository.
+Face tracking requires the use of the user-facing or "selfie" camera. It is the responsibility of your session's [XRSessionSubsystem.configurationChooser](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem.configurationChooser) to choose the camera facing direction. You can override the configuration chooser to meet your app's needs. For more information, refer to [Configuration Chooser](xref:arfoundation-session-configuration-chooser).
+
+You can access a sample that shows how to use the `ConfigurationChooser` to choose between the user-facing and world-facing camera on the [AR Foundation samples](https://github.com/Unity-Technologies/arfoundation-samples/tree/main/Assets/Scenes/ConfigurationChooser) GitHub repository.
 
 ### Configuration chooser
 

@@ -24,3 +24,5 @@ ARKit implements the following optional features of AR Foundation's [XRAnchorSub
 > [!NOTE]
 > Refer to AR Foundation [Anchors platform support](xref:arfoundation-anchors-platform-support) for more information
 > on the optional features of the anchor subsystem.
+
+[!include[](snippets/apple-arkit-trademark.md)]

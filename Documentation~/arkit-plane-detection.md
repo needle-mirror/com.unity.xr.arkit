@@ -35,3 +35,5 @@ Refer to the table below to understand the mapping between AR Foundation's class
 | WindowFrame           | window           |
 | InvisibleWallFace     |                  |
 | Other                 |                  |
+
+[!include[](snippets/apple-arkit-trademark.md)]
