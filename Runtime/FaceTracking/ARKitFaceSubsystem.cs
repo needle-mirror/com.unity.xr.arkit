@@ -7,6 +7,7 @@ using Unity.Collections.LowLevel.Unsafe;
 
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
+using static UnityEngine.XR.ARSubsystems.XRResultStatus;
 
 namespace UnityEngine.XR.ARKit
 {
@@ -34,6 +35,9 @@ namespace UnityEngine.XR.ARKit
 
         [DllImport("__Internal")]
         static extern bool UnityARKit_FaceProvider_TryAcquireFaceBlendCoefficients(TrackableId faceId, out IntPtr ptrBlendCoefficientData, out int numArrayBlendCoefficients);
+
+        [DllImport("__Internal")]
+        static extern XRResultStatus UnityARKit_FaceProvider_TryGetBlendShapes(TrackableId faceId, out IntPtr ptrBlendShapeData, out int elementSize, out int numArrayBlendShapes);
 
 #if UNITY_IOS && !UNITY_EDITOR
         [DllImport("__Internal")]
@@ -110,6 +114,11 @@ namespace UnityEngine.XR.ARKit
             throw new System.NotImplementedException(k_ExceptionMsg);
         }
 
+        static XRResultStatus UnityARKit_FaceProvider_TryGetBlendShapes(TrackableId faceId, out IntPtr ptrBlendShapeData, out int elementSize, out int numArrayBlendShapes)
+        {
+            throw new System.NotSupportedException(k_ExceptionMsg);
+        }
+
         static bool UnityARKit_FaceProvider_IsSupported() => false;
 
         static void UnityARKit_FaceProvider_OnRegisterDescriptor()
@@ -174,6 +183,7 @@ namespace UnityEngine.XR.ARKit
         /// <returns>A new <c>NativeArray</c> allocated with <paramref name="allocator"/> describing
         /// the blend shapes for the face with id <paramref name="faceId"/>. The caller owns the
         /// <c>NativeArray</c> and is responsible for calling <c>Dispose</c> on it.</returns>
+        [Obsolete("GetBlendShapeCoefficients has been deprecated as of Apple ARKit XR Plug-in 6.3.0. Use TryGetBlendShapes instead.", false)]
         public unsafe NativeArray<ARKitBlendShapeCoefficient> GetBlendShapeCoefficients(
             TrackableId faceId,
             Allocator allocator)
@@ -386,6 +396,43 @@ namespace UnityEngine.XR.ARKit
                 get => UnityARKit_FaceProvider_GetRequestedMaximumFaceCount();
                 set => UnityARKit_FaceProvider_SetRequestedMaximumFaceCount(value);
             }
+
+            /// <summary>
+            /// Attempts to get the blend shapes associated with the given face.
+            /// </summary>
+            /// <param name="faceId">The <see cref="TrackableId"/> associated with the <see cref="XRFace"/> to query.</param>
+            /// <param name="allocator">The allocator to use for the returned blend shape native array.</param>
+            /// <returns>A result of a new native array, allocated with the requested allocation strategy, describing
+            /// the blend shapes for the face. You own the returned native array and are responsible for calling <c>Dispose</c>
+            /// on it if you have opted for the `Allocator.Persistent` strategy.</returns>
+            public unsafe override Result<NativeArray<XRFaceBlendShape>> TryGetBlendShapes(TrackableId faceId, Allocator allocator)
+            {
+                var resultStatus = UnityARKit_FaceProvider_TryGetBlendShapes(faceId, out var ptrNativeBlendShapesArray, out var elementSize, out var blendShapeCount);
+                if (resultStatus.IsError())
+                {
+                    return new Result<NativeArray<XRFaceBlendShape>>(resultStatus, default);
+                }
+                if (blendShapeCount <= 0)
+                {
+                    return new Result<NativeArray<XRFaceBlendShape>>(resultStatus, new NativeArray<XRFaceBlendShape>(0, allocator));
+                }
+
+                try
+                {
+                    var blendShapes = NativeCopyUtility.PtrToNativeArrayWithDefault<XRFaceBlendShape>(
+                        default,
+                        (void*)ptrNativeBlendShapesArray,
+                        elementSize,
+                        blendShapeCount,
+                        allocator);
+
+                    return new Result<NativeArray<XRFaceBlendShape>>(resultStatus, blendShapes);
+                }
+                finally
+                {
+                    UnityARKit_FaceProvider_DeallocateTempMemory(ptrNativeBlendShapesArray);
+                }
+            }
         }
 
         // this method is run on startup of the app to register this provider with XR Subsystem Manager
@@ -403,6 +450,7 @@ namespace UnityEngine.XR.ARKit
                 supportsFaceMeshVerticesAndIndices = true,
                 supportsFaceMeshUVs = true,
                 supportsEyeTracking = UnityARKit_FaceProvider_IsEyeTrackingSupported(),
+                supportsBlendShapes = true,
                 id = "ARKit-Face",
                 providerType = typeof(ARKitFaceSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitFaceSubsystem)

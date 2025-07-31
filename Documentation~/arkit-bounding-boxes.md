@@ -18,26 +18,35 @@ This feature is only available on iOS devices equipped with a LiDAR scanner runn
 
 This package maps Apple's native [semantic labels](https://developer.apple.com/documentation/roomplan/capturedroom/object/category-swift.enum) to AR Foundation's [BoundingBoxClassifications](xref:UnityEngine.XR.ARFoundation.ARBoundingBox.classifications). Apple supports multiple classifications per bounding box.
 
-Refer to the following table to understand the mapping between AR Foundation's classifications and Apple's semantic labels:
+The following table outlines the AR Foundation [Classifications](xref:UnityEngine.XR.ARFoundation.ARBoundingBox.classifications) that ARKit supports, and how they map to Apple's semantic labels:
 
 | AR Foundation Label | Apple Label  |
 | :------------------ | :----------- |
-| Couch               | sofa         |
-| Table               | table        |
-| Bed                 | bed          |
-| Screen              | television   |
-| Storage             | storage      |
 | Bathtub             | bathtub      |
+| Bed                 | bed          |
 | Chair               | chair        |
+| Couch               | sofa         |
 | Dishwasher          | dishwasher   |
 | Fireplace           | fireplace    |
+| Keyboard            |              |
+| Lamp                |              |
+| Laptop              |              |
+| Mouse               |              |
+| Other               |              |
 | Oven                | oven         |
+| Plant               |              |
 | Refrigerator        | refrigerator |
+| Screen              | television   |
 | Sink                | sink         |
 | Stairs              | stairs       |
+| Storage             | storage      |
 | Stove               | stove        |
+| Table               | table        |
 | Toilet              | toilet       |
 | WasherDryer         | washerDryer  |
+
+> [!NOTE]
+> Classifications with no mapping to Apple labels aren't supported by ARKit.
 
 ## Room capture instructions
 

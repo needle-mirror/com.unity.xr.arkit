@@ -1,4 +1,5 @@
 using System;
+using UnityEngine.XR.ARSubsystems;
 using System.Runtime.InteropServices;
 
 namespace UnityEngine.XR.ARKit
@@ -10,7 +11,7 @@ namespace UnityEngine.XR.ARKit
     /// feature represents the neutral position, while a coefficient of one represents the fully articulated
     /// position.
     ///
-    /// Call <see cref="ARKitFaceSubsystem.GetBlendShapeCoefficients*"/> to get the current coefficients of each
+    /// Call <see cref="ARKitFaceSubsystem.TryGetBlendShapes"/> to get the current coefficients of each
     /// blend shape location for the current facial expression.
     /// </remarks>
     public enum ARKitBlendShapeLocation
@@ -388,6 +389,7 @@ namespace UnityEngine.XR.ARKit
     /// blend shape location of the current facial expression.
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
+    [Obsolete("ARKitBlendShapeCoefficient has been deprecated as of Apple ARKit XR Plug-in 6.3.0. Use XRFaceBlendShape instead.", false)]
     public struct ARKitBlendShapeCoefficient : IEquatable<ARKitBlendShapeCoefficient>
     {
         // Fields to marshall/serialize from native code
@@ -447,7 +449,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="lhs">The left-hand side of the comparison.</param>
         /// <param name="rhs">The right-hand side of the comparison.</param>
         /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
-        public static bool operator==(ARKitBlendShapeCoefficient lhs, ARKitBlendShapeCoefficient rhs) => lhs.Equals(rhs);
+        public static bool operator ==(ARKitBlendShapeCoefficient lhs, ARKitBlendShapeCoefficient rhs) => lhs.Equals(rhs);
 
         /// <summary>
         /// Tests for inequality. Same as `!`<see cref="Equals(ARKitBlendShapeCoefficient)"/>.
@@ -455,6 +457,6 @@ namespace UnityEngine.XR.ARKit
         /// <param name="lhs">The left-hand side of the comparison.</param>
         /// <param name="rhs">The right-hand side of the comparison.</param>
         /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
-        public static bool operator!=(ARKitBlendShapeCoefficient lhs, ARKitBlendShapeCoefficient rhs) => !lhs.Equals(rhs);
+        public static bool operator !=(ARKitBlendShapeCoefficient lhs, ARKitBlendShapeCoefficient rhs) => !lhs.Equals(rhs);
     }
 }

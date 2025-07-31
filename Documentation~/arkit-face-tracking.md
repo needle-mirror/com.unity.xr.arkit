@@ -19,6 +19,7 @@ ARKit implements the following optional features of AR Foundation's [XRFaceSubsy
 | **Face mesh UVs** | [supportsFaceMeshUVs](xref:UnityEngine.XR.ARSubsystems.XRFaceSubsystemDescriptor.supportsFaceMeshUVs) | Yes |
 | **Face mesh normals** | [supportsFaceMeshNormals](xref:UnityEngine.XR.ARSubsystems.XRFaceSubsystemDescriptor.supportsFaceMeshNormals) | |
 | **Eye tracking** |  [supportsEyeTracking](xref:UnityEngine.XR.ARSubsystems.XRFaceSubsystemDescriptor.supportsEyeTracking) | Yes |
+| **Blend Shapes** |  [supportsBlendShapes](xref:UnityEngine.XR.ARSubsystems.XRFaceSubsystemDescriptor.supportsBlendShapes) | Yes |
 
 > [!NOTE]
 > Refer to AR Foundation [Face tracking platform support](xref:arfoundation-face-tracking-platform-support) for more information
@@ -40,7 +41,7 @@ You can access an example of using a custom `ConfigurationChooser` in the `Rear 
 
 ARKit provides a series of [blend shapes](https://developer.apple.com/documentation/arkit/arfaceanchor/2928251-blendshapes?language=objc) to describe different features of a face. Each blend shape is modulated from 0..1. For example, one blend shape defines how open the mouth is.
 
-A blend shape represents action at a location on a face. Each blend shape is defined by an [ARKitBlendShapeLocation](xref:UnityEngine.XR.ARKit.ARKitBlendShapeLocation) to identify the location of the face action and a [ARKitBlendShapeCoefficient](xref:UnityEngine.XR.ARKit.ARKitBlendShapeCoefficient) to describe the amount of action at the location. The `ARKitBlendShapeCoefficient` is a value between `0.0` and `1.0`.
+A blend shape represents action at a location on a face. Each blend shape is defined by an [ARKitBlendShapeLocation](xref:UnityEngine.XR.ARKit.ARKitBlendShapeLocation) to identify the location of the face action and a [XRFaceBlendShape](xref:UnityEngine.XR.ARSubsystems.XRFaceBlendShape) to describe the amount of action at the location. The `weight` of `XRFaceBlendShape` is a value between `0.0` and `1.0`.
 
 You can learn more about blend shapes with the `Blend shapes` sample on the [AR Foundation Samples](https://github.com/Unity-Technologies/arfoundation-samples/tree/main?tab=readme-ov-file#blend-shapes-arkit) GitHub. This sample uses blend shapes to puppet a cartoon face which is displayed over the detected face.
 

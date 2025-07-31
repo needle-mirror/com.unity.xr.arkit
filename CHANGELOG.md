@@ -8,6 +8,22 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.3.0-pre.1] - 2025-07-31
+
+### Added
+
+- Added `XRFaceBlendShapeExtensions`, which allows you to cast an `XRBlendShape` to the ARKit-specific `ARKitBlendShapeLocation`.
+- Added support for `XRFaceSubsystem.TryGetBlendShapes` to `ARKitFaceSubsystem`.
+
+### Changed
+
+- Changed AR Foundation dependency version from 6.2.0 to 6.3.0-pre.1.
+
+### Deprecated
+
+- `ARKitBlendShapeCoefficient` has been marked obsolete. Instead use `XRFaceBlendShape` to represent a blend shape ID and its weight.
+- `ARKitFaceSubsystem.GetBlendShapeCoefficients` has been marked obsolete. Use `ARKitFaceSubsystem.TryGetBlendShapes` instead.
+
 ## [6.2.0] - 2025-06-23
 
 ### Changed
