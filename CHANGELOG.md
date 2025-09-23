@@ -8,6 +8,13 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.3.0-pre.2] - 2025-09-23
+
+### Changed
+
+- Rebuilt static libraries with Xcode 16.4 (16F6). You are now required to use Xcode 16.4 or newer to build iOS apps that depend on this package.
+- Changed AR Foundation dependency version from 6.3.0-pre.1 to 6.3.0-pre.2.
+
 ## [6.3.0-pre.1] - 2025-07-31
 
 ### Added

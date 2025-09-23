@@ -1,13 +1,13 @@
 #import <ARKit/ARKit.h>
+#import <UnityFramework/UnityFramework.h>
 #include "IUnityInterface.h"
-#include "UnityAppController.h"
 
 void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API UnityARKitXRPlugin_PluginLoad(IUnityInterfaces* unityInterfaces);
 extern void UnityARKit_SetRootView(UIView* view);
 
 void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API UnityARKit_EnsureRootViewIsSetup()
 {
-    UnityARKit_SetRootView(_UnityAppController.rootView);
+    UnityARKit_SetRootView(UnityGetGLView());
 }
 
 @interface UnityARKit : NSObject

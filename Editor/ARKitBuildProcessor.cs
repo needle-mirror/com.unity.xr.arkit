@@ -274,9 +274,12 @@ namespace UnityEditor.XR.ARKit
                 File.WriteAllText(plistPath, plist.WriteToString());
 
                 // update for Unity-iOS.xcodeproj's Build Setting
-                var projectPath = pathToBuiltProject + "/Unity-iPhone.xcodeproj/project.pbxproj";
+                var projectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
                 var project = new PBXProject();
                 project.ReadFromFile(projectPath);
+
+                // NOTE: The following settings are for Objective-C trampoline only and should be removed
+                // for Swift builds if/when a Swift trampoline becomes available in the future.
 
                 // target : unity-iphone
                 string targetGUID = project.GetUnityMainTargetGuid();
@@ -295,7 +298,6 @@ namespace UnityEditor.XR.ARKit
                 project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)");
                 project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)");
 
-                // After we're done editing the build settings we save it
                 project.WriteToFile(projectPath);
             }
         }
