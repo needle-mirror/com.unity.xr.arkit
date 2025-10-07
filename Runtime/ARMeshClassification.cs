@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 
 namespace UnityEngine.XR.ARKit
@@ -5,6 +6,7 @@ namespace UnityEngine.XR.ARKit
     /// <summary>
     /// A value describing the classification of a mesh face.
     /// </summary>
+    [Obsolete("ARMeshClassification is deprecated as of Apple ARKit XR Plug-in version 6.3. Use XRMeshClassification instead.", false)]
     public enum ARMeshClassification : byte
     {
         /// <summary>

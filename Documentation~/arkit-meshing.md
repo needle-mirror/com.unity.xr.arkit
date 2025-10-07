@@ -7,62 +7,37 @@ ARKit provides support for the scene reconstruction feature that became availabl
 
 ARKit scene reconstruction provides a meshing feature that generates a mesh based on scanned real-world geometry. The mesh manager enables and configures this functionality.
 
+Using the LiDAR sensor, ARKit scene reconstruction scans the environment to create mesh geometry representing the real world environment. Additionally, ARKit provides an optional classification of each triangle in the scanned mesh. The per-triangle classification identifies the type of surface corresponding to the triangle's location in the real world.
+
 ## Requirements
 
 This new mesh functionality requires Xcode 11.4 or later, and it only works on iOS devices with the LiDAR scanner, such as the new iPad Pro.
 
+The meshing feature requires iOS 13.4 or newer, and iPadOS 13.4 or newer.
+
 ## Use meshing in a scene
 
-Using the LiDAR sensor, ARKit scene reconstruction scans the environment to create mesh geometry representing the real world environment. Additionally, ARKit provides an optional classification of each triangle in the scanned mesh. The per-triangle classification identifies the type of surface corresponding to the triangle's location in the real world.
+To get started with ARKit meshing with AR Foundation, follow the instructions in AR Foundation's [Use meshing in your scene](xref:arfoundation-meshing-use).
 
-To use ARKit meshing with AR Foundation, you need to add the [ARMeshManager](xref:UnityEngine.XR.ARFoundation.ARMeshManager) component to your scene.
+## Optional feature support
 
-![ARFoundation ARMeshManager component](images/arfoundation-mesh-manager.png)
+The following table indicates which meshing features ARKit supports:
 
-### Mesh Prefab
+| **Feature** | **Supported** |
+| :---------- | :-----------: |
+| Density | |
+| Normals | Yes |
+| Tangents | |
+| Texture coordinates |
+| Colors | |
+| Queue size | Yes |
+| Classification | Yes |
 
-You need to set the [meshPrefab](xref:UnityEngine.XR.ARFoundation.ARMeshManager.meshPrefab) to a prefab that is instantiated for each scanned mesh. This prefab must contain at least a [MeshFilter](xref:UnityEngine.MeshFilter) component.
-
-If you want to render the scanned meshes, add a [MeshRenderer](xref:UnityEngine.MeshRenderer) component and a [Material](xref:UnityEngine.Material) component to the mesh prefab.
-
-If you want to have virtual content that interacts physically with the real-world scanned meshes, add a [MeshCollider](xref:UnityEngine.MeshCollider) component to the mesh prefab.
-
-This image demonstrates a mesh Prefab configured with the required [MeshFilter](xref:UnityEngine.MeshFilter) component, an optional [MeshCollider](xref:UnityEngine.MeshCollider) component to allow for physics interactions, and optional [MeshRenderer](xref:UnityEngine.MeshRenderer) and [Material](xref:UnityEngine.Material) components to render the mesh.
-
-![Mesh prefab example](images/arfoundation-mesh-prefab.png)
-
-### Normals
-
-As ARKit is constructing the mesh geometry, the vertex normals for the mesh are calculated. If you don't need the mesh vertex normals, disable [normals](xref:UnityEngine.XR.ARFoundation.ARMeshManager.normals) to save on memory and CPU time.
-
-### Concurrent queue size
-
-To avoid blocking the main thread, the tasks of converting the ARKit mesh into a Unity mesh and creating the physics collision mesh (if the mesh prefab contains a [MeshCollider](xref:UnityEngine.MeshCollider) component) are moved into a job queue processed on a background thread. [concurrentQueueSize](xref:UnityEngine.XR.ARFoundation.ARMeshManager.concurrentQueueSize) specifies the number of meshes to be processed concurrently.
-
-### Other `ARMeshManager` settings
-
-For the ARKit implementation, only the settings mentioned above affect the performance and output of ARKit meshing. ARKit does not implement the following features of the `ARMeshManager`:
-
-- Density
-- Tangents
-- Texture Coordinates
-- Colors
+Refer to [AR Mesh Manager](xref:arfoundation-meshing-manager) (AR Foundation) to learn more about AR Mesh Manager features.
 
 ## Sample scenes
 
-Three sample scenes exist in the [arfoundation-samples](https://github.com/Unity-Technologies/arfoundation-samples) repository:
-
-- The **ClassificationMeshes** scene uses the mesh classification functionality to generate colored overlays on top of the real world. Each color represents a unique surface typed detected by ARKit.
-
-![ClassificationMeshes](images/arfoundation-arkit-classified-meshing.gif)
-
-- The **NormalMeshes** scene renders an overlay on top of the real world. The color of the mesh varies based on the normal of the mesh geometry.
-
-![NormalMeshes](images/arfoundation-arkit-normal-meshing.gif)
-
-- The **OcclusionMeshes** scene might appear to be doing nothing at first. However, it is rendering a depth texture on top of the scene based on the real-world geometry. This allows for the real world to occlude virtual content. The scene has a script on it that fires a red ball into the scene when you tap the screen. You can see the occlusion working by firing the red balls into a space which you can then move the device camera behind some other real world object to see that the virtual red balls are occluded by the real world object.
-
-![NormalMeshes](images/arfoundation-arkit-occlusion-meshing.gif)
+AR Foundation provides three meshing sample scenes to demonstrate meshing features. To learn more about these meshing samples, refer to [Meshing samples](xref:arfoundation-samples-meshing).
 
 ## Meshing behaviors
 
