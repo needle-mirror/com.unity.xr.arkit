@@ -1,19 +1,24 @@
 {
-  "name": "Unity.XR.ARKit.Runtime.Tests",
+    "name": "Unity.XR.ARKit.Runtime.Tests",
+    "rootNamespace": "UnityEngine.XR.ARKit.Tests",
     "references": [
         "Unity.XR.ARKit",
         "Unity.XR.ARSubsystems"
     ],
-    "optionalUnityReferences": [
-        "TestAssemblies"
+    "includePlatforms": [
+        "Editor",
+        "iOS"
     ],
-    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
-    "precompiledReferences": [],
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [
         "UNITY_INCLUDE_TESTS"
-    ]
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
