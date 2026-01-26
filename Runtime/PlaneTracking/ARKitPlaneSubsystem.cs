@@ -267,8 +267,8 @@ namespace UnityEngine.XR.ARKit
                 supportsHorizontalPlaneDetection = true,
                 supportsVerticalPlaneDetection = Api.AtLeast11_3(),
                 supportsArbitraryPlaneDetection = false,
-                supportsBoundaryVertices = true,
-                supportsClassification = NativeApi.UnityARKit_Planes_SupportsClassification(),
+                supportsBoundaryVerticesDelegate = () => true,
+                supportsClassificationDelegate = () => NativeApi.UnityARKit_Planes_SupportsClassification(),
             };
 
             XRPlaneSubsystemDescriptor.Register(cinfo);

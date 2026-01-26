@@ -278,25 +278,29 @@ namespace UnityEditor.XR.ARKit
                 var project = new PBXProject();
                 project.ReadFromFile(projectPath);
 
-                // NOTE: The following settings are for Objective-C trampoline only and should be removed
-                // for Swift builds if/when a Swift trampoline becomes available in the future.
+#if UNITY_6000_5_OR_NEWER
+                if (PlayerSettings.xcodeProjectType == XcodeProjectType.ObjectiveC)
+                {
+#endif
+                    // target : unity-iphone
+                    string targetGUID = project.GetUnityMainTargetGuid();
+                    project.SetBuildProperty(targetGUID, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+                    project.AddBuildProperty(targetGUID, "LD_RUNPATH_SEARCH_PATHS", "/usr/lib/swift");
+                    project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME)");
+                    project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)");
 
-                // target : unity-iphone
-                string targetGUID = project.GetUnityMainTargetGuid();
-                project.SetBuildProperty(targetGUID, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
-                project.AddBuildProperty(targetGUID, "LD_RUNPATH_SEARCH_PATHS", "/usr/lib/swift");
-                project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)");
-                project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)");
+                    // target : unityframework
+                    targetGUID = project.GetUnityFrameworkTargetGuid();
+                    project.SetBuildProperty(targetGUID, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+                    project.AddBuildProperty(targetGUID, "LD_RUNPATH_SEARCH_PATHS", "/usr/lib/swift");
+                    project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "/usr/lib/swift");
+                    project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME)");
+                    project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)");
 
-                // target : unityframework
-                targetGUID = project.GetUnityFrameworkTargetGuid();
-                project.SetBuildProperty(targetGUID, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
-                project.AddBuildProperty(targetGUID, "LD_RUNPATH_SEARCH_PATHS", "/usr/lib/swift");
-                project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "/usr/lib/swift");
-                project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)");
-                project.AddBuildProperty(targetGUID, "LIBRARY_SEARCH_PATHS", "$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)");
-
-                project.WriteToFile(projectPath);
+                    project.WriteToFile(projectPath);
+#if UNITY_6000_5_OR_NEWER
+                }
+#endif
             }
         }
 #endif // UNITY_IOS

@@ -3,7 +3,7 @@
         {
             "ValidationTest": "API Validation",
             "ExceptionMessage": "Adding the first entry in includePlatforms requires a new major version. Was:\"\" Now:\"Editor, iOS\"",
-            "PackageVersion": "6.4.1"
+            "PackageVersion": "6.5.0-pre.1"
         }
     ],
     "WarningExceptions": []

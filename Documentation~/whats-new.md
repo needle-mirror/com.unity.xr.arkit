@@ -1,12 +1,9 @@
 ---
 uid: arkit-whats-new
 ---
-# What's new in version 6.4
+# What's new in version 6.5
 
-# Deprecated
-
-- `ARKitMeshSubsystemExtensions` has been deprecated in favor of a new cross-platform API. Use `XRMeshSubsystem` instead.
-- `ARMeshClassification` has been deprecated in favor of a new cross-platform API. Use `XRMeshClassification` instead.
+This release contains no significant changes to the Apple ARKit XR Plug-in.
 
 For a full list of changes in this version including backwards-compatible bugfixes, refer to the package [changelog](xref:arkit-changelog).
 

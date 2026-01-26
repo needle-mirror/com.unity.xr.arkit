@@ -8,15 +8,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [6.4.1] - 2025-12-09
+## [6.5.0-pre.1] - 2026-01-26
 
 ### Changed
 
-- Changed AR Foundation dependency version from 6.4.0 to 6.4.1.
+- Changed the ARKit Build Processor so that it doesn't modify your Xcode project settings to link the Swift standard libraries in Unity 6.5 or newer if you enable the Swift Xcode project type in Project Settings. In a Swift Xcode project, the Swift libraries are already linked, so this extra step isn't necessary.
+- Changed AR Foundation dependency version from 6.4.0 to 6.5.0-pre.1.
 
 ### Fixed
 
 - Fixed the Tests.Runtime assembly to only compile for the Editor and iOS platforms, which are the same platforms used by the Runtime assembly.
+- Fixed an issue where Xcode builds fail reporting missing swift compatibility symbols. The ARKit plugin now uses the `DEVELOPER_DIR` wildcard to locate the default toolchain, instead of `TOOLCHAIN_DIR`, which can sometimes point to the wrong folder.
 
 ## [6.4.0] - 2025-12-03
 

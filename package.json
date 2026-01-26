@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "Apple ARKit XR Plugin",
-  "version": "6.4.1",
+  "version": "6.5.0-pre.1",
   "unity": "6000.0",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion\n\n* Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.",
   "keywords": [
@@ -13,20 +13,20 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arfoundation": "6.4.1",
+    "com.unity.xr.arfoundation": "6.5.0-pre.1",
     "com.unity.xr.core-utils": "2.2.2",
     "com.unity.xr.management": "4.4.0"
   },
   "_upm": {
-    "changelog": "### Changed\n\n- Changed AR Foundation dependency version from 6.4.0 to 6.4.1.\n\n### Fixed\n\n- Fixed the Tests.Runtime assembly to only compile for the Editor and iOS platforms, which are the same platforms used by the Runtime assembly."
+    "changelog": "### Changed\n\n- Changed the ARKit Build Processor so that it doesn't modify your Xcode project settings to link the Swift standard libraries in Unity 6.5 or newer if you enable the Swift Xcode project type in Project Settings. In a Swift Xcode project, the Swift libraries are already linked, so this extra step isn't necessary.\n- Changed AR Foundation dependency version from 6.4.0 to 6.5.0-pre.1.\n\n### Fixed\n\n- Fixed the Tests.Runtime assembly to only compile for the Editor and iOS platforms, which are the same platforms used by the Runtime assembly.\n- Fixed an issue where Xcode builds fail reporting missing swift compatibility symbols. The ARKit plugin now uses the `DEVELOPER_DIR` wildcard to locate the default toolchain, instead of `TOOLCHAIN_DIR`, which can sometimes point to the wrong folder."
   },
   "upmCi": {
-    "footprint": "76c21339e1f4385bfed7aa18fb0e88a849e4dd9a"
+    "footprint": "5850181333431d61596a92d88063b8c56eabfdc7"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@6.4/manual/index.html",
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@6.5/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "6498d718637514e9d6e1f780d2bd6fd0e7e06d3b"
+    "revision": "39ee88e7dbf5706bad2c776ef02ba29311744ae1"
   }
 }
