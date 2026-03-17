@@ -8,6 +8,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.4.2] - 2026-03-17
+
+### Changed
+
+- Changed AR Foundation dependency version from 6.4.1 to 6.4.2.
+
+### Fixed
+
+- Fixed an issue where Xcode builds fail reporting missing swift compatibility symbols. The ARKit plugin now uses the `DEVELOPER_DIR` wildcard to locate the default toolchain, instead of `TOOLCHAIN_DIR`, which can sometimes point to the wrong folder.
+
 ## [6.4.1] - 2025-12-09
 
 ### Changed
