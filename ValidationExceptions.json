@@ -1,0 +1,10 @@
+{
+  "ErrorExceptions": [
+    {
+      "ValidationTest": "API Validation",
+      "ExceptionMessage": "Adding the first entry in includePlatforms requires a new major version. Was:\u0022\u0022 Now:\u0022Editor, iOS\u0022",
+      "PackageVersion": "6.0.7"
+    }
+  ],
+  "WarningExceptions": []
+}

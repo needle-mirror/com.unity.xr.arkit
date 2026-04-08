@@ -8,6 +8,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.7] - 2026-04-08
+
+### Changed
+
+- Rebuilt static libraries with Xcode version 26.0.1 (17A400). You are now required to use Xcode 26 or newer to build iOS apps that depend on this package.
+- Changed AR Foundation dependency version from 6.0.6 to 6.0.7
+
+### Fixed
+
+- Fixed the Tests.Runtime assembly to only compile for the Editor and iOS platforms, which are the same platforms used by the Runtime assembly.
+
 ## [6.0.6] - 2025-05-27
 
 ### Changed
