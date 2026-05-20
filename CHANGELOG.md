@@ -8,6 +8,14 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.6.0-pre.1] - 2026-05-20
+
+### Changed
+
+- Rebuilt static libraries with Xcode version 26.4.1 (17E202).
+- Changed static libraries so that this package now includes the Swift portion of the library source code. We expect this to improve linker stability in current and future versions of Xcode when building iOS apps with this package.
+- Changed AR Foundation dependency version from 6.5.0 to 6.6.0-pre.1.
+
 ## [6.5.0] - 2026-03-26
 
 ### Changed

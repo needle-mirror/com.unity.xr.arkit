@@ -1,7 +1,7 @@
 ---
 uid: arkit-whats-new
 ---
-# What's new in version 6.5
+# What's new in version 6.6
 
 This release contains no significant changes to the Apple ARKit XR Plug-in.
 

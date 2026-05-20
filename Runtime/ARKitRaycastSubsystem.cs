@@ -119,7 +119,7 @@ namespace UnityEngine.XR.ARKit
                 subsystemTypeOverride = typeof(ARKitRaycastSubsystem),
                 supportsViewportBasedRaycast = true,
                 supportsWorldBasedRaycast = false,
-                supportedTrackableTypes =
+                supportedTrackableTypesDelegate = () =>
                     TrackableType.Planes |
                     TrackableType.FeaturePoint,
                 supportsTrackedRaycasts = Api.AtLeast13_0(),

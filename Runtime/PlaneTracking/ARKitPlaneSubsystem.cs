@@ -2,6 +2,7 @@ using System;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
+using Unity.XR.CoreUtils;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 #if UNITY_XR_ARKIT_LOADER_ENABLED
@@ -19,9 +20,7 @@ namespace UnityEngine.XR.ARKit
         class ARKitProvider : Provider
         {
             public override void Destroy() => NativeApi.UnityARKit_Planes_Shutdown();
-
             public override void Start() => NativeApi.UnityARKit_Planes_Start();
-
             public override void Stop() => NativeApi.UnityARKit_Planes_Stop();
 
             /// <summary>
@@ -30,19 +29,14 @@ namespace UnityEngine.XR.ARKit
             public override PlaneDetectionMode currentPlaneDetectionMode => NativeApi.UnityARKit_Planes_GetCurrentPlaneDetectionMode();
 
             public override unsafe void GetBoundary(
-                TrackableId trackableId,
-                Allocator allocator,
-                ref NativeArray<Vector2> boundary)
+                TrackableId trackableId, Allocator allocator, ref NativeArray<Vector2> boundary)
             {
                 void* plane = NativeApi.UnityARKit_Planes_AcquireBoundary(
-                    trackableId,
-                    out Quaternion rotation,
-                    out void* verticesPtr,
-                    out int numPoints);
+                    trackableId, out Quaternion rotation, out void* verticesPtr, out int numPoints);
 
                 try
                 {
-                    CreateOrResizeNativeArrayIfNecessary(numPoints, allocator, ref boundary);
+                    NativeArrayUtils.EnsureExactSize(ref boundary, numPoints, allocator);
                     var transformPositionsHandle = new TransformBoundaryPositionsJob
                     {
                         positionsIn = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector4>(verticesPtr, numPoints, Allocator.None),
@@ -78,13 +72,13 @@ namespace UnityEngine.XR.ARKit
 
             struct TransformBoundaryPositionsJob : IJobParallelFor
             {
-                [ReadOnly]
+                [Unity.Collections.ReadOnly]
                 public NativeArray<Vector4> positionsIn;
 
                 [WriteOnly]
                 public NativeArray<Vector2> positionsOut;
 
-                [ReadOnly]
+                [Unity.Collections.ReadOnly]
                 public Quaternion inverseYAxisRotation;
 
                 public void Execute(int index)
@@ -191,21 +185,21 @@ namespace UnityEngine.XR.ARKit
 #else
             static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
 
-            internal static unsafe bool UnityARKit_Planes_SupportsClassification() => false;
+            internal static bool UnityARKit_Planes_SupportsClassification() => false;
 
             internal static void UnityARKit_Planes_Shutdown()
             {
-                throw new System.NotImplementedException(k_ExceptionMsg);
+                throw new NotImplementedException(k_ExceptionMsg);
             }
 
             internal static void UnityARKit_Planes_Start()
             {
-                throw new System.NotImplementedException(k_ExceptionMsg);
+                throw new NotImplementedException(k_ExceptionMsg);
             }
 
             internal static void UnityARKit_Planes_Stop()
             {
-                throw new System.NotImplementedException(k_ExceptionMsg);
+                throw new NotImplementedException(k_ExceptionMsg);
             }
 
             internal static unsafe void* UnityARKit_Planes_AcquireChanges(
@@ -214,27 +208,27 @@ namespace UnityEngine.XR.ARKit
                 out void* removedPtr, out int removedLength,
                 out int elementSize)
             {
-                throw new System.NotImplementedException(k_ExceptionMsg);
+                throw new NotImplementedException(k_ExceptionMsg);
             }
 
             internal static unsafe void UnityARKit_Planes_ReleaseChanges(void* changes)
             {
-                throw new System.NotImplementedException(k_ExceptionMsg);
+                throw new NotImplementedException(k_ExceptionMsg);
             }
 
             internal static PlaneDetectionMode UnityARKit_Planes_GetRequestedPlaneDetectionMode()
             {
-                throw new System.NotImplementedException(k_ExceptionMsg);
+                throw new NotImplementedException(k_ExceptionMsg);
             }
 
             internal static void UnityARKit_Planes_SetRequestedPlaneDetectionMode(PlaneDetectionMode mode)
             {
-                throw new System.NotImplementedException(k_ExceptionMsg);
+                throw new NotImplementedException(k_ExceptionMsg);
             }
 
             internal static PlaneDetectionMode UnityARKit_Planes_GetCurrentPlaneDetectionMode()
             {
-                throw new System.NotImplementedException(k_ExceptionMsg);
+                throw new NotImplementedException(k_ExceptionMsg);
             }
 
             internal static unsafe void* UnityARKit_Planes_AcquireBoundary(
@@ -243,12 +237,12 @@ namespace UnityEngine.XR.ARKit
                 out void* verticesPtr,
                 out int numPoints)
             {
-                throw new System.NotImplementedException(k_ExceptionMsg);
+                throw new NotImplementedException(k_ExceptionMsg);
             }
 
             internal static unsafe void UnityARKit_Planes_ReleaseBoundary(void* boundary)
             {
-                throw new System.NotImplementedException(k_ExceptionMsg);
+                throw new NotImplementedException(k_ExceptionMsg);
             }
 #endif
         }
