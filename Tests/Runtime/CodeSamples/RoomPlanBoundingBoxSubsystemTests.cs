@@ -10,10 +10,10 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
     public class RoomPlanBoundingBoxSubsystemTests
     {
         #region CheckRoomCaptureSupportSample
-        bool CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem)
+        bool CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem, ARBoundingBoxManager boundingBoxManager)
         {
             // check if roomplan bounding box subsystem is available
-            subsystem = m_BoundingBoxManager.subsystem as RoomPlanBoundingBoxSubsystem;
+            subsystem = boundingBoxManager.subsystem as RoomPlanBoundingBoxSubsystem;
             if (subsystem == null)
             {
                 Debug.LogError("RoomPlanBoundingBoxSubsystem is not available.");
@@ -25,9 +25,9 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
         #endregion CheckRoomCaptureSupportSample
 
         #region SetupRoomCaptureSample
-        void RoomCaptureSetup()
+        void RoomCaptureSetup(ARBoundingBoxManager boundingBoxManager)
         {
-            if (!CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem))
+            if (!CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem, boundingBoxManager))
                 return;
 
             if (subsystem.SetupRoomCapture())
@@ -38,9 +38,9 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
         #endregion SetupRoomCaptureSample
 
         #region StartRoomCaptureSample
-        void RoomCaptureStart()
+        void RoomCaptureStart(ARBoundingBoxManager boundingBoxManager)
         {
-            if (!CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem))
+            if (!CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem, boundingBoxManager))
                 return;
 
             subsystem.StartRoomCapture();
@@ -48,9 +48,9 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
         #endregion StartRoomCaptureSample
 
         #region StopRoomCaptureSample
-        void RoomCaptureStop()
+        void RoomCaptureStop(ARBoundingBoxManager boundingBoxManager)
         {
-            if (!CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem))
+            if (!CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem, boundingBoxManager))
                 return;
 
             subsystem.StopRoomCapture();
@@ -58,9 +58,9 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
         #endregion StopRoomCaptureSample
 
         #region IsRoomCapturingSample
-        void CheckRoomCapturingStatus()
+        void CheckRoomCapturingStatus(ARBoundingBoxManager boundingBoxManager)
         {
-            if (!CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem))
+            if (!CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem, boundingBoxManager))
                 return;
 
             if (subsystem.IsRoomCapturing())
@@ -71,9 +71,9 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
         #endregion IsRoomCapturingSample
 
         #region GetRoomCaptureInstructionSample
-        void UpdateRoomCaptureInstruction()
+        void UpdateRoomCaptureInstruction(ARBoundingBoxManager boundingBoxManager)
         {
-            if (!CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem))
+            if (!CheckRoomCaptureSupport(out RoomPlanBoundingBoxSubsystem subsystem, boundingBoxManager))
                 return;
 
             subsystem.GetRoomCaptureInstruction(out XRBoundingBoxInstructions instruction);

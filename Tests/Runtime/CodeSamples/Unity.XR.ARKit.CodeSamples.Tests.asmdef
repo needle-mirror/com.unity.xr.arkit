@@ -8,6 +8,7 @@
         "UnityEngine.TestRunner"
     ],
     "includePlatforms": [
+        "Editor",
         "iOS"
     ],
     "excludePlatforms": [],

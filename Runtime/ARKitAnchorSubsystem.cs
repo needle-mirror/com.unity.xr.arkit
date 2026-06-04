@@ -166,12 +166,12 @@ namespace UnityEngine.XR.ARKit
                 id = "ARKit-Anchor",
                 providerType = typeof(ARKitAnchorSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitAnchorSubsystem),
-                supportsTrackableAttachments = true,
                 supportsSynchronousAdd = true,
                 supportsSaveAnchorDelegate = () => false,
                 supportsLoadAnchorDelegate = () => false,
                 supportsEraseAnchorDelegate = () => false,
                 supportsGetSavedAnchorIdsDelegate = () => false,
+                supportsTrackableAttachmentsDelegate = () => true,
                 supportsAsyncCancellation = false,
             };
 

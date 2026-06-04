@@ -10,10 +10,8 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
     public class ARKitCameraSubsystemTests
     {
         #region HighResolutionCpuImageSample
-        IEnumerator CaptureHighResolutionCpuImage()
+        IEnumerator CaptureHighResolutionCpuImage(ARCameraManager cameraManager)
         {
-            // This is inefficient. You should re-use a saved reference instead.
-            var cameraManager = FindAnyObjectByType<ARCameraManager>();
             if (cameraManager.subsystem is not ARKitCameraSubsystem subsystem)
             {
                 Debug.LogError("High resolution CPU image capture requires ARKit.");
@@ -36,11 +34,8 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
         #endregion
 
         #region AdvancedConfigurationSupport
-        bool AdvancedConfigurationSupported(out ARKitCameraSubsystem subsystem)
+        bool AdvancedConfigurationSupported(out ARKitCameraSubsystem subsystem, ARCameraManager cameraManager)
         {
-            // This is inefficient. You should re-use a saved reference instead.
-            var cameraManager = FindAnyObjectByType<ARCameraManager>();
-
             // check if arkit subsystem is available
             subsystem = cameraManager.subsystem as ARKitCameraSubsystem;
             if (subsystem == null)
@@ -61,9 +56,9 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
         #endregion AdvancedConfigurationSupport
 
         #region CameraExposure
-        void UpdateCameraExposure()
+        void UpdateCameraExposure(ARCameraManager cameraManager)
         {
-            if (!AdvancedConfigurationSupported(out ARKitCameraSubsystem subsystem))
+            if (!AdvancedConfigurationSupported(out ARKitCameraSubsystem subsystem, cameraManager))
                 return;
 
             // try to get a locked camera
@@ -86,9 +81,9 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
         #endregion CameraExposure
 
         #region CameraWhiteBalance
-        void UpdateCameraWhiteBalance()
+        void UpdateCameraWhiteBalance(ARCameraManager cameraManager)
         {
-            if (!AdvancedConfigurationSupported(out ARKitCameraSubsystem subsystem))
+            if (!AdvancedConfigurationSupported(out ARKitCameraSubsystem subsystem, cameraManager))
                 return;
 
             // try to get a locked camera
@@ -112,9 +107,9 @@ namespace UnityEngine.XR.ARKit.CodeSamples.Tests
         #endregion CameraWhiteBalance
 
         #region CameraFocus
-        void UpdateCameraFocus()
+        void UpdateCameraFocus(ARCameraManager cameraManager)
         {
-            if (!AdvancedConfigurationSupported(out ARKitCameraSubsystem subsystem))
+            if (!AdvancedConfigurationSupported(out ARKitCameraSubsystem subsystem, cameraManager))
                 return;
 
             // try to get a locked camera
