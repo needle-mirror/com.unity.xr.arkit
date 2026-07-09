@@ -1,3 +1,4 @@
+#pragma warning disable CS0728 // Possibly incorrect assignment to local which is the argument to a using or lock statement
 using System.Collections;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;

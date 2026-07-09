@@ -140,6 +140,8 @@ namespace UnityEditor.XR.ARKit
 
                 EnsureMetalIsFirstApi();
 
+                WarnIfSimulatorArchitectureUnsupported();
+
                 if (ARKitSettings.GetOrCreateSettings().requirement == ARKitSettings.Requirement.Required)
                 {
                     EnsureMinimumBuildTarget();
@@ -190,6 +192,23 @@ namespace UnityEditor.XR.ARKit
                     throw new BuildFailedException(
                         "Apple ARKit XR Plug-in only supports the ARM64 architecture. " +
                         "See Player Settings > Other Settings > Architecture.");
+            }
+
+            static void WarnIfSimulatorArchitectureUnsupported()
+            {
+#if UNITY_IOS
+                if (PlayerSettings.iOS.sdkVersion != iOSSdkVersion.SimulatorSDK)
+                    return;
+
+                if (PlayerSettings.iOS.simulatorSdkArchitecture == AppleMobileArchitectureSimulator.ARM64)
+                    return;
+
+                Debug.LogWarning(
+                    "Apple ARKit XR Plug-in does not ship a native plug-in slice for the x86_64 iOS Simulator " +
+                    "architecture, which Unity has deprecated. The player will fail to link against the plug-in's " +
+                    "native symbols when built for an x86_64 simulator. Switch the simulator architecture to ARM64 in " +
+                    "Player Settings > iOS > Other Settings > Architecture (Simulator).");
+#endif
             }
 
             static void EnsureMetalIsFirstApi()

@@ -8,6 +8,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.6.0] - 2026-07-09
+
+### Added
+
+- Added ARM64 iOS Simulator support to the Apple ARKit XR Plug-in native library. Apps that depend on this package can now build and run on the iOS Simulator on Apple silicon Macs; previously, building for the Simulator failed to link against the plug-in. ARKit does not run in the Simulator, so AR features report as unavailable (`ARConfiguration.isSupported` returns `false`), but the player links and launches so you can exercise the non-AR parts of your app.
+- Added a build-time warning when targeting the deprecated x86_64 iOS Simulator architecture, which this package does not support. The warning directs you to switch the Simulator architecture to ARM64.
+
+### Changed
+
+- Changed the minimum dependency version of AR Foundation from 6.6.0-pre.2 to 6.6.0.
+
 ## [6.6.0-pre.2] - 2026-06-04
 
 ### Changed

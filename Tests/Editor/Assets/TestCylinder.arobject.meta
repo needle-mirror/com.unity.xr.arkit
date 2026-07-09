@@ -1,9 +1,12 @@
 fileFormatVersion: 2
 guid: c7c8217af215d4f83adb6e9edd5b8cf5
 ScriptedImporter:
-  fileIDToRecycleName:
-    11400000: arobject
+  internalIDToNameTable:
+  - first:
+      114: 11400000
+    second: arobject
   externalObjects: {}
+  serializedVersion: 2
   userData: 
   assetBundleName: 
   assetBundleVariant: 
