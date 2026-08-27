@@ -17,7 +17,7 @@ The meshing feature requires iOS 13.4 or newer, and iPadOS 13.4 or newer.
 
 ## Use meshing in a scene
 
-To get started with ARKit meshing with AR Foundation, follow the instructions in AR Foundation's [Use meshing in your scene](xref:arfoundation-meshing-use).
+To get started with ARKit meshing with AR Foundation, refer to the [Meshing](xref:arfoundation-meshing) page and [Meshing sample scenes](xref:arfoundation-samples-meshing) in the AR Foundation package documentation.
 
 ## Optional feature support
 

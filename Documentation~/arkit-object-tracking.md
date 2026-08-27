@@ -3,17 +3,27 @@ uid: arkit-object-tracking
 ---
 # Object tracking
 
-To use object tracking on ARKit, you first need to create a reference object library. See [Object tracking](xref:arfoundation-object-tracking) for instructions.
+This page is a supplement to the AR Foundation [Object tracking](xref:arfoundation-object-tracking) manual. The following sections only contain information about APIs where ARKit exhibits unique platform-specific behavior.
 
-Next, you need to create an ARKit-specific reference object entry. The [Scanning and Detecting 3D Objects](https://developer.apple.com/documentation/arkit/scanning_and_detecting_3d_objects) page on Apple's developer website allows you to download an app that you can use with an iOS device to produce such a scan. Note that this is a third-party application, and Unity is not involved in its development.
+[!include[](snippets/arf-docs-tip.md)]
+
+## Configure reference object library
+
+To use object tracking on ARKit, you first need to create a reference object library (refer to [Configure a reference object library](xref:arfoundation-object-tracking-reference-objects) for instructions).
+
+### Scan your reference objects
+
+Next, you need to create an ARKit-specific reference object entry. [Scanning and Detecting 3D Objects](https://developer.apple.com/documentation/arkit/scanning_and_detecting_3d_objects) (Apple Developer documentation) provides an app you can download that you can use to produce a scan of an object. This is a third-party application, and Unity is not involved in its development.
 
 The scanning app produces a file with the extension `.arobject`. Drag each `.arobject` file into your Unity project, and Unity generates an `ARKitReferenceObjectEntry` for it.
 
-![Example scan](images/arobject-inspector.png "Example scan")<br/>*Example scan*
+![Example scans in the Inspector.](images/arobject-inspector.png)<br/>*Example scan in the Inspector.*
 
-You should see some metadata and a preview image of the scan in the Inspector.
+Once you have scanned an object, the **Inspector** displays metadata and a preview image of the scan.
 
-You can now add the `.arobject` to a reference object in your Reference Object Library as shown below:
+### Add scanned objects to reference object library
+
+You can now add the `.arobject` to a reference object in your reference object library as shown in the following image:
 
 ![Example Reference Object Library](images/reference-object-library-inspector.png)<br/>*Example Reference Object Library*
 
