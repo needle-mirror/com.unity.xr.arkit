@@ -45,7 +45,7 @@ namespace UnityEngine.XR.ARKit
         /// Compares for equality.
         /// </summary>
         /// <param name="obj">An <c>object</c> to compare against.</param>
-        /// <returns><c>true</c> if <paramref name="obj"/> is an <see cref="SerializedARCollaborationData"/> and
+        /// <returns><c>true</c> if <paramref name="obj"/> is a <see cref="SerializedARCollaborationData"/> and
         /// <see cref="Equals(SerializedARCollaborationData)"/> is also <c>true</c>. Otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj) => (obj is SerializedARCollaborationData) && Equals((SerializedARCollaborationData)obj);
 

@@ -13,15 +13,11 @@ ARKit implements the following optional features of AR Foundation's [XRSessionSu
 
 | Feature | Descriptor Property | Supported |
 | :------ | :--------------- | :--------: |
-| **Install** | [supportsInstall](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystemDescriptor.supportsInstall) | |
+| **Install** (Deprecated) | [supportsInstall](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystemDescriptor.supportsInstall) | |
 | **Match frame rate** | [supportsMatchFrameRate](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystemDescriptor.supportsMatchFrameRate) | Yes |
 
 > [!NOTE]
 > Refer to AR Foundation [Session platform support](xref:arfoundation-session-platform-support) for more information on the optional features of the session subsystem.
-
-## Check if AR is supported
-
-ARKit implements [XRSessionSubsystem.GetAvailabilityAsync](xref:UnityEngine.XR.ARSubsystems.XRSessionSubsystem.GetAvailabilityAsync), which consists of the device checking that it's running on iOS 11.0 or newer.
 
 ## Native pointer
 

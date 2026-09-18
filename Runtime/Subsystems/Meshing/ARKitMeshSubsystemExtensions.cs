@@ -23,6 +23,7 @@ namespace UnityEngine.XR.ARKit
             public static extern unsafe void UnityARKit_MeshProvider_ReleaseClassifications(void* classifications);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern unsafe bool UnityARKit_MeshProvider_IsClassificationEnabled();
 
             [DllImport("__Internal")]

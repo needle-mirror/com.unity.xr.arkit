@@ -98,7 +98,7 @@ For more information on binned vs non-binned video formats, see Apple's [Discove
 
 ## EXIF data
 
-You are able to access camera frame's [EXIF data](xref:arfoundation-exif-data) on devices running iOS 16 or newer.
+You are able to access the camera frame's [EXIF data](xref:arfoundation-exif-data) on devices running iOS 16 or newer.
 
 For more information, refer to the [EXIF specification](https://web.archive.org/web/20190624045241if_/http://www.cipa.jp:80/std/documents/e/DC-008-Translation-2019-E.pdf).
 

@@ -383,18 +383,21 @@ namespace UnityEngine.XR.ARKit
             public static extern void UnityARKit_Camera_GetFocusRange(IntPtr cameraDevice, out ARKitFocusRange focusRange);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Camera_TrySetExposure(IntPtr cameraDevice, double duration, float iso);
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_Camera_GetExposure(IntPtr cameraDevice, out double duration, out float iso);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Camera_TrySetWhiteBalance(IntPtr cameraDevice, float blue, float green, float red);
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_Camera_GetWhiteBalance(IntPtr cameraDevice, out float blue, out float green, out float red);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Camera_TrySetFocus(IntPtr cameraDevice, float lensPosition);
 
             [DllImport("__Internal")]

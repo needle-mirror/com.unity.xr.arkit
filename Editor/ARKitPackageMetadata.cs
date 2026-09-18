@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine;
 using UnityEngine.XR.ARKit;
 using UnityEditor.XR.Management.Metadata;
@@ -23,6 +26,9 @@ namespace UnityEditor.XR.ARKit
             public List<IXRLoaderMetadata> loaderMetadata { get; set; }
         }
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static IXRPackageMetadata s_Metadata = new ARKitPackageMetadata()
         {
             packageName = ARKitPackageInfo.displayName,

@@ -25,7 +25,7 @@ namespace UnityEditor.XR.ARKit
             Required,
 
             /// <summary>
-            /// ARKit is optional, which means the the app can be installed on devices that do not support ARKit.
+            /// ARKit is optional, which means the app can be installed on devices that do not support ARKit.
             /// </summary>
             Optional
         }

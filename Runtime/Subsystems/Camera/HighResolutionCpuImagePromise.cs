@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 using AOT;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEngine.XR.ARKit
@@ -22,16 +25,25 @@ namespace UnityEngine.XR.ARKit
         /// <para>Refer to ARKit's <a href="https://developer.apple.com/documentation/arkit/arsession/3975720-capturehighresolutionframewithco?language=objc">
         /// captureHighResolutionFrameWithCompletion</a> documentation for more information.</para>
         /// </remarks>
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static HighResolutionCpuImagePromise s_Instance;
 
         /// <summary>
         /// The <see cref="XRCpuImage.Cinfo"/> object whose fields will be assigned by the native API.
         /// </summary>
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static XRCpuImage.Cinfo s_Cinfo;
 
         /// <summary>
         /// The function pointer for <see cref="OnPromiseComplete"/> to be marshalled to native API.
         /// </summary>
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static IntPtr s_OnPromiseCompleteFuncPtr = Marshal.GetFunctionPointerForDelegate((HighResolutionCpuImageCallback)OnPromiseComplete);
 
         /// <summary>

@@ -1,5 +1,8 @@
 using System;
 using Unity.Collections;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.Management;
 
@@ -101,6 +104,9 @@ namespace UnityEngine.XR.ARKit
             m_ARKitReferenceObject = new ARReferenceObject(m_ReferenceObjectBytes);
 
 #if UNITY_EDITOR
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static bool s_ObjectBytesShouldBeSet;
 
         // Called by ARKitReferenceObjectLibraryBuildProcessor

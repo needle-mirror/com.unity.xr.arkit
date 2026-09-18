@@ -27,7 +27,7 @@ Some ARKit features require specific Unity Project settings to function properly
 To use ARKit, you must enable the plug-in in your **XR Plug-in Management** settings. (Installing the package from the Package Manager doesn't automatically enable the plug-in.)
 
 > [!NOTE]
-> Enabling ARKit also installs the package, if necessary. However, disabling ARkit doesn't uninstall the package.
+> Enabling ARKit also installs the package, if necessary. However, disabling ARKit doesn't uninstall the package.
 
 You must install the **iOS Module** using the Unity Hub before you can enable the ARKit plug-in. Refer to the [Add modules](https://docs.unity3d.com/hub/manual/AddModules.html) section of the Unity Hub documentation for instructions.
 
@@ -94,6 +94,9 @@ To enable ARKit face tracking:
 ### Set the ARKit support requirement
 
 If your app can't function without ARKit support, you can prevent it from being installed on devices without ARKit support by setting the ARKit plug-in **Requirement** setting to **Required**. Alternately, if your app works with or without ARKit, you can set the **Requirement** setting to **Optional**.
+
+> [!NOTE]
+> ARKit is supported on all iOS devices as of iOS 11.
 
 When you require ARKit, the `arkit` key is added to the `UIRequiredDeviceCapabilities` section of your app's `Info.plist` file. Refer to Apple's [Verifying Device Support and User Permission](https://developer.apple.com/documentation/arkit/verifying_device_support_and_user_permission) for additional information.
 

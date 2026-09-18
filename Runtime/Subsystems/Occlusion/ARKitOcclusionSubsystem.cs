@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 using Unity.Collections;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using Unity.XR.CoreUtils.Collections;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
@@ -55,29 +58,58 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The shader keywords for enabling human segmentation rendering.
             /// </summary>
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly List<string> k_HumanSegmentationKeywordList = new(){ k_HumanEnabledMaterialKeyword };
+
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly ReadOnlyList<string> k_HumanSegmentationKeywordListReadOnly = new(k_HumanSegmentationKeywordList);
 
             /// <summary>
             /// The shader keywords for enabling environment depth rendering.
             /// </summary>
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly List<string> k_EnvironmentDepthKeywordList = new(){ k_EnvironmentDepthEnabledMaterialKeyword };
+
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly ReadOnlyList<string> k_EnvironmentDepthKeywordListReadOnly = new(k_EnvironmentDepthKeywordList);
 
             /// <summary>
             /// Keywords to use when no occlusion is enabled.
             /// </summary>
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly List<string> k_AllDisabledShaderKeywords =
                 new(){ k_HumanEnabledMaterialKeyword, k_EnvironmentDepthEnabledMaterialKeyword };
 
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly ReadOnlyList<string> k_AllDisabledShaderKeywordsReadOnly = new(k_AllDisabledShaderKeywords);
 
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly XRShaderKeywords k_DepthDisabledShaderKeywords =
                 new(null, k_AllDisabledShaderKeywordsReadOnly) ;
 
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly XRShaderKeywords k_EnvironmentDepthKeywords =
                 new(k_EnvironmentDepthKeywordListReadOnly, k_HumanSegmentationKeywordListReadOnly);
 
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly XRShaderKeywords k_HumanSegmentationKeywords =
                 new(k_HumanSegmentationKeywordListReadOnly, k_EnvironmentDepthKeywordListReadOnly);
 
@@ -223,7 +255,7 @@ namespace UnityEngine.XR.ARKit
                     enabledKeywords = null;
                     disabledKeywords = k_AllDisabledShaderKeywords;
                 }
-                // Else if environment depth is enabled and human depth is not enabled/prefered, then use environment depth.
+                // Else if environment depth is enabled and human depth is not enabled/preferred, then use environment depth.
                 else if (isEnvDepthEnabled && (!isHumanDepthEnabled || m_OcclusionPreferenceMode == OcclusionPreferenceMode.PreferEnvironmentOcclusion))
                 {
                     enabledKeywords = k_EnvironmentDepthKeywordList;
@@ -324,18 +356,23 @@ namespace UnityEngine.XR.ARKit
             public static extern EnvironmentDepthMode UnityARKit_OcclusionProvider_GetCurrentEnvironmentDepthMode();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_OcclusionProvider_GetEnvironmentDepthTemporalSmoothingEnabled();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_OcclusionProvider_TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_OcclusionProvider_TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_OcclusionProvider_TryGetEnvironmentDepth(out XRTextureDescriptor envDepthDescriptor);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_OcclusionProvider_TryGetEnvironmentDepthConfidence(out XRTextureDescriptor envDepthConfidenceDescriptor);
 
             [DllImport("__Internal")]
@@ -345,9 +382,11 @@ namespace UnityEngine.XR.ARKit
             public static extern unsafe void UnityARKit_OcclusionProvider_ReleaseTextureDescriptors(void* descriptors);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_OcclusionProvider_IsHumanEnabled();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_OcclusionProvider_IsEnvironmentEnabled();
 
             [DllImport("__Internal")]

@@ -112,11 +112,11 @@ namespace UnityEngine.XR.ARKit
     public static partial class NSErrorExtensions
     {
         /// <summary>
-        /// Converts an <see cref="NSError"/> to an <see cref="CoreLocationErrorCode"/> by casting its
-        /// <see cref="NSError.code"/> to an <see cref="CoreLocationErrorCode"/>.
+        /// Converts an <see cref="NSError"/> to a <see cref="CoreLocationErrorCode"/> by casting its
+        /// <see cref="NSError.code"/> to a <see cref="CoreLocationErrorCode"/>.
         /// </summary>
         /// <param name="error">The <see cref="NSError"/> being extended.</param>
-        /// <returns>Returns the <see cref="NSError"/> as an <see cref="CoreLocationErrorCode"/>.</returns>
+        /// <returns>Returns the <see cref="NSError"/> as a <see cref="CoreLocationErrorCode"/>.</returns>
         /// <exception cref="System.InvalidCastException">Thrown if <paramref name="error"/>'s
         /// <see cref="NSError.ToErrorDomain"/> is not <see cref="NSErrorDomain.CoreLocation"/>.</exception>
         public static CoreLocationErrorCode AsCoreLocationErrorCode(this NSError error)

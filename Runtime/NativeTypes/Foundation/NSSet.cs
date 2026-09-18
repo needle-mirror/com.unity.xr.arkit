@@ -54,6 +54,7 @@ namespace UnityEngine.XR.ARKit
         public static extern IntPtr GetEnumerator(IntPtr self);
 
         [DllImport("__Internal", EntryPoint = "NSSet_containsObject_")]
+        [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool ContainsObject(IntPtr self, IntPtr obj);
 
         [DllImport("__Internal", EntryPoint = "NSSet_class")]

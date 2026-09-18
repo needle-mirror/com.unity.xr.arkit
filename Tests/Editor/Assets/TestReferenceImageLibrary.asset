@@ -27,6 +27,7 @@ MonoBehaviour:
     m_SpecifySize: 1
     m_Name: one
     m_Texture: {fileID: 0}
+    m_MovingImageType: 0
   - m_SerializedGuid:
       m_GuidLow: 5042663397258134544
       m_GuidHigh: 10762295089441842576
@@ -37,3 +38,5 @@ MonoBehaviour:
     m_SpecifySize: 1
     m_Name: two
     m_Texture: {fileID: 0}
+    m_MovingImageType: 0
+  m_MovingImageType: 0

@@ -120,7 +120,7 @@ namespace UnityEngine.XR.ARKit
             /// Queries for the set of human body changes.
             /// </summary>
             /// <param name="defaultHumanBody">The default human body.</param>
-            /// <param name="allocator">The memory allocator to use for the returns trackable changes.</param>
+            /// <param name="allocator">The memory allocator to use for the returned trackable changes.</param>
             /// <returns>
             /// The set of human body changes.
             /// </returns>
@@ -285,21 +285,27 @@ namespace UnityEngine.XR.ARKit
             public static unsafe extern void UnityARKit_HumanBodyProvider_ReleaseHumanBodyPose2DJoints(void* joints);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_HumanBodyProvider_GetHumanBodyPose2DEstimationEnabled();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_HumanBodyProvider_GetHumanBodyPose3DEstimationEnabled();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_HumanBodyProvider_GetHumanBodyPose3DScaleEstimationEnabled();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose2DEstimation();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DEstimation();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_HumanBodyProvider_DoesSupportBodyPose3DScaleEstimation();
 #else
             static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";

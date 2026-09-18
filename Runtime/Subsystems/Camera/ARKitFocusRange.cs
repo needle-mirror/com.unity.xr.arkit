@@ -15,12 +15,12 @@ namespace UnityEngine.XR.ARKit
         float m_MaximumLensPosition;
 
         /// <summary>
-        /// Minimum supported lens position. This value represent the shortest distance at which the lens can focus.
+        /// Minimum supported lens position. This value represents the shortest distance at which the lens can focus.
         /// </summary>
         public float minimumLensPosition => m_MinimumLensPosition;
 
         /// <summary>
-        /// Maximum supported lens position. This value represent the furthest distance at which the lens can focus.
+        /// Maximum supported lens position. This value represents the furthest distance at which the lens can focus.
         /// </summary>
         public float maximumLensPosition => m_MaximumLensPosition;
 

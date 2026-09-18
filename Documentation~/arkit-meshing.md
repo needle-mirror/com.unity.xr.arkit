@@ -28,7 +28,7 @@ The following table indicates which meshing features ARKit supports:
 | Density | |
 | Normals | Yes |
 | Tangents | |
-| Texture coordinates |
+| Texture coordinates | |
 | Colors | |
 | Queue size | Yes |
 | Classification | Yes |

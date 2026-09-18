@@ -47,22 +47,28 @@ namespace UnityEngine.XR.ARKit
 #endif
 
 #if UNITY_IOS && !UNITY_EDITOR && UNITY_XR_ARKIT_LOADER_ENABLED
+        [return: MarshalAs(UnmanagedType.I1)]
         [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast11_0")]
         public static extern bool AtLeast11_0();
 
         [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast11_3")]
+        [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool AtLeast11_3();
 
         [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast12_0")]
+        [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool AtLeast12_0();
 
         [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast13_0")]
+        [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool AtLeast13_0();
 
         [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast16_0")]
+        [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool AtLeast16_0();
 
         [DllImport("__Internal", EntryPoint="UnityARKit_Version_AtLeast17_0")]
+        [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool AtLeast17_0();
 
         [DllImport("__Internal", EntryPoint="UnityARKit_EnsureRootViewIsSetup")]
@@ -87,9 +93,11 @@ namespace UnityEngine.XR.ARKit
         internal static extern int UnityARKit_getWorldMapIdFromRequestId(int requestId);
 
         [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.I1)]
         internal static extern bool UnityARKit_isWorldMapValid(int nativeHandle);
 
         [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.I1)]
         internal static extern bool UnityARKit_trySerializeWorldMap(
             int nativeHandle, out IntPtr nsdata, out int length);
 

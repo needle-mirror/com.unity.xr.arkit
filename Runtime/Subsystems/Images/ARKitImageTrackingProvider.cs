@@ -1,6 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using Unity.Collections;
+using Unity.XR.CoreUtils;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -17,10 +19,19 @@ namespace UnityEngine.XR.ARKit
             public override void Start() { }
             public override void Stop() { }
 
+            [Obsolete("CreateRuntimeLibrary is deprecated in AR Foundation 6.7. Use TryCreateRuntimeLibraryAsync instead.")]
             public override RuntimeReferenceImageLibrary CreateRuntimeLibrary(
                 XRReferenceImageLibrary serializedLibrary)
             {
                 return new ARKitImageDatabase(serializedLibrary);
+            }
+
+            public override Awaitable<Result<RuntimeReferenceImageLibrary>> TryCreateRuntimeLibraryAsync(
+                XRReferenceImageLibrary serializedLibrary, CancellationToken cancellationToken = default)
+            {
+                RuntimeReferenceImageLibrary library = new ARKitImageDatabase(serializedLibrary);
+                return AwaitableUtils<Result<RuntimeReferenceImageLibrary>>.FromResult(
+                    new Result<RuntimeReferenceImageLibrary>(library));
             }
 
             public override RuntimeReferenceImageLibrary imageLibrary
@@ -172,6 +183,7 @@ namespace UnityEngine.XR.ARKit
                 supportsMutableLibrary = true,
                 requiresPhysicalImageDimensions = true,
                 supportsImageValidation = Api.AtLeast13_0(),
+                supportsRuntimeLibraryDelegate = () => true,
             });
         }
     }

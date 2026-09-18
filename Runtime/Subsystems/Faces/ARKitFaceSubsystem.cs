@@ -1,10 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
-
 using Unity.Jobs;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 using static UnityEngine.XR.ARSubsystems.XRResultStatus;
@@ -34,13 +32,17 @@ namespace UnityEngine.XR.ARKit
         static extern void UnityARKit_FaceProvider_Stop();
 
         [DllImport("__Internal")]
-        static extern bool UnityARKit_FaceProvider_TryAcquireFaceBlendCoefficients(TrackableId faceId, out IntPtr ptrBlendCoefficientData, out int numArrayBlendCoefficients);
+        [return: MarshalAs(UnmanagedType.I1)]
+        static extern bool UnityARKit_FaceProvider_TryAcquireFaceBlendCoefficients(
+            TrackableId faceId, out IntPtr ptrBlendCoefficientData, out int numArrayBlendCoefficients);
 
         [DllImport("__Internal")]
-        static extern XRResultStatus UnityARKit_FaceProvider_TryGetBlendShapes(TrackableId faceId, out IntPtr ptrBlendShapeData, out int elementSize, out int numArrayBlendShapes);
+        static extern XRResultStatus UnityARKit_FaceProvider_TryGetBlendShapes(
+            TrackableId faceId, out IntPtr ptrBlendShapeData, out int elementSize, out int numArrayBlendShapes);
 
 #if UNITY_IOS && !UNITY_EDITOR
         [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool UnityARKit_FaceProvider_IsSupported();
 #else
         static bool UnityARKit_FaceProvider_IsSupported() => false;
@@ -50,6 +52,7 @@ namespace UnityEngine.XR.ARKit
         static extern void UnityARKit_FaceProvider_OnRegisterDescriptor();
 
         [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool UnityARKit_FaceProvider_IsEyeTrackingSupported();
 
         [DllImport("__Internal")]

@@ -112,6 +112,11 @@ namespace UnityEngine.XR.ARKit
             if (!Api.AtLeast11_0())
                 return;
 
+            var planeTypes = TrackableType.PlaneWithinPolygon
+                | TrackableType.PlaneWithinBounds
+                | TrackableType.PlaneWithinInfinity
+                | TrackableType.PlaneEstimated;
+
             XRRaycastSubsystemDescriptor.Register(new XRRaycastSubsystemDescriptor.Cinfo
             {
                 id = "ARKit-Raycast",
@@ -120,7 +125,7 @@ namespace UnityEngine.XR.ARKit
                 supportsViewportBasedRaycast = true,
                 supportsWorldBasedRaycast = false,
                 supportedTrackableTypesDelegate = () =>
-                    TrackableType.Planes |
+                    planeTypes |
                     TrackableType.FeaturePoint,
                 supportsTrackedRaycasts = Api.AtLeast13_0(),
             });
@@ -163,6 +168,7 @@ namespace UnityEngine.XR.ARKit
             public static extern unsafe void ReleaseChanges(XRRaycast* added, XRRaycast* updated, TrackableId* removed);
 
             [DllImport("__Internal", EntryPoint = "UnityARKit_Raycast_TryAddRaycast")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TryAddRaycast(IntPtr self, Vector3 origin, Vector3 direction, float estimatedDistance, out XRRaycast raycast);
 
             [DllImport("__Internal", EntryPoint = "UnityARKit_Raycast_RemoveRaycast")]

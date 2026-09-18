@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Unity.Collections;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using Unity.XR.CoreUtils.Collections;
 using UnityEngine.Rendering;
 using UnityEngine.Scripting;
@@ -26,6 +29,9 @@ namespace UnityEngine.XR.ARKit
         const string k_AfterOpaquesBackgroundShaderName = "Unlit/ARKitBackground/AfterOpaques";
         const string k_BackgroundShaderKeywordURP = "ARKIT_BACKGROUND_URP";
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly List<string> k_BackgroundShaderKeywordsToNotCompile = new()
         {
 #if !URP_7_OR_NEWER
@@ -128,7 +134,7 @@ namespace UnityEngine.XR.ARKit
         /// Get whether advanced camera hardware configuration is supported. Advanced camera
         /// hardware configuration requires iOS 16 or newer and a device with an ultra-wide camera.
         /// </summary>
-        /// <value><see langword="true"/> if setting advance camera hardware configurations is
+        /// <value><see langword="true"/> if setting advanced camera hardware configurations is
         /// supported. Otherwise, <see langword="false"/>.</value>
         /// <seealso cref="TryGetLockedCamera"/>
         public bool advancedCameraConfigurationSupported =>
@@ -173,12 +179,23 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The shader keywords to disable when the Built-in Render Pipeline is enabled.
             /// </summary>
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly List<string> k_BuiltInRPKeywordsToDisable = new() { k_BackgroundShaderKeywordURP };
+
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly ReadOnlyList<string> k_BuiltInRPKeywordsToDisableReadOnly = new(k_BuiltInRPKeywordsToDisable);
+
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly XRShaderKeywords k_BuiltInRPShaderKeywords = new(null, k_BuiltInRPKeywordsToDisableReadOnly);
 
             /// <summary>
-            /// The current <see cref="RenderingThreadingMode"/> use by Unity's rendering pipeline.
+            /// The current <see cref="RenderingThreadingMode"/> used by Unity's rendering pipeline.
             /// </summary>
             static readonly RenderingThreadingMode k_RenderingThreadingMode = SystemInfo.renderingThreadingMode;
 
@@ -192,9 +209,19 @@ namespace UnityEngine.XR.ARKit
             /// <summary>
             /// The shader keywords to enable when URP is enabled.
             /// </summary>
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly List<string> k_URPEnabledKeywordList = new(){ k_BackgroundShaderKeywordURP };
+
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly ReadOnlyList<string> k_URPEnabledKeywordListReadOnly = new(k_URPEnabledKeywordList);
 
+#if UNITY_6000_5_OR_NEWER
+            [NoAutoStaticsCleanup]
+#endif
             static readonly XRShaderKeywords k_URPShaderKeywords = new(k_URPEnabledKeywordListReadOnly, null);
 #endif // URP_7_OR_NEWER
 
@@ -444,8 +471,7 @@ namespace UnityEngine.XR.ARKit
             }
 
             public override unsafe NativeArray<XRTextureDescriptor> GetTextureDescriptors(
-                XRTextureDescriptor defaultDescriptor,
-                Allocator allocator)
+                XRTextureDescriptor defaultDescriptor, Allocator allocator)
             {
                 var textureDescriptors = NativeApi.UnityARKit_Camera_AcquireTextureDescriptors(
                     out int length, out int elementSize);
@@ -579,14 +605,17 @@ namespace UnityEngine.XR.ARKit
             public static extern void UnityARKit_Camera_Stop();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Camera_TryGetFrame(
                 XRCameraParams cameraParams,
                 out XRCameraFrame cameraFrame);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Camera_TryGetIntrinsics(out XRCameraIntrinsics cameraIntrinsics);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Camera_IsCameraPermissionGranted();
 
             [DllImport("__Internal")]
@@ -598,6 +627,7 @@ namespace UnityEngine.XR.ARKit
             public static extern void UnityARKit_Camera_ReleaseConfigurations(IntPtr configurations);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Camera_TryGetCurrentConfiguration(
                 out XRCameraConfiguration cameraConfiguration);
 
@@ -617,6 +647,7 @@ namespace UnityEngine.XR.ARKit
             public static extern Feature UnityARKit_Camera_GetCurrentCamera();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Camera_GetAutoFocusEnabled();
 
             [DllImport("__Internal")]
@@ -629,6 +660,7 @@ namespace UnityEngine.XR.ARKit
             public static extern IntPtr UnityARKit_Camera_GetConfigurableCamera();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Camera_TryLockCamera(IntPtr cameraDevicePtr);
 
             [DllImport("__Internal")]

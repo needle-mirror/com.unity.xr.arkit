@@ -9,7 +9,7 @@ namespace UnityEngine.XR.ARKit
     /// </summary>
     /// <remarks>
     /// This struct can be useful if you receive data through a stream. If you already have all
-    /// the bytes, use a <see cref="ARCollaborationData"/> constructor instead.
+    /// the bytes, use an <see cref="ARCollaborationData"/> constructor instead.
     /// This struct represents a native resource and must be explicitly disposed when no longer needed.
     /// While this struct is not thread safe, you can construct, Dispose, and Append from any thread.
     /// </remarks>

@@ -146,6 +146,7 @@ namespace UnityEngine.XR.ARKit
         static extern NSString GetDescription(IntPtr self);
 
         [DllImport("__Internal", EntryPoint = "NSObject_isEqual_")]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool IsEqual(IntPtr self, IntPtr other);
 
         [DllImport("__Internal", EntryPoint = "NSObject_get_hash")]

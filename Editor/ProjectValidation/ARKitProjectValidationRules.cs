@@ -1,4 +1,7 @@
 using System.Linq;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using Unity.XR.CoreUtils.Editor;
 using UnityEditor.XR.Management;
 using UnityEngine.XR.ARFoundation;
@@ -11,6 +14,9 @@ namespace UnityEditor.XR.ARKit
         const string k_ProjectXRPlugInManagement = "Project/XR Plug-in Management";
         const string k_Category = "Apple ARKit";
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly System.Type[] k_FaceTrackingTypes =
         {
             typeof(ARFace),

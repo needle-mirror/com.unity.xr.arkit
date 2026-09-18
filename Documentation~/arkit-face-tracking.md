@@ -35,13 +35,13 @@ You can access a sample that shows how to use the `ConfigurationChooser` to choo
 
 iOS devices support different combinations of features in different camera facing directions. If your scene contains several manager components that require the world-facing camera, AR Foundation's default configuration chooser might decide to use the world-facing camera, even if the AR Face Manager component is also enabled in your scene. You can create your own [ConfigurationChooser](xref:UnityEngine.XR.ARSubsystems.ConfigurationChooser) to prioritize face tracking functionality over other features if you desire greater control over the camera's facing direction.
 
-You can access an example of using a custom `ConfigurationChooser` in the `Rear Camera (ARKit)` sample on the [AR Foundations samples](https://github.com/Unity-Technologies/arfoundation-samples/tree/main/Assets/Scenes/FaceTracking/WorldCameraWithUserFacingFaceTracking) GitHub. This example demonstrates how you can use the user-facing camera for face tracking, and the world-facing (rear) camera for passthrough video (iOS 13+).
+You can access an example of using a custom `ConfigurationChooser` in the `Rear Camera (ARKit)` sample on the [AR Foundation samples](https://github.com/Unity-Technologies/arfoundation-samples/tree/main/Assets/Scenes/FaceTracking/WorldCameraWithUserFacingFaceTracking) GitHub. This example demonstrates how you can use the user-facing camera for face tracking, and the world-facing (rear) camera for passthrough video (iOS 13+).
 
 ## Blend shapes
 
 ARKit provides a series of [blend shapes](https://developer.apple.com/documentation/arkit/arfaceanchor/2928251-blendshapes?language=objc) to describe different features of a face. Each blend shape is modulated from 0..1. For example, one blend shape defines how open the mouth is.
 
-A blend shape represents action at a location on a face. Each blend shape is defined by an [ARKitBlendShapeLocation](xref:UnityEngine.XR.ARKit.ARKitBlendShapeLocation) to identify the location of the face action and a [XRFaceBlendShape](xref:UnityEngine.XR.ARSubsystems.XRFaceBlendShape) to describe the amount of action at the location. The `weight` of `XRFaceBlendShape` is a value between `0.0` and `1.0`.
+A blend shape represents action at a location on a face. Each blend shape is defined by an [ARKitBlendShapeLocation](xref:UnityEngine.XR.ARKit.ARKitBlendShapeLocation) to identify the location of the face action and an [XRFaceBlendShape](xref:UnityEngine.XR.ARSubsystems.XRFaceBlendShape) to describe the amount of action at the location. The `weight` of `XRFaceBlendShape` is a value between `0.0` and `1.0`.
 
 You can learn more about blend shapes with the `Blend shapes` sample on the [AR Foundation Samples](https://github.com/Unity-Technologies/arfoundation-samples/tree/main?tab=readme-ov-file#blend-shapes-arkit) GitHub. This sample uses blend shapes to puppet a cartoon face which is displayed over the detected face.
 

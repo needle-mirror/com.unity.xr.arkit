@@ -31,7 +31,7 @@ namespace UnityEngine.XR.ARKit
         /// maximum gain values are equal.
         /// </remarks>
         /// <param name="other">The <see cref="ARKitWhiteBalanceRange"/> to compare against.</param>
-        /// <returns><see langword="true"/> if the underlying white balance gain range are the same.
+        /// <returns><see langword="true"/> if the underlying white balance gain range is the same.
         ///   Otherwise, <see langword="false"/>.</returns>
         public bool Equals(ARKitWhiteBalanceRange other)
         {

@@ -3,6 +3,9 @@ using System;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.Assertions;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
@@ -110,8 +113,7 @@ namespace UnityEngine.XR.ARKit
         /// to determine whether the world map was successfully created.</param>
         /// <seealso cref="ApplyWorldMap(ARWorldMap)"/>
         /// <seealso cref="worldMapSupported"/>
-        public void GetARWorldMapAsync(
-            Action<ARWorldMapRequestStatus, ARWorldMap> onComplete)
+        public void GetARWorldMapAsync(Action<ARWorldMapRequestStatus, ARWorldMap> onComplete)
         {
             var handle = GCHandle.Alloc(onComplete);
             var context = GCHandle.ToIntPtr(handle);
@@ -215,7 +217,7 @@ namespace UnityEngine.XR.ARKit
         /// Dequeues the oldest collaboration data in the queue. After calling this method, <see cref="collaborationDataCount"/>
         /// will be decremented by one.
         /// </summary>
-        /// <returns>The nextx <see cref="ARCollaborationData"/> in the queue.</returns>
+        /// <returns>The next <see cref="ARCollaborationData"/> in the queue.</returns>
         /// <exception cref="System.NotSupportedException">Thrown if <see cref="supportsCollaboration"/> is false.</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if <see cref="collaborationDataCount"/> is zero.</exception>
         /// <seealso cref="ARCollaborationData"/>
@@ -265,6 +267,9 @@ namespace UnityEngine.XR.ARKit
             s_OnAsyncWorldMapCompleted = OnAsyncConversionComplete;
         }
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static NativeApi.OnAsyncConversionCompleteDelegate s_OnAsyncWorldMapCompleted;
 
         [MonoPInvokeCallback(typeof(NativeApi.OnAsyncConversionCompleteDelegate))]
@@ -344,9 +349,11 @@ namespace UnityEngine.XR.ARKit
 
             public override void Reset() => NativeApi.UnityARKit_Session_Reset(m_Self);
 
+            [Obsolete("GetAvailabilityAsync has been deprecated in AR Foundation version 6.7. All iOS devices since the iPhone 6 support ARKit.")]
             public override Promise<SessionAvailability> GetAvailabilityAsync() => Promise<SessionAvailability>.CreateResolvedPromise(
                 NativeApi.UnityARKit_Session_IsSupported() && AtLeastOneConfigurationExists()? SessionAvailability.Installed | SessionAvailability.Supported : SessionAvailability.None);
 
+            [Obsolete("InstallAsync has been deprecated in AR Foundation version 6.7. ARKit cannot be installed.")]
             public override Promise<SessionInstallationStatus> InstallAsync() =>
                 throw new NotSupportedException("ARKit cannot be installed.");
 
@@ -399,7 +406,9 @@ namespace UnityEngine.XR.ARKit
                 id = "ARKit-Session",
                 providerType = typeof(ARKitSessionSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitSessionSubsystem),
+#pragma warning disable CS0618 // supportsInstall is deprecated
                 supportsInstall = false,
+#pragma warning restore CS0618
                 supportsMatchFrameRate = true,
             });
         }
@@ -437,6 +446,7 @@ namespace UnityEngine.XR.ARKit
             public static extern IntPtr UnityARKit_Session_GetNativePtr(IntPtr self);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Session_IsSupported();
 
             [DllImport("__Internal")]
@@ -483,12 +493,14 @@ namespace UnityEngine.XR.ARKit
             public static extern void UnityARKit_Session_UpdateWithCollaborationData(IntPtr self, IntPtr data);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Session_GetCollaborationEnabled(IntPtr self);
 
             [DllImport("__Internal")]
             public static extern Guid UnityARKit_Session_GetSessionIdentifier(IntPtr self);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Session_GetMatchFrameRateEnabled(IntPtr self);
 
             [DllImport("__Internal")]
@@ -498,12 +510,14 @@ namespace UnityEngine.XR.ARKit
             public static extern int UnityARKit_Session_GetFrameRate(IntPtr self);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Session_GetCoachingOverlayActivatesAutomatically(IntPtr self);
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_Session_SetCoachingOverlayActivatesAutomatically(IntPtr self, bool activatesAutomatically);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_Session_IsCoachingOverlayActive(IntPtr self);
 
             [DllImport("__Internal")]

@@ -38,7 +38,7 @@ During an iOS player build, this package compiles the reference image libraries 
 
 ### AssetBundles
 
-You can store reference image libraries in AssetBundles and load them runtime, but setting up your project to build the AssetBundles correctly requires special instructions. Refer to [Use reference image libraries with AssetBundles](xref:arfoundation-image-tracking-assetbundles) in AR Foundation for more information.
+You can store reference image libraries in AssetBundles and load them at runtime, but setting up your project to build the AssetBundles correctly requires special instructions. Refer to [Use reference image libraries with AssetBundles](xref:arfoundation-image-tracking-assetbundles) in AR Foundation for more information.
 
 ### Image format requirements
 

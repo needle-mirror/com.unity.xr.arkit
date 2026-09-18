@@ -117,7 +117,7 @@ namespace UnityEngine.XR.ARKit
         public void StopRoomCapture() => NativeApi.UnityARKit_BoundingBox_StopRoomCapture();
 
         /// <summary>
-        /// Check the status of room capture process.
+        /// Check the status of the room capture process.
         /// </summary>
         /// <returns>`True` if the process is room capturing, otherwise false.</returns>
         /// <example>
@@ -128,7 +128,7 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// Receive the instruction during room capture.
         /// </summary>
-        /// <param name="instruction">The instruction from room capture process.</param>
+        /// <param name="instruction">The instruction from the room capture process.</param>
         /// <example>
         /// <code source="../Tests/Runtime/CodeSamples/RoomPlanBoundingBoxSubsystemTests.cs" region="GetRoomCaptureInstructionSample"/>
         /// </example>
@@ -178,9 +178,11 @@ namespace UnityEngine.XR.ARKit
             public static extern unsafe void UnityARKit_BoundingBox_GetRoomCaptureInstruction(out XRBoundingBoxInstructions instruction);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_BoundingBox_SetupRoomCapture();
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityARKit_BoundingBox_IsRoomCapturing();
 
             [DllImport("__Internal")]

@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARSubsystems;
 #if UNITY_XR_ARKIT_LOADER_ENABLED
 using System.Runtime.InteropServices;
@@ -26,6 +29,9 @@ namespace UnityEngine.XR.ARKit
         /// <summary>
         /// The shared API instance.
         /// </summary>
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         public static ARKitCpuImageApi instance { get; } = new();
 
         /// <summary>
@@ -96,10 +102,7 @@ namespace UnityEngine.XR.ARKit
         /// <param name="size">The number of bytes required to store the converted image.</param>
         /// <returns><see langword="true"/> if the output <paramref name="size"/> was set. Otherwise, <see langword="false"/>.</returns>
         public override bool TryGetConvertedDataSize(
-            int nativeHandle,
-            Vector2Int dimensions,
-            TextureFormat format,
-            out int size)
+            int nativeHandle, Vector2Int dimensions, TextureFormat format, out int size)
             => Native.TryGetConvertedDataSize(nativeHandle, dimensions, format, out size);
 
         /// <summary>
@@ -113,10 +116,7 @@ namespace UnityEngine.XR.ARKit
         /// <returns><see langword="true"/> if the image was converted and stored in <paramref name="destinationBuffer"/>.
         /// Otherwise, <see langword="false"/>.</returns>
         public override bool TryConvert(
-            int nativeHandle,
-            XRCpuImage.ConversionParams conversionParams,
-            IntPtr destinationBuffer,
-            int bufferLength)
+            int nativeHandle, XRCpuImage.ConversionParams conversionParams, IntPtr destinationBuffer, int bufferLength)
             => Native.TryConvert(nativeHandle, conversionParams, destinationBuffer, bufferLength);
 
         /// <summary>
@@ -164,6 +164,9 @@ namespace UnityEngine.XR.ARKit
             IntPtr context)
             => Native.CreateAsyncConversionRequestWithCallback(nativeHandle, conversionParams, callback, context);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly HashSet<TextureFormat> s_SupportedVideoConversionFormats = new()
         {
             TextureFormat.Alpha8,
@@ -199,18 +202,19 @@ namespace UnityEngine.XR.ARKit
         {
 #if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal", EntryPoint = "UnityARKit_CpuImage_TryAcquireLatestImage")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TryAcquireLatestImage(ImageType imageType, out XRCpuImage.Cinfo cinfo);
 
             [DllImport("__Internal", EntryPoint = "UnityARKit_CpuImage_DisposeImage")]
             public static extern void DisposeImage(int nativeHandle);
 
             [DllImport("__Internal", EntryPoint = "UnityARKit_CpuImage_TryGetPlane")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TryGetPlane(
-                int nativeHandle,
-                int planeIndex,
-                out XRCpuImage.Plane.Cinfo planeCinfo);
+                int nativeHandle, int planeIndex, out XRCpuImage.Plane.Cinfo planeCinfo);
 
             [DllImport("__Internal", EntryPoint = "UnityARKit_CpuImage_HandleValid")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool HandleValid(int nativeHandle);
 
             [DllImport("__Internal", EntryPoint = "UnityARKit_CpuImage_GetAsyncRequestStatus")]
@@ -220,10 +224,12 @@ namespace UnityEngine.XR.ARKit
             public static extern void DisposeAsyncRequest(int requestHandle);
 
             [DllImport("__Internal", EntryPoint = "UnityARKit_CpuImage_TryGetConvertedDataSize")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TryGetConvertedDataSize(
                 int nativeHandle, Vector2Int dimensions, TextureFormat format, out int size);
 
             [DllImport("__Internal", EntryPoint = "UnityARKit_CpuImage_TryConvert")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TryConvert(
                 int nativeHandle,
                 XRCpuImage.ConversionParams conversionParams,
@@ -235,6 +241,7 @@ namespace UnityEngine.XR.ARKit
                 int nativeHandle, XRCpuImage.ConversionParams conversionParams);
 
             [DllImport("__Internal", EntryPoint = "UnityARKit_CpuImage_TryGetAsyncRequestData")]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TryGetAsyncRequestData(
                 int requestHandle, out IntPtr dataPtr, out int dataLength);
 

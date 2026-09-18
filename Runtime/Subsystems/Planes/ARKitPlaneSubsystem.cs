@@ -142,6 +142,7 @@ namespace UnityEngine.XR.ARKit
         {
 #if UNITY_XR_ARKIT_LOADER_ENABLED
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern unsafe bool UnityARKit_Planes_SupportsClassification();
 
             [DllImport("__Internal")]

@@ -54,10 +54,7 @@ namespace UnityEngine.XR.ARKit
                 return UnityARKit_anchors_tryAdd(pose, out anchor);
             }
 
-            public override bool TryAttachAnchor(
-                TrackableId attachedToId,
-                Pose pose,
-                out XRAnchor anchor)
+            public override bool TryAttachAnchor(TrackableId attachedToId, Pose pose, out XRAnchor anchor)
             {
                 return UnityARKit_anchors_tryAttach(attachedToId, pose, out anchor);
             }
@@ -88,17 +85,16 @@ namespace UnityEngine.XR.ARKit
             static extern unsafe void UnityARKit_anchors_releaseChanges(void* changes);
 
             [DllImport("__Internal")]
-            static extern bool UnityARKit_anchors_tryAdd(
-                Pose pose,
-                out XRAnchor anchor);
+            [return: MarshalAs(UnmanagedType.I1)]
+            static extern bool UnityARKit_anchors_tryAdd(Pose pose, out XRAnchor anchor);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             static extern bool UnityARKit_anchors_tryAttach(
-                TrackableId trackableToAffix,
-                Pose pose,
-                out XRAnchor anchor);
+                TrackableId trackableToAffix, Pose pose, out XRAnchor anchor);
 
             [DllImport("__Internal")]
+            [return: MarshalAs(UnmanagedType.I1)]
             static extern bool UnityARKit_anchors_tryRemove(TrackableId anchorId);
 #else
             static readonly string k_ExceptionMsg = "Apple ARKit XR Plug-in Provider not enabled in project settings.";
@@ -132,17 +128,12 @@ namespace UnityEngine.XR.ARKit
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static bool UnityARKit_anchors_tryAdd(
-                Pose pose,
-                out XRAnchor anchor)
+            static bool UnityARKit_anchors_tryAdd(Pose pose, out XRAnchor anchor)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
 
-            static bool UnityARKit_anchors_tryAttach(
-                TrackableId trackableToAffix,
-                Pose pose,
-                out XRAnchor anchor)
+            static bool UnityARKit_anchors_tryAttach(TrackableId trackableToAffix, Pose pose, out XRAnchor anchor)
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }

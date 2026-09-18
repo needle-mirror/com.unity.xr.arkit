@@ -5,7 +5,7 @@ uid: arkit-occlusion
 
 ARKit provides support for occlusion based on depth images it generates every frame.
 
-There are three types of depth images that ARKit exposes through the provider's implementation of the [XROcclusionSubsystem](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem) implementation:
+There are three types of depth images that ARKit exposes through the provider's implementation of the [XROcclusionSubsystem](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem):
 
 - **Environment depth**: distance from the device to any part of the environment in the camera field of view.
 - **Human depth**: distance from the device to any part of a human recognized within the camera field of view.
@@ -43,6 +43,6 @@ The occlusion subsystem provides access to two types of environment depth: [raw]
 
 Environment depth requires Xcode 12 or later, and it only works on iOS 14 devices with the LiDAR scanner, such as the new iPad Pro.
 
-Human depth and human scencils requires Xcode 11 or later, and it only works on iOS 13+ devices with the A12 Bionic or higher.
+Human depth and human stencils require Xcode 11 or later, and it only works on iOS 13+ devices with the A12 Bionic or higher.
 
 [!include[](snippets/apple-arkit-trademark.md)]

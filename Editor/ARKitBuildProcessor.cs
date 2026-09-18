@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.Rendering;
@@ -23,7 +26,14 @@ namespace UnityEditor.XR.ARKit
 {
     static class ARKitBuildProcessor
     {
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         public static bool loaderEnabled;
+
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         public static bool faceTrackingEnabled;
 
         class Preprocessor : IPreprocessBuildWithReport, IPreprocessShaders
@@ -302,6 +312,9 @@ namespace UnityEditor.XR.ARKit
         static readonly NamedBuildTarget s_iOSTarget =
             NamedBuildTarget.FromBuildTargetGroup(BuildPipeline.GetBuildTargetGroup(BuildTarget.iOS));
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static ARKitSettings s_ARKitSettings;
 
         static LoaderEnabledCheck()

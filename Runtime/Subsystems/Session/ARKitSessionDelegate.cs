@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 using AOT;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 
 namespace UnityEngine.XR.ARKit
 {
@@ -68,12 +71,24 @@ namespace UnityEngine.XR.ARKit
         /// <seealso cref="OnCoachingOverlayViewWillActivate"/>
         protected virtual void OnCoachingOverlayViewDidDeactivate(ARKitSessionSubsystem sessionSubsystem) { }
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static Action<IntPtr, NSError> s_SessionDidFailWithError = SessionDidFailWithError;
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static Action<IntPtr> s_CoachingOverlayViewWillActivate = CoachingOverlayViewWillActivate;
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static Action<IntPtr> s_CoachingOverlayViewDidDeactivate = CoachingOverlayViewDidDeactivate;
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static Action<IntPtr> s_ConfigurationChanged = ConfigurationChanged;
 
         [MonoPInvokeCallback(typeof(Action<IntPtr, NSError>))]
