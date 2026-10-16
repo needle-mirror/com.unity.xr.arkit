@@ -218,6 +218,7 @@ namespace UnityEngine.XR.ARKit
 
 #if UNITY_XR_ARKIT_LOADER_ENABLED && !UNITY_EDITOR
             [DllImport("__Internal", EntryPoint = "UnityARKit_ImageDatabase_AddImage")]
+            [return: MarshalAs(UnmanagedType.I1)]
             static extern unsafe bool AddImage(
                 IntPtr database, IntPtr validator, void* bytes, TextureFormat format,
                 int width, int height, float physicalWidth,

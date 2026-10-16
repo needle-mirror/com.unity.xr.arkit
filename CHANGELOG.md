@@ -8,6 +8,25 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.7.0] - 2026-10-16
+
+### Added
+
+### Changed
+
+- Changed the minimum dependency version of AR Foundation from 6.7.0-pre.1 to 6.7.0.
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- Fixed AR content appearing rotated 90 degrees when built with the iOS 27 SDK due to the deprecated `statusBarOrientation` API returning `UIInterfaceOrientationUnknown`. The native plug-in now queries orientation from `UIWindowScene`.
+- Fixed a bug where adding an image to a `MutableRuntimeReferenceImageLibrary` at runtime could leak memory if the image failed to add, or in rare cases release an image that was added successfully.
+
+### Security
+
 ## [6.7.0-pre.1] - 2026-09-18
 
 ### Changed
