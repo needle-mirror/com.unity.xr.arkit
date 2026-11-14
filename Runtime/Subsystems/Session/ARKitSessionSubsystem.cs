@@ -314,8 +314,6 @@ namespace UnityEngine.XR.ARKit
                 NativeApi.SetConfigurationChangedCallback(m_Self, ARKitSessionDelegate.s_ConfigurationChanged);
             }
 
-            bool AtLeastOneConfigurationExists() => NativeApi.UnityARKit_Session_GetConfigurationDescriptors(m_Self, IntPtr.Zero, 0, 0) > 0;
-
             public override void Start() => NativeApi.UnityARKit_Session_Resume(m_Self);
 
             public override void Stop() => NativeApi.UnityARKit_Session_Pause(m_Self);
@@ -349,13 +347,11 @@ namespace UnityEngine.XR.ARKit
 
             public override void Reset() => NativeApi.UnityARKit_Session_Reset(m_Self);
 
-            [Obsolete("GetAvailabilityAsync has been deprecated in AR Foundation version 6.7. All iOS devices since the iPhone 6 support ARKit.")]
-            public override Promise<SessionAvailability> GetAvailabilityAsync() => Promise<SessionAvailability>.CreateResolvedPromise(
-                NativeApi.UnityARKit_Session_IsSupported() && AtLeastOneConfigurationExists()? SessionAvailability.Installed | SessionAvailability.Supported : SessionAvailability.None);
+            [Obsolete("GetAvailabilityAsync has been deprecated in AR Foundation version 6.7. All iOS devices since the iPhone 6 support ARKit.", true)]
+            public override Promise<SessionAvailability> GetAvailabilityAsync() => null;
 
-            [Obsolete("InstallAsync has been deprecated in AR Foundation version 6.7. ARKit cannot be installed.")]
-            public override Promise<SessionInstallationStatus> InstallAsync() =>
-                throw new NotSupportedException("ARKit cannot be installed.");
+            [Obsolete("InstallAsync has been deprecated in AR Foundation version 6.7. ARKit cannot be installed.", true)]
+            public override Promise<SessionInstallationStatus> InstallAsync() => null;
 
             public override IntPtr nativePtr => NativeApi.UnityARKit_Session_GetNativePtr(m_Self);
 
@@ -406,9 +402,6 @@ namespace UnityEngine.XR.ARKit
                 id = "ARKit-Session",
                 providerType = typeof(ARKitSessionSubsystem.ARKitProvider),
                 subsystemTypeOverride = typeof(ARKitSessionSubsystem),
-#pragma warning disable CS0618 // supportsInstall is deprecated
-                supportsInstall = false,
-#pragma warning restore CS0618
                 supportsMatchFrameRate = true,
             });
         }
@@ -444,10 +437,6 @@ namespace UnityEngine.XR.ARKit
 
             [DllImport("__Internal")]
             public static extern IntPtr UnityARKit_Session_GetNativePtr(IntPtr self);
-
-            [DllImport("__Internal")]
-            [return: MarshalAs(UnmanagedType.I1)]
-            public static extern bool UnityARKit_Session_IsSupported();
 
             [DllImport("__Internal")]
             public static extern void UnityARKit_Session_Update(IntPtr self, IntPtr desiredConfigurationClass, Feature features);
@@ -590,8 +579,6 @@ namespace UnityEngine.XR.ARKit
             {
                 throw new System.NotImplementedException(k_ExceptionMsg);
             }
-
-            public static bool UnityARKit_Session_IsSupported() => false;
 
             public static void UnityARKit_Session_Update(IntPtr self, IntPtr desiredConfigurationClass, Feature features)
             {

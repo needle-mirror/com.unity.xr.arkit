@@ -1,8 +1,9 @@
 {
   "name": "com.unity.xr.arkit",
   "displayName": "Apple ARKit XR Plugin",
-  "version": "6.7.1",
-  "unity": "6000.0",
+  "version": "7.0.0-pre.1",
+  "unity": "7000.0",
+  "unityRelease": "0a12",
   "description": "Provides native Apple ARKit integration for use with Unity's multi-platform XR API.\nSupports the following features:\n-Efficient Background Rendering\n-Horizontal Planes\n-Depth Data\n-Anchors\n-Hit Testing\n-Face Tracking\n-Environment Probes\n-Meshing\n-Occlusion\n\n* Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.",
   "keywords": [
     "arkit",
@@ -13,20 +14,20 @@
   ],
   "dependencies": {
     "com.unity.editorcoroutines": "1.0.0",
-    "com.unity.xr.arfoundation": "6.7.1",
+    "com.unity.xr.arfoundation": "7.0.0-pre.1",
     "com.unity.xr.core-utils": "2.2.2",
     "com.unity.xr.management": "4.4.0"
   },
   "_upm": {
-    "changelog": "### Changed\n\n- Changed the minimum dependency version of AR Foundation from 6.7.0 to 6.7.1."
+    "changelog": "### Changed\n\n- Changed the minimum Unity version from 6000.0 to 7000.0.\n- Changed the minimum dependency version of AR Foundation from 6.7.1 to 7.0.0-pre.1.\n- Updated the plane subsystem to use [XRPlane](xref:UnityEngine.XR.ARSubsystems.XRPlane), which replaces `BoundedPlane` in AR Foundation 7.0.\n\n### Deprecated\n\n- The following APIs, which were previously deprecated with a warning, now produce compile errors when referenced. Refer to the [upgrade guide](xref:arkit-upgrade-guide-7-0) for more information.\n  - [`ARKitCameraSubsystem.backgroundShaderName`](xref:UnityEngine.XR.ARKit.ARKitCameraSubsystem.backgroundShaderName). Use [`backgroundShaderNames`](xref:UnityEngine.XR.ARKit.ARKitCameraSubsystem.backgroundShaderNames) instead.\n  - [`ARKitMeshSubsystemExtensions`](xref:UnityEngine.XR.ARKit.ARKitMeshSubsystemExtensions). Use [`XRMeshSubsystem`](xref:UnityEngine.XR.XRMeshSubsystem) instead.\n  - [`ARMeshClassification`](xref:UnityEngine.XR.ARKit.ARMeshClassification). Use [`XRMeshClassification`](xref:UnityEngine.XR.ARSubsystems.XRMeshClassification) instead.\n\n### Removed\n\n- Removed `ARKitXRDepthSubsystem`, `ARKitXRPointCloudSubsystem`, and `ARKitLoader.depthSubsystem`. Use [`ARKitPointCloudSubsystem`](xref:UnityEngine.XR.ARKit.ARKitPointCloudSubsystem) and [`ARKitLoader.pointCloudSubsystem`](xref:UnityEngine.XR.ARKit.ARKitLoader.pointCloudSubsystem) instead. Refer to the [upgrade guide](xref:arkit-upgrade-guide-7-0) for more information.\n- Removed `ARKitXRPlaneSubsystem`. Use [`ARKitPlaneSubsystem`](xref:UnityEngine.XR.ARKit.ARKitPlaneSubsystem) instead.\n- Removed `ARKitXRObjectTrackingSubsystem`. Use [`ARKitObjectTrackingSubsystem`](xref:UnityEngine.XR.ARKit.ARKitObjectTrackingSubsystem) instead."
   },
   "upmCi": {
-    "footprint": "eaeaed66c961770178817ea0a46f0bc315eda23a"
+    "footprint": "268fb11d4efec0f233dc57f4566dcdbfaafb6f42"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@6.7/manual/index.html",
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.arkit@7.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.git",
     "type": "git",
-    "revision": "539385b646deb99dd28c87b51eaebb65e91c00a1"
+    "revision": "97aa00bbf170ab2202509a163aaa8c48beaca341"
   }
 }

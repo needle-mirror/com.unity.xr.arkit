@@ -103,8 +103,8 @@ namespace UnityEngine.XR.ARKit
                 }
             }
 
-            public override unsafe TrackableChanges<BoundedPlane> GetChanges(
-                BoundedPlane defaultPlane,
+            public override unsafe TrackableChanges<XRPlane> GetChanges(
+                XRPlane defaultPlane,
                 Allocator allocator)
             {
                 void* context = NativeApi.UnityARKit_Planes_AcquireChanges(
@@ -115,7 +115,7 @@ namespace UnityEngine.XR.ARKit
 
                 try
                 {
-                    return new TrackableChanges<BoundedPlane>(
+                    return new TrackableChanges<XRPlane>(
                         addedArrayPtr, addedLength,
                         updatedArrayPtr, updatedLength,
                         removedArrayPtr, removedLength,

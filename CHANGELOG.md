@@ -8,6 +8,27 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.0.0-pre.1] - 2026-11-14
+
+### Changed
+
+- Changed the minimum Unity version from 6000.0 to 7000.0.
+- Changed the minimum dependency version of AR Foundation from 6.7.1 to 7.0.0-pre.1.
+- Updated the plane subsystem to use [XRPlane](xref:UnityEngine.XR.ARSubsystems.XRPlane), which replaces `BoundedPlane` in AR Foundation 7.0.
+
+### Deprecated
+
+- The following APIs, which were previously deprecated with a warning, now produce compile errors when referenced. Refer to the [upgrade guide](xref:arkit-upgrade-guide-7-0) for more information.
+  - [`ARKitCameraSubsystem.backgroundShaderName`](xref:UnityEngine.XR.ARKit.ARKitCameraSubsystem.backgroundShaderName). Use [`backgroundShaderNames`](xref:UnityEngine.XR.ARKit.ARKitCameraSubsystem.backgroundShaderNames) instead.
+  - [`ARKitMeshSubsystemExtensions`](xref:UnityEngine.XR.ARKit.ARKitMeshSubsystemExtensions). Use [`XRMeshSubsystem`](xref:UnityEngine.XR.XRMeshSubsystem) instead.
+  - [`ARMeshClassification`](xref:UnityEngine.XR.ARKit.ARMeshClassification). Use [`XRMeshClassification`](xref:UnityEngine.XR.ARSubsystems.XRMeshClassification) instead.
+
+### Removed
+
+- Removed `ARKitXRDepthSubsystem`, `ARKitXRPointCloudSubsystem`, and `ARKitLoader.depthSubsystem`. Use [`ARKitPointCloudSubsystem`](xref:UnityEngine.XR.ARKit.ARKitPointCloudSubsystem) and [`ARKitLoader.pointCloudSubsystem`](xref:UnityEngine.XR.ARKit.ARKitLoader.pointCloudSubsystem) instead. Refer to the [upgrade guide](xref:arkit-upgrade-guide-7-0) for more information.
+- Removed `ARKitXRPlaneSubsystem`. Use [`ARKitPlaneSubsystem`](xref:UnityEngine.XR.ARKit.ARKitPlaneSubsystem) instead.
+- Removed `ARKitXRObjectTrackingSubsystem`. Use [`ARKitObjectTrackingSubsystem`](xref:UnityEngine.XR.ARKit.ARKitObjectTrackingSubsystem) instead.
+
 ## [6.7.1] - 2026-10-27
 
 ### Changed
@@ -1053,7 +1074,6 @@ and project files needed to adapt ARKit to the Unity multi-platform AR API.
 ### Removed
 
 - Remove extraneous debug log
-
 
 <hr>
 \* *Apple and ARKit are trademarks of Apple Inc., registered in the U.S. and other countries and regions.*

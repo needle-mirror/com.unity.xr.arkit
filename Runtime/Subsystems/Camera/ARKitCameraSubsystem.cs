@@ -62,8 +62,8 @@ namespace UnityEngine.XR.ARKit
         /// The name for the background shader.
         /// </summary>
         /// <value>The name for the background shader.</value>
-        [Obsolete("'backgroundShaderName' is obsolete, use backgroundShaderNames instead. (2022/04/04)")]
-        public static string backgroundShaderName => k_BeforeOpaquesBackgroundShaderName;
+        [Obsolete("'backgroundShaderName' is obsolete, use backgroundShaderNames instead. (2022/04/04)", true)]
+        public static string backgroundShaderName => null;
 
         internal static List<string> backgroundShaderKeywordsToNotCompile => k_BackgroundShaderKeywordsToNotCompile;
 

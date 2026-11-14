@@ -29,9 +29,7 @@ Use the Apple ARKit XR Plug-in package to enable ARKit support in your [AR Found
 
 # Install the Apple ARKit XR Plug-in
 
-When you enable the Apple ARKit XR Plug-in in **Project Settings** > **XR Plug-in Management** settings, Unity automatically installs this package (if necessary). See [Enable the ARKit plug-in](xref:arkit-project-config#enable-the-apple-arkit-plug-in) for instructions.
-
-You can also install and uninstall this package using the [Package Manager](https://learn.unity.com/tutorial/the-package-manager). Installing through the Package Manager does not automatically enable the plug-in. You must still enable it in **Project Settings** > **XR Plug-in Management**.
+To check the requirements and install this package, refer to [Install the Apple ARKit plug-in](xref:arkit-install).
 
 # Project configuration
 
@@ -56,15 +54,6 @@ See [Set the ARKit support Requirement](xref:arkit-project-config#arkit-required
 Apple ARKit XR Plug-in package supports project validation. Project validation is a set of rules that the Unity Editor checks to detect possible problems with your project's configuration. See [Project Validation](xref:arkit-project-config#project-validation) section for more information about the rules checked for Apple ARKit XR Plug-in.
 
 # Technical details
-
-## Requirements
-
-This version of Apple ARKit XR Plug-in is compatible with the following versions of the Unity Editor:
-
-* Unity 6 (6000.0) or newer.
-
-> [!IMPORTANT]
-> You must use Xcode 26.0 or newer when compiling an iOS app that includes this package.
 
 ## Known limitations
 

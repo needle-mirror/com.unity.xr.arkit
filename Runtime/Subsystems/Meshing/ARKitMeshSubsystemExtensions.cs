@@ -10,7 +10,7 @@ namespace UnityEngine.XR.ARKit
     /// <summary>
     /// ARKit extension methods to the [XRMeshSubsystem](https://docs.unity3d.com/ScriptReference/XR.XRMeshSubsystem.html).
     /// </summary>
-    [Obsolete("ARKitMeshSubsystemExtensions is deprecated as of Apple ARKit XR Plug-in version 6.3. Use XRMeshSubsystem instead.", false)]
+    [Obsolete("ARKitMeshSubsystemExtensions is deprecated as of Apple ARKit XR Plug-in version 6.3. Use XRMeshSubsystem instead.", true)]
     public static class ARKitMeshSubsystemExtensions
     {
         static class NativeApi

@@ -1,5 +1,8 @@
 * [Introduction](xref:arkit-manual)
   * [What's new](xref:arkit-whats-new)
+  * [Install and upgrade](xref:arkit-install-and-upgrade)
+    * [Install the Apple ARKit plug-in](xref:arkit-install)
+    * [Upgrade to Apple ARKit plug-in 7.0](xref:arkit-upgrade-guide-7-0)
   * [Project configuration](xref:arkit-project-config)
 * Subsystems
   * [Session](xref:arkit-session)
